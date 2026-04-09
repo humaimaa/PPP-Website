@@ -1,5 +1,5 @@
 <nav class="bg-[#0D2818] text-[#DAD7CD] shadow-lg sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4">
+  <div class=" px-4">
     <div class="flex justify-between items-center">
       <!-- Left: Hamburger Menu Button (visible on all screens) -->
       <div class="flex items-center">

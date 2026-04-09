@@ -1,13 +1,13 @@
 <footer class="bg-[#0D2818] text-[#DAD7CD] pt-12 pb-6 overflow-hidden w-full">
-  <div class="px-4 md:px-14">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[40%_28%_28%] gap-12 mb-8">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[40%_28%_28%] gap-8 mb-8 mr-8">
       <!-- Logo and About -->
-      <div class="lg:col-span-1 md:mr-8 ">
+      <div class="lg:col-span-1">
         <div class="flex items-center mb-4">
           <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-12 mr-3">
           <span class="text-2xl font-bold">PPP Department</span>
         </div>
-        <p class="mb-4 text-sm md:text-base text-justify">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
+        <p class="mb-4 text-sm md:text-base">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
         <div class="flex space-x-4">
           <a href="https://facebook.com" target="_blank" class="hover:opacity-80 transition-opacity duration-300">
             <img src="{{ asset('images/facebook-icon.png') }}" alt="Facebook" class="w-6 h-6 filter brightness-0 invert">
@@ -27,7 +27,7 @@
         <ul class="space-y-2">
           <li><a href="{{route('home')}}" class="hover:text-[#0A612B] transition-colors duration-300 block">Home</a></li>
           <li><a href="{{ route('about', 'overview') }}" class="hover:text-[#0A612B] transition-colors duration-300 block">About Us</a></li>
-          <li><a href="#" class="hover:text-[#0A612B] transition-colors duration-300 block">Projects</a></li>
+          <li><a href="{{ route('projects.index', 'all') }}" class="hover:text-[#0A612B] transition-colors duration-300 block">Projects</a></li>
           <li><a href="#" class="hover:text-[#0A612B] transition-colors duration-300 block">Tenders</a></li>
           <li><a href="#" class="hover:text-[#0A612B] transition-colors duration-300 block">News & Updates</a></li>
           <li><a href="{{route('contact')}}" class="hover:text-[#0A612B] transition-colors duration-300 block">Contact Us</a></li>

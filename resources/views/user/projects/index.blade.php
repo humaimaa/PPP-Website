@@ -376,7 +376,7 @@
                         <div>
                             <span class="text-sm text-gray-500">
                                 @if($project['status'] === 'operational')
-                                Operational: {{ $project['timeline'] }}
+                                {{ $project['timeline'] }}
                                 @elseif($project['status'] === 'ongoing')
                                 {{ $project['timeline'] }}
                                 @else

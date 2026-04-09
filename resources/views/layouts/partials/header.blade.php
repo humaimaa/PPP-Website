@@ -114,27 +114,27 @@
           </li>
 
           <!-- Media Dropdown -->
-          <li class="mobile-dropdown">
-            <button
-              class="mobile-dropdown-toggle flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition-all duration-300">
-              Media
-              <svg class="mobile-dropdown-arrow w-5 h-5 transition-transform duration-300" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </button>
-            <ul class="mobile-dropdown-menu hidden mt-2 space-y-1 pl-6">
-              <li><a href="#"
-                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">News
-                  & Updates</a></li>
-              <li><a href="#"
-                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Gallery</a>
-              </li>
-              <li><a href="#"
-                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Downloads</a>
-              </li>
-            </ul>
-          </li>
+<li class="mobile-dropdown">
+    <button
+        class="mobile-dropdown-toggle flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition-all duration-300">
+        Media
+        <svg class="mobile-dropdown-arrow w-5 h-5 transition-transform duration-300" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+    <ul class="mobile-dropdown-menu hidden mt-2 space-y-1 pl-6">
+        <li><a href="{{ route('news.index') }}"
+            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">News & Updates</a>
+        </li>
+        <li><a href="#"
+            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Gallery</a>
+        </li>
+        <li><a href="{{ route('media.downloads') }}"
+            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Downloads</a>
+        </li>
+    </ul>
+</li>
         </ul>
       </div>
     </div>

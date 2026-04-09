@@ -9,68 +9,119 @@
         </div>
         <p class="mb-4 text-sm md:text-base">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
         <div class="flex space-x-4">
-          <a href="https://facebook.com" target="_blank" class="hover:opacity-80 transition-opacity duration-300">
-            <img src="{{ asset('images/facebook-icon.png') }}" alt="Facebook" class="w-6 h-6 filter brightness-0 invert">
+          <a href="https://facebook.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
+            <i class="fab fa-facebook-f text-[#DAD7CD] text-sm"></i>
           </a>
-          <a href="https://twitter.com" target="_blank" class="hover:opacity-80 transition-opacity duration-300">
-            <img src="{{ asset('images/twitter-icon.png') }}" alt="Twitter" class="w-6 h-6 filter brightness-0 invert">
+          <a href="https://twitter.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
+            <i class="fab fa-twitter text-[#DAD7CD] text-sm"></i>
           </a>
-          <a href="https://linkedin.com" target="_blank" class="hover:opacity-80 transition-opacity duration-300">
-            <img src="{{ asset('images/linkedin-icon.png') }}" alt="LinkedIn" class="w-6 h-6 filter brightness-0 invert">
+          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
+            <i class="fab fa-linkedin-in text-[#DAD7CD] text-sm"></i>
+          </a>
+          <a href="https://youtube.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
+            <i class="fab fa-youtube text-[#DAD7CD] text-sm"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
+            <i class="fab fa-instagram text-[#DAD7CD] text-sm"></i>
           </a>
         </div>
       </div>
 
       <!-- Quick Links -->
       <div class="lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 border-b border-[#0A612B] pb-2">Quick Links</h3>
+        <h3 class="text-lg font-semibold mb-4 border-b border-[#0A612B] pb-2 flex items-center">
+          <i class="fas fa-link mr-2 text-[#0A612B] text-sm"></i>
+          Quick Links
+        </h3>
         <ul class="space-y-2">
-          <li><a href="{{route('home')}}" class="hover:text-[#0A612B] transition-colors duration-300 block">Home</a></li>
-          <li><a href="{{ route('about', 'overview') }}" class="hover:text-[#0A612B] transition-colors duration-300 block">About Us</a></li>
-          <li><a href="{{ route('projects.index', 'all') }}" class="hover:text-[#0A612B] transition-colors duration-300 block">Projects</a></li>
-          <li><a href="#" class="hover:text-[#0A612B] transition-colors duration-300 block">Tenders</a></li>
-          <li><a href="#" class="hover:text-[#0A612B] transition-colors duration-300 block">News & Updates</a></li>
-          <li><a href="{{route('contact')}}" class="hover:text-[#0A612B] transition-colors duration-300 block">Contact Us</a></li>
+          <li>
+            <a href="{{route('home')}}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('about', 'overview') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('projects.index', 'all') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              Projects
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('tenders', 'active') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              Tenders
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('news.index') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              News & Updates
+            </a>
+          </li>
+          <li>
+            <a href="{{route('contact')}}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+              <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
+              Contact Us
+            </a>
+          </li>
         </ul>
       </div>
 
       <!-- Contact Info -->
       <div class="lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 border-b border-[#0A612B] pb-2">Contact Us</h3>
+        <h3 class="text-lg font-semibold mb-4 border-b border-[#0A612B] pb-2 flex items-center">
+          <i class="fas fa-address-card mr-2 text-[#0A612B] text-sm"></i>
+          Contact Us
+        </h3>
         <ul class="space-y-3">
           <li class="flex items-start">
-            <svg class="flex-shrink-0 w-5 h-5 mr-3 mt-0.5 text-[#0A612B]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
+            <i class="fas fa-map-marker-alt text-[#0A612B] mr-3 mt-0.5 text-sm"></i>
             <span class="text-sm md:text-base">PPP Complex, Sector G-5, Peshawar, Khyber Pakhtunkhwa, Pakistan</span>
           </li>
           <li class="flex items-center">
-            <svg class="flex-shrink-0 w-5 h-5 mr-3 text-[#0A612B]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-            </svg>
+            <i class="fas fa-phone-alt text-[#0A612B] mr-3 text-sm"></i>
             <span class="text-sm md:text-base">+92 91 921 1234</span>
           </li>
           <li class="flex items-center">
-            <svg class="flex-shrink-0 w-5 h-5 mr-3 text-[#0A612B]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-            </svg>
+            <i class="fas fa-envelope text-[#0A612B] mr-3 text-sm"></i>
             <span class="text-sm md:text-base">info@pppdepartmentkpk.gov.pk</span>
           </li>
           <li class="flex items-center">
-            <svg class="flex-shrink-0 w-5 h-5 mr-3 text-[#0A612B]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-            </svg>
+            <i class="fas fa-clock text-[#0A612B] mr-3 text-sm"></i>
             <span class="text-sm md:text-base">Mon-Fri: 9:00 AM - 5:00 PM</span>
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-fax text-[#0A612B] mr-3 text-sm"></i>
+            <span class="text-sm md:text-base">+92 91 921 1235</span>
           </li>
         </ul>
       </div>
     </div>
 
     <!-- Copyright and Credits -->
-    <div class="border-t border-[#0A612B] pt-6 mt-8 text-center md:text-left">
-     
-        <p class="text-xs md:text-sm mb-4 md:mb-0 text-center md:text-left">© {{ date('Y') }} PPP Department Khyber Pakhtunkhwa. All rights reserved.</p>
-
+    <div class="border-t border-[#0A612B] pt-6 mt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-xs md:text-sm text-center md:text-left">
+          <i class="far fa-copyright mr-1"></i> {{ date('Y') }} PPP Department Khyber Pakhtunkhwa. All rights reserved.
+        </p>
+        <div class="flex space-x-6 text-xs">
+          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
+            <i class="fas fa-shield-alt mr-1"></i> Privacy Policy
+          </a>
+          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
+            <i class="fas fa-file-alt mr-1"></i> Terms of Use
+          </a>
+          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
+            <i class="fas fa-sitemap mr-1"></i> Sitemap
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

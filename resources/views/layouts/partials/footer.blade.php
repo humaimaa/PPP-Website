@@ -1,13 +1,13 @@
 <footer class="bg-[#0D2818] text-[#DAD7CD] pt-12 pb-6 overflow-hidden w-full">
   <div class=" px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[40%_28%_28%] gap-8 mb-8 mr-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[40%_28%_28%] gap-8 mb-8">
       <!-- Logo and About -->
-      <div class="lg:col-span-1">
+      <div class="lg:col-span-1 mr-8">
         <div class="flex items-center mb-4">
           <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-12 mr-3">
           <span class="text-2xl font-bold">PPP Department</span>
         </div>
-        <p class="mb-4 text-sm md:text-base">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
+        <p class="mb-4 text-sm md:text-base text-justify">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
         <div class="flex space-x-4">
           <a href="https://facebook.com" target="_blank" class="w-8 h-8 bg-[#DAD7CD]/10 rounded-full flex items-center justify-center hover:bg-[#0A612B] hover:scale-110 transition-all duration-300">
             <i class="fab fa-facebook-f text-[#DAD7CD] text-sm"></i>
@@ -110,17 +110,6 @@
         <p class="text-xs md:text-sm text-center md:text-left">
           <i class="far fa-copyright mr-1"></i> {{ date('Y') }} PPP Department Khyber Pakhtunkhwa. All rights reserved.
         </p>
-        <div class="flex space-x-6 text-xs">
-          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
-            <i class="fas fa-shield-alt mr-1"></i> Privacy Policy
-          </a>
-          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
-            <i class="fas fa-file-alt mr-1"></i> Terms of Use
-          </a>
-          <a href="#" class="hover:text-[#0A612B] transition-colors duration-300">
-            <i class="fas fa-sitemap mr-1"></i> Sitemap
-          </a>
-        </div>
       </div>
     </div>
   </div>

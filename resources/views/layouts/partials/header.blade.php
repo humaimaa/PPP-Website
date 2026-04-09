@@ -1,11 +1,11 @@
 <nav class="bg-[#0D2818] text-[#DAD7CD] shadow-lg sticky top-0 z-50">
-  <div class=" px-4">
+  <div class="px-4">
     <div class="flex justify-between items-center">
       <!-- Left: Hamburger Menu Button (visible on all screens) -->
       <div class="flex items-center">
-        <button class="mobile-menu-button outline-none p-2 hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300"
+        <button class="mobile-menu-button outline-none hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300"
           id="mobileMenuBtn">
-          <svg class="w-6 h-6 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
@@ -14,16 +14,16 @@
       <!-- Center: Logo with Name -->
       <div>
         <a href="{{ route('home') }}" class="flex items-center py-4 group">
-          <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-10 w-auto mr-3">
-          <span class="text-[#DAD7CD] font-semibold text-xl tracking-wide">PPP Department KPK</span>
+          <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-12 w-auto mr-3">
+          <span class="text-[#DAD7CD] font-semibold text-xl tracking-wide hidden md:block">PPP Department KPK</span>
         </a>
       </div>
 
-      <!-- Right: Contact Icon -->
-      <div class="flex items-center">
+      <!-- Right: Contact Icon (hidden on mobile, visible on md and up) -->
+      <div class="flex items-center hidden md:block">
         <a href="{{ route('contact') }}" class="p-2 hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300"
           aria-label="Contact">
-          <svg class="w-6 h-6 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
             </path>
@@ -114,27 +114,36 @@
           </li>
 
           <!-- Media Dropdown -->
-<li class="mobile-dropdown">
-    <button
-        class="mobile-dropdown-toggle flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition-all duration-300">
-        Media
-        <svg class="mobile-dropdown-arrow w-5 h-5 transition-transform duration-300" fill="none"
-            stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    <ul class="mobile-dropdown-menu hidden mt-2 space-y-1 pl-6">
-        <li><a href="{{ route('news.index') }}"
-            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">News & Updates</a>
-        </li>
-        <li><a href="#"
-            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Gallery</a>
-        </li>
-        <li><a href="{{ route('media.downloads') }}"
-            class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Downloads</a>
-        </li>
-    </ul>
-</li>
+          <li class="mobile-dropdown">
+            <button
+              class="mobile-dropdown-toggle flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition-all duration-300">
+              Media
+              <svg class="mobile-dropdown-arrow w-5 h-5 transition-transform duration-300" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <ul class="mobile-dropdown-menu hidden mt-2 space-y-1 pl-6">
+              <li><a href="{{ route('news.index') }}"
+                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">News & Updates</a>
+              </li>
+              <li><a href="#"
+                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Gallery</a>
+              </li>
+              <li><a href="{{ route('media.downloads') }}"
+                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Downloads</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Contact Us - Mobile Menu Item (visible only on mobile) -->
+          <li class="block md:hidden">
+            <a href="{{ route('contact') }}"
+              class="flex items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition-all duration-300">
+              
+              Contact Us
+            </a>
+          </li>
         </ul>
       </div>
     </div>

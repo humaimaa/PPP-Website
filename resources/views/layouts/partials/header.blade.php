@@ -15,13 +15,16 @@
       <div>
         <a href="{{ route('home') }}" class="flex items-center py-4 group">
           <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-12 w-auto mr-3">
-          <span class="text-[#DAD7CD] font-semibold text-xl tracking-wide hidden md:block">PPP Department KPK</span>
+          <div class="hidden md:block">
+            <span class="text-[#DAD7CD] font-semibold text-lg tracking-wide block">Public Private Partnership Unit</span>
+            <span class="text-[#DAD7CD] text-sm tracking-wide block">P & D Department, KP</span>
+          </div>
         </a>
       </div>
 
       <!-- Right: Contact Icon (hidden on mobile, visible on md and up) -->
       <div class="flex items-center hidden md:block">
-        <a href="{{ route('contact') }}" class="p-2 hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300"
+        <a href="{{ route('contact') }}" class="p-2 hover:bg-[#DAD7CD]/10 bg-[#DAD7CD]/10 rounded-lg transition duration-300"
           aria-label="Contact">
           <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

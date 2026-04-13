@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-   <section class="relative h-96 md:h-125 overflow-hidden" 
+   <section class="relative h-[40vh] md:h-[50vh] overflow-hidden" 
         style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=600&fit=crop'); background-size: cover; background-position: center;">
        
      <!-- Dark Overlay for Text Readability -->
@@ -27,7 +27,7 @@
     </section>
 
     <!-- Main Content Section -->
-    <section class="py-12 md:py-20 bg-white">
+    <section class="py-10  bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Search and Filter Controls -->
             <div class="mb-12 space-y-6">
@@ -348,7 +348,7 @@
             </div>
 
             <!-- Empty State -->
-            <div id="emptyState" class="hidden text-center py-16 px-6">
+            <div id="emptyState" class="hidden text-center py-10 px-6">
                 <div class="mb-6 flex justify-center">
                     <svg class="w-24 h-24 text-[#0D2818]/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>

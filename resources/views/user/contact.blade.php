@@ -19,7 +19,7 @@
 </section>
 
 <!-- Contact Section -->
-<section class="py-16 bg-[#DAD7CD]/50">
+<section class="py-10 bg-[#DAD7CD]/50">
     <div class="container mx-auto px-4">
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Contact Information (Left) -->

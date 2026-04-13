@@ -16,7 +16,7 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="Project Banner" class="w-full h-full object-cover">
 </section>
 
-<section class="py-16 bg-white">
+<section class="py-10 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
             <div class="mb-8">

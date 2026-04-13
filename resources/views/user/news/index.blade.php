@@ -18,7 +18,7 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="News Banner" class="w-full h-full object-cover">
 </section>
 
-<section class="py-16 bg-white">
+<section class="py-10 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-3xl font-bold text-[#0D2818] mb-8">Latest Updates</h2>
 

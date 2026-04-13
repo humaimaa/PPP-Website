@@ -303,13 +303,13 @@
     </section>
 
     <!-- History Section -->
-    <section class="py-10 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-10 bg-white ">
+        <div class="container mx-auto px-8 sm:px-18 lg:px-32">
             <div class="text-center mb-10">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">Our History</h2>
                 <div class="w-20 h-1 bg-[#5c5d5c] mx-auto mt-4"></div>
             </div>
-            <div class="space-y-6 text-gray-700">
+            <div class="space-y-6 text-gray-700  text-justify">
                 <p class="text-lg">
                     The PPP Department was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private 
                     Partnership Act, which provided the legal framework for private sector participation in public infrastructure 

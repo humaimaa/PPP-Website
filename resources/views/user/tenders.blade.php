@@ -150,7 +150,7 @@ $offset = ($currentPage - 1) * $perPage;
 $paginatedTenders = array_slice($archivedTenders, $offset, $perPage);
 @endphp
 
-<section class="py-16 bg-gray-50">
+<section class="py-1 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
@@ -310,7 +310,7 @@ $offset = ($currentPage - 1) * $perPage;
 $paginatedTenders = array_slice($activeTenders, $offset, $perPage);
 @endphp
 
-<section class="py-16 bg-gray-50">
+<section class="py-10 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
@@ -383,7 +383,7 @@ $paginatedTenders = array_slice($activeTenders, $offset, $perPage);
 </section>
 
 <!-- Improved Additional Information Section (Only for Active Tenders) -->
-<section class="py-16 bg-[#DAD7CD]/50">
+<section class="py-10 bg-[#DAD7CD]/50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#0A612B]">Tender Submission Guidelines</h2>

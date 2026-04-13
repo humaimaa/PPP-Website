@@ -77,7 +77,7 @@
     <section class=" bg-[#DAD7CD]/50" id="about-section">
         <div class="grid grid-cols-1 md:grid-cols-2 ">
             <!-- Image Column (Left on desktop, order-first on mobile) -->
-            <div class=" py-12 px-12 md:py-16 md:px-12 flex justify-center items-center w-full">
+            <div class=" py-10 px-12  flex justify-center items-center w-full">
                 <div class="relative overflow-hidden shadow-lg w-full">
                     <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Department KPK Headquarters"
                         class="w-full h-full object-cover">
@@ -92,7 +92,7 @@
             </div>
 
             <!-- Text Column (Right on desktop) -->
-            <div class="md:order-first bg-gray-50 py-12 px-12 md:py-16 md:px-12 flex justify-center items-center">
+            <div class="md:order-first bg-gray-50 py-10 px-12  md:px-12 flex justify-center items-center">
                 <div class="w-full">
                     <div class="w-24 h-2 bg-[#0A612B] mb-4"></div>
                     <h2 class="font-display font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-[#0D2818]">About PPP

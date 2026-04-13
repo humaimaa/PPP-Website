@@ -1,5 +1,14 @@
 import './bootstrap';
 
+// Import JSZip and FileSaver
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+
+// Make them globally available for use in Blade templates
+window.JSZip = JSZip;
+window.saveAs = saveAs;
+
+
 // Import GSAP
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

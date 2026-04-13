@@ -38,9 +38,14 @@ Route::get('/news/{id}', function ($id) {
     return view('user.news.show', compact('id'));
 })->name('news.show');
 
-// Route::get('/gallery', function () {
-//     return view('user.media.gallery');
-// })->name('media.gallery');
+// Gallery Routes
+Route::get('/gallery', function () {
+    return view('user.gallery.index');
+})->name('gallery.index');
+
+Route::get('/gallery/album/{id}', function ($id) {
+    return view('user.gallery.album', compact('id'));
+})->name('gallery.album');
 
 Route::get('/downloads', function () {
     return view('user.downloads');

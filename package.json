@@ -18,6 +18,8 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7.2.0",
-        "gsap": "^3.14.2"
+        "file-saver": "^2.0.5",
+        "gsap": "^3.14.2",
+        "jszip": "^3.10.1"
     }
 }

@@ -445,7 +445,7 @@
             </div>
             <div class="flex-1">
                 <p class="font-semibold text-[#0D2818]" id="toastMessage">Download started successfully!</p>
-                <p class="text-sm text-gray-600 mt-1" id="toastSubtext">Your file will be downloaded to your downloads folder.</p>
+                <p class="text-sm text-gray-600 mt-1" id="toastSubtext">Your file is downloaded.</p>
             </div>
             <button onclick="document.getElementById('toast').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

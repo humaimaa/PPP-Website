@@ -53,7 +53,7 @@
                             <h3 class="font-semibold text-[#0D2818] mb-2">Project Timeline</h3>
                             <p class="text-gray-600"><strong>Start Date:</strong> January 2023</p>
                             <p class="text-gray-600"><strong>Expected Completion:</strong> December 2024</p>
-                            <p class="text-gray-600"><strong>Current Status:</strong> 65% Complete</p>
+                            
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h3 class="font-semibold text-[#0D2818] mb-2">Key Partners</h3>

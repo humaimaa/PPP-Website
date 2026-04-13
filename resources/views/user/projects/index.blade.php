@@ -84,7 +84,6 @@
             'image' => 'project-4.jpg',
             'investment' => '$75 Million',
             'partner' => 'EcoEnergy International',
-            'progress' => '30%',
             'location' => 'Peshawar'
             ],
             [
@@ -100,7 +99,6 @@
             'image' => 'project-1.jpg',
             'investment' => '$20 Million',
             'partner' => 'EcoResorts International',
-            'progress' => '15%',
             'location' => 'Chitral'
             ],
             [
@@ -116,7 +114,6 @@
             'image' => 'project-3.jpg',
             'investment' => '$30 Million',
             'partner' => 'Education First Foundation',
-            'progress' => '45%',
             'location' => 'Multiple Districts'
             ],
 
@@ -134,7 +131,6 @@
             'image' => 'project-1.jpg',
             'investment' => '$120 Million',
             'partner' => 'TransPeshawar Pvt Ltd',
-            'progress' => '75%',
             'location' => 'Peshawar'
             ],
             [
@@ -150,7 +146,6 @@
             'image' => 'project-5.jpg',
             'investment' => '$25 Million',
             'partner' => 'Clean Water Initiative',
-            'progress' => '80%',
             'location' => 'Rural KPK'
             ],
             [
@@ -166,7 +161,6 @@
             'image' => 'project-6.jpg',
             'investment' => '$15 Million',
             'partner' => 'KPK Tourism Development Corp',
-            'progress' => '85%',
             'location' => 'Upper Dir'
             ],
             [
@@ -182,7 +176,6 @@
             'image' => 'project-2.jpg',
             'investment' => '$40 Million',
             'partner' => 'AgriTech Pakistan',
-            'progress' => '40%',
             'location' => 'Multiple Districts'
             ],
             [
@@ -198,7 +191,6 @@
             'image' => 'project-5.jpg',
             'investment' => '$35 Million',
             'partner' => 'TechHub Pakistan',
-            'progress' => '60%',
             'location' => 'Abbottabad'
             ],
 
@@ -216,7 +208,6 @@
             'image' => 'project-2.jpg',
             'investment' => '$45 Million',
             'partner' => 'Mardan Healthcare Consortium',
-            'progress' => '100%',
             'location' => 'Mardan'
             ],
             [
@@ -232,7 +223,6 @@
             'image' => 'project-4.jpg',
             'investment' => '$180 Million',
             'partner' => 'Green Energy Solutions',
-            'progress' => '100%',
             'location' => 'Swat'
             ],
             [
@@ -248,7 +238,6 @@
             'image' => 'project-3.jpg',
             'investment' => '$60 Million',
             'partner' => 'Smart City Solutions',
-            'progress' => '100%',
             'location' => 'Peshawar'
             ],
             [
@@ -263,7 +252,6 @@
             'image' => 'project-6.jpg',
             'investment' => '$95 Million',
             'partner' => 'National Highway Authority',
-            'progress' => '100%',
             'location' => 'Karak'
             ],
             [
@@ -279,7 +267,6 @@
             'image' => 'project-1.jpg',
             'investment' => '$85 Million',
             'partner' => 'Habib Construction Services',
-            'progress' => '100%',
             'location' => 'Peshawar'
             ]
             ];
@@ -330,13 +317,6 @@
                         {{ $project['investment'] }}
                     </div>
 
-                    <!-- Progress Badge for Ongoing Projects -->
-                    @if($project['status'] === 'ongoing')
-                    <div
-                        class="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        {{ $project['progress'] }} Complete
-                    </div>
-                    @endif
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-2">
@@ -395,14 +375,7 @@
                         </a>
                     </div>
 
-                    <!-- Progress Bar for Ongoing Projects -->
-                    @if($project['status'] === 'ongoing')
-                    <div class="mt-4">
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-[#0A612B] h-2 rounded-full" style="width: {{ $project['progress'] }}"></div>
-                        </div>
-                    </div>
-                    @endif
+
                 </div>
             </div>
             @empty

@@ -134,7 +134,7 @@
                             <span class="text-sm md:text-base">Facilitating infrastructure development across KPK</span>
                         </li>
                     </ul>
-                    <a href="{{ route('about','overview') }}"
+                    <a href="{{ route('about', 'overview') }}"
                         class="inline-block border-2 border-[#0A612B] font-light text-[#0A612B] text-sm uppercase tracking-widest py-3 px-8 hover:bg-[#0A612B] hover:text-white transition duration-300">
                         Read more
                     </a>
@@ -144,7 +144,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section class="pt-10 pb-12 bg-white w-full" id="projects-section">
+    <section class="py-10 bg-white w-full" id="projects-section">
         <div class="w-full px-0">
             <!-- Section Heading -->
             <div class="text-center mb-12 overflow-hidden">
@@ -230,7 +230,47 @@
             </div>
         </div>
     </section>
+    <!-- Pitchbook Section -->
+    <section class="pb-10 bg-white w-full">
+    <div class="w-full px-0">
+        <!-- Section Heading -->
+        <div class="text-center mb-12 overflow-hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">Our Pitchbook</h2>
+            <div class="w-20 h-1 bg-[#5c5d5c] mx-auto mt-4"></div>
+        </div>
 
+        <div class="flex justify-center items-center w-full">
+            <a href="{{ route('pitchbook') }}" class="relative group">
+                
+                <!-- Image -->
+                <img src="{{ asset('images/pitchbook-Cover.jpeg') }}" 
+                     alt="Pitchbook Icon"
+                     class="w-90 h-70 rounded-xl transition duration-300">
+
+                <!-- Green Overlay -->
+                <div class="absolute inset-0 bg-[#0D2818]/70 rounded-xl opacity-0 
+                            group-hover:opacity-100 transition duration-300 flex 
+                            items-center justify-center">
+
+                    <!-- Preview Icon (Eye SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         class="w-10 h-10 text-white"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                 c4.477 0 8.268 2.943 9.542 7
+                                 -1.274 4.057-5.065 7-9.542 7
+                                 -4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+
+                </div>
+
+            </a>
+        </div>
+    </div>
+</section>
     <!-- Message Section with Background Image -->
     <section class="relative h-[60vh] flex items-center justify-center overflow-hidden ">
         <!-- Background Image -->
@@ -305,9 +345,9 @@
 
             <div class="pt-8 flex justify-center ">
                 <a href="#"
-                        class="inline-block rounded-lg  text-white text-sm uppercase tracking-widest bg-[#0A612B] py-3 px-8 hover:bg-[#074d22] hover:text-white transition duration-300">
-                        More News
-                    </a>
+                    class="inline-block rounded-lg  text-white text-sm uppercase tracking-widest bg-[#0A612B] py-3 px-8 hover:bg-[#074d22] hover:text-white transition duration-300">
+                    More News
+                </a>
             </div>
         </div>
     </section>

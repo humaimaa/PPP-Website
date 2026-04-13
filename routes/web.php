@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('user.home');
 })->name('home');
 
+// Pitchbook page
+Route::get('/pitchbook', function () {
+    return view('user.pitchbook');
+})->name('pitchbook');
+
 // About page (with optional section parameter - default to 'overview')
 Route::get('/about/{section?}', function ($section = 'overview') {
     return view('user.about', compact('section'));

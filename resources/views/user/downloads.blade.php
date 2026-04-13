@@ -360,6 +360,7 @@
                     Clear Filters
                 </button>
             </div>
+          
 
             <!-- Pagination (if applicable) -->
             <div class="mt-12 flex justify-center">

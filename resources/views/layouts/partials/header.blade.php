@@ -5,7 +5,7 @@
       <div class="flex items-center">
         <button class="mobile-menu-button outline-none hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out"
           id="mobileMenuBtn">
-          <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24"> 
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>

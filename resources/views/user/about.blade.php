@@ -4,22 +4,6 @@
 
 @section('content')
 
-<!-- Navigation Tabs -->
-<section class="bg-white shadow-md sticky top-16 z-40">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex space-x-8">
-            <a href="{{ route('about', 'overview') }}" 
-               class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($section ?? 'overview') === 'overview' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                Overview
-            </a>
-            <a href="{{ route('about', 'team') }}" 
-               class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($section ?? 'overview') === 'team' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                Our Team
-            </a>
-        </div>
-    </div>
-</section>
-
 <!-- Page Header -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
@@ -37,7 +21,21 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="About Us Banner" class="w-full h-full object-cover">
 </section>
 
-
+<!-- Navigation Tabs -->
+<section class="bg-white shadow-md sticky top-16 z-40">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex space-x-8">
+            <a href="{{ route('about', 'overview') }}" 
+               class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($section ?? 'overview') === 'overview' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
+                Overview
+            </a>
+            <a href="{{ route('about', 'team') }}" 
+               class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($section ?? 'overview') === 'team' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
+                Our Team
+            </a>
+        </div>
+    </div>
+</section>
 
 @if(($section ?? 'overview') === 'team')
     <!-- ==================== TEAM SECTION ==================== -->

@@ -43,8 +43,23 @@ Route::get('/news/{id}', function ($id) {
 // })->name('media.gallery');
 
 Route::get('/downloads', function () {
-    return view('user.downloads');
+    return view('user.downloads', [
+        'documents' => collect([
+        ])
+    ]);
 })->name('media.downloads');
+
+// API endpoint for downloading files
+Route::post('/api/downloads/{id}', function ($id) {
+    // We'll implement this in Step 4
+    return response()->json(['success' => true]);
+})->name('api.downloads.file');
+
+// API endpoint for previewing files
+Route::get('/api/downloads/{id}/preview', function ($id) {
+    // We'll implement this in Step 4
+    return response()->json(['success' => true]);
+})->name('api.downloads.preview');
 
 // Contact page
 Route::get('/contact', function () {

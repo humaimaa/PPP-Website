@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <!-- Left: Hamburger Menu Button (visible on all screens) -->
       <div class="flex items-center">
-        <button class="mobile-menu-button outline-none hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out"
+        <button class="mobile-menu-button p-2 outline-none hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out"
           id="mobileMenuBtn">
           <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24"> 
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -15,14 +15,16 @@
       <div>
         <a href="{{ route('home') }}" class="flex items-center py-4 group">
           <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-12 w-auto mr-3">
-          <span class="text-[#DAD7CD] font-semibold text-xl tracking-wide hidden md:block">PPP Department KPK</span>
+          <div class="hidden md:block">
+            <span class="text-[#DAD7CD] font-semibold text-md block tracking-tighter">Public Private Partnership Unit</span>
+            <span class="text-[#DAD7CD] text-sm tracking-wide block tracking-tighter">P & D Department, KP</span>
+          </div>
         </a>
       </div>
 
-      <!-- Right: Contact Icon (hidden on mobile, visible on md and up) -->
+   
       <div class="flex items-center hidden md:flex">
-        <a href="{{ route('contact') }}" class="p-2 outline-none  hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out"
-          aria-label="Contact">
+        <a href="{{ route('contact') }}" class="p-2 outline-none  hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out">
           <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">

@@ -17,13 +17,13 @@
           <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-14 w-auto mr-3">
           <div class="hidden md:block">
             <span class="text-[#DAD7CD] font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>
-            <span class="text-[#DAD7CD] text-sm tracking-wide block tracking-tighter leading-4">P & D Department, KP</span>
+            <span class="text-[#DAD7CD] text-sm block tracking-tighter leading-4">P & D Department, KP</span>
           </div>
         </a>
       </div>
 
    
-      <div class="flex items-center hidden md:flex">
+      <div class="items-center hidden md:flex">
         <a href="{{ route('contact') }}" class="p-2 outline-none  hover:bg-[#DAD7CD]/10 rounded-lg transition duration-300 ease-in-out">
           <svg class="w-8 h-8 text-[#DAD7CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

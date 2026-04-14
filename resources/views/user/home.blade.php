@@ -174,13 +174,13 @@
     <!-- Pitchbook Section -->
     <section class="pb-10 bg-white w-full">
         <div class="w-full px-0">
-            <div class="text-center mb-12 overflow-hidden">
+            <div class="text-center mb-4 overflow-hidden">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">Our Pitchbook</h2>
                 <div class="w-20 h-1 bg-[#5c5d5c] mx-auto mt-4"></div>
             </div>
             <div class="flex justify-center items-center w-full">
                 <a href="{{ route('pitchbook') }}" class="relative group">
-                    <img src="{{ asset('images/pitchbook-Cover.jpeg') }}" alt="Pitchbook Icon" class="w-60  md:w-90 md:h-70 rounded-xl transition duration-300">
+                    <img src="{{ asset('images/pitchbook-Cover.png') }}" alt="Pitchbook Icon" class="w-60 h-40 md:w-90 md:h-50 rounded-xl transition duration-300">
                     <div class="absolute inset-0 bg-[#0D2818]/70 rounded-xl opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -358,16 +358,15 @@
 </section>
 @endsection
 @push('scripts')
-<!-- Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Leaflet CSS and JS (local) -->
+<link rel="stylesheet" href="{{ asset('node_modules/leaflet/dist/leaflet.css') }}" />
+<script src="{{ asset('node_modules/leaflet/dist/leaflet.js') }}"></script>
 
-<!-- Chart.js for pie charts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Chart.js (local) -->
+<script src="{{ asset('node_modules/chart.js/dist/chart.umd.js') }}"></script>
 
 <!-- Include the map JavaScript file -->
 @vite(['resources/js/kp-map.js'])
-
 <style>
     /* Division grid cards styling */
     #divisions-grid .bg-white\/10 {

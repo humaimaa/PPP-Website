@@ -211,7 +211,11 @@
         <div class="flex justify-center items-center w-full">
             <a href="{{ route('pitchbook') }}" class="inline-block">
                 <img src="{{ asset('images/pitchbook-Cover.png') }}" alt="Pitchbook Icon"
+<<<<<<< HEAD
                     class="w-60 h-40 md:w-90 md:h-50 transition-all duration-300 hover:scale-105  cursor-pointer">
+=======
+                    class="w-60 h-40 md:w-90 md:h-50 transition-all duration-300 hover:scale-105 cursor-pointer">
+>>>>>>> fde246b3c0172f774177e3109d350eb6febf9911
             </a>
         </div>
 
@@ -407,6 +411,7 @@
 </section>
 @endsection
 @push('scripts')
+<<<<<<< HEAD
  @vite([
         'node_modules/leaflet/dist/leaflet.css',
         'node_modules/leaflet/dist/leaflet.js',
@@ -414,6 +419,17 @@
         'resources/js/kp-map.js'
     ])
 
+=======
+<!-- Leaflet CSS and JS (local) -->
+<link rel="stylesheet" href="{{ asset('node_modules/leaflet/dist/leaflet.css') }}" />
+<script src="{{ asset('node_modules/leaflet/dist/leaflet.js') }}"></script>
+
+<!-- Chart.js (local) -->
+<script src="{{ asset('node_modules/chart.js/dist/chart.umd.js') }}"></script>
+
+<!-- Include the map JavaScript file -->
+@vite(['resources/js/kp-map.js'])
+>>>>>>> fde246b3c0172f774177e3109d350eb6febf9911
 <style>
     /* Division grid cards styling */
     #divisions-grid .bg-white\/10 {

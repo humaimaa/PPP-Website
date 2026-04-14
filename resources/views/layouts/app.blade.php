@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,16 +8,23 @@
     <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <title>@yield('title', 'PPP Department KPK')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- <link rel="stylesheet" href="{{ asset('css/custom.css') }}"> --}}
+    {{--
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}"> --}}
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
+
 <body class="font-sans">
     @include('.layouts.partials.header')
-    
+
     <main>
         @yield('content')
     </main>
-    
+
     @include('.layouts.partials.footer')
     @stack('scripts')
 </body>
+
 </html>

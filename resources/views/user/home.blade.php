@@ -210,12 +210,9 @@
         </div>
         <div class="flex justify-center items-center w-full">
             <a href="{{ route('pitchbook') }}" class="inline-block">
-                <img src="{{ asset('images/pitchbook-Cover.png') }}" alt="Pitchbook Icon"
-<<<<<<< HEAD
+                <img src="{{ asset('images/pitchbook-Cover.png') }}" alt="Pitchbook Icon" 
                     class="w-60 h-40 md:w-90 md:h-50 transition-all duration-300 hover:scale-105  cursor-pointer">
-=======
-                    class="w-60 h-40 md:w-90 md:h-50 transition-all duration-300 hover:scale-105 cursor-pointer">
->>>>>>> fde246b3c0172f774177e3109d350eb6febf9911
+
             </a>
         </div>
 
@@ -411,124 +408,115 @@
 </section>
 @endsection
 @push('scripts')
-<<<<<<< HEAD
- @vite([
-        'node_modules/leaflet/dist/leaflet.css',
-        'node_modules/leaflet/dist/leaflet.js',
-        'node_modules/chart.js/dist/chart.umd.js',
-        'resources/js/kp-map.js'
-    ])
+     @vite([ 'node_modules/leaflet/dist/leaflet.css' , 'node_modules/leaflet/dist/leaflet.js'
+    , 'node_modules/chart.js/dist/chart.umd.js' , 'resources/js/kp-map.js' ])<!-- Leaflet CSS and JS (local) -->
+    <link rel="stylesheet" href="{{ asset('node_modules/leaflet/dist/leaflet.css') }}" />
+    <script src="{{ asset('node_modules/leaflet/dist/leaflet.js') }}"></script>
 
-=======
-<!-- Leaflet CSS and JS (local) -->
-<link rel="stylesheet" href="{{ asset('node_modules/leaflet/dist/leaflet.css') }}" />
-<script src="{{ asset('node_modules/leaflet/dist/leaflet.js') }}"></script>
+    <!-- Chart.js (local) -->
+    <script src="{{ asset('node_modules/chart.js/dist/chart.umd.js') }}"></script>
 
-<!-- Chart.js (local) -->
-<script src="{{ asset('node_modules/chart.js/dist/chart.umd.js') }}"></script>
+    <!-- Include the map JavaScript file -->
+    @vite(['resources/js/kp-map.js'])
+    <style>
+        /* Division grid cards styling */
+        #divisions-grid .bg-white\/10 {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
 
-<!-- Include the map JavaScript file -->
-@vite(['resources/js/kp-map.js'])
->>>>>>> fde246b3c0172f774177e3109d350eb6febf9911
-<style>
-    /* Division grid cards styling */
-    #divisions-grid .bg-white\/10 {
-        background-color: #f9fafb;
-        border: 1px solid #e5e7eb;
-    }
+        #divisions-grid .bg-white\/10 .text-white {
+            color: #1f2937;
+        }
 
-    #divisions-grid .bg-white\/10 .text-white {
-        color: #1f2937;
-    }
+        #divisions-grid .bg-white\/10 .text-green-400 {
+            color: #15803d;
+        }
 
-    #divisions-grid .bg-white\/10 .text-green-400 {
-        color: #15803d;
-    }
+        #divisions-grid .bg-white\/10 .text-gray-300 {
+            color: #6b7280;
+        }
 
-    #divisions-grid .bg-white\/10 .text-gray-300 {
-        color: #6b7280;
-    }
+        #divisions-grid .bg-white\/10 .text-gray-400 {
+            color: #9ca3af;
+        }
 
-    #divisions-grid .bg-white\/10 .text-gray-400 {
-        color: #9ca3af;
-    }
+        #divisions-grid .bg-white\/10 .text-gray-500 {
+            color: #6b7280;
+        }
 
-    #divisions-grid .bg-white\/10 .text-gray-500 {
-        color: #6b7280;
-    }
+        #divisions-grid .bg-white\/10:hover {
+            background-color: #f3f4f6;
+        }
 
-    #divisions-grid .bg-white\/10:hover {
-        background-color: #f3f4f6;
-    }
+        /* Division detail project list items */
+        #division-projects-list .bg-white\/10 {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
 
-    /* Division detail project list items */
-    #division-projects-list .bg-white\/10 {
-        background-color: #f9fafb;
-        border: 1px solid #e5e7eb;
-    }
+        #division-projects-list .bg-white\/10 .text-white {
+            color: #1f2937;
+        }
 
-    #division-projects-list .bg-white\/10 .text-white {
-        color: #1f2937;
-    }
+        #division-projects-list .bg-white\/10 .text-gray-300 {
+            color: #6b7280;
+        }
 
-    #division-projects-list .bg-white\/10 .text-gray-300 {
-        color: #6b7280;
-    }
+        #division-projects-list .bg-white\/10 .text-green-400 {
+            color: #15803d;
+        }
 
-    #division-projects-list .bg-white\/10 .text-green-400 {
-        color: #15803d;
-    }
+        #division-projects-list .bg-white\/10 .text-blue-400 {
+            color: #1d4ed8;
+        }
 
-    #division-projects-list .bg-white\/10 .text-blue-400 {
-        color: #1d4ed8;
-    }
+        #division-projects-list .bg-white\/10 .text-orange-400 {
+            color: #c2410c;
+        }
 
-    #division-projects-list .bg-white\/10 .text-orange-400 {
-        color: #c2410c;
-    }
+        /* Hover tooltip styles */
+        .group:hover .group-hover\:block {
+            display: block !important;
+        }
 
-    /* Hover tooltip styles */
-    .group:hover .group-hover\:block {
-        display: block !important;
-    }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
 
-    ::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 4px;
-    }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
 
-    ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 4px;
-    }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.4);
-    }
+        /* Leaflet map container - disable panning/dragging */
+        .leaflet-container {
+            cursor: default !important;
+        }
 
-    /* Leaflet map container - disable panning/dragging */
-    .leaflet-container {
-        cursor: default !important;
-    }
+        .leaflet-grab {
+            cursor: default !important;
+        }
 
-    .leaflet-grab {
-        cursor: default !important;
-    }
+        /* Hide zoom controls */
+        .leaflet-control-zoom {
+            display: none !important;
+        }
 
-    /* Hide zoom controls */
-    .leaflet-control-zoom {
-        display: none !important;
-    }
-
-    /* Disable map dragging */
-    .leaflet-container:active {
-        cursor: default;
-    }
-</style>
-@endpush
+        /* Disable map dragging */
+        .leaflet-container:active {
+            cursor: default;
+        }
+    </style>
+    @endpush

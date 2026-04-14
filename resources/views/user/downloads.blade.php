@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Downloads - PPP Department KPK')
+@section('title', 'PPP Department KPK - Downloads')
 
 @section('content')
     <!-- Hero Section -->

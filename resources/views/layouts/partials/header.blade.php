@@ -1,4 +1,4 @@
-<nav class="bg-[#0D2818] text-[#DAD7CD] shadow-lg sticky top-0 z-50">
+<nav class="bg-[#0D2818] text-[#DAD7CD] shadow-lg sticky top-0 z-100">
   <div class="px-4">
     <div class="flex justify-between items-center">
       <!-- Left: Hamburger Menu Button (visible on all screens) -->
@@ -13,11 +13,11 @@
 
       <!-- Center: Logo with Name -->
       <div>
-        <a href="{{ route('home') }}" class="flex items-center py-4 group">
-          <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-12 w-auto mr-3">
+        <a href="{{ route('home') }}" class="flex items-center py-2 group">
+          <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" class="h-16 md:h-14 w-auto mr-3">
           <div class="hidden md:block">
-            <span class="text-[#DAD7CD] font-semibold text-md block tracking-tighter">Public Private Partnership Unit</span>
-            <span class="text-[#DAD7CD] text-sm tracking-wide block tracking-tighter">P & D Department, KP</span>
+            <span class="text-[#DAD7CD] font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>
+            <span class="text-[#DAD7CD] text-sm tracking-wide block tracking-tighter leading-4">P & D Department, KP</span>
           </div>
         </a>
       </div>

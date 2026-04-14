@@ -8,7 +8,6 @@ import { saveAs } from 'file-saver';
 window.JSZip = JSZip;
 window.saveAs = saveAs;
 
-
 // Import GSAP
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.mobile-dropdown-menu').forEach(menu => {
                 if (menu !== this.parentElement.querySelector('.mobile-dropdown-menu')) {
                     menu.classList.add('hidden');
-                    // Reset arrow for other dropdowns
                     const otherButton = menu.closest('.mobile-dropdown')?.querySelector('.mobile-dropdown-toggle');
                     if (otherButton) {
                         const otherArrow = otherButton.querySelector('.mobile-dropdown-arrow');
@@ -98,8 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     initHeroSlider();
-
-
 });
 
 // Hero Slider Initialization with Right-to-Left Slide Animation
@@ -119,6 +115,38 @@ function initHeroSlider() {
     let isSlideContentHovered = false;
     const autoSlideDelay = 5000;
     
+    // Function to animate slide content
+    function animateSlideContent(element, direction = 'in') {
+        if (!element) return;
+        
+        const heading = element.querySelector('.slide-heading');
+        const text = element.querySelector('.slide-text');
+        
+        if (direction === 'in') {
+            // Animate content in
+            if (heading) {
+                gsap.fromTo(heading, 
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.2 }
+                );
+            }
+            if (text) {
+                gsap.fromTo(text,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.4 }
+                );
+            }
+        } else {
+            // Reset content
+            if (heading) {
+                gsap.set(heading, { y: 0, opacity: 1 });
+            }
+            if (text) {
+                gsap.set(text, { y: 0, opacity: 1 });
+            }
+        }
+    }
+    
     // Initialize slider
     function initializeSlider() {
         slides.forEach((slide, index) => {
@@ -134,13 +162,18 @@ function initHeroSlider() {
             opacity: 1
         });
         
+        // Animate content of first slide
+        const firstSlideContent = slides[0].querySelector('.slide-content');
+        if (firstSlideContent) {
+            animateSlideContent(firstSlideContent, 'in');
+        }
+        
         if (dots[0]) {
             gsap.set(dots[0], {
                 backgroundColor: "#28b960",
                 scale: 1.2
             });
         }
-        
     }
     
     function transitionToSlide(newIndex, direction = 'next') {
@@ -153,11 +186,28 @@ function initHeroSlider() {
         
         isAnimating = true;
         
+        // Get content elements
+        const oldContent = oldSlide.querySelector('.slide-content');
+        const newContent = newSlide.querySelector('.slide-content');
+        
+        // Reset old content opacity
+        if (oldContent) {
+            gsap.set(oldContent, { opacity: 1 });
+        }
+        
         // Set initial position for new slide
         if (direction === 'next') {
             gsap.set(newSlide, { x: "100%", display: "block", opacity: 1 });
         } else {
             gsap.set(newSlide, { x: "-100%", display: "block", opacity: 1 });
+        }
+        
+        // Set new content initial state
+        if (newContent) {
+            const heading = newContent.querySelector('.slide-heading');
+            const text = newContent.querySelector('.slide-text');
+            if (heading) gsap.set(heading, { y: 50, opacity: 0 });
+            if (text) gsap.set(text, { y: 30, opacity: 0 });
         }
         
         // Animate old slide out
@@ -189,7 +239,9 @@ function initHeroSlider() {
             onComplete: () => {
                 isAnimating = false;
                 // Animate content of new slide
-                animateSlideContent(newSlide);
+                if (newContent) {
+                    animateSlideContent(newContent, 'in');
+                }
             }
         });
         
@@ -310,5 +362,3 @@ function initHeroSlider() {
     initializeSlider();
     startSlider();
 }
-
-

@@ -292,7 +292,7 @@
         </div>
 
         <div class="pt-8 flex justify-center">
-            <a href="#"
+            <a href="{{ route('news.index') }}"
                 class="inline-block rounded-lg text-white text-sm uppercase tracking-widest bg-[#0A612B] py-3 px-8 hover:bg-[#074d22] transition duration-300">
                 More News
             </a>
@@ -408,16 +408,18 @@
 </section>
 @endsection
 @push('scripts')
-     @vite([ 'node_modules/leaflet/dist/leaflet.css' , 'node_modules/leaflet/dist/leaflet.js'
-    , 'node_modules/chart.js/dist/chart.umd.js' , 'resources/js/kp-map.js' ])<!-- Leaflet CSS and JS (local) -->
+     @vite([ 
+             'node_modules/leaflet/dist/leaflet.css' , 
+             'node_modules/leaflet/dist/leaflet.js' , 
+             'node_modules/chart.js/dist/chart.umd.js' , 
+             'resources/js/kp-map.js' ])<!-- Leaflet CSS and JS (local) -->
+
     <link rel="stylesheet" href="{{ asset('node_modules/leaflet/dist/leaflet.css') }}" />
     <script src="{{ asset('node_modules/leaflet/dist/leaflet.js') }}"></script>
 
     <!-- Chart.js (local) -->
     <script src="{{ asset('node_modules/chart.js/dist/chart.umd.js') }}"></script>
 
-    <!-- Include the map JavaScript file -->
-    @vite(['resources/js/kp-map.js'])
     <style>
         /* Division grid cards styling */
         #divisions-grid .bg-white\/10 {

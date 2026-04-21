@@ -41,7 +41,7 @@
     <!-- ==================== TEAM SECTION ==================== -->
     
     <!-- Chief / Director Section -->
-    <section class="py-12 bg-gradient-to-br from-[#0D2818] to-[#1a4d2e] text-white">
+    <section class="py-12 bg-linear-to-br from-[#0D2818] to-[#1a4d2e] text-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
@@ -53,8 +53,8 @@
                 <div class="lg:w-1/3">
                     <div class="relative rounded-lg overflow-hidden shadow-2xl">
                         <img src="{{ asset('images/boy.jpg') }}" alt="Chief PPP Department" 
-                             class="w-full h-[400px] object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                             class="w-full h-100 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold">Mr. Muhammad Ali</h3>
                             <p class="text-[#DAD7CD]">Chief Executive Officer</p>
                         </div>
@@ -129,7 +129,6 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-[#0D2818]">Mr. Kamran Khan</h3>
                         <p class="text-[#0A612B] font-semibold mb-2">Research Officer</p>
-                        <p class="text-gray-600 text-sm mb-3">Masters in Public Policy, 8+ years experience</p>
                         <div class="flex space-x-3 mt-3">
                             <a href="mailto:kamran@pppdepartmentkpk.gov.pk" class="text-[#0A612B] hover:text-[#0D2818]">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -147,7 +146,6 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-[#0D2818]">Ms. Ayesha Malik</h3>
                         <p class="text-[#0A612B] font-semibold mb-2">Research Officer</p>
-                        <p class="text-gray-600 text-sm mb-3">MBA Finance, 6+ years experience</p>
                         <div class="flex space-x-3 mt-3">
                             <a href="mailto:ayesha@pppdepartmentkpk.gov.pk" class="text-[#0A612B] hover:text-[#0D2818]">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -167,7 +165,6 @@
             <div class="text-center mb-8">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">Research Analysts</h2>
                 <div class="w-20 h-1 bg-[#0A612B] mx-auto mt-4"></div>
-                <p class="text-gray-600 mt-4">Supporting project research and data analysis</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -178,7 +175,6 @@
                     </div>
                     <h3 class="text-lg font-bold text-[#0D2818]">Usman Chaudhry</h3>
                     <p class="text-[#0A612B] text-sm">Senior Research Analyst</p>
-                    <p class="text-gray-500 text-xs mt-2">Financial Modeling</p>
                 </div>
                 
                 <!-- Analyst 2 -->
@@ -188,7 +184,6 @@
                     </div>
                     <h3 class="text-lg font-bold text-[#0D2818]">Fatima Zafar</h3>
                     <p class="text-[#0A612B] text-sm">Research Analyst</p>
-                    <p class="text-gray-500 text-xs mt-2">Policy Research</p>
                 </div>
                 
                 <!-- Analyst 3 -->
@@ -198,7 +193,6 @@
                     </div>
                     <h3 class="text-lg font-bold text-[#0D2818]">Ali Raza</h3>
                     <p class="text-[#0A612B] text-sm">Data Analyst</p>
-                    <p class="text-gray-500 text-xs mt-2">Data Visualization</p>
                 </div>
                 
                 <!-- Analyst 4 -->
@@ -208,7 +202,6 @@
                     </div>
                     <h3 class="text-lg font-bold text-[#0D2818]">Sana Tariq</h3>
                     <p class="text-[#0A612B] text-sm">Junior Analyst</p>
-                    <p class="text-gray-500 text-xs mt-2">Project Support</p>
                 </div>
             </div>
         </div>
@@ -236,7 +229,7 @@
                     </div>
                 </div>
                 <div class="lg:w-1/2 overflow-hidden">
-                    <div class="relative rounded-lg overflow-hidden shadow-lg h-[300px] md:h-[400px]">
+                    <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-100">
                         <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Department Overview" class="w-full h-full object-cover">
                     </div>
                 </div>
@@ -249,7 +242,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row items-center gap-8">
                 <div class="lg:w-1/2 overflow-hidden">
-                    <div class="relative rounded-lg overflow-hidden shadow-lg h-[300px] md:h-[500px]">
+                    <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-125">
                         <img src="{{ asset('images/project-6.jpg') }}" alt="Vision and Mission" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-[#0A612B]/20 flex items-end p-6">
                             <div class="bg-white/90 backdrop-blur-sm p-4 rounded">

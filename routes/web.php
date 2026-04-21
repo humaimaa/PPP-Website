@@ -1,77 +1,45 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 
 // ==================== PUBLIC ROUTES ====================
 
 // Homepage
-Route::get('/', function () {
-    return view('user.home');
-})->name('home');
+Route::get('/', [PageController::class, 'home'])->name('home');
 
 // Pitchbook page
-Route::get('/pitchbook', function () {
-    return view('user.pitchbook');
-})->name('pitchbook');
+Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 
 // About page (with optional section parameter - default to 'overview')
-Route::get('/about/{section?}', function ($section = 'overview') {
-    return view('user.about', compact('section'));
-})->name('about');
+Route::get('/about/{section?}', [PageController::class, 'about'])->name('about');
 
 // Tenders page (with optional section parameter - default to 'active')
-Route::get('/tenders/{section?}', function ($section = 'active') {
-    return view('user.tenders', compact('section'));
-})->name('tenders');
+Route::get('/tenders/{section?}', [PageController::class, 'tenders'])->name('tenders');
 
 // Projects page (with optional status parameter - default to 'all')
-Route::get('/projects/{status?}', function ($status = 'all') {
-    return view('user.projects.index', compact('status'));
-})->name('projects.index');
+Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->name('projects.index');
 
 // Individual project detail page
-Route::get('/project/{id}', function ($id) {
-    return view('user.projects.show', compact('id'));
-})->name('projects.show');
+Route::get('/project/{id}', [PageController::class, 'projectsShow'])->name('projects.show');
 
 // Media Routes
-Route::get('/news', function () {
-    return view('user.news.index');
-})->name('news.index');
+Route::get('/news', [PageController::class, 'newsIndex'])->name('news.index');
 
-Route::get('/news/{id}', function ($id) {
-    return view('user.news.show', compact('id'));
-})->name('news.show');
+Route::get('/news/{id}', [PageController::class, 'newsShow'])->name('news.show');
 
 // Gallery Routes
-Route::get('/gallery', function () {
-    return view('user.gallery.index');
-})->name('gallery.index');
+Route::get('/gallery', [PageController::class, 'galleryIndex'])->name('gallery.index');
 
-Route::get('/gallery/album/{id}', function ($id) {
-    return view('user.gallery.album', compact('id'));
-})->name('gallery.album');
+Route::get('/gallery/album/{id}', [PageController::class, 'galleryAlbum'])->name('gallery.album');
 
-Route::get('/downloads', function () {
-    return view('user.downloads', [
-        'documents' => collect([
-        ])
-    ]);
-})->name('media.downloads');
+Route::get('/downloads', [PageController::class, 'downloads'])->name('media.downloads');
 
 // API endpoint for downloading files
-Route::post('/api/downloads/{id}', function ($id) {
-    // We'll implement this in Step 4
-    return response()->json(['success' => true]);
-})->name('api.downloads.file');
+Route::post('/api/downloads/{id}', [PageController::class, 'apiDownloadFile'])->name('api.downloads.file');
 
 // API endpoint for previewing files
-Route::get('/api/downloads/{id}/preview', function ($id) {
-    // We'll implement this in Step 4
-    return response()->json(['success' => true]);
-})->name('api.downloads.preview');
+Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFile'])->name('api.downloads.preview');
 
 // Contact page
-Route::get('/contact', function () {
-    return view('user.contact');
-})->name('contact');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');

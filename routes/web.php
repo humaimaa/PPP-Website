@@ -64,7 +64,6 @@ Route::get('/admin/projects/{id}/edit', function ($id) {
             return view('admin.projects.edit', ['id' => $id]);
         })->name('admin.projects.edit');
 
-
 Route::get('/admin/updates/add', function () {
     return view('admin.updates.add');
 })->name('admin.updates.add');
@@ -76,3 +75,16 @@ Route::get('/admin/updates', function () {
 Route::get('/admin/updates/{id}/edit', function ($id) {
             return view('admin.updates.edit', ['id' => $id]);
         })->name('admin.updates.edit');
+
+
+Route::get('/admin/tenders/add', function () {
+    return view('admin.tenders.add');
+})->name('admin.tenders.add');
+
+Route::get('/admin/tenders', function () {
+    return view('admin.tenders.index');
+})->name('admin.tenders.index');
+
+Route::get('/admin/tenders/{id}/edit', function ($id) {
+            return view('admin.tenders.edit', ['id' => $id]);
+        })->name('admin.tenders.edit');

@@ -63,3 +63,16 @@ Route::get('/admin/projects', function () {
 Route::get('/admin/projects/{id}/edit', function ($id) {
             return view('admin.projects.edit', ['id' => $id]);
         })->name('admin.projects.edit');
+
+// Tender Routes
+Route::get('/admin/tenders', function () {
+    return view('admin.tenders.index');
+})->name('admin.tenders.index');
+
+Route::get('/admin/tenders/add', function () {
+    return view('admin.tenders.add');
+})->name('admin.tenders.add');
+
+Route::get('/admin/tenders/{id}/edit', function ($id) {
+    return view('admin.tenders.edit', ['id' => $id]);
+})->name('admin.tenders.edit');

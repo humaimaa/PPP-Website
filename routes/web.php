@@ -51,3 +51,15 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
+
+Route::get('/admin/projects/add', function () {
+    return view('admin.projects.add');
+})->name('admin.projects.add');
+
+Route::get('/admin/projects', function () {
+    return view('admin.projects.index');
+})->name('admin.projects.index');
+
+Route::get('/admin/projects/{id}/edit', function ($id) {
+            return view('admin.projects.edit', ['id' => $id]);
+        })->name('admin.projects.edit');

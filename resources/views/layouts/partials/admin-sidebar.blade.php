@@ -44,8 +44,8 @@
             </button>
             <div class="dropdown-content ml-9 pl-2 border-l-2 border-emerald-600/50 overflow-hidden transition-all duration-300"
                  style="max-height: 0; {{ !$isOpen ? 'display: none;' : '' }}">
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Project</a>
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Projects</a>
+                <a href="{{ route('admin.projects.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Project</a>
+                <a href="{{ route('admin.projects.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Projects</a>
             </div>
         </div>
 

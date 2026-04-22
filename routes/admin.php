@@ -28,6 +28,7 @@ Route::middleware(['admin'])->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

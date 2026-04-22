@@ -103,3 +103,15 @@ Route::get('/admin/downloads/{id}/edit', function ($id) {
         })->name('admin.downloads.edit');
 
 
+//gallery routes
+Route::get('/admin/gallery/add', function () {
+    return view('admin.gallery.add');
+})->name('admin.gallery.add');
+
+Route::get('/admin/gallery', function () {
+    return view('admin.gallery.index');
+})->name('admin.gallery.index');
+
+Route::get('/admin/gallery/{id}/edit', function ($id) {
+            return view('admin.gallery.edit', ['id' => $id]);
+        })->name('admin.gallery.edit');

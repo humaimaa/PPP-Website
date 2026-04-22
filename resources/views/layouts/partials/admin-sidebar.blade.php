@@ -98,8 +98,8 @@
             </button>
             <div class="dropdown-content ml-9 pl-2 border-l-2 border-emerald-600/50 overflow-hidden transition-all duration-300"
                  style="max-height: 0; {{ !$isOpen ? 'display: none;' : '' }}">
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Downloads</a>
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Downloads</a>
+                <a href="{{ route('admin.downloads.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Downloads</a>
+                <a href="{{ route('admin.downloads.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Downloads</a>
             </div>
         </div>
 
@@ -116,8 +116,8 @@
             </button>
             <div class="dropdown-content ml-9 pl-2 border-l-2 border-emerald-600/50 overflow-hidden transition-all duration-300"
                  style="max-height: 0; {{ !$isOpen ? 'display: none;' : '' }}">
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Gallery </a>
-                <a href="#" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Gallery </a>
+                <a href="{{ route('admin.gallery.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Add Gallery </a>
+                <a href="{{ route('admin.gallery.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Gallery </a>
             </div>
         </div>
     </nav>

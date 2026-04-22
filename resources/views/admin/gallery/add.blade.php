@@ -51,7 +51,7 @@
             <p class="text-sm text-gray-500 mt-1">Fill in the details below to add a new gallery item</p>
         </div>
 
-        <form action="{{ route('admin.gallery.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <form action="#" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

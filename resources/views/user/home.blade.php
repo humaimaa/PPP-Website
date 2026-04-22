@@ -143,7 +143,7 @@
 
         <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-3 gap-0 w-full">
             <div class="project-category-card transport-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1601758003122-53c40e686a19" alt="Transportation Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
                 <div class="relative z-20 h-full flex items-center justify-center">
@@ -153,7 +153,7 @@
 
             <div
                 class="project-category-card healthcare-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118" alt="Healthcare Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
                 <div class="relative z-20 h-full flex items-center justify-center">
@@ -162,7 +162,7 @@
             </div>
 
             <div class="project-category-card education-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1" alt="Education Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
                 <div class="relative z-20 h-full flex items-center justify-center">
@@ -171,7 +171,7 @@
             </div>
 
             <div class="project-category-card tourism-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e" alt="Tourism Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
                 <div class="relative z-20 h-full flex items-center justify-center">
@@ -180,7 +180,7 @@
             </div>
 
             <div class="project-category-card water-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35"
                     alt="Water Infrastructure Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
@@ -190,7 +190,7 @@
             </div>
 
             <div class="project-category-card urban-card relative h-64 overflow-hidden cursor-pointer group w-full">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 z-10"></div>
+                <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/70 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df" alt="Urban Development Projects"
                     class="w-full h-full object-cover absolute group-hover:scale-105 transition-transform duration-600">
                 <div class="relative z-20 h-full flex items-center justify-center">
@@ -348,7 +348,7 @@
 
                         <h4 class="font-semibold mb-3 text-lg text-gray-800">All Divisions</h4>
                         <div id="divisions-grid"
-                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[400px] overflow-y-auto pr-1">
+                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-100 overflow-y-auto pr-1">
                         </div>
                     </div>
 
@@ -399,7 +399,7 @@
 
                         <!-- Project List -->
                         <h4 class="font-semibold mb-2 text-sm text-gray-800">Project Details</h4>
-                        <div id="division-projects-list" class="space-y-2 max-h-[250px] overflow-y-auto pr-1"></div>
+                        <div id="division-projects-list" class="space-y-2 max-h-62.5 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
             </div>

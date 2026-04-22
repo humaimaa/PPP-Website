@@ -43,3 +43,11 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+
+
+// ==================== ADMIN ROUTES ====================
+// Admin dashboard
+Route::get('/admin', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');

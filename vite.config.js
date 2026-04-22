@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/kp-map.js',
+                'resources/js/admin.js',
             ],
             refresh: true,
         }),

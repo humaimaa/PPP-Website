@@ -1,152 +1,203 @@
+{{-- resources/views/admin/downloads/index.blade.php --}}
 @extends('layouts.admin')
 
-@section('title', 'Documents List - PPP Department KPK')
+@section('title', 'Downloads List - PPP Department KPK')
+@section('header-title', 'Downloads Management')
 
 @section('content')
-<div class="flex justify-between items-center p-4 pt-8">
-    <h2 class="text-2xl font-bold ml-2 text-[#0A612B]">Documents List</h2>
-    <a href="{{ route('admin.downloads.add') }}" class="px-4 py-2 bg-emerald-700 text-white rounded-md hover:bg-emerald-800 transition-colors flex items-center">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        Add New Document
-    </a>
-</div>
+<div class="max-w-full mx-auto">
+    {{-- Success Message --}}
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
 
-<main class="p-4 md:p-6">
-    {{-- Static dummy documents --}}
+    {{-- Error Message --}}
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
+    {{-- Action Bar --}}
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-3">
+            <h2 class="text-xl font-semibold text-gray-800">
+                <i class="fas fa-download mr-2 text-emerald-600"></i>
+                All Downloads
+            </h2>
+            {{-- <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                {{ $total }} Total
+            </span> --}}
+        </div>
+        <a href="{{ route('admin.downloads.add') }}" 
+           class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+            <i class="fas fa-plus mr-2"></i>
+            Add New Download
+        </a>
+    </div>
+
+    {{-- Static dummy downloads --}}
     @php
-    $dummyDocuments = [
+    $dummyDownloads = [
         [
             'id' => 1,
-            'document_name' => 'PPP Act 2023',
+            'title' => 'PPP Act 2023',
             'description' => 'Public Private Partnership Act 2023 with amendments and regulations.',
             'file_size' => 2457600, // 2.34 MB
             'uploaded_at' => '2024-03-15 10:30:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Legislation',
         ],
         [
             'id' => 2,
-            'document_name' => 'Project Guidelines',
+            'title' => 'Project Guidelines',
             'description' => 'Comprehensive guidelines for PPP project preparation and implementation.',
             'file_size' => 1048576, // 1 MB
             'uploaded_at' => '2024-02-20 14:15:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Guidelines',
         ],
         [
             'id' => 3,
-            'document_name' => 'Board Meeting Minutes',
+            'title' => 'Board Meeting Minutes',
             'description' => 'Minutes of the 5th Board Meeting held on January 15, 2024.',
             'file_size' => 512000, // 500 KB
             'uploaded_at' => '2024-01-16 09:45:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Minutes',
         ],
         [
             'id' => 4,
-            'document_name' => 'Annual Report 2023',
+            'title' => 'Annual Report 2023',
             'description' => 'Annual performance report of PPP projects for the year 2023.',
             'file_size' => 3145728, // 3 MB
             'uploaded_at' => '2024-01-05 11:20:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Reports',
         ],
         [
             'id' => 5,
-            'document_name' => 'Policy Framework',
+            'title' => 'Policy Framework',
             'description' => 'PPP Policy Framework 2024-2029 outlining strategic objectives.',
             'file_size' => 1835008, // 1.75 MB
             'uploaded_at' => '2023-12-10 08:00:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Policy',
         ],
         [
             'id' => 6,
-            'document_name' => 'Feasibility Study Template',
+            'title' => 'Feasibility Study Template',
             'description' => 'Standard template for conducting feasibility studies of PPP projects.',
             'file_size' => 786432, // 768 KB
             'uploaded_at' => '2023-11-22 16:30:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Templates',
         ],
         [
             'id' => 7,
-            'document_name' => 'Risk Management Guidelines',
+            'title' => 'Risk Management Guidelines',
             'description' => 'Guidelines for identifying and mitigating risks in PPP contracts.',
             'file_size' => 2097152, // 2 MB
             'uploaded_at' => '2023-10-05 13:10:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Guidelines',
         ],
         [
             'id' => 8,
-            'document_name' => 'Stakeholder Engagement Plan',
+            'title' => 'Stakeholder Engagement Plan',
             'description' => 'Plan for stakeholder consultation and communication.',
             'file_size' => 917504, // 896 KB
             'uploaded_at' => '2023-09-18 09:00:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Plans',
         ],
         [
             'id' => 9,
-            'document_name' => 'Financial Model Template',
+            'title' => 'Financial Model Template',
             'description' => 'Excel-based financial model for PPP project evaluation.',
             'file_size' => 1572864, // 1.5 MB
             'uploaded_at' => '2023-08-30 14:45:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Templates',
         ],
         [
             'id' => 10,
-            'document_name' => 'Procurement Manual',
+            'title' => 'Procurement Manual',
             'description' => 'Detailed procedures for procurement under PPP mode.',
             'file_size' => 2621440, // 2.5 MB
             'uploaded_at' => '2023-08-01 10:15:00',
-            'file_path' => '#',
+            'file_path' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            'category' => 'Manuals',
         ],
     ];
 
     // Pagination simulation
     $currentPage = request()->get('page', 1);
     $perPage = 10;
-    $total = count($dummyDocuments);
+    $total = count($dummyDownloads);
     $totalPages = ceil($total / $perPage);
     $offset = ($currentPage - 1) * $perPage;
-    $paginatedDocuments = array_slice($dummyDocuments, $offset, $perPage);
+    $paginatedDownloads = array_slice($dummyDownloads, $offset, $perPage);
     @endphp
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
+    {{-- Downloads Table Card --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Info</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uploaded At</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Title
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Category
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Description
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            File Info
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Uploaded
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($paginatedDocuments as $document)
-                        <tr>
+                    @forelse($paginatedDownloads as $download)
+                        <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $document['document_name'] }}</div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-pdf text-red-500 mr-3 text-lg"></i>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $download['title'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <i class="fas fa-tag mr-1 text-xs"></i>
+                                    {{ $download['category'] }}
+                                </span>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm text-gray-500">
-                                    {{ Str::limit($document['description'], 50) }}
+                                <div class="text-sm text-gray-500 max-w-md">
+                                    {{ Str::limit($download['description'], 50) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">
                                     @php
-                                        $size = $document['file_size'];
+                                        $size = $download['file_size'];
                                         if ($size >= 1073741824) {
                                             $size = number_format($size / 1073741824, 2) . ' GB';
                                         } elseif ($size >= 1048576) {
@@ -157,42 +208,62 @@
                                             $size = $size . ' bytes';
                                         }
                                     @endphp
-                                    {{ $size }}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-database mr-1"></i>
+                                        {{ $size }}
+                                    </span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ date('d M Y', strtotime($document['uploaded_at'])) }}
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                    <i class="far fa-calendar-alt mr-1 text-gray-400"></i>
+                                    {{ date('d M Y', strtotime($download['uploaded_at'])) }}
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    {{ date('h:i A', strtotime($download['uploaded_at'])) }}
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex space-x-3">
-                                    <a href="{{ $document['file_path'] }}" target="_blank" class="flex items-center text-emerald-600 hover:text-emerald-900">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                        View
+                                <div class="flex items-center gap-2">
+                                    {{-- View PDF Button - Opens in new blank page --}}
+                                    <a href="{{ $download['file_path'] }}" 
+                                       target="_blank"
+                                       class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                       title="View PDF">
+                                        <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('admin.downloads.edit', $document['id']) }}" class="flex items-center text-blue-600 hover:text-blue-900">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                        </svg>
-                                        Edit
+                                    
+                                    {{-- Edit Button - Opens edit page --}}
+                                    <a href="{{ route('admin.downloads.edit', $download['id']) }}" 
+                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                       title="Edit Download">
+                                        <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="#" method="POST" onsubmit="return confirm('Are you sure you want to delete this document?');" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex items-center text-red-600 hover:text-red-900">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                            Delete
-                                        </button>
-                                    </form>
+
+                                    
+                                    {{-- Delete Button --}}
+                                    <button onclick="confirmDelete({{ $download['id'] }}, '{{ $download['title'] }}')" 
+                                            class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                            title="Delete Download">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No documents found</td>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <i class="fas fa-download text-4xl text-gray-400 mb-3"></i>
+                                    <p class="text-gray-500 text-lg mb-2">No downloads found</p>
+                                    <p class="text-gray-400 text-sm mb-4">Get started by adding your first download</p>
+                                    <a href="{{ route('admin.downloads.add') }}" 
+                                       class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add New Download
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -201,10 +272,10 @@
 
         {{-- Pagination --}}
         @if($totalPages > 1)
-        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                    <p class="text-sm text-gray-700">
+                    <p class="text-sm text-gray-600">
                         Showing <span class="font-medium">{{ $offset + 1 }}</span> to
                         <span class="font-medium">{{ min($offset + $perPage, $total) }}</span> of
                         <span class="font-medium">{{ $total }}</span> results
@@ -214,44 +285,51 @@
                     <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                         {{-- Previous --}}
                         @if($currentPage > 1)
-                            <a href="?page={{ $currentPage - 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                </svg>
+                            <a href="?page={{ $currentPage - 1 }}" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-left text-xs"></i>
                             </a>
                         @else
-                            <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                </svg>
+                            <span class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                <i class="fas fa-chevron-left text-xs"></i>
                             </span>
                         @endif
 
-                        {{-- Page Numbers (simplified) --}}
-                        @for($i = 1; $i <= $totalPages; $i++)
+                        {{-- Page Numbers --}}
+                        @php
+                            $start = max(1, $currentPage - 2);
+                            $end = min($totalPages, $currentPage + 2);
+                        @endphp
+
+                        @if($start > 1)
+                            <a href="?page=1" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</a>
+                            @if($start > 2)
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                            @endif
+                        @endif
+
+                        @for($i = $start; $i <= $end; $i++)
                             @if($i == $currentPage)
-                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-emerald-50 text-sm font-medium text-emerald-600">{{ $i }}</span>
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-emerald-600 text-sm font-medium text-white">{{ $i }}</span>
                             @else
                                 <a href="?page={{ $i }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">{{ $i }}</a>
                             @endif
                         @endfor
 
+                        @if($end < $totalPages)
+                            @if($end < $totalPages - 1)
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                            @endif
+                            <a href="?page={{ $totalPages }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">{{ $totalPages }}</a>
+                        @endif
+
                         {{-- Next --}}
                         @if($currentPage < $totalPages)
-                            <a href="?page={{ $currentPage + 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                </svg>
+                            <a href="?page={{ $currentPage + 1 }}" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-right text-xs"></i>
                             </a>
                         @else
-                            <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                </svg>
+                            <span class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                <i class="fas fa-chevron-right text-xs"></i>
                             </span>
                         @endif
                     </nav>
@@ -260,5 +338,75 @@
         </div>
         @endif
     </div>
-</main>
+</div>
+
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeDeleteModal()"></div>
+
+        <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <div class="mt-4 text-center">
+                    <h3 class="text-lg font-medium text-gray-900">Delete Download</h3>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Are you sure you want to delete this download? This action cannot be undone.
+                    </p>
+                    <p class="mt-2 text-sm font-medium text-gray-700" id="deleteDownloadTitle"></p>
+                </div>
+                <div class="mt-6 flex items-center justify-center gap-3">
+                    <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+                        Cancel
+                    </button>
+                    <form id="deleteForm" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-trash mr-2"></i>
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+    let currentDeleteId = null;
+
+    window.confirmDelete = function(id, title) {
+        currentDeleteId = id;
+        document.getElementById('deleteDownloadTitle').textContent = title;
+        document.getElementById('deleteForm').action = `/admin/downloads/${id}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeDeleteModal = function() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        currentDeleteId = null;
+    };
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+        const deleteModal = document.getElementById('deleteModal');
+        if (event.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+</script>
+@endpush

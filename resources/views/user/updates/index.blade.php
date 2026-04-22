@@ -90,7 +90,7 @@
         ];
 
         // Pagination logic
-        $currentPage = request()->get('page', 1);
+        $currentPage = request()->input('page', 1);
         $perPage = 6;
         $totalNews = count($allNews);
         $lastPage = ceil($totalNews / $perPage);

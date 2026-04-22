@@ -51,7 +51,7 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
-
+ //project routes
 Route::get('/admin/projects/add', function () {
     return view('admin.projects.add');
 })->name('admin.projects.add');
@@ -76,7 +76,7 @@ Route::get('/admin/updates/{id}/edit', function ($id) {
             return view('admin.updates.edit', ['id' => $id]);
         })->name('admin.updates.edit');
 
-
+//tenders routes
 Route::get('/admin/tenders/add', function () {
     return view('admin.tenders.add');
 })->name('admin.tenders.add');
@@ -88,3 +88,18 @@ Route::get('/admin/tenders', function () {
 Route::get('/admin/tenders/{id}/edit', function ($id) {
             return view('admin.tenders.edit', ['id' => $id]);
         })->name('admin.tenders.edit');
+
+//dowloads routes
+Route::get('/admin/downloads/add', function () {
+    return view('admin.downloads.add');
+})->name('admin.downloads.add');
+
+Route::get('/admin/downloads', function () {
+    return view('admin.downloads.index');
+})->name('admin.downloads.index');
+
+Route::get('/admin/downloads/{id}/edit', function ($id) {
+            return view('admin.downloads.edit', ['id' => $id]);
+        })->name('admin.downloads.edit');
+
+

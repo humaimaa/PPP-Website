@@ -59,7 +59,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ route('news.index') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
+            <a href="{{ route('updates.index') }}" class="hover:text-[#0A612B] transition-colors duration-300 block flex items-center">
               <i class="fas fa-angle-right mr-2 text-xs text-[#0A612B]"></i>
               News & Updates
             </a>

@@ -24,9 +24,9 @@ Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->nam
 Route::get('/project/{id}', [PageController::class, 'projectsShow'])->name('projects.show');
 
 // Media Routes
-Route::get('/news', [PageController::class, 'newsIndex'])->name('news.index');
+Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates.index');
 
-Route::get('/news/{id}', [PageController::class, 'newsShow'])->name('news.show');
+Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
 
 // Gallery Routes
 Route::get('/gallery', [PageController::class, 'galleryIndex'])->name('gallery.index');
@@ -63,3 +63,16 @@ Route::get('/admin/projects', function () {
 Route::get('/admin/projects/{id}/edit', function ($id) {
             return view('admin.projects.edit', ['id' => $id]);
         })->name('admin.projects.edit');
+
+
+Route::get('/admin/updates/add', function () {
+    return view('admin.updates.add');
+})->name('admin.updates.add');
+
+Route::get('/admin/updates', function () {
+    return view('admin.updates.index');
+})->name('admin.updates.index');
+
+Route::get('/admin/updates/{id}/edit', function ($id) {
+            return view('admin.updates.edit', ['id' => $id]);
+        })->name('admin.updates.edit');

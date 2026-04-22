@@ -292,9 +292,9 @@
         </div>
 
         <div class="pt-8 flex justify-center">
-            <a href="{{ route('news.index') }}"
+            <a href="{{ route('updates.index') }}"
                 class="inline-block rounded-lg text-white text-sm uppercase tracking-widest bg-[#0A612B] py-3 px-8 hover:bg-[#074d22] transition duration-300">
-                More News
+                More Updates
             </a>
         </div>
     </div>

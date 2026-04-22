@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
         <div class="text-center px-4">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">News & Updates</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Updates</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
                 Stay informed about the latest developments in our public-private partnership initiatives
@@ -111,7 +111,7 @@
                     <div>
                         <h3
                             class="text-xl font-bold text-[#0D2818] mb-3 hover:text-[#0A612B] transition-colors duration-300">
-                            <a href="{{ route('news.show', $news['id']) }}">{{ $news['title'] }}</a>
+                            <a href="{{ route('updates.show', $news['id']) }}">{{ $news['title'] }}</a>
                         </h3>
                         <p class="text-gray-600 line-clamp-3 text-justify">{{ $news['description'] }}</p>
                     </div>
@@ -121,7 +121,7 @@
                                 <i class="far fa-calendar-alt mr-1"></i> {{ $news['date'] }}
                             </span>
                         </div>
-                        <a href="{{ route('news.show', $news['id']) }}"
+                        <a href="{{ route('updates.show', $news['id']) }}"
                             class="text-[#0A612B] font-medium hover:text-[#0D2818] transition-colors duration-300 inline-flex items-center">
                             Read More
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,7 +152,7 @@
         'lastPage' => $lastPage,
         'total' => $totalNews,
         'perPage' => $perPage,
-        'routeName' => 'news.index'
+        'routeName' => 'updates.index'
         ])
         @endif
     </div>

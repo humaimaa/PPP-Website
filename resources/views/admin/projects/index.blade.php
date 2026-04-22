@@ -34,7 +34,7 @@
                 6 Total
             </span>
         </div>
-        <a href="#"
+        <a href="{{ route('admin.projects.add') }}"
             class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
             <i class="fas fa-plus mr-2"></i>
             Add New Project

@@ -126,8 +126,8 @@
               </svg>
             </button>
             <ul class="mobile-dropdown-menu hidden mt-2 space-y-1 pl-6">
-              <li><a href="{{ route('news.index') }}"
-                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">News & Updates</a>
+              <li><a href="{{ route('updates.index') }}"
+                  class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Updates</a>
               </li>
               <li><a href="{{ route('gallery.index') }}"
             class="block text-base md:text-lg px-6 py-2 text-[#0D2818] hover:bg-[#0D2818] hover:text-[#DAD7CD] rounded-lg transition duration-300">Gallery</a>

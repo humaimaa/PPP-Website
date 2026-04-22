@@ -55,19 +55,19 @@ class PageController extends Controller
     }
 
     /**
-     * News index page
+     * Updates index page
      */
-    public function newsIndex()
+    public function updatesIndex()
     {
-        return view('user.news.index');
+        return view('user.updates.index');
     }
 
     /**
-     * Individual news detail page
+     * Individual updates detail page
      */
-    public function newsShow($id)
+    public function updatesShow($id)
     {
-        return view('user.news.show', compact('id'));
+        return view('user.updates.show', compact('id'));
     }
 
     /**

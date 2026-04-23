@@ -21,7 +21,7 @@ class TenderController extends Controller
      */
     public function create()
     {
-        return view('admin.tenders.add');
+        return view('admin.tenders.create');
     }
 
     /**

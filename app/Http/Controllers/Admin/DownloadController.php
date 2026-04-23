@@ -21,7 +21,7 @@ class DownloadController extends Controller
      */
     public function create()
     {
-        return view('admin.downloads.add');
+        return view('admin.downloads.create');
     }
 
     /**

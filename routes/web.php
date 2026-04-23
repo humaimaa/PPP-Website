@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -44,3 +46,10 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
+//middleware
+Route::middleware(['auth', 'role:super-admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('permissions', PermissionController::class)->except(['show']);
+    Route::resource('roles', RoleController::class)->except(['show']);
+
+});

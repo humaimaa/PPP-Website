@@ -120,5 +120,83 @@
                 <a href="{{ route('admin.gallery.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1">Manage Gallery </a>
             </div>
         </div>
+        {{-- Roles & Permissions (Super Admin only) --}}
+        @role('super-admin')
+
+        {{-- Divider --}}
+        <div class="my-3 border-t border-emerald-700/60"></div>
+
+        {{-- Section Label --}}
+        <div class="px-3 mb-1 overflow-hidden transition-all duration-300"
+             style="opacity: {{ $isOpen ? '1' : '0' }}; max-height: {{ $isOpen ? '30px' : '0' }};">
+            <span class="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                Access Control
+            </span>
+        </div>
+
+        {{-- Roles --}}
+        <div class="relative mb-1">
+            <button class="dropdown-btn w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left">
+                <div class="flex items-center">
+                    <i class="fas fa-user-shield w-6 h-6 shrink-0"></i>
+                    <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300 ease-in-out"
+                          style="opacity: {{ $isOpen ? '1' : '0' }}; width: {{ $isOpen ? 'auto' : '0' }}; overflow: hidden;">Roles</span>
+                </div>
+                <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200"
+                   style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
+            </button>
+            {{-- Tooltip when collapsed --}}
+            @if(!$isOpen)
+                <div class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                    Roles
+                </div>
+            @endif
+            <div class="dropdown-content ml-9 pl-2 border-l-2 border-emerald-600/50 overflow-hidden transition-all duration-300"
+                 style="max-height: 0; {{ !$isOpen ? 'display: none;' : '' }}">
+                <a href="{{ route('admin.roles.create') }}"
+                   class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1
+                          {{ request()->routeIs('admin.roles.create') ? 'bg-emerald-700/60 font-medium' : '' }}">
+                    Add Role
+                </a>
+                <a href="{{ route('admin.roles.index') }}"
+                   class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1
+                          {{ request()->routeIs('admin.roles.index') ? 'bg-emerald-700/60 font-medium' : '' }}">
+                    Manage Roles
+                </a>
+            </div>
+        </div>
+
+        {{-- Permissions --}}
+        <div class="relative mb-1">
+            <button class="dropdown-btn w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left">
+                <div class="flex items-center">
+                    <i class="fas fa-key w-6 h-6 shrink-0"></i>
+                    <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300 ease-in-out"
+                          style="opacity: {{ $isOpen ? '1' : '0' }}; width: {{ $isOpen ? 'auto' : '0' }}; overflow: hidden;">Permissions</span>
+                </div>
+                <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200"
+                   style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
+            </button>
+            @if(!$isOpen)
+                <div class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                    Permissions
+                </div>
+            @endif
+            <div class="dropdown-content ml-9 pl-2 border-l-2 border-emerald-600/50 overflow-hidden transition-all duration-300"
+                 style="max-height: 0; {{ !$isOpen ? 'display: none;' : '' }}">
+                <a href="{{ route('admin.permissions.create') }}"
+                   class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1
+                          {{ request()->routeIs('admin.permissions.create') ? 'bg-emerald-700/60 font-medium' : '' }}">
+                    Add Permission
+                </a>
+                <a href="{{ route('admin.permissions.index') }}"
+                   class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1
+                          {{ request()->routeIs('admin.permissions.index') ? 'bg-emerald-700/60 font-medium' : '' }}">
+                    Manage Permissions
+                </a>
+            </div>
+        </div>
+
+        @endrole
     </nav>
 </aside>

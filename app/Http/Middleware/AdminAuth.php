@@ -4,23 +4,25 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAuth
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
-        if (!session('admin_logged_in')) {
+        // Not logged in at all
+        if (!Auth::check()) {
             return redirect()->route('admin.login')
                 ->withErrors(['email' => 'Please login to access the admin panel.']);
         }
-        
+
+        // Logged in but not an admin
+        if (!Auth::user()->hasAnyRole(['super-admin', 'admin'])) {
+            Auth::logout();
+            return redirect()->route('admin.login')
+                ->withErrors(['email' => 'You do not have admin access.']);
+        }
+
         return $next($request);
     }
 }

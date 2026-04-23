@@ -13,7 +13,7 @@ class TenderController extends Controller
      */
     public function index()
     {
-        //
+       return view('admin.tenders.index');
     }
 
     /**
@@ -21,7 +21,7 @@ class TenderController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.tenders.add');
     }
 
     /**
@@ -45,7 +45,7 @@ class TenderController extends Controller
      */
     public function edit(Tender $tender)
     {
-        //
+            return view('admin.tenders.edit', compact('tender'));
     }
 
     /**

@@ -13,7 +13,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.updates.index');
     }
 
     /**
@@ -21,7 +21,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.updates.add');
     }
 
     /**
@@ -45,7 +45,7 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        //
+        return view('admin.updates.edit', compact('news'));
     }
 
     /**

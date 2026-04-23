@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TenderController;
+use App\Http\Controllers\admin\ProjectController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\DownloadController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\LeadershipMessageController;
 use App\Http\Controllers\Auth\LoginController;
+use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,14 +43,14 @@ Route::middleware(['admin'])->group(function () {
     
     // ==================== project MANAGEMENT ====================
     Route::prefix('projects')->name('projects.')->group(function () {
-        Route::get('/', [DashboardController::class, 'projectsIndex'])->name('index');
-        Route::get('/add', [DashboardController::class, 'projectsCreate'])->name('add');
-        Route::post('/', [DashboardController::class, 'projectsStore'])->name('store');
-        Route::get('/{id}', [DashboardController::class, 'projectsShow'])->name('show');
-        Route::get('/{id}/edit', [DashboardController::class, 'projectsEdit'])->name('edit');
-        Route::put('/{id}', [DashboardController::class, 'projectsUpdate'])->name('update');
-        Route::delete('/{id}', [DashboardController::class, 'projectsDestroy'])->name('destroy');
-        Route::post('/{id}/toggle-status', [DashboardController::class, 'projectsToggleStatus'])->name('toggle-status');
+        Route::get('/', [ProjectController::class, 'index'])->name('index');
+        Route::get('/add', [ProjectController::class, 'create'])->name('add');
+        Route::post('/', [ProjectController::class, 'store'])->name('store');
+        Route::get('/{id}', [ProjectController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ProjectController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ProjectController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('toggle-status');
     });
 
     // ==================== NEWS/UPDATES MANAGEMENT ====================

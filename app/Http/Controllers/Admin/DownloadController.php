@@ -13,7 +13,7 @@ class DownloadController extends Controller
      */
     public function index()
     {
-        //
+       return view('admin.downloads.index');
     }
 
     /**
@@ -21,7 +21,7 @@ class DownloadController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.downloads.add');
     }
 
     /**
@@ -45,7 +45,7 @@ class DownloadController extends Controller
      */
     public function edit(Download $download)
     {
-        //
+        return view('admin.downloads.edit', compact('download'));
     }
 
     /**

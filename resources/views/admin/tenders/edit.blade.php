@@ -29,7 +29,7 @@
     @endif
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
-        <form action="{{ route('tenders.update', $tender->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="#" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

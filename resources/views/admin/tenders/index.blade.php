@@ -95,10 +95,31 @@ $tenders = collect([
                                 {{ $tender->end_date->format('d M Y') }}
                             </td>
 
-                            <td class="px-6 py-4 flex gap-3">
-                                <a href="#" class="text-emerald-600">View PDF</a>
-                                <a href="#" class="text-blue-600">Edit</a>
-                                <button class="text-red-600">Delete</button>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center gap-2">
+                                    {{-- View PDF Button - Opens in new blank page --}}
+                                    <a href="#" 
+                                       target="_blank"
+                                       class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                       title="View PDF">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    
+                                    {{-- Edit Button - Opens edit page --}}
+                                    <a href="{{ route('admin.tenders.edit', $tender->id) }}" 
+                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                       title="Edit Tender">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    
+                                    {{-- Delete Button --}}
+                                    <button onclick="confirmDelete({{ $tender->id }}, '{{ $tender->tender_name }}')" 
+                                            class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                            title="Delete Tender">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty

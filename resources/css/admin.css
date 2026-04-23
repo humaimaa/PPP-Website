@@ -25,57 +25,41 @@
 }
 
 /* ============================================
-   SIDEBAR STYLES
+   SIDEBAR
    ============================================ */
 
-/* Custom scrollbar for sidebar */
-.sidebar::-webkit-scrollbar {
-  width: 4px;
-}
+/* Custom scrollbar */
+#sidebar::-webkit-scrollbar        { width: 4px; }
+#sidebar::-webkit-scrollbar-track  { background: #064e3b; border-radius: 4px; }
+#sidebar::-webkit-scrollbar-thumb  { background: #34d399; border-radius: 4px; }
 
-.sidebar::-webkit-scrollbar-track {
-  background: #064e3b;
-  border-radius: 4px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: #34d399;
-  border-radius: 4px;
-}
-
-.sidebar {
+#sidebar {
   scrollbar-width: thin;
   scrollbar-color: #34d399 #064e3b;
-  z-index: 40;
-  transition: all 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 /* ============================================
-   LAYOUT DIMENSIONS
+   LAYOUT
    ============================================ */
 
-/* Main content area adjustments */
 .main-content {
-  margin-left: 72px; /* Matches closed sidebar width */
-  margin-top: 64px; /* Matches header height */
-  position: relative;
-  z-index: 10;
-  transition: all 0.3s ease-in-out;
+  margin-left: 72px;
+  margin-top: 64px;
+  transition: margin-left 0.3s ease-in-out;
 }
 
-/* When sidebar is open */
 body.sidebar-open .main-content {
   margin-left: 256px;
 }
 
-/* Header adjustments */
 header {
   position: fixed;
   top: 0;
-  left: 72px; /* Matches closed sidebar width */
   right: 0;
+  left: 72px;
   z-index: 30;
-  transition: all 0.3s ease-in-out;
+  transition: left 0.3s ease-in-out;
 }
 
 body.sidebar-open header {
@@ -83,303 +67,73 @@ body.sidebar-open header {
 }
 
 /* ============================================
-   SIDEBAR OVERLAY
-   ============================================ */
-
-#sidebarOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 30;
-  transition: opacity 0.3s ease-in-out;
-  backdrop-filter: blur(2px);
-}
-
-/* ============================================
-   DROPDOWN STYLES
-   ============================================ */
-
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-}
-
-.dropdown-content.open {
-  max-height: 300px;
-  transition: max-height 0.3s ease-in;
-}
-
-/* Dropdown icon rotation */
-.dropdown-icon {
-  transition: transform 0.3s ease-in-out;
-}
-
-/* ============================================
-   DASHBOARD GRID SYSTEM
+   DASHBOARD GRID
    ============================================ */
 
 .stats-grid {
   display: grid;
   gap: 1.5rem;
-  transition: all 0.3s ease-in-out;
+  transition: grid-template-columns 0.3s ease-in-out;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-/* Grid system for dashboard cards - Open state (3 columns) */
 body.sidebar-open .stats-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* Grid system for dashboard cards - Closed state (4 columns) */
-body:not(.sidebar-open) .stats-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-/* ============================================
-   STAT CARD STYLES
-   ============================================ */
-
-.stat-card {
-  transition: all 0.3s ease-in-out;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-}
-
-/* ============================================
-   NAVIGATION ITEMS
-   ============================================ */
-
-.nav-item {
-  position: relative;
-}
-
-/* Tooltip for closed sidebar state */
-.nav-item .tooltip {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 8px;
-  background: #1f2937;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-  z-index: 50;
-}
-
-.nav-item:hover .tooltip {
-  opacity: 1;
-}
-
-/* Active navigation state */
-.nav-item.bg-emerald-700 {
-  background-color: rgba(4, 120, 87, 0.8);
-}
-
-/* ============================================
-   TOGGLE BUTTON
-   ============================================ */
-
-#sidebarToggle {
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.2s ease;
-}
-
-#sidebarToggle:hover {
-  background-color: rgba(243, 244, 246, 1);
-}
-
-#sidebarToggle:active {
-  background-color: rgba(229, 231, 235, 1);
-}
-
-/* ============================================
-   USER DROPDOWN
-   ============================================ */
-
-#userMenuButton {
-  cursor: pointer;
-  user-select: none;
-}
-
-#userDropdown {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  transform-origin: top right;
-}
-
-#userDropdown:not(.hidden) {
-  animation: dropdownFadeIn 0.2s ease;
-}
-
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ============================================
-   RESPONSIVE STYLES
-   ============================================ */
-
-/* Tablet Styles (1024px and below) */
 @media (max-width: 1024px) {
+  .stats-grid,
   body.sidebar-open .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  
-  body:not(.sidebar-open) .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
-/* Mobile Styles (768px and below) */
 @media (max-width: 768px) {
-  /* Reset margins for mobile */
-  .main-content,
-  body.sidebar-open .main-content,
-  body:not(.sidebar-open) .main-content {
-    margin-left: 0 !important;
-  }
-  
-  /* Reset header position for mobile */
-  header,
-  body.sidebar-open header,
-  body:not(.sidebar-open) header {
-    left: 0 !important;
-  }
-  
-  /* Sidebar mobile behavior */
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
-    width: 256px !important; /* Always full width on mobile when visible */
-    position: fixed;
-  }
-  
-  body.sidebar-open .sidebar {
-    transform: translateX(0) !important;
-  }
-  
-  body:not(.sidebar-open) .sidebar {
-    transform: translateX(-100%) !important;
-  }
-  
-  /* Reset width animations on mobile */
-  .logo-text,
-  .nav-text {
-    opacity: 1 !important;
-    width: auto !important;
-  }
-  
-  .dropdown-icon {
-    opacity: 1 !important;
-  }
-  
-  .pending-badge {
-    display: inline-block !important;
-  }
-  
-  /* Single column grid for mobile */
   .stats-grid,
-  body.sidebar-open .stats-grid,
-  body:not(.sidebar-open) .stats-grid {
+  body.sidebar-open .stats-grid {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
   }
 }
 
-/* Small Mobile Styles (480px and below) */
-@media (max-width: 480px) {
+/* ============================================
+   USER DROPDOWN ANIMATION
+   ============================================ */
+
+#userDropdown:not(.hidden) {
+  animation: dropdownFadeIn 0.15s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ============================================
+   MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
   .main-content {
-    margin-top: 56px; /* Slightly smaller header on very small screens */
+    margin-left: 0 !important;
+    margin-top: 60px !important;
   }
-  
+
   header {
-    height: 56px;
+    left: 0 !important;
   }
-  
-  #sidebarToggle {
-    padding: 6px;
-  }
-  
-  #sidebarToggle i {
-    font-size: 1.125rem;
-  }
-  
-  /* Reduce padding on small screens */
-  .main-content .p-4 {
-    padding: 0.75rem;
-  }
-  
-  .main-content .p-6 {
-    padding: 1rem;
-  }
-  
-  /* Make stat cards more compact */
-  .stat-card {
-    padding: 1rem !important;
-  }
-  
-  .stat-card i {
-    font-size: 1.5rem !important;
-  }
-  
-  /* Hide user name on very small screens */
-  #userMenuButton span {
-    display: none;
-  }
-}
 
-/* ============================================
-   ANIMATIONS & TRANSITIONS
-   ============================================ */
+  #sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
 
-/* Smooth transitions for all layout elements */
-.sidebar,
-.main-content,
-header,
-.stat-card,
-.stats-grid,
-.logo-text,
-.nav-text,
-.dropdown-icon,
-.pending-badge {
-  transition: all 0.3s ease-in-out;
-}
+  body.sidebar-open #sidebar {
+    transform: translateX(0) !important;
+  }
 
-/* Logo text specific transition */
-.logo-text {
-  transition: opacity 0.3s ease-in-out, width 0.3s ease-in-out;
-}
-
-/* Navigation text transition */
-.nav-text {
-  transition: opacity 0.3s ease-in-out, width 0.3s ease-in-out;
-}
-
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
-
-/* Prevent body scroll when sidebar is open on mobile */
-body.sidebar-open {
-  overflow: hidden;
+  body.sidebar-open {
+    overflow: hidden;
+  }
 }
 
 @media (min-width: 769px) {
@@ -388,83 +142,28 @@ body.sidebar-open {
   }
 }
 
-/* Focus styles for accessibility */
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid #34d399;
   outline-offset: 2px;
 }
 
-/* Loading states */
-.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-/* Print styles */
-@media print {
-  .sidebar,
-  header,
-  #sidebarToggle,
-  #sidebarOverlay {
-    display: none !important;
-  }
-  
-  .main-content {
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-  }
-}
-
-/* ============================================
-   CUSTOM SCROLLBAR FOR MAIN CONTENT
-   ============================================ */
-
-.main-content::-webkit-scrollbar {
-  width: 8px;
-}
-
-.main-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-
-
-/* ============================================
-   HIGH CONTRAST MODE SUPPORT
-   ============================================ */
-
-@media (prefers-contrast: high) {
-  .sidebar {
-    border-right: 2px solid #000;
-  }
-  
-  .stat-card {
-    border-width: 2px;
-  }
-}
-
-/* ============================================
-   REDUCED MOTION SUPPORT
-   ============================================ */
-
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+
+@media print {
+  #sidebar, header, #sidebarToggle, #sidebarOverlay { display: none !important; }
+  .main-content { margin: 0 !important; }
 }

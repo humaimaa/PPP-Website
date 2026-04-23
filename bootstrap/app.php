@@ -12,9 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register your admin middleware alias here
+        // THIS IS THE KEY FIX - Redirect guests to admin login
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
+        
+        // Redirect authenticated users to admin dashboard
+        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+        
+        // Register middleware aliases
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminAuth::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('designation');
             $table->text('message');
+            // $table->string('image')->nullable(); // stored path e.g. leadership/filename.jpg
             $table->timestamps();
         });
     }

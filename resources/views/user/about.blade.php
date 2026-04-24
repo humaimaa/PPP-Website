@@ -12,7 +12,7 @@
                 @if(($section ?? 'overview') === 'team')
                     Our Leadership Team
                 @else
-                    About PPP Department
+                    About PPP Unit
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>

@@ -89,7 +89,7 @@
             <div class="w-full">
                 <div class="w-24 h-2 bg-[#0A612B] mb-4"></div>
                 <h2 class="font-display font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-[#0D2818]">About PPP
-                    Department KPK</h2>
+                    Unit KPK</h2>
                 <p class="text-gray-600 text-sm md:text-base mb-4 leading-normal text-justify">
                     The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa is a pioneering initiative by
                     the Government of KPK to foster collaboration between the public and private sectors for sustainable

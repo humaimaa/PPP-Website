@@ -6,7 +6,7 @@
 
 <div class="flex justify-between items-center p-4 pt-8">
     <h2 class="text-2xl font-bold ml-2 text-[#0A612B]">Leadership Messages</h2>
-    <a href="{{ route('admin.leadershipMessages.create') }}" class="flex items-center px-4 py-2 bg-emerald-700 text-white rounded-md hover:bg-emerald-800 transition-colors">
+    <a href="{{ route('admin.leadership.add') }}" class="flex items-center px-4 py-2 bg-emerald-700 text-white rounded-md hover:bg-emerald-800 transition-colors">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
@@ -34,31 +34,31 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse ($messages as $message)
+                    @forelse ($messages as $msg)
                         <tr>
-                            <td class="px-6 py-4 font-medium">{{ $message->name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $message->designation }}</td>
+                            <td class="px-6 py-4 font-medium">{{ $msg->name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $msg->designation }}</td>
                             <td class="px-6 py-4">
-                                <div class="text-sm text-gray-500 max-w-xs">{{ Str::limit($message->message, 80) }}</div>
+                                <div class="text-sm text-gray-500 max-w-xs">{{ Str::limit($msg->message, 80) }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-2">
                                     {{-- View Button --}}
-                                    <a href="{{ route('admin.leadershipMessages.show', $message->id) }}"
+                                    <a href="{{ route('admin.leadership.show', $msg->id) }}"
                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
                                        title="View Message">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
                                     {{-- Edit Button --}}
-                                    <a href="{{ route('admin.leadershipMessages.edit', $message->id) }}"
+                                    <a href="{{ route('admin.leadership.edit', $msg->id) }}"
                                        class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
                                        title="Edit Message">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
                                     {{-- Delete Form --}}
-                                    <form action="{{ route('admin.leadershipMessages.destroy', $message->id) }}" method="POST"
+                                    <form action="{{ route('admin.leadership.destroy', $msg->id) }}" method="POST"
                                           onsubmit="return confirm('Are you sure you want to delete this message?')">
                                         @csrf
                                         @method('DELETE')

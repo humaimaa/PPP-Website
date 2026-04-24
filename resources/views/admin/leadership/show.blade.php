@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex justify-between items-center p-4 pt-8">
     <h2 class="text-2xl font-bold ml-2 text-[#0A612B]">Leadership Message</h2>
-    <a href="{{ route('admin.leadershipMessages.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+    <a href="{{ route('admin.leadership.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
         Back to Messages
     </a>
 </div>
@@ -31,11 +31,11 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3">
-            <a href="{{ route('admin.leadershipMessages.edit', $message->id) }}"
+            <a href="{{ route('admin.leadership.edit', $message->id) }}"
                class="px-4 py-2 bg-emerald-700 text-white rounded-md hover:bg-emerald-800 transition-colors">
                 Edit Message
             </a>
-            <form action="{{ route('admin.leadershipMessages.destroy', $message->id) }}" method="POST"
+            <form action="{{ route('admin.leadership.destroy', $message->id) }}" method="POST"
                   onsubmit="return confirm('Are you sure you want to delete this message?')">
                 @csrf
                 @method('DELETE')

@@ -5,6 +5,9 @@
 @section('content')
 <div class="flex justify-between items-center p-4 pt-8">
     <h2 class="text-2xl font-bold ml-2 text-[#0A612B]">Add Leadership Message</h2>
+    <a href="{{ route('admin.leadership.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+        Back to Messages
+    </a>
 </div>
 
 <main class="p-4 md:p-6">
@@ -18,7 +21,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.leadershipMessages.store') }}" method="POST"
+    <form action="{{ route('admin.leadership.store') }}" method="POST"
           class="bg-white rounded-lg shadow-md p-6">
         @csrf
 

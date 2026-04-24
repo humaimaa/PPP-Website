@@ -8,15 +8,17 @@ use App\Models\User;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
+        // Clear cached permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Role::firstOrCreate(['name' => 'super-admin']);
+        // Call PermissionsSeeder to create permissions and roles
+        $this->call(PermissionsSeeder::class);
 
-        $superAdmin = User::first();
-        if ($superAdmin) {
-            $superAdmin->assignRole('super-admin');
-        }
+        $this->command->info('Roles and permissions created successfully!');
     }
 }

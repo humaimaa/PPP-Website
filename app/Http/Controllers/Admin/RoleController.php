@@ -103,57 +103,124 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        // Prevent deletion of system roles
+        if (in_array($role->name, ['Super Admin', 'Admin'])) {
+            return redirect()->route('admin.roles.index')
+                ->with('error', 'Cannot delete system role: ' . $role->name);
+        }
+
         $role->delete();
+        
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role deleted successfully.');
     }
 
     /**
-     * Group permissions by module.
+     * Bulk delete roles.
      */
-    private function groupPermissions($permissions)
+    public function bulkDelete(Request $request)
     {
-        $grouped = [];
-        $modules = [
-            'dashboard' => 'Dashboard',
-            'projects' => 'Projects',
-            'tenders' => 'Tenders',
-            'news' => 'News/Updates',
-            'gallery' => 'Gallery',
-            'events' => 'Events',
-            'downloads' => 'Downloads',
-            'sectors' => 'Sectors',
-            'team' => 'Team',
-            'designations' => 'Designations',
-            'leadership' => 'Leadership',
-            'users' => 'Users',
-            'roles' => 'Roles',
-            'settings' => 'Settings',
-            'registrations' => 'Registrations',
-            'bulk' => 'Bulk Actions',
-            'profile' => 'Profile',
-        ];
+        $request->validate([
+            'role_ids' => ['required', 'array'],
+            'role_ids.*' => ['exists:roles,id'],
+        ]);
 
-        foreach ($modules as $key => $label) {
-            $grouped[$key] = [
-                'label' => $label,
-                'permissions' => [],
-            ];
+        // Prevent deletion of system roles
+        $systemRoles = ['Super Admin', 'Admin'];
+        $rolesToDelete = Role::whereIn('id', $request->role_ids)
+            ->whereNotIn('name', $systemRoles)
+            ->get();
+
+        $deletedCount = 0;
+        $deletedRoles = [];
+        
+        foreach ($rolesToDelete as $role) {
+            $deletedRoles[] = $role->name;
+            $role->delete();
+            $deletedCount++;
         }
 
-        foreach ($permissions as $permission) {
-            $module = explode('.', $permission->name)[0] ?? 'other';
-            
-            if (isset($grouped[$module])) {
-                $grouped[$module]['permissions'][] = $permission;
-            } else {
-                if (!isset($grouped['other'])) {
-                    $grouped['other'] = ['label' => 'Other', 'permissions' => []];
-                }
-                $grouped['other']['permissions'][] = $permission;
-            }
+        $skippedCount = count($request->role_ids) - $deletedCount;
+        
+        if ($deletedCount > 0) {
+            $message = $deletedCount . " role(s) deleted successfully: " . implode(', ', $deletedRoles);
+        } else {
+            $message = "No roles were deleted.";
+        }
+        
+        if ($skippedCount > 0) {
+            $message .= " " . $skippedCount . " system role(s) were skipped (Super Admin/Admin cannot be deleted).";
         }
 
-        return array_filter($grouped, fn($group) => count($group['permissions']) > 0);
+        return redirect()->route('admin.roles.index')
+            ->with('success', $message);
     }
+
+   
+    /**
+ * Group permissions by module.
+ */
+private function groupPermissions($permissions)
+{
+    $grouped = [];
+    
+    // Define module display names that match your seeder modules
+    $modules = [
+        'projects' => 'Projects',
+        'tenders' => 'Tenders',
+        'news' => 'News/Updates',
+        'gallery' => 'Gallery',
+        'sectors' => 'Sectors',
+        'designations' => 'Designations',
+        'users' => 'Users',
+        'downloads' => 'Downloads',
+        'team' => 'Team',
+        'leadership' => 'Leadership',
+        'roles' => 'Roles',
+    ];
+
+    // Initialize groups
+    foreach ($modules as $key => $label) {
+        $grouped[$key] = [
+            'label' => $label,
+            'permissions' => [],
+        ];
+    }
+
+    // Group permissions by module (first part before dot)
+    foreach ($permissions as $permission) {
+        $parts = explode('.', $permission->name);
+        $module = $parts[0] ?? 'other';
+        
+        if (isset($grouped[$module])) {
+            $grouped[$module]['permissions'][] = $permission;
+        } else {
+            // Handle any unexpected modules
+            if (!isset($grouped['other'])) {
+                $grouped['other'] = ['label' => 'Other', 'permissions' => []];
+            }
+            $grouped['other']['permissions'][] = $permission;
+        }
+    }
+
+    // Sort permissions within each group by action order
+    foreach ($grouped as &$group) {
+        usort($group['permissions'], function($a, $b) {
+            $order = [
+                'view' => 1, 
+                'create' => 2, 
+                'edit' => 3, 
+                'delete' => 4, 
+                'toggle_status' => 5,
+                'extend' => 6,
+                'set_thumbnail' => 7,
+            ];
+            $actionA = explode('.', $a->name)[1] ?? '';
+            $actionB = explode('.', $b->name)[1] ?? '';
+            return ($order[$actionA] ?? 99) - ($order[$actionB] ?? 99);
+        });
+    }
+
+    return array_filter($grouped, fn($group) => count($group['permissions']) > 0);
+}
 }

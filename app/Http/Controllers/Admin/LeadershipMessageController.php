@@ -8,59 +8,68 @@ use Illuminate\Http\Request;
 
 class LeadershipMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $messages = LeadershipMessage::all();
+        return view('admin.leadershipMessages.index', compact('messages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.leadershipMessages.add');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'message'     => 'required',
+        ]);
+
+        LeadershipMessage::create($validated);
+
+        return redirect()
+            ->route('admin.leadership-messages.index')   // change if you don't have 'admin.' prefix
+            ->with('success', 'Message created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(LeadershipMessage $leadershipMessage)
+    // Resource route parameter is {leadership_message} (automatically from 'leadership-messages')
+    public function show(LeadershipMessage $leadership_message)
     {
-        //
+        return view('admin.leadershipMessages.show', [
+            'message' => $leadership_message   // alias so Blade can use $message
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LeadershipMessage $leadershipMessage)
+    public function edit(LeadershipMessage $leadership_message)
     {
-        //
+        return view('admin.leadershipMessages.edit', [
+            'message' => $leadership_message
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, LeadershipMessage $leadershipMessage)
+    public function update(Request $request, LeadershipMessage $leadership_message)
     {
-        //
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'message'     => 'required',
+        ]);
+
+        $leadership_message->update($validated);
+
+        return redirect()
+            ->route('admin.leadership-messages.index')
+            ->with('success', 'Message updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(LeadershipMessage $leadershipMessage)
+    public function destroy(LeadershipMessage $leadership_message)
     {
-        //
+        $leadership_message->delete();
+
+        return redirect()
+            ->route('admin.leadership-messages.index')
+            ->with('success', 'Message deleted successfully.');
     }
 }

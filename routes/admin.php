@@ -174,6 +174,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/team/reorder', [TeamController::class, 'reorder'])->name('team.reorder');
     
     // ==================== LEADERSHIP MESSAGES MANAGEMENT ====================
+    
     Route::resource('leadership-messages', LeadershipMessageController::class);
     Route::post('/leadership-messages/{message}/toggle-status', [LeadershipMessageController::class, 'toggleStatus'])->name('leadership-messages.toggle-status');
     

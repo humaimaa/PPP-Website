@@ -26,7 +26,7 @@
     @if($errors->any())
         <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
             <div class="flex">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <i class="fas fa-exclamation-triangle text-red-500"></i>
                 </div>
                 <div class="ml-3">

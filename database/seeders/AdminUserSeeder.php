@@ -18,12 +18,11 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@pppkpk.gov.pk'],
             [
                 'name' => 'Super Administrator',
-                'password' => bcrypt('admin123'), // Encrypted password
+                'password' => bcrypt('admin123'),
                 'email_verified_at' => now(),
             ]
         );
         
-        // Assign Super Admin role
         if (!$superAdmin->hasRole('Super Admin')) {
             $superAdmin->assignRole('Super Admin');
         }

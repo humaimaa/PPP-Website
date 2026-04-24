@@ -169,7 +169,7 @@
                             <option value="">Select a role</option>
                             @foreach($roles as $role)
                                 <option value="{{ $role->id }}" {{ old('roles') && in_array($role->id, old('roles')) ? 'selected' : '' }}>
-                                    {{ $role->name }} {{ $role->description ? '- ' . $role->description : '' }}
+                                    {{ $role->name }} 
                                 </option>
                             @endforeach
                         </select>
@@ -186,34 +186,6 @@
                     </p>
                 </div>
 
-                {{-- Multiple Roles (Optional - Checkbox for additional roles) --}}
-                @if($roles->count() > 1)
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Additional Roles (Optional)
-                    </label>
-                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            @foreach($roles as $role)
-                                <label class="flex items-center p-2 hover:bg-gray-100 rounded transition cursor-pointer">
-                                    <input type="checkbox"
-                                           name="roles[]"
-                                           value="{{ $role->id }}"
-                                           class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-500"
-                                           {{ in_array($role->id, old('roles', [])) ? 'checked' : '' }}>
-                                    <span class="ml-3">
-                                        <span class="text-sm font-medium text-gray-700">{{ $role->name }}</span>
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        You can assign multiple roles to this user (optional)
-                    </p>
-                </div>
-                @endif
             </div>
 
             {{-- Form Actions --}}

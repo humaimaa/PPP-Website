@@ -133,6 +133,66 @@
     </div>
 </section>
 
+<!-- Messages Section -->
+<section class="py-16 bg-white" id="messages-section">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 overflow-hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">Messages From Leadership</h2>
+            <div class="w-20 h-1 bg-[#5c5d5c] mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            <!-- CM Message Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <div class="relative h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1577412647305-991150c7d1b3?w=800&h=600&fit=crop" alt="Chief Minister Khyber Pakhtunkhwa"
+                        class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6">
+                        <span class="text-[#A3B18A] text-sm font-medium tracking-wider uppercase">Chief Minister</span>
+                        <h3 class="text-2xl font-bold text-white mt-1">Muhammad Sohail Khan Afridi</h3>
+                        <p class="text-gray-200 text-sm mt-1">Government of Khyber Pakhtunkhwa</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-1 bg-[#0A612B] mr-3"></div>
+                        <span class="text-sm text-gray-500 uppercase tracking-wider">Message</span>
+                    </div>
+                    <div class="text-gray-600 leading-relaxed text-justify space-y-4">
+                        <p>I am proud of the transformative work being done by the Public-Private Partnership Department in Khyber Pakhtunkhwa. Through strategic collaborations between the government and private sector, we are delivering critical infrastructure projects that directly improve the lives of our citizens across the province.</p>
+                        <p>Our commitment remains unwavering to ensure transparency, efficiency, and value for money in all PPP initiatives. Together, we are building a stronger, more prosperous Khyber Pakhtunkhwa for generations to come.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secretary P&D Message Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <div class="relative h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop" alt="Secretary P&D Khyber Pakhtunkhwa"
+                        class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6">
+                        <span class="text-[#A3B18A] text-sm font-medium tracking-wider uppercase">Secretary P&D</span>
+                        <h3 class="text-2xl font-bold text-white mt-1">Mr. Ikramullah Khan</h3>
+                        <p class="text-gray-200 text-sm mt-1">Planning & Development Department, KPK</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-1 bg-[#0A612B] mr-3"></div>
+                        <span class="text-sm text-gray-500 uppercase tracking-wider">Message</span>
+                    </div>
+                    <div class="text-gray-600 leading-relaxed text-justify space-y-4">
+                        <p>The PPP framework in Khyber Pakhtunkhwa has been instrumental in attracting private sector expertise and investment across critical sectors including healthcare, education, and infrastructure. Our structured approach ensures that each partnership delivers sustainable value to the people of this province.</p>
+                        <p>We invite investors and development partners to explore the abundant opportunities available in Khyber Pakhtunkhwa. The PPP Unit stands ready to facilitate and support transformative projects that will shape the future of our region.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Projects Section -->
 <section class="py-10 bg-white w-full" id="projects-section">
     <div class="w-full px-0">

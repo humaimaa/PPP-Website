@@ -40,14 +40,13 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'roles' => ['required', 'array'],
             'roles.*' => ['exists:roles,id'],
-            'is_active' => ['boolean'],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'is_active' => $request->boolean('is_active', true),
+            'is_active' => true,
         ]);
 
         // Assign roles to user
@@ -86,13 +85,11 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'roles' => ['required', 'array'],
             'roles.*' => ['exists:roles,id'],
-            'is_active' => ['boolean'],
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'is_active' => $request->boolean('is_active'),
         ]);
 
         // Update password if provided
@@ -117,14 +114,16 @@ class UserController extends Controller
     {
         // Prevent deleting yourself
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'You cannot delete your own account.');
+            return redirect()->route('admin.users.index')
+                ->with('error', 'You cannot delete your own account.');
         }
 
         // Prevent deleting the last Super Admin
         if ($user->hasRole('Super Admin')) {
             $superAdminCount = User::role('Super Admin')->count();
             if ($superAdminCount <= 1) {
-                return back()->with('error', 'Cannot delete the last Super Admin user.');
+                return redirect()->route('admin.users.index')
+                    ->with('error', 'Cannot delete the last Super Admin user.');
             }
         }
 
@@ -141,7 +140,7 @@ class UserController extends Controller
     {
         // Prevent deactivating yourself
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'You cannot deactivate your own account.');
+            return back()->with('error', 'You cannot change your own status.');
         }
 
         // Prevent deactivating the last Super Admin
@@ -165,32 +164,37 @@ class UserController extends Controller
     public function bulkDelete(Request $request)
     {
         $request->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['exists:users,id'],
+            'user_ids' => ['required', 'array'],
+            'user_ids.*' => ['exists:users,id'],
         ]);
 
+        $userIds = $request->user_ids;
+        
         // Don't allow deleting yourself
-        if (in_array(auth()->id(), $request->ids)) {
-            return back()->with('error', 'You cannot delete your own account.');
+        if (in_array(auth()->id(), $userIds)) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'You cannot delete your own account.');
         }
 
         // Don't allow deleting the last Super Admin
         $superAdminIds = User::role('Super Admin')->pluck('id')->toArray();
-        $deletingSuperAdmins = array_intersect($request->ids, $superAdminIds);
+        $deletingSuperAdmins = array_intersect($userIds, $superAdminIds);
         
         if (!empty($deletingSuperAdmins)) {
             $remainingSuperAdmins = User::role('Super Admin')
-                ->whereNotIn('id', $request->ids)
+                ->whereNotIn('id', $userIds)
                 ->count();
             
             if ($remainingSuperAdmins === 0) {
-                return back()->with('error', 'Cannot delete all Super Admin users.');
+                return redirect()->route('admin.users.index')
+                    ->with('error', 'Cannot delete all Super Admin users.');
             }
         }
 
-        User::whereIn('id', $request->ids)->delete();
+        $deletedCount = User::whereIn('id', $userIds)->delete();
 
-        return back()->with('success', count($request->ids) . ' users deleted successfully.');
+        return redirect()->route('admin.users.index')
+            ->with('success', "{$deletedCount} user(s) deleted successfully.");
     }
 
     /**
@@ -199,13 +203,21 @@ class UserController extends Controller
     public function bulkActivate(Request $request)
     {
         $request->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['exists:users,id'],
+            'user_ids' => ['required', 'array'],
+            'user_ids.*' => ['exists:users,id'],
         ]);
 
-        User::whereIn('id', $request->ids)->update(['is_active' => true]);
+        $userIds = $request->user_ids;
+        
+        // Don't allow activating yourself (though it's fine, just skip)
+        $userIds = array_filter($userIds, function($id) {
+            return $id != auth()->id();
+        });
 
-        return back()->with('success', count($request->ids) . ' users activated successfully.');
+        $activatedCount = User::whereIn('id', $userIds)->update(['is_active' => true]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "{$activatedCount} user(s) activated successfully.");
     }
 
     /**
@@ -214,33 +226,38 @@ class UserController extends Controller
     public function bulkDeactivate(Request $request)
     {
         $request->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['exists:users,id'],
+            'user_ids' => ['required', 'array'],
+            'user_ids.*' => ['exists:users,id'],
         ]);
 
+        $userIds = $request->user_ids;
+        
         // Don't allow deactivating yourself
-        if (in_array(auth()->id(), $request->ids)) {
-            return back()->with('error', 'You cannot deactivate your own account.');
+        if (in_array(auth()->id(), $userIds)) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'You cannot deactivate your own account.');
         }
 
         // Don't allow deactivating the last active Super Admin
         $superAdminIds = User::role('Super Admin')->pluck('id')->toArray();
-        $deactivatingSuperAdmins = array_intersect($request->ids, $superAdminIds);
+        $deactivatingSuperAdmins = array_intersect($userIds, $superAdminIds);
         
         if (!empty($deactivatingSuperAdmins)) {
             $remainingActiveSuperAdmins = User::role('Super Admin')
                 ->where('is_active', true)
-                ->whereNotIn('id', $request->ids)
+                ->whereNotIn('id', $userIds)
                 ->count();
             
             if ($remainingActiveSuperAdmins === 0) {
-                return back()->with('error', 'Cannot deactivate all active Super Admin users.');
+                return redirect()->route('admin.users.index')
+                    ->with('error', 'Cannot deactivate all active Super Admin users.');
             }
         }
 
-        User::whereIn('id', $request->ids)->update(['is_active' => false]);
+        $deactivatedCount = User::whereIn('id', $userIds)->update(['is_active' => false]);
 
-        return back()->with('success', count($request->ids) . ' users deactivated successfully.');
+        return redirect()->route('admin.users.index')
+            ->with('success', "{$deactivatedCount} user(s) deactivated successfully.");
     }
 
     /**
@@ -252,47 +269,41 @@ class UserController extends Controller
         
         $filename = 'users_export_' . date('Y-m-d_His') . '.csv';
         
-        $headers = [
+        $callback = function() use ($users) {
+            $handle = fopen('php://output', 'w');
+            
+            // Add CSV headers
+            fputcsv($handle, [
+                'ID',
+                'Name',
+                'Email',
+                'Roles',
+                'Status',
+                'Email Verified',
+                'Created At',
+                'Last Updated'
+            ]);
+            
+            // Add data rows
+            foreach ($users as $user) {
+                fputcsv($handle, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->roles->pluck('name')->implode(', '),
+                    $user->is_active ? 'Active' : 'Inactive',
+                    $user->email_verified_at ? 'Verified' : 'Not Verified',
+                    $user->created_at->format('Y-m-d H:i:s'),
+                    $user->updated_at->format('Y-m-d H:i:s'),
+                ]);
+            }
+            
+            fclose($handle);
+        };
+        
+        return response()->stream($callback, 200, [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-        
-        $handle = fopen('php://output', 'w');
-        
-        // Add CSV headers
-        fputcsv($handle, [
-            'ID',
-            'Name',
-            'Email',
-            'Roles',
-            'Status',
-            'Email Verified',
-            'Created At',
-            'Last Updated'
         ]);
-        
-        // Add data rows
-        foreach ($users as $user) {
-            fputcsv($handle, [
-                $user->id,
-                $user->name,
-                $user->email,
-                $user->roles->pluck('name')->implode(', '),
-                $user->is_active ? 'Active' : 'Inactive',
-                $user->email_verified_at ? 'Verified' : 'Not Verified',
-                $user->created_at->format('Y-m-d H:i:s'),
-                $user->updated_at->format('Y-m-d H:i:s'),
-            ]);
-        }
-        
-        fclose($handle);
-        
-        return response()->stream(
-            function() use ($users) {
-                // Output is already sent via fputcsv
-            },
-            200,
-            $headers
-        );
     }
 }

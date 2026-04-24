@@ -17,6 +17,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $user->load('roles');
         return view('admin.profile.index', compact('user'));
     }
 
@@ -52,7 +53,7 @@ class ProfileController extends Controller
             $message .= ' Please verify your new email address.';
         }
 
-        return redirect()->route('admin.profile.index')
+        return redirect()->route('admin.profile')
             ->with('success', $message);
     }
 
@@ -73,6 +74,7 @@ class ProfileController extends Controller
         ], [
             'password.regex' => 'The password must contain at least one uppercase letter and one number.',
             'password.min' => 'The password must be at least 8 characters.',
+            'current_password.current_password' => 'The current password is incorrect.',
         ]);
 
         $user = Auth::user();
@@ -80,36 +82,26 @@ class ProfileController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Optional: Log out from other devices
-        // Auth::logoutOtherDevices($request->password);
-
-        return redirect()->route('admin.profile.index')
+        return redirect()->route('admin.profile')
             ->with('success', 'Password updated successfully. Please use your new password next time you log in.');
     }
 
-    /**
-     * Delete user account (optional)
-     */
-    public function destroy(Request $request)
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
 
+    /**
+     * Resend email verification link
+     */
+    public function resendVerification(Request $request)
+    {
         $user = Auth::user();
         
-        // Don't allow deleting the last admin user
-        if ($user->hasRole('super-admin') && \App\Models\User::role('super-admin')->count() === 1) {
-            return back()->with('error', 'Cannot delete the last super administrator account.');
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('admin.profile')
+                ->with('info', 'Your email is already verified.');
         }
 
-        Auth::logout();
-        $user->delete();
+        $user->sendEmailVerificationNotification();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('admin.login')
-            ->with('success', 'Your account has been deleted successfully.');
+        return redirect()->route('admin.profile')
+            ->with('success', 'Verification link sent to your email address.');
     }
 }

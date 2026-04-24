@@ -38,9 +38,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Profile Management - Accessible to all authenticated users
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::prefix('profile')->name('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('');
+        Route::put('/update', [ProfileController::class, 'update'])->name('.update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('.password');
+        Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.resend-verification');
+    });
 
     // ==================== USER MANAGEMENT ====================
     Route::prefix('users')->name('users.')->middleware('can:users.view')->group(function () {

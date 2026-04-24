@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit User - PPP Department KPK')
-@section('header-title', 'Edit User')
+@section('title', 'Edit User Role - PPP Department KPK')
+@section('header-title', 'Edit User Role')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -45,9 +45,9 @@
         <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
             <h3 class="text-lg font-semibold text-gray-800">
                 <i class="fas fa-user-edit mr-2 text-emerald-600"></i>
-                Edit User Information
+                Edit User Role
             </h3>
-            <p class="text-sm text-gray-500 mt-1">Update user account details and assigned roles</p>
+            <p class="text-sm text-gray-500 mt-1">Update role assignment for {{ $user->name }}</p>
         </div>
 
         <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="p-6">
@@ -55,10 +55,10 @@
             @method('PUT')
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Full Name --}}
+                {{-- Full Name (Read-only) --}}
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name <span class="text-red-500">*</span>
+                        Full Name
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -68,21 +68,18 @@
                             type="text" 
                             id="name" 
                             name="name" 
-                            value="{{ old('name', $user->name) }}"
-                            required
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('name') border-red-500 @enderror"
-                            placeholder="Enter full name"
+                            value="{{ $user->name }}"
+                            readonly
+                            disabled
+                            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
                         >
                     </div>
-                    @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
-                {{-- Email Address --}}
+                {{-- Email Address (Read-only) --}}
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address <span class="text-red-500">*</span>
+                        Email Address
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -92,68 +89,18 @@
                             type="email" 
                             id="email" 
                             name="email" 
-                            value="{{ old('email', $user->email) }}"
-                            required
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('email') border-red-500 @enderror"
-                            placeholder="user@example.com"
+                            value="{{ $user->email }}"
+                            readonly
+                            disabled
+                            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
                         >
-                    </div>
-                    @error('email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Password (Optional) --}}
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        New Password <span class="text-gray-400 text-xs font-normal">(Leave blank to keep current)</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('password') border-red-500 @enderror"
-                            placeholder="Minimum 8 characters"
-                        >
-                        <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-eye" id="password-toggle-icon"></i>
-                        </button>
-                    </div>
-                    @error('password')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Confirm Password --}}
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm New Password
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                        <input 
-                            type="password" 
-                            id="password_confirmation" 
-                            name="password_confirmation" 
-                            class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                            placeholder="Re-enter new password"
-                        >
-                        <button type="button" onclick="togglePassword('password_confirmation')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-eye" id="password_confirmation-toggle-icon"></i>
-                        </button>
                     </div>
                 </div>
 
-                {{-- Primary Role Selection (Dropdown) --}}
+                {{-- Role Selection (Editable) --}}
                 <div class="md:col-span-2">
                     <label for="primary_role" class="block text-sm font-medium text-gray-700 mb-2">
-                        Primary Role <span class="text-red-500">*</span>
+                        Assign Role <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -165,10 +112,10 @@
                             required
                             class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors appearance-none @error('roles') border-red-500 @enderror"
                         >
-                            <option value="">Select a primary role</option>
+                            <option value="">Select a role</option>
                             @foreach($roles as $role)
                                 <option value="{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoles)) ? 'selected' : '' }}>
-                                    {{ $role->name }} {{ $role->description ? '- ' . $role->description : '' }}
+                                    {{ $role->name }} 
                                 </option>
                             @endforeach
                         </select>
@@ -181,41 +128,9 @@
                     @enderror
                     <p class="text-xs text-gray-500 mt-2">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Select the primary role that will define this user's main permissions
+                        Select the role that will define this user's permissions
                     </p>
                 </div>
-
-                {{-- Additional Roles (Checkboxes) --}}
-                {{-- @if($roles->count() > 1)
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Additional Roles (Optional)
-                    </label>
-                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            @foreach($roles as $role)
-                                <label class="flex items-center p-2 hover:bg-gray-100 rounded transition cursor-pointer">
-                                    <input type="checkbox"
-                                           name="roles[]"
-                                           value="{{ $role->id }}"
-                                           class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-500"
-                                           {{ in_array($role->id, old('roles', $userRoles)) ? 'checked' : '' }}>
-                                    <span class="ml-3">
-                                        <span class="text-sm font-medium text-gray-700">{{ $role->name }}</span>
-                                        @if($role->description)
-                                            <span class="text-xs text-gray-500 block">{{ $role->description }}</span>
-                                        @endif
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        You can assign multiple additional roles to this user
-                    </p>
-                </div>
-                @endif --}}
 
                 {{-- User Information Summary --}}
                 <div class="md:col-span-2">
@@ -254,9 +169,9 @@
                                 </span>
                             </div>
                             <div class="md:col-span-2">
-                                <span class="text-gray-500">Current Roles:</span>
+                                <span class="text-gray-500">Current Role{{ $user->roles->count() > 1 ? 's' : '' }}:</span>
                                 <div class="flex flex-wrap gap-1 mt-1">
-                                    @foreach($user->roles as $role)
+                                    @forelse($user->roles as $role)
                                         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                                             @if($role->name === 'Super Admin') 
                                                 bg-purple-100 text-purple-800
@@ -271,7 +186,9 @@
                                             @endif">
                                             {{ $role->name }}
                                         </span>
-                                    @endforeach
+                                    @empty
+                                        <span class="text-gray-500 italic">No role assigned</span>
+                                    @endforelse
                                 </div>
                             </div>
                         </div>
@@ -293,7 +210,7 @@
                     class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                 >
                     <i class="fas fa-save mr-2"></i>
-                    Update User
+                    Update Role
                 </button>
             </div>
         </form>
@@ -303,78 +220,18 @@
 
 @push('scripts')
 <script>
-    // Toggle password visibility
-    function togglePassword(fieldId) {
-        const field = document.getElementById(fieldId);
-        const icon = document.getElementById(fieldId + '-toggle-icon');
-        
-        if (field.type === 'password') {
-            field.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            field.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-    
-    // Password strength and match validation
+    // Warn user when leaving page with unsaved changes
     document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.getElementById('password');
-        const confirmInput = document.getElementById('password_confirmation');
-        
-        if (passwordInput && confirmInput) {
-            function validatePasswordMatch() {
-                if (confirmInput.value !== '' || passwordInput.value !== '') {
-                    if (passwordInput.value !== confirmInput.value) {
-                        confirmInput.setCustomValidity('Passwords do not match');
-                    } else {
-                        confirmInput.setCustomValidity('');
-                    }
-                } else {
-                    confirmInput.setCustomValidity('');
-                }
-            }
-            
-            passwordInput.addEventListener('input', validatePasswordMatch);
-            confirmInput.addEventListener('input', validatePasswordMatch);
-        }
-        
-        // Warn user when leaving page with unsaved changes
         const form = document.querySelector('form');
-        const originalValues = {};
-        const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="password"]), select');
-        
-        inputs.forEach(input => {
-            if (input.type === 'checkbox' || input.type === 'radio') {
-                originalValues[input.name] = input.checked;
-            } else {
-                originalValues[input.name] = input.value;
-            }
-        });
+        const roleSelect = document.getElementById('primary_role');
+        let originalRoleValue = roleSelect.value;
         
         form.addEventListener('submit', function() {
             window.removeEventListener('beforeunload', warnUnsaved);
         });
         
         function warnUnsaved(e) {
-            let hasChanges = false;
-            
-            inputs.forEach(input => {
-                let currentValue;
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    currentValue = input.checked;
-                } else {
-                    currentValue = input.value;
-                }
-                
-                if (originalValues[input.name] !== currentValue) {
-                    hasChanges = true;
-                }
-            });
-            
-            if (hasChanges) {
+            if (roleSelect.value !== originalRoleValue) {
                 e.preventDefault();
                 e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
                 return e.returnValue;

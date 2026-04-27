@@ -113,11 +113,11 @@
         <div class="max-w-5xl mx-auto">
             <!-- Back Button -->
             <div class="mb-8">
-                <a href="{{ route('news.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300">
+                <a href="{{ route('updates.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    Back to News
+                    Back to Updates
                 </a>
             </div>
 

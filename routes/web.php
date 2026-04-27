@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -24,14 +26,14 @@ Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->nam
 Route::get('/project/{id}', [PageController::class, 'projectsShow'])->name('projects.show');
 
 // Media Routes
-Route::get('/news', [PageController::class, 'newsIndex'])->name('news.index');
+Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates.index');
 
-Route::get('/news/{id}', [PageController::class, 'newsShow'])->name('news.show');
+Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
 
 // Gallery Routes
-Route::get('/gallery', [PageController::class, 'galleryIndex'])->name('gallery.index');
+Route::get('/events', [PageController::class, 'eventIndex'])->name('events.index');
 
-Route::get('/gallery/album/{id}', [PageController::class, 'galleryAlbum'])->name('gallery.album');
+Route::get('events/gallery/{id}', [PageController::class, 'eventGallery'])->name('events.gallery');
 
 Route::get('/downloads', [PageController::class, 'downloads'])->name('media.downloads');
 
@@ -43,3 +45,11 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+//middleware
+Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('permissions', PermissionController::class)->except(['show']);
+    Route::resource('roles', RoleController::class)->except(['show']);
+
+});

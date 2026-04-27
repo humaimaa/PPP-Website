@@ -1,0 +1,169 @@
+/* resources/css/admin.css */
+
+/* Import Font Awesome and Google Fonts */
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* Tailwind Sources */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* Theme Configuration */
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif,
+               'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Base Styles */
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+  }
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+/* Custom scrollbar */
+#sidebar::-webkit-scrollbar        { width: 4px; }
+#sidebar::-webkit-scrollbar-track  { background: #064e3b; border-radius: 4px; }
+#sidebar::-webkit-scrollbar-thumb  { background: #34d399; border-radius: 4px; }
+
+#sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #34d399 #064e3b;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+
+.main-content {
+  margin-left: 72px;
+  margin-top: 64px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+body.sidebar-open .main-content {
+  margin-left: 256px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 72px;
+  z-index: 30;
+  transition: left 0.3s ease-in-out;
+}
+
+body.sidebar-open header {
+  left: 256px;
+}
+
+/* ============================================
+   DASHBOARD GRID
+   ============================================ */
+
+.stats-grid {
+  display: grid;
+  gap: 1.5rem;
+  transition: grid-template-columns 0.3s ease-in-out;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+body.sidebar-open .stats-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1024px) {
+  .stats-grid,
+  body.sidebar-open .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid,
+  body.sidebar-open .stats-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ============================================
+   USER DROPDOWN ANIMATION
+   ============================================ */
+
+#userDropdown:not(.hidden) {
+  animation: dropdownFadeIn 0.15s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ============================================
+   MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    margin-top: 60px !important;
+  }
+
+  header {
+    left: 0 !important;
+  }
+
+  #sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  body.sidebar-open #sidebar {
+    transform: translateX(0) !important;
+  }
+
+  body.sidebar-open {
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 769px) {
+  body.sidebar-open {
+    overflow: auto;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+
+@media print {
+  #sidebar, header, #sidebarToggle, #sidebarOverlay { display: none !important; }
+  .main-content { margin: 0 !important; }
+}

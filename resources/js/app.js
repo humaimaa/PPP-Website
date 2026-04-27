@@ -1,364 +1,329 @@
-import './bootstrap';
-
-// Import JSZip and FileSaver
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-
-// Make them globally available for use in Blade templates
-window.JSZip = JSZip;
-window.saveAs = saveAs;
-
-// Import GSAP
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Alpine from 'alpinejs';
 
-// Register ScrollTrigger plugin
+// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// Make GSAP available globally
-window.gsap = gsap;
-window.ScrollTrigger = ScrollTrigger;
-
-// Header Navigation Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    const menuOverlay = document.getElementById('menuOverlay');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-    function openMenu() {
-        if (mobileMenu && menuOverlay) {
-            mobileMenu.classList.remove('-translate-x-full');
-            mobileMenu.classList.add('translate-x-0');
-            menuOverlay.classList.remove('opacity-0', 'invisible');
-            menuOverlay.classList.add('opacity-100', 'visible');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeMenu() {
-        if (mobileMenu && menuOverlay) {
-            mobileMenu.classList.remove('translate-x-0');
-            mobileMenu.classList.add('-translate-x-full');
-            menuOverlay.classList.remove('opacity-100', 'visible');
-            menuOverlay.classList.add('opacity-0', 'invisible');
-            document.body.style.overflow = '';
-        }
-    }
-
-    // Event listeners for menu buttons
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', openMenu);
-    }
-    
-    if (closeMenuBtn) {
-        closeMenuBtn.addEventListener('click', closeMenu);
-    }
-    
-    if (menuOverlay) {
-        menuOverlay.addEventListener('click', closeMenu);
-    }
-
-    // Mobile dropdown toggles inside the offcanvas menu
-    document.querySelectorAll('.mobile-dropdown-toggle').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Close all other dropdowns first
-            document.querySelectorAll('.mobile-dropdown-menu').forEach(menu => {
-                if (menu !== this.parentElement.querySelector('.mobile-dropdown-menu')) {
-                    menu.classList.add('hidden');
-                    const otherButton = menu.closest('.mobile-dropdown')?.querySelector('.mobile-dropdown-toggle');
-                    if (otherButton) {
-                        const otherArrow = otherButton.querySelector('.mobile-dropdown-arrow');
-                        if (otherArrow) otherArrow.classList.remove('rotate-180');
+// ========== NAVBAR DROPDOWN COMPONENT ==========
+function navbarDropdown() {
+    return {
+        dropdownOpen: null,
+        mobileMenuOpen: false,
+        isScrolled: false,
+        
+        toggleDropdown(dropdown) {
+            // Close if clicking the same dropdown, otherwise open the new one
+            if (this.dropdownOpen === dropdown) {
+                this.dropdownOpen = null;
+            } else {
+                this.dropdownOpen = dropdown;
+            }
+        },
+        
+        closeAllDropdowns() {
+            this.dropdownOpen = null;
+        },
+        
+        toggleMobileMenu() {
+            this.mobileMenuOpen = !this.mobileMenuOpen;
+            if (this.mobileMenuOpen) {
+                document.body.classList.add('mobile-menu-open');
+            } else {
+                document.body.classList.remove('mobile-menu-open');
+            }
+        },
+        
+        closeMobileMenu() {
+            this.mobileMenuOpen = false;
+            document.body.classList.remove('mobile-menu-open');
+        },
+        
+        init() {
+            // Handle ESC key to close dropdowns
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    this.closeAllDropdowns();
+                    if (this.mobileMenuOpen) {
+                        this.closeMobileMenu();
                     }
                 }
             });
             
-            const parent = this.closest('.mobile-dropdown');
-            const menu = parent.querySelector('.mobile-dropdown-menu');
-            const arrow = this.querySelector('.mobile-dropdown-arrow');
-            
-            if (menu && arrow) {
-                menu.classList.toggle('hidden');
-                arrow.classList.toggle('rotate-180');
+            // Initialize scroll detection
+            this.checkScroll();
+            window.addEventListener('scroll', () => this.checkScroll());
+        },
+        
+        checkScroll() {
+            this.isScrolled = window.scrollY > 50;
+        }
+    };
+}
+
+// Make Alpine component available globally
+window.navbarDropdown = navbarDropdown;
+
+// Start Alpine
+window.Alpine = Alpine;
+Alpine.start();
+
+// ========== NAVBAR SCROLL EFFECT ==========
+function initializeNavbarScroll() {
+    const navbar = document.querySelector('.navbar');
+    
+    if (navbar) {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial call
+    }
+}
+
+// ========== LOGO ROTATION ANIMATION ==========
+function initializeLogoRotation() {
+    const logo = document.querySelector('.navbar-logo');
+    if (logo) {
+        const parent = logo.parentElement;
+        if (parent) {
+            parent.style.perspective = '1000px';
+            parent.style.transformStyle = 'preserve-3d';
+        }
+        
+        logo.addEventListener('mouseenter', () => {
+            logo.style.animationPlayState = 'paused';
+        });
+        
+        logo.addEventListener('mouseleave', () => {
+            logo.style.animationPlayState = 'running';
+        });
+    }
+}
+
+// ========== MOBILE DROPDOWN HANDLER ==========
+function initializeMobileDropdowns() {
+    // Handle closing other mobile dropdowns when one opens
+    document.addEventListener('close-other-mobile', (e) => {
+        document.querySelectorAll('[x-data]').forEach(el => {
+            if (el.__x && el.__x.$data.open && el.__x.$data.open !== true) {
+                el.__x.$data.open = false;
             }
         });
     });
+}
 
-    // Close menu on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('translate-x-0')) {
-            closeMenu();
+// ========== STATS COUNTER ANIMATION ==========
+function initializeStatsCounter() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    if (statNumbers.length > 0) {
+        const animateNumber = (element) => {
+            const target = parseInt(element.getAttribute('data-count'));
+            let current = 0;
+            const increment = target / 50;
+            const updateNumber = () => {
+                if (current < target) {
+                    current += increment;
+                    element.textContent = Math.round(current);
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    element.textContent = target;
+                }
+            };
+            updateNumber();
+        };
+        
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumber(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        statNumbers.forEach(stat => observer.observe(stat));
+    }
+}
+
+// ========== HERO OVERLAY FADE ON SCROLL ==========
+function initializeHeroOverlay() {
+    const heroOverlay = document.getElementById('heroOverlay');
+    const arrow = document.getElementById('arrow');
+    
+    if (heroOverlay) {
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const opacity = Math.min(scrollPosition / 300, 0.8);
+            heroOverlay.style.backgroundColor = `rgba(0, 0, 0, ${0.5 + opacity * 0.3})`;
+            
+            if (arrow) {
+                if (scrollPosition > 100) {
+                    arrow.style.opacity = '0';
+                    arrow.style.visibility = 'hidden';
+                } else {
+                    arrow.style.opacity = '1';
+                    arrow.style.visibility = 'visible';
+                }
+            }
+        });
+    }
+}
+
+// ========== PROJECT CATEGORY HOVER EFFECTS ==========
+function initializeProjectCards() {
+    const projectCards = document.querySelectorAll('.project-category-card');
+    
+    projectCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const img = card.querySelector('img');
+            if (img) {
+                img.style.transform = 'scale(1.1)';
+                img.style.opacity = '0.3';
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            const img = card.querySelector('img');
+            if (img) {
+                img.style.transform = 'scale(1)';
+                img.style.opacity = '1';
+            }
+        });
+    });
+}
+
+// ========== BUTTON POSITION AWARE EFFECT ==========
+function initializePositionAwareButtons() {
+    const buttons = document.querySelectorAll('.btn-position-aware');
+    
+    buttons.forEach(button => {
+        const span = button.querySelector('.position-aware-span');
+        
+        if (span) {
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                span.style.width = '300px';
+                span.style.height = '300px';
+                span.style.left = `${x}px`;
+                span.style.top = `${y}px`;
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                span.style.width = '0';
+                span.style.height = '0';
+            });
         }
     });
+}
 
-    initHeroSlider();
+// ========== SMOOTH SCROLL FOR ANCHOR LINKS ==========
+function initializeSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+}
+
+// ========== SCROLL DOWN ARROW ==========
+function initializeScrollArrow() {
+    const arrow = document.getElementById('arrow');
+    if (arrow) {
+        arrow.addEventListener('click', () => {
+            const aboutSection = document.getElementById('about-section');
+            if (aboutSection) {
+                aboutSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    }
+}
+
+// ========== ANIMATION ON SCROLL (GSAP) ==========
+function initializeGSAPAnimations() {
+    // Fade in animations for sections
+    gsap.utils.toArray('section').forEach((section, i) => {
+        gsap.from(section, {
+            scrollTrigger: {
+                trigger: section,
+                start: 'top 80%',
+                end: 'top 50%',
+                scrub: 0.5
+            },
+            opacity: 0,
+            y: 50,
+            duration: 1
+        });
+    });
+    
+    // About section image animation
+    const aboutImage = document.querySelector('#about-section img');
+    if (aboutImage) {
+        gsap.from(aboutImage, {
+            scrollTrigger: {
+                trigger: '#about-section',
+                start: 'top 70%',
+                end: 'top 50%',
+                scrub: 0.5
+            },
+            opacity: 0,
+            x: -50,
+            duration: 1
+        });
+    }
+}
+
+// ========== INITIALIZE EVERYTHING ON DOM LOAD ==========
+document.addEventListener('DOMContentLoaded', () => {
+    initializeNavbarScroll();
+    initializeLogoRotation();
+    initializeMobileDropdowns();
+    initializeStatsCounter();
+    initializeHeroOverlay();
+    initializeProjectCards();
+    initializePositionAwareButtons();
+    initializeSmoothScroll();
+    initializeScrollArrow();
+    
+    // Initialize GSAP animations only if GSAP is available
+    if (typeof gsap !== 'undefined') {
+        initializeGSAPAnimations();
+    }
 });
 
-// Hero Slider Initialization with Right-to-Left Slide Animation
-function initHeroSlider() {
-    const heroSlider = document.querySelector(".hero-slider");
-    if (!heroSlider) return;
-    
-    const slides = document.querySelectorAll(".hero-slide");
-    const dots = document.querySelectorAll(".slide-dot");
-    const slideContents = document.querySelectorAll(".slide-content");
-    
-    if (slides.length === 0) return;
-    
-    let currentIndex = 0;
-    let intervalId;
-    let isAnimating = false;
-    let isSlideContentHovered = false;
-    const autoSlideDelay = 5000;
-    
-    // Function to animate slide content
-    function animateSlideContent(element, direction = 'in') {
-        if (!element) return;
-        
-        const heading = element.querySelector('.slide-heading');
-        const text = element.querySelector('.slide-text');
-        
-        if (direction === 'in') {
-            // Animate content in
-            if (heading) {
-                gsap.fromTo(heading, 
-                    { y: 50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.2 }
-                );
-            }
-            if (text) {
-                gsap.fromTo(text,
-                    { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.4 }
-                );
-            }
-        } else {
-            // Reset content
-            if (heading) {
-                gsap.set(heading, { y: 0, opacity: 1 });
-            }
-            if (text) {
-                gsap.set(text, { y: 0, opacity: 1 });
-            }
-        }
-    }
-    
-    // Initialize slider
-    function initializeSlider() {
-        slides.forEach((slide, index) => {
-            gsap.set(slide, {
-                opacity: 0,
-                display: "none",
-                x: 0
-            });
-        });
-        
-        gsap.set(slides[0], {
-            display: "block",
-            opacity: 1
-        });
-        
-        // Animate content of first slide
-        const firstSlideContent = slides[0].querySelector('.slide-content');
-        if (firstSlideContent) {
-            animateSlideContent(firstSlideContent, 'in');
-        }
-        
-        if (dots[0]) {
-            gsap.set(dots[0], {
-                backgroundColor: "#28b960",
-                scale: 1.2
-            });
-        }
-    }
-    
-    function transitionToSlide(newIndex, direction = 'next') {
-        if (isAnimating || newIndex === currentIndex) return;
-        
-        const oldSlide = slides[currentIndex];
-        const newSlide = slides[newIndex];
-        
-        if (!newSlide) return;
-        
-        isAnimating = true;
-        
-        // Get content elements
-        const oldContent = oldSlide.querySelector('.slide-content');
-        const newContent = newSlide.querySelector('.slide-content');
-        
-        // Reset old content opacity
-        if (oldContent) {
-            gsap.set(oldContent, { opacity: 1 });
-        }
-        
-        // Set initial position for new slide
-        if (direction === 'next') {
-            gsap.set(newSlide, { x: "100%", display: "block", opacity: 1 });
-        } else {
-            gsap.set(newSlide, { x: "-100%", display: "block", opacity: 1 });
-        }
-        
-        // Set new content initial state
-        if (newContent) {
-            const heading = newContent.querySelector('.slide-heading');
-            const text = newContent.querySelector('.slide-text');
-            if (heading) gsap.set(heading, { y: 50, opacity: 0 });
-            if (text) gsap.set(text, { y: 30, opacity: 0 });
-        }
-        
-        // Animate old slide out
-        if (direction === 'next') {
-            gsap.to(oldSlide, {
-                x: "-100%",
-                duration: 0.6,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    gsap.set(oldSlide, { display: "none", x: 0 });
-                }
-            });
-        } else {
-            gsap.to(oldSlide, {
-                x: "100%",
-                duration: 0.6,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    gsap.set(oldSlide, { display: "none", x: 0 });
-                }
-            });
-        }
-        
-        // Animate new slide in
-        gsap.to(newSlide, {
-            x: 0,
-            duration: 0.6,
-            ease: "power2.inOut",
-            onComplete: () => {
-                isAnimating = false;
-                // Animate content of new slide
-                if (newContent) {
-                    animateSlideContent(newContent, 'in');
-                }
-            }
-        });
-        
-        // Update dots
-        if (dots[currentIndex]) {
-            gsap.to(dots[currentIndex], {
-                backgroundColor: "#ffffff",
-                scale: 1,
-                opacity: 0.5,
-                duration: 0.3
-            });
-        }
-        
-        if (dots[newIndex]) {
-            gsap.to(dots[newIndex], {
-                backgroundColor: "#28b960",
-                scale: 1.2,
-                opacity: 1,
-                duration: 0.5,
-                ease: "elastic.out(1, 0.5)"
-            });
-        }
-        
-        currentIndex = newIndex;
-    }
-    
-    // Next slide
-    function nextSlide() {
-        if (isAnimating) return;
-        const nextIndex = (currentIndex + 1) % slides.length;
-        transitionToSlide(nextIndex, 'next');
-    }
-    
-    // Previous slide
-    function prevSlide() {
-        if (isAnimating) return;
-        const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-        transitionToSlide(prevIndex, 'prev');
-    }
-    
-    // Start auto-sliding
-    function startSlider() {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = setInterval(() => {
-            if (!isSlideContentHovered && !isAnimating) {
-                nextSlide();
-            }
-        }, autoSlideDelay);
-    }
-    
-    // Stop auto-sliding
-    function stopSlider() {
-        if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-        }
-    }
-    
-    // Add navigation arrows if they exist
-    const prevBtn = document.querySelector('.slider-prev');
-    const nextBtn = document.querySelector('.slider-next');
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            stopSlider();
-            prevSlide();
-            startSlider();
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            stopSlider();
-            nextSlide();
-            startSlider();
-        });
-    }
-    
-    // Dot click handlers
-    dots.forEach((dot, index) => {
-        dot.addEventListener("click", () => {
-            if (isAnimating) return;
-            stopSlider();
-            const direction = index > currentIndex ? 'next' : 'prev';
-            transitionToSlide(index, direction);
-            startSlider();
-        });
-    });
-    
-    // Pause on hover for slide contents
-    slideContents.forEach((content) => {
-        content.addEventListener("mouseenter", () => {
-            isSlideContentHovered = true;
-            stopSlider();
-        });
-        
-        content.addEventListener("mouseleave", () => {
-            isSlideContentHovered = false;
-            startSlider();
-        });
-    });
-    
-    // Keyboard navigation
-    document.addEventListener("keydown", (e) => {
-        if (isAnimating) return;
-        if (e.key === "ArrowLeft") {
-            stopSlider();
-            prevSlide();
-            startSlider();
-        } else if (e.key === "ArrowRight") {
-            stopSlider();
-            nextSlide();
-            startSlider();
-        }
-    });
-    
-    // Initialize
-    initializeSlider();
-    startSlider();
-}
+// ========== WINDOW LOAD (for images and complete load) ==========
+window.addEventListener('load', () => {
+    // Additional initialization after all resources are loaded
+    document.body.classList.add('loaded');
+});
+
+// Export for use in Blade templates
+window.gsap = gsap;
+window.ScrollTrigger = ScrollTrigger;

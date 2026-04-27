@@ -55,35 +55,35 @@ class PageController extends Controller
     }
 
     /**
-     * News index page
+     * Updates index page
      */
-    public function newsIndex()
+    public function updatesIndex()
     {
-        return view('user.news.index');
+        return view('user.updates.index');
     }
 
     /**
-     * Individual news detail page
+     * Individual updates detail page
      */
-    public function newsShow($id)
+    public function updatesShow($id)
     {
-        return view('user.news.show', compact('id'));
+        return view('user.updates.show', compact('id'));
     }
 
     /**
      * Gallery index page
      */
-    public function galleryIndex()
+    public function eventIndex()
     {
-        return view('user.gallery.index');
+        return view('user.events.index');
     }
 
     /**
      * Gallery album page
      */
-    public function galleryAlbum($id)
+    public function eventGallery($id)
     {
-        return view('user.gallery.album', compact('id'));
+        return view('user.events.gallery', compact('id'));
     }
 
     /**

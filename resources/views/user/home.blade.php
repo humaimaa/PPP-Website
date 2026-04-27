@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Home')
+@section('title', 'PPP Unit KPK - Home')
 
 @section('content')
 <!-- Hero Video Section -->
@@ -41,11 +41,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="py-10 px-12 md:px-12 flex justify-center items-center w-full bg-background-gray/20">
             <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
-                <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Department KPK Headquarters"
+                <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Unit KPK Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
                     <div class="bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
-                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Department Headquarters</h3>
+                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Unit Headquarters</h3>
                         <p class="text-xs text-text-secondary lg:text-sm">Peshawar, Khyber Pakhtunkhwa</p>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
         <div class="md:order-first py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
             <div class="w-full">
                 <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
-                <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Department KPK</h2>
+                <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KPK</h2>
                 <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
                     The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa is a pioneering initiative by
                     the Government of KPK to foster collaboration between the public and private sectors for sustainable
@@ -201,7 +201,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @php
             $newsItems = [
-            ['title' => 'Signing Ceremony for New Infrastructure Project', 'date' => 'June 15, 2023', 'category' => 'Announcement', 'image' => 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca', 'id' => 1, 'desc' => 'The PPP Department signed an agreement with private partners for the construction of a new highway connecting Peshawar to Chitral.'],
+            ['title' => 'Signing Ceremony for New Infrastructure Project', 'date' => 'June 15, 2023', 'category' => 'Announcement', 'image' => 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca', 'id' => 1, 'desc' => 'The PPP Unit signed an agreement with private partners for the construction of a new highway connecting Peshawar to Chitral.'],
             ['title' => 'Groundbreaking of New Tertiary Care Hospital', 'date' => 'May 28, 2023', 'category' => 'Healthcare', 'image' => 'https://images.unsplash.com/photo-1521791136064-7986c2920216', 'id' => 2, 'desc' => 'Construction begins on a 500-bed specialized healthcare facility in Mardan under the PPP model.'],
             ['title' => '10 New Model Schools Under PPP Framework', 'date' => 'April 10, 2023', 'category' => 'Education', 'image' => 'https://images.unsplash.com/photo-1523240795612-9a054b0db644', 'id' => 3, 'desc' => 'The department announced the establishment of 10 new model schools across KPK, with private sector partners managing operations.'],
             ];
@@ -426,25 +426,6 @@
             display: block !important;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.4);
-        }
 
         /* Leaflet map container - disable panning/dragging */
         .leaflet-container {

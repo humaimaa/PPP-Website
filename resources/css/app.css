@@ -70,9 +70,14 @@
     line-height: 1.6;
     overflow-x: hidden;
   }
+  
+  /* Prevent body scroll when mobile menu is open */
+  body.mobile-menu-open {
+    overflow: hidden;
+  }
 }
 
-/* Custom utilities for animations that can't be done with Tailwind */
+/* Custom utilities for animations */
 @layer utilities {
   @keyframes continuousRotation {
     0% { transform: rotateY(0deg); }
@@ -98,9 +103,159 @@
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
   }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.2s ease-out;
+  }
 }
 
-/* Scrollbar - can't be done with Tailwind easily */
+/* ========== NAVBAR SPECIFIC STYLES ========== */
+
+/* Navbar base styles */
+.navbar {
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+/* Navbar scrolled state - Solid Green */
+.navbar-scrolled {
+  background-color: var(--color-primary) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-scrolled .desktop-menu {
+  background: rgba(13, 38, 23, 0.95) !important;
+  backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Desktop menu base styles */
+.desktop-menu {
+  transition: all 0.3s ease;
+}
+
+/* Dropdown styles - Base (transparent) */
+.dropdown-menu {
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dropdown scrolled state - Solid Green */
+.navbar-scrolled .dropdown-menu {
+  background: var(--color-primary) !important;
+  backdrop-filter: blur(0px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile menu base styles */
+.mobile-menu {
+  background-color: var(--color-primary);
+}
+
+.navbar-scrolled .mobile-menu {
+  background-color: var(--color-primary-dark);
+}
+
+/* ========== DROPDOWN ITEM HOVER STYLES - TEXT COLOR CHANGE ONLY ========== */
+.dropdown-item {
+  position: relative;
+  transition: all 0.3s ease;
+  color: var(--color-text-primary);
+}
+
+/* On hover: change text color to gold, add slight right movement, NO background change */
+.dropdown-item:hover {
+  color: var(--color-accent-1) !important;
+  transform: translateX(5px);
+  background-color: transparent !important;
+}
+
+/* For scrolled state - same behavior */
+.navbar-scrolled .dropdown-item:hover {
+  color: var(--color-accent-1) !important;
+  background-color: transparent !important;
+  transform: translateX(5px);
+}
+
+/* Dropdown arrow rotation */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.dropdown-button svg {
+  transition: transform 0.3s ease;
+}
+
+/* Top-level nav links hover - change text color to gold */
+.desktop-menu > div > button:hover,
+.desktop-menu > a:hover {
+  color: var(--color-accent-1) !important;
+}
+
+/* Mobile menu improvements */
+.mobile-menu-item {
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-item:active {
+  transform: scale(0.98);
+}
+
+/* Mobile menu links hover - text color change */
+.mobile-menu a:hover {
+  color: var(--color-accent-1) !important;
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  button, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Active dropdown indicator */
+.dropdown-active button {
+  color: var(--color-accent-1);
+}
+
+/* Hover effects for nav links - underline effect */
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-accent-1);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -116,4 +271,31 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(179, 147, 57, 0.8);
+}
+
+/* Loading spinner animations */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.95); }
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
 }

@@ -113,7 +113,7 @@
                          style="display: none;">
                         <a href="{{ route('updates.index') }}" class="dropdown-item block px-4 py-3 transition-all duration-300">News & Updates</a>
                         <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('gallery.index') }}" class="dropdown-item block px-4 py-3 transition-all duration-300">Gallery</a>
+                        <a href="{{ route('events.index') }}" class="dropdown-item block px-4 py-3 transition-all duration-300">Events</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('media.downloads') }}" class="dropdown-item block px-4 py-3 transition-all duration-300">Downloads</a>
                     </div>
@@ -228,7 +228,7 @@
                             x-transition:enter-end="opacity-100 transform translate-y-0"
                             class="mt-2 space-y-1 pl-6">
                             <li><a href="{{ route('updates.index') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">News & Updates</a></li>
-                            <li><a href="{{ route('gallery.index') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Gallery</a></li>
+                            <li><a href="{{ route('events.index') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Gallery</a></li>
                             <li><a href="{{ route('media.downloads') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Downloads</a></li>
                         </ul>
                     </li>

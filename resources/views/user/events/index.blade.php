@@ -90,7 +90,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($paginatedAlbums as $album)
-            <div class="group cursor-pointer" onclick="window.location='{{ route('gallery.album', $album['id']) }}'">
+            <div class="group cursor-pointer" onclick="window.location='{{ route('events.gallery', $album['id']) }}'">
                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <!-- Image Container -->
                     <div class="relative overflow-hidden h-64">

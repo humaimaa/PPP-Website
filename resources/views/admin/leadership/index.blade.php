@@ -27,6 +27,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Designation</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Message</th>
@@ -36,6 +37,17 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($messages as $msg)
                         <tr>
+                            <td class="px-6 py-4">
+                                @if ($msg->image)
+                                    <img src="{{ asset('storage/' . $msg->image) }}"
+                                         alt="{{ $msg->name }}"
+                                         class="w-12 h-12 rounded-full object-cover border border-gray-200 shadow-sm">
+                                @else
+                                    <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 font-medium">{{ $msg->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $msg->designation }}</td>
                             <td class="px-6 py-4">
@@ -73,7 +85,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center py-4 text-gray-500">No leadership messages found.</td>
+                            <td colspan="5" class="text-center py-4 text-gray-500">No leadership messages found.</td>
                         </tr>
                     @endforelse
                 </tbody>

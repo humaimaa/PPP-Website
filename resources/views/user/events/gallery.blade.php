@@ -127,7 +127,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('gallery.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300" aria-label="Back to gallery">
+            <a href="{{ route('events.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300" aria-label="Back to gallery">
                 <i class="fas fa-arrow-left mr-2" aria-hidden="true"></i>
                 Back to Gallery
             </a>

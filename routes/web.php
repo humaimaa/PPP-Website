@@ -31,9 +31,9 @@ Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates.i
 Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
 
 // Gallery Routes
-Route::get('/gallery', [PageController::class, 'galleryIndex'])->name('gallery.index');
+Route::get('/events', [PageController::class, 'eventIndex'])->name('events.index');
 
-Route::get('/gallery/album/{id}', [PageController::class, 'galleryAlbum'])->name('gallery.album');
+Route::get('events/gallery/{id}', [PageController::class, 'eventGallery'])->name('events.gallery');
 
 Route::get('/downloads', [PageController::class, 'downloads'])->name('media.downloads');
 

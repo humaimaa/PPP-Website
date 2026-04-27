@@ -22,7 +22,7 @@
     @endif
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
-        <form action="{{ route('admin.leadership.update', $message->id) }}" method="POST">
+        <form action="{{ route('admin.leadership.update', $message->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -54,6 +54,33 @@
                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 @error('message') border-red-500 @enderror">{{ old('message', $message->message) }}</textarea>
                 @error('message')
                     <span class="text-red-500 text-sm mt-1">{{ $errors->first('message') }}</span>
+                @enderror
+            </div>
+
+            {{-- Image Upload --}}
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700">Profile Image</label>
+
+                @if ($message->image)
+                    <div class="mt-2 mb-3 flex items-center gap-4">
+                        <img src="{{ asset('storage/' . $message->image) }}"
+                             alt="Current image"
+                             class="w-20 h-20 rounded-full object-cover border border-gray-300 shadow">
+                        <span class="text-sm text-gray-500">Current image</span>
+                    </div>
+                @endif
+
+                <input type="file" id="image" name="image" accept="image/*"
+                       class="mt-1 block w-full text-sm text-gray-500
+                              file:mr-4 file:py-2 file:px-4
+                              file:rounded-md file:border-0
+                              file:text-sm file:font-medium
+                              file:bg-emerald-50 file:text-emerald-700
+                              hover:file:bg-emerald-100">
+                <p class="mt-1 text-xs text-gray-400">Leave empty to keep the current image. Accepted: JPG, PNG, WEBP.</p>
+
+                @error('image')
+                    <span class="text-red-500 text-sm mt-1">{{ $errors->first('image') }}</span>
                 @enderror
             </div>
 

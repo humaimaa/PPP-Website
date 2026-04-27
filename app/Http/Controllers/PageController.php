@@ -73,17 +73,17 @@ class PageController extends Controller
     /**
      * Gallery index page
      */
-    public function galleryIndex()
+    public function eventIndex()
     {
-        return view('user.gallery.index');
+        return view('user.events.index');
     }
 
     /**
      * Gallery album page
      */
-    public function galleryAlbum($id)
+    public function eventGallery($id)
     {
-        return view('user.gallery.album', compact('id'));
+        return view('user.events.gallery', compact('id'));
     }
 
     /**

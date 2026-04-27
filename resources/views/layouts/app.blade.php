@@ -13,11 +13,9 @@
     @stack('styles')
 </head>
 
-<body class="font-sans bg-primary text-text-primary">
-    <!-- Page Loader -->
-    @include('layouts.partials.loader')
-    
-    @include('layouts.partials.header')
+<body class="font-sans background-white text-text-primary">
+    @include('.layouts.partials.loader')
+    @include('.layouts.partials.header')
 
     <main>
         @yield('content')

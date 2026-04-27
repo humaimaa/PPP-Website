@@ -12,6 +12,20 @@
 
 <main class="p-4 md:p-6">
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
+
+        {{-- Profile Image --}}
+        <div class="flex justify-center mb-6">
+            @if ($message->image)
+                <img src="{{ asset('storage/' . $message->image) }}"
+                     alt="{{ $message->name }}"
+                     class="w-32 h-32 rounded-full object-cover border-4 border-emerald-100 shadow">
+            @else
+                <div class="w-32 h-32 rounded-full bg-gray-100 border-4 border-emerald-100 shadow flex items-center justify-center">
+                    <i class="fas fa-user text-gray-400 text-4xl"></i>
+                </div>
+            @endif
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Name</h3>

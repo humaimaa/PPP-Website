@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LeadershipMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LeadershipMessageController extends Controller
 {
@@ -21,51 +22,75 @@ class LeadershipMessageController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name'        => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'message'     => 'required|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        LeadershipMessage::create($validated);
+        $data = $request->only(['name', 'designation', 'message']);
 
-        return redirect()
-            ->route('admin.leadership.index')
-            ->with('success', 'Message created successfully.');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('leadership', 'public');
+        }
+
+        LeadershipMessage::create($data);
+
+        return redirect()->route('admin.leadership.index')
+                         ->with('success', 'Leadership message added successfully.');
     }
 
-    // Parameter name MUST match the route {message}
-    public function show(LeadershipMessage $message)
+    public function show($id)
     {
+        $message = LeadershipMessage::findOrFail($id);
         return view('admin.leadership.show', compact('message'));
     }
 
-    public function edit(LeadershipMessage $message)
+    public function edit($id)
     {
+        $message = LeadershipMessage::findOrFail($id);
         return view('admin.leadership.edit', compact('message'));
     }
 
-    public function update(Request $request, LeadershipMessage $message)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $message = LeadershipMessage::findOrFail($id);
+
+        $request->validate([
             'name'        => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'message'     => 'required|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $message->update($validated);
+        $data = $request->only(['name', 'designation', 'message']);
 
-        return redirect()
-            ->route('admin.leadership.index')
-            ->with('success', 'Message updated successfully.');
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($message->image) {
+                Storage::disk('public')->delete($message->image);
+            }
+            $data['image'] = $request->file('image')->store('leadership', 'public');
+        }
+
+        $message->update($data);
+
+        return redirect()->route('admin.leadership.index')
+                         ->with('success', 'Leadership message updated successfully.');
     }
 
-    public function destroy(LeadershipMessage $message)
+    public function destroy($id)
     {
+        $message = LeadershipMessage::findOrFail($id);
+
+        if ($message->image) {
+            Storage::disk('public')->delete($message->image);
+        }
+
         $message->delete();
 
-        return redirect()
-            ->route('admin.leadership.index')
-            ->with('success', 'Message deleted successfully.');
+        return redirect()->route('admin.leadership.index')
+                         ->with('success', 'Leadership message deleted successfully.');
     }
 }

@@ -1,27 +1,119 @@
-/* 1. External CSS must come FIRST */
+/* 1. All @imports MUST come first */
 @import '@fortawesome/fontawesome-free/css/all.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* 2. Specific Google Font URL (Yours was just 'googleapis.com') */
-@import url('https://googleapis.com');
-
-/* 3. Tailwind CSS Import */
+/* 2. Tailwind */
 @import "tailwindcss";
 
-/* 4. Project Source directives */
+/* 3. Source files for Tailwind */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-/* 5. Theme Configuration */
 @theme {
-  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 
-               'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Colors - Theme: #0D2617, white, #B39339 */
+  --color-primary: #0D2617;
+  --color-primary-dark: #07180e;
+  --color-primary-light: #1a3a28;
+  --color-primary-hover: #B39339;
+
+  --color-background-primary: #0D2617;
+  --color-background-secondary: #1a3a28;
+  --color-background-card: #0D2617;
+  --color-background-white: #ffffff;
+  --color-background-gray: #888888; 
+  --color-background-dark: #0D2617;
+
+  --color-text-primary: #ffffff;
+  --color-text-black: #000000;
+  --color-text-green: #0D2617;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #6b7280;
+
+  --color-accent-1: #B39339;
+  --color-accent-2: #c4a747;
+  --color-accent-3: #0D2617;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  /* Box Shadow */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+  --shadow-glow: 0 0 20px rgba(179, 147, 57, 0.5);
 }
 
-/* 6. Global Reset (Ensures the theme is applied to everything) */
 @layer base {
-  html, body {
-    font-family: var(--font-sans);
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: #0D2617;
+    color: #ffffff;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom utilities for animations that can't be done with Tailwind */
+@layer utilities {
+  @keyframes continuousRotation {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+  }
+
+  .animate-continuous-rotation {
+    animation: continuousRotation 8s linear infinite;
+    transform-style: preserve-3d;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+}
+
+/* Scrollbar - can't be done with Tailwind easily */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(179, 147, 57, 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(179, 147, 57, 0.8);
 }

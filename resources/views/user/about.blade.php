@@ -106,7 +106,6 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-[#0D2818]">Dr. Sarah Ahmed</h3>
                         <p class="text-[#0A612B] font-semibold mb-2">Senior Research Officer</p>
-                        <p class="text-gray-600 text-sm mb-3">PhD in Economics, 12+ years experience</p>
                         <div class="flex space-x-3 mt-3">
                             <a href="mailto:sarah@pppdepartmentkpk.gov.pk" class="text-[#0A612B] hover:text-[#0D2818]">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

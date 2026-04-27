@@ -16,7 +16,7 @@
         @if(session('success'))
             <div class="mb-6 rounded-lg bg-green-50 p-4 border-l-4 border-green-500">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <i class="fas fa-check-circle text-green-500"></i>
                     </div>
                     <div class="ml-3">
@@ -29,7 +29,7 @@
         @if(session('error'))
             <div class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <i class="fas fa-exclamation-circle text-red-500"></i>
                     </div>
                     <div class="ml-3">
@@ -42,7 +42,7 @@
         @if($errors->any())
             <div class="mb-6 rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
                 <div class="flex">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <i class="fas fa-exclamation-triangle text-red-500"></i>
                     </div>
                     <div class="ml-3">
@@ -62,7 +62,7 @@
             <div class="lg:col-span-1 space-y-6">
                 <!-- Profile Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-8 text-center">
+                    <div class="bg-linear-to-r from-emerald-600 to-teal-600 px-6 py-8 text-center">
                         <div class="relative inline-block">
                             <div class="w-28 h-28 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto border-4 border-white shadow-lg">
                                 <span class="text-4xl font-bold text-white">
@@ -160,7 +160,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Update Profile Information -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" id="profileForm">
-                    <div class="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
+                    <div class="border-b border-gray-200 px-6 py-4 bg-linear-to-r from-gray-50 to-white">
                         <h2 class="text-xl font-semibold text-gray-900 flex items-center">
                             <i class="fas fa-user-edit text-emerald-600 mr-2"></i>
                             Profile Information
@@ -245,7 +245,7 @@
 
                 <!-- Change Password -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" id="passwordForm">
-                    <div class="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
+                    <div class="border-b border-gray-200 px-6 py-4 bg-linear-to-r from-gray-50 to-white">
                         <h2 class="text-xl font-semibold text-gray-900 flex items-center">
                             <i class="fas fa-lock text-emerald-600 mr-2"></i>
                             Change Password
@@ -365,7 +365,7 @@
 
                 <!-- Session Management -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
+                    <div class="border-b border-gray-200 px-6 py-4 bg-linear-to-r from-gray-50 to-white">
                         <h2 class="text-xl font-semibold text-gray-900 flex items-center">
                             <i class="fas fa-desktop text-emerald-600 mr-2"></i>
                             Session Management
@@ -375,7 +375,7 @@
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="flex-shrink-0">
+                                <div class="shrink-0">
                                     <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
                                         <i class="fas fa-laptop-code text-gray-600"></i>
                                     </div>

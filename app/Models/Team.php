@@ -2,16 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Team extends Model
 {
+    use HasFactory;
+    
     protected $table = 'team';
     
-    protected $fillable = ['name', 'designation_id', 'img', 'email', 'message'];
+    protected $fillable = [
+        'name',
+        'designation_id',
+        'img',
+        'email',
+        'experience',
+    ];
     
-    public function designation(): BelongsTo
+    /**
+     * Get the designation associated with the team member.
+     */
+    public function designation()
     {
         return $this->belongsTo(Designation::class);
     }

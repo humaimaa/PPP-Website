@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('designation');
             $table->text('message');
             $table->timestamps();
+             $table->string('image')->nullable();
         });
     }
 

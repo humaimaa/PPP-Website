@@ -49,9 +49,6 @@ class PermissionsSeeder extends Seeder
         
         // Gallery specific permissions (set_thumbnail for gallery)
         Permission::firstOrCreate(['name' => 'gallery.set_thumbnail', 'guard_name' => 'web']);
-        
-        // Tenders specific permissions (extend for tenders)
-        Permission::firstOrCreate(['name' => 'tenders.extend', 'guard_name' => 'web']);
 
         // ==================== BULK DELETE PERMISSION ====================
         Permission::firstOrCreate(['name' => 'bulk.delete', 'guard_name' => 'web']);
@@ -80,7 +77,7 @@ class PermissionsSeeder extends Seeder
         $contentManagerRole = Role::firstOrCreate(['name' => 'Content Manager', 'guard_name' => 'web']);
         $contentManagerPermissions = [
             'projects.view', 'projects.create', 'projects.edit',
-            'tenders.view', 'tenders.create', 'tenders.edit', 'tenders.extend',
+            'tenders.view', 'tenders.create', 'tenders.edit',
             'news.view', 'news.create', 'news.edit',
             'gallery.view', 'gallery.create', 'gallery.edit', 'gallery.set_thumbnail',
             'sectors.view', 'sectors.create', 'sectors.edit',

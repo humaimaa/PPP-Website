@@ -12,11 +12,23 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Display a listing of users.
+     * Display a listing of users with search functionality.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('roles')->latest()->paginate(10);
+        $query = User::with('roles');
+        
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        
+        $users = $query->latest()->paginate(10);
+        
         return view('admin.users.index', compact('users'));
     }
 
@@ -47,6 +59,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'is_active' => true,
+            'email_verified_at' => now(), // Auto-verify email for admin-created users
         ]);
 
         // Assign roles to user
@@ -54,15 +67,6 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
-    }
-
-    /**
-     * Display the specified user.
-     */
-    public function show(User $user)
-    {
-        $user->load('roles', 'permissions');
-        return view('admin.users.show', compact('user'));
     }
 
     /**
@@ -258,52 +262,5 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', "{$deactivatedCount} user(s) deactivated successfully.");
-    }
-
-    /**
-     * Export users to CSV
-     */
-    public function export()
-    {
-        $users = User::with('roles')->get();
-        
-        $filename = 'users_export_' . date('Y-m-d_His') . '.csv';
-        
-        $callback = function() use ($users) {
-            $handle = fopen('php://output', 'w');
-            
-            // Add CSV headers
-            fputcsv($handle, [
-                'ID',
-                'Name',
-                'Email',
-                'Roles',
-                'Status',
-                'Email Verified',
-                'Created At',
-                'Last Updated'
-            ]);
-            
-            // Add data rows
-            foreach ($users as $user) {
-                fputcsv($handle, [
-                    $user->id,
-                    $user->name,
-                    $user->email,
-                    $user->roles->pluck('name')->implode(', '),
-                    $user->is_active ? 'Active' : 'Inactive',
-                    $user->email_verified_at ? 'Verified' : 'Not Verified',
-                    $user->created_at->format('Y-m-d H:i:s'),
-                    $user->updated_at->format('Y-m-d H:i:s'),
-                ]);
-            }
-            
-            fclose($handle);
-        };
-        
-        return response()->stream($callback, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ]);
     }
 }

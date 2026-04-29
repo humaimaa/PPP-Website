@@ -4,7 +4,7 @@
 @section('header-title', 'Role Management')
 
 @section('content')
-<div class="p-6">
+<div class="max-w-7xl mx-auto p-6">
 
     <div class="flex items-center justify-between mb-6">
         <div>
@@ -42,161 +42,204 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        <i class="fas fa-shield-alt mr-2 text-emerald-600"></i>
+                        All Roles
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Total: <span class="font-semibold text-emerald-600">{{ $roles->total() }}</span> roles
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <form method="GET" action="{{ route('admin.roles.index') }}" class="flex gap-2">
+                        <input type="text" 
+                               name="search" 
+                               value="{{ request('search') }}"
+                               placeholder="Search roles by name..." 
+                               class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
+                        <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        @if(request('search'))
+                            <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <form id="bulkDeleteForm" action="{{ route('admin.roles.bulk-delete') }}" method="POST">
             @csrf
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-3 text-left w-10">
-                            <input type="checkbox" 
-                                   id="selectAllCheckbox" 
-                                   class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                        </th>
-                        <th class="px-6 py-3 text-left">Role Name</th>
-                        <th class="px-6 py-3 text-left">Permissions</th>
-                        <th class="px-6 py-3 text-left">Users</th>
-                        <th class="px-6 py-3 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 text-gray-700">
-                    @forelse($roles as $role)
-                    <tr class="hover:bg-gray-50 transition" data-role-id="{{ $role->id }}">
-                        <td class="px-6 py-4">
-                            @if(!in_array($role->name, ['Super Admin', 'Admin']))
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3 text-left w-10">
                                 <input type="checkbox" 
-                                       name="role_ids[]" 
-                                       value="{{ $role->id }}"
-                                       class="role-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            @else
-                                <span class="text-gray-300 text-xs" title="System role cannot be deleted">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center bg-gray-800 text-white text-xs font-medium px-2.5 py-1 rounded-md">
-                                {{ $role->name }}
-                            </span>
-                            @if(in_array($role->name, ['Super Admin', 'Admin']))
-                                <span class="ml-2 text-xs text-gray-400">(System)</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex flex-wrap gap-1 max-w-md">
-                                @php
-                                    // Limit permissions to show only first 3
-                                    $displayPermissions = $role->permissions->take(3);
-                                    $remainingCount = $role->permissions->count() - 3;
-                                @endphp
-                                
-                                @forelse($displayPermissions as $perm)
-                                    @php
-                                        // Extract action from permission name (e.g., "projects.view" -> "view")
-                                        $action = explode('.', $perm->name)[1] ?? '';
-                                        $actionLabels = [
-                                            'view' => 'View',
-                                            'create' => 'Create',
-                                            'edit' => 'Edit',
-                                            'delete' => 'Delete',
-                                            'toggle_status' => 'Toggle Status',
-                                            'extend' => 'Extend',
-                                            'set_thumbnail' => 'Set Thumbnail',
-                                        ];
-                                        $actionColors = [
-                                            'view' => 'text-blue-600 bg-blue-50',
-                                            'create' => 'text-green-600 bg-green-50',
-                                            'edit' => 'text-yellow-600 bg-yellow-50',
-                                            'delete' => 'text-red-600 bg-red-50',
-                                            'toggle_status' => 'text-purple-600 bg-purple-50',
-                                            'extend' => 'text-orange-600 bg-orange-50',
-                                            'set_thumbnail' => 'text-pink-600 bg-pink-50',
-                                        ];
-                                        $label = $actionLabels[$action] ?? ucfirst($action);
-                                        $colorClass = $actionColors[$action] ?? 'text-gray-600 bg-gray-50';
-                                        
-                                        // Get module name
-                                        $module = explode('.', $perm->name)[0] ?? '';
-                                        $moduleLabels = [
-                                            'projects' => 'Proj',
-                                            'tenders' => 'Tend',
-                                            'news' => 'News',
-                                            'gallery' => 'Gal',
-                                            'sectors' => 'Sec',
-                                            'designations' => 'Desig',
-                                            'users' => 'Users',
-                                            'downloads' => 'Dl',
-                                            'team' => 'Team',
-                                            'leadership' => 'Lead',
-                                            'roles' => 'Roles',
-                                        ];
-                                        $moduleShort = $moduleLabels[$module] ?? ucfirst(substr($module, 0, 3));
-                                    @endphp
-                                    <span class="text-xs px-2 py-0.5 rounded-full font-medium {{ $colorClass }}" title="{{ $perm->name }}">
-                                        {{ $moduleShort }}: {{ $label }}
-                                    </span>
-                                @empty
-                                    <span class="text-gray-400 text-xs">No permissions</span>
-                                @endforelse
-                                
-                                @if($remainingCount > 0)
-                                    <span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full cursor-help" title="{{ $role->permissions->slice(3)->pluck('name')->implode(', ') }}">
-                                        +{{ $remainingCount }} more
-                                    </span>
-                                @endif
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-gray-600 font-medium">{{ $role->users_count }}</span>
-                            <span class="text-gray-400 text-xs ml-1">{{ Str::plural('user', $role->users_count) }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex items-center justify-end gap-2">
-                                {{-- View Button --}}
-                                <a href="{{ route('admin.roles.show', $role) }}" 
-                                   class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                   title="View Role Details">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                
-                                {{-- Edit Button --}}
-                                <a href="{{ route('admin.roles.edit', $role) }}" 
-                                   class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                   title="Edit Role">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                
-                                {{-- Delete Button --}}
+                                       id="selectAllCheckbox" 
+                                       class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </th>
+                            <th class="px-6 py-3 text-left">Role Name</th>
+                            <th class="px-6 py-3 text-left">Permissions</th>
+                            <th class="px-6 py-3 text-left">Users</th>
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-700">
+                        @forelse($roles as $role)
+                        <tr class="hover:bg-gray-50 transition" data-role-id="{{ $role->id }}">
+                            <td class="px-6 py-4">
                                 @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                                    <button onclick="confirmDelete({{ $role->id }}, '{{ $role->name }}')" 
-                                            class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                            title="Delete Role">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <input type="checkbox" 
+                                           name="role_ids[]" 
+                                           value="{{ $role->id }}"
+                                           class="role-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 @else
-                                    <span class="text-gray-400 p-2 cursor-not-allowed" title="System role cannot be deleted">
+                                    <span class="text-gray-300 text-xs" title="System role cannot be deleted">
                                         <i class="fas fa-lock"></i>
                                     </span>
                                 @endif
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-400">
-                            <i class="fas fa-shield-alt text-4xl mb-2"></i>
-                            <p class="text-lg mb-1">No roles yet</p>
-                            <a href="{{ route('admin.roles.create') }}" class="text-emerald-600 hover:underline text-sm">
-                                Create your first role →
-                            </a>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center bg-gray-800 text-white text-xs font-medium px-2.5 py-1 rounded-md">
+                                    {{ $role->name }}
+                                </span>
+                                @if(in_array($role->name, ['Super Admin', 'Admin']))
+                                    <span class="ml-2 text-xs text-gray-400">(System)</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-1 max-w-md">
+                                    @php
+                                        // Limit permissions to show only first 3
+                                        $displayPermissions = $role->permissions->take(3);
+                                        $remainingCount = $role->permissions->count() - 3;
+                                    @endphp
+                                    
+                                    @forelse($displayPermissions as $perm)
+                                        @php
+                                            // Extract action from permission name (e.g., "projects.view" -> "view")
+                                            $action = explode('.', $perm->name)[1] ?? '';
+                                            $actionLabels = [
+                                                'view' => 'View',
+                                                'create' => 'Create',
+                                                'edit' => 'Edit',
+                                                'delete' => 'Delete',
+                                                'toggle_status' => 'Toggle Status',
+                                                'extend' => 'Extend',
+                                                'set_thumbnail' => 'Set Thumbnail',
+                                            ];
+                                            $actionColors = [
+                                                'view' => 'text-blue-600 bg-blue-50',
+                                                'create' => 'text-green-600 bg-green-50',
+                                                'edit' => 'text-yellow-600 bg-yellow-50',
+                                                'delete' => 'text-red-600 bg-red-50',
+                                                'toggle_status' => 'text-purple-600 bg-purple-50',
+                                                'extend' => 'text-orange-600 bg-orange-50',
+                                                'set_thumbnail' => 'text-pink-600 bg-pink-50',
+                                            ];
+                                            $label = $actionLabels[$action] ?? ucfirst($action);
+                                            $colorClass = $actionColors[$action] ?? 'text-gray-600 bg-gray-50';
+                                            
+                                            // Get module name
+                                            $module = explode('.', $perm->name)[0] ?? '';
+                                            $moduleLabels = [
+                                                'projects' => 'Proj',
+                                                'tenders' => 'Tend',
+                                                'news' => 'News',
+                                                'gallery' => 'Gal',
+                                                'sectors' => 'Sec',
+                                                'designations' => 'Desig',
+                                                'users' => 'Users',
+                                                'downloads' => 'Dl',
+                                                'team' => 'Team',
+                                                'leadership' => 'Lead',
+                                                'roles' => 'Roles',
+                                            ];
+                                            $moduleShort = $moduleLabels[$module] ?? ucfirst(substr($module, 0, 3));
+                                        @endphp
+                                        <span class="text-xs px-2 py-0.5 rounded-full font-medium {{ $colorClass }}" title="{{ $perm->name }}">
+                                            {{ $moduleShort }}: {{ $label }}
+                                        </span>
+                                    @empty
+                                        <span class="text-gray-400 text-xs">No permissions</span>
+                                    @endforelse
+                                    
+                                    @if($remainingCount > 0)
+                                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full cursor-help" title="{{ $role->permissions->slice(3)->pluck('name')->implode(', ') }}">
+                                            +{{ $remainingCount }} more
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-gray-600 font-medium">{{ $role->users_count }}</span>
+                                <span class="text-gray-400 text-xs ml-1">{{ Str::plural('user', $role->users_count) }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center justify-end gap-2">
+                                    {{-- View Button --}}
+                                    <a href="{{ route('admin.roles.show', $role) }}" 
+                                       class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                       title="View Role Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    
+                                    {{-- Edit Button --}}
+                                    <a href="{{ route('admin.roles.edit', $role) }}" 
+                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                       title="Edit Role">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
+                                    {{-- Delete Button --}}
+                                    @if(!in_array($role->name, ['Super Admin', 'Admin']))
+                                        <button onclick="confirmDelete({{ $role->id }}, '{{ $role->name }}')" 
+                                                class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                title="Delete Role">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @else
+                                        <span class="text-gray-400 p-2 cursor-not-allowed" title="System role cannot be deleted">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-shield-alt text-4xl mb-2"></i>
+                                <p class="text-lg mb-1">No roles found</p>
+                                @if(request('search'))
+                                    <a href="{{ route('admin.roles.index') }}" class="text-emerald-600 hover:underline text-sm">
+                                        Clear search
+                                    </a>
+                                @else
+                                    <a href="{{ route('admin.roles.create') }}" class="text-emerald-600 hover:underline text-sm">
+                                        Create your first role →
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </form>
     </div>
 
-    <div class="mt-4">{{ $roles->links() }}</div>
+    @if($roles->hasPages())
+        <div class="mt-4">
+            {{ $roles->appends(request()->query())->links() }}
+        </div>
+    @endif
 </div>
 
 {{-- Delete Confirmation Modal --}}

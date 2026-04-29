@@ -4,12 +4,12 @@
 @section('header-title', 'Users Management')
 
 @section('content')
-<div class="p-6">
+<div class="max-w-7xl mx-auto p-6">
     
     {{-- Header Actions --}}
     <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-800">All Users</h1>
+            <h1 class="text-2xl font-bold text-gray-800">All Users</h1>
             <p class="text-sm text-gray-500 mt-0.5">Manage system users and their roles</p>
         </div>
         
@@ -25,7 +25,7 @@
             {{-- Add User Button --}}
             @can('users.create')
             <a href="{{ route('admin.users.add') }}" 
-               class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition flex items-center">
+               class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition flex items-center">
                 <i class="fas fa-plus mr-2"></i>
                 Add New User
             </a>
@@ -35,7 +35,7 @@
 
     {{-- Success Message --}}
     @if(session('success'))
-        <div class="mb-4 bg-emerald-50 border-l-4 border-emerald-700 text-emerald-700 p-4 rounded-r-lg">
+        <div class="mb-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-r-lg">
             <div class="flex items-center">
                 <i class="fas fa-check-circle mr-2"></i>
                 <span>{{ session('success') }}</span>
@@ -55,6 +55,37 @@
 
     {{-- Users Table --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        <i class="fas fa-users mr-2 text-emerald-600"></i>
+                        All Users
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Total: <span class="font-semibold text-emerald-600">{{ $users->total() }}</span> users
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="flex gap-2">
+                        <input type="text" 
+                               name="search" 
+                               value="{{ request('search') }}"
+                               placeholder="Search by name or email..." 
+                               class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
+                        <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        @if(request('search'))
+                            <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <form id="bulkDeleteForm" action="{{ route('admin.users.bulk-delete') }}" method="POST">
             @csrf
             <div class="overflow-x-auto">
@@ -128,8 +159,9 @@
                                     @if($user->roles->count() > 0)
                                         <div class="flex flex-wrap gap-1">
                                             @foreach($user->roles as $role)
-                                                <span class="inline-flex items-center px-2  text-green-800 py-1  text-xs font-medium
-                                                    
+                                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
+                                                    {{ $role->name == 'Super Admin' ? 'bg-purple-100 text-purple-800' : 
+                                                       ($role->name == 'Admin' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800') }}
                                                     {{ !$user->is_active ? 'opacity-50' : '' }}">
                                                     {{ $role->name }}
                                                 </span>
@@ -157,8 +189,10 @@
                                 
                                 {{-- Created Date --}}
                                 <td class="px-6 py-4 text-sm {{ $user->is_active ? 'text-gray-500' : 'text-gray-400' }}">
-                                    {{ $user->created_at->format('M d, Y') }}
-                                    <span class="text-xs block">{{ $user->created_at->format('h:i A') }}</span>
+                                    <div class="flex flex-col">
+                                        <span>{{ $user->created_at->format('M d, Y') }}</span>
+                                        <span class="text-xs">{{ $user->created_at->format('h:i A') }}</span>
+                                    </div>
                                 </td>
                                 
                                 {{-- Actions --}}
@@ -168,8 +202,8 @@
                                         @can('users.edit')
                                         <a href="{{ route('admin.users.edit', $user->id) }}" 
                                            class="text-blue-500 hover:text-blue-700 transition p-2 rounded hover:bg-blue-50"
-                                           title="Edit Role">
-                                            <i class="fas fa-edit w-4 h-4"></i>
+                                           title="Edit User">
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                         @endcan
 
@@ -184,12 +218,12 @@
                                                     <button type="submit" 
                                                             class="{{ $user->is_active ? 'text-yellow-500 hover:text-yellow-700 hover:bg-yellow-50' : 'text-green-500 hover:text-green-700 hover:bg-green-50' }} transition p-2 rounded"
                                                             title="{{ $user->is_active ? 'Deactivate User' : 'Activate User' }}">
-                                                        <i class="fas fa-{{ $user->is_active ? 'ban' : 'check-circle' }} w-4 h-4"></i>
+                                                        <i class="fas fa-{{ $user->is_active ? 'ban' : 'check-circle' }}"></i>
                                                     </button>
                                                 </form>
                                             @else
                                                 <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot change your own status">
-                                                    <i class="fas fa-ban w-4 h-4"></i>
+                                                    <i class="fas fa-ban"></i>
                                                 </span>
                                             @endif
                                         @endcan
@@ -200,11 +234,11 @@
                                                 <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')" 
                                                         class="text-red-500 hover:text-red-700 transition p-2 rounded hover:bg-red-50"
                                                         title="Delete User">
-                                                    <i class="fas fa-trash w-4 h-4"></i>
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                             @else
                                                 <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot delete yourself">
-                                                    <i class="fas fa-trash w-4 h-4"></i>
+                                                    <i class="fas fa-trash"></i>
                                                 </span>
                                             @endif
                                         @endcan
@@ -216,11 +250,17 @@
                                 <td colspan="9" class="px-6 py-12 text-center text-gray-500">
                                     <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
                                     <p class="text-sm">No users found.</p>
-                                    @can('users.create')
-                                    <a href="{{ route('admin.users.create') }}" class="text-emerald-700 hover:underline text-sm mt-2 inline-block">
-                                        Create your first user
-                                    </a>
-                                    @endcan
+                                    @if(request('search'))
+                                        <a href="{{ route('admin.users.index') }}" class="text-emerald-600 hover:underline text-sm mt-2 inline-block">
+                                            Clear search
+                                        </a>
+                                    @else
+                                        @can('users.create')
+                                        <a href="{{ route('admin.users.create') }}" class="text-emerald-600 hover:underline text-sm mt-2 inline-block">
+                                            Create your first user
+                                        </a>
+                                        @endcan
+                                    @endif
                                 </td>
                             </tr>
                         @endforelse
@@ -232,7 +272,7 @@
         {{-- Pagination --}}
         @if($users->hasPages())
             <div class="px-6 py-4 border-t border-gray-200">
-                {{ $users->links() }}
+                {{ $users->appends(request()->query())->links() }}
             </div>
         @endif
     </div>
@@ -330,8 +370,7 @@
                 let hasCurrentUser = false;
                 checkedBoxes.forEach(checkbox => {
                     const row = checkbox.closest('tr');
-                    const userName = row.querySelector('td:nth-child(3) .font-medium')?.innerText;
-                    const youBadge = row.querySelector('td:nth-child(3) .text-blue-600');
+                    const youBadge = row.querySelector('.text-blue-600');
                     if (youBadge && youBadge.innerText === '(You)') {
                         hasCurrentUser = true;
                     }
@@ -340,9 +379,11 @@
                 let confirmMessage = `Are you sure you want to delete ${count} user${count > 1 ? 's' : ''}? This action cannot be undone.`;
                 if (hasCurrentUser) {
                     confirmMessage = '⚠️ Warning: You have selected your own account. You cannot delete yourself.\n\n' + confirmMessage;
+                    alert(confirmMessage);
+                    return;
                 }
                 
-                if (confirm(confirmMessage) && !hasCurrentUser) {
+                if (confirm(confirmMessage)) {
                     bulkDeleteForm.submit();
                 }
             });

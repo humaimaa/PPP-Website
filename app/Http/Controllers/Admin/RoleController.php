@@ -11,11 +11,20 @@ use Illuminate\Validation\Rule;
 class RoleController extends Controller
 {
     /**
-     * Display a listing of roles.
+     * Display a listing of roles with search functionality.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::with('permissions')->withCount('users')->latest()->paginate(10);
+        $query = Role::with('permissions')->withCount('users');
+        
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+        
+        $roles = $query->latest()->paginate(10);
+        
         return view('admin.roles.index', compact('roles'));
     }
 
@@ -156,71 +165,86 @@ class RoleController extends Controller
             ->with('success', $message);
     }
 
-   
     /**
- * Group permissions by module.
- */
-private function groupPermissions($permissions)
-{
-    $grouped = [];
-    
-    // Define module display names that match your seeder modules
-    $modules = [
-        'projects' => 'Projects',
-        'tenders' => 'Tenders',
-        'news' => 'News/Updates',
-        'gallery' => 'Gallery',
-        'sectors' => 'Sectors',
-        'designations' => 'Designations',
-        'users' => 'Users',
-        'downloads' => 'Downloads',
-        'team' => 'Team',
-        'leadership' => 'Leadership',
-        'roles' => 'Roles',
-    ];
-
-    // Initialize groups
-    foreach ($modules as $key => $label) {
-        $grouped[$key] = [
-            'label' => $label,
-            'permissions' => [],
-        ];
-    }
-
-    // Group permissions by module (first part before dot)
-    foreach ($permissions as $permission) {
-        $parts = explode('.', $permission->name);
-        $module = $parts[0] ?? 'other';
+     * Group permissions by module.
+     */
+    private function groupPermissions($permissions)
+    {
+        $grouped = [];
         
-        if (isset($grouped[$module])) {
-            $grouped[$module]['permissions'][] = $permission;
-        } else {
-            // Handle any unexpected modules
-            if (!isset($grouped['other'])) {
-                $grouped['other'] = ['label' => 'Other', 'permissions' => []];
-            }
-            $grouped['other']['permissions'][] = $permission;
-        }
-    }
+        // Define module display names that match your seeder modules
+        $modules = [
+            'projects' => 'Projects',
+            'tenders' => 'Tenders',
+            'news' => 'News/Updates',
+            'gallery' => 'Gallery',
+            'sectors' => 'Sectors',
+            'designations' => 'Designations',
+            'users' => 'Users',
+            'downloads' => 'Downloads',
+            'team' => 'Team',
+            'leadership' => 'Leadership',
+            'roles' => 'Roles',
+        ];
 
-    // Sort permissions within each group by action order
-    foreach ($grouped as &$group) {
-        usort($group['permissions'], function($a, $b) {
-            $order = [
-                'view' => 1, 
-                'create' => 2, 
-                'edit' => 3, 
-                'delete' => 4, 
-                'toggle_status' => 5,
-                'extend' => 6,
-                'set_thumbnail' => 7,
+        // Define allowed actions for each module
+        $allowedActions = ['view', 'create', 'edit', 'delete'];
+        
+        // Initialize groups
+        foreach ($modules as $key => $label) {
+            $grouped[$key] = [
+                'label' => $label,
+                'permissions' => [],
             ];
-            $actionA = explode('.', $a->name)[1] ?? '';
-            $actionB = explode('.', $b->name)[1] ?? '';
-            return ($order[$actionA] ?? 99) - ($order[$actionB] ?? 99);
-        });
-    }
+        }
 
-    return array_filter($grouped, fn($group) => count($group['permissions']) > 0);
-}
+        // Group permissions by module (first part before dot) and filter
+        foreach ($permissions as $permission) {
+            $parts = explode('.', $permission->name);
+            $module = $parts[0] ?? 'other';
+            $action = $parts[1] ?? '';
+            
+            // Check if this permission should be shown
+            $shouldShow = false;
+            
+            // Basic CRUD permissions
+            if (in_array($action, $allowedActions)) {
+                $shouldShow = true;
+            }
+            // toggle_status only for users module
+            elseif ($action === 'toggle_status' && $module === 'users') {
+                $shouldShow = true;
+            }
+            // set_thumbnail only for gallery module
+            elseif ($action === 'set_thumbnail' && $module === 'gallery') {
+                $shouldShow = true;
+            }
+            
+            // Only add if it should be shown and module exists
+            if ($shouldShow && isset($grouped[$module])) {
+                $grouped[$module]['permissions'][] = $permission;
+            }
+        }
+
+        // Sort permissions within each group by action order
+        foreach ($grouped as &$group) {
+            usort($group['permissions'], function($a, $b) {
+                $order = [
+                    'view' => 1, 
+                    'create' => 2, 
+                    'edit' => 3, 
+                    'delete' => 4, 
+                    'toggle_status' => 5,
+                    'set_thumbnail' => 6,
+                ];
+                $actionA = explode('.', $a->name)[1] ?? '';
+                $actionB = explode('.', $b->name)[1] ?? '';
+                return ($order[$actionA] ?? 99) - ($order[$actionB] ?? 99);
+            });
+        }
+
+        // Remove empty groups and 'other' group if it exists
+        unset($grouped['other']);
+        return array_filter($grouped, fn($group) => count($group['permissions']) > 0);
+    }
 }

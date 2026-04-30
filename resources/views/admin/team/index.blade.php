@@ -103,10 +103,10 @@
                                        value="{{ $member->id }}"
                                        class="team-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </td>
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
+                            <td class="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">
                                 #{{ $member->id }}
-                            </table>
-                            <td class="px-6 py-4">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 @if($member->img)
                                     <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
                                         <img src="{{ asset('storage/' . $member->img) }}" 
@@ -119,15 +119,15 @@
                                     </div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="font-medium text-gray-900">{{ $member->name }}</span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-md">
                                     {{ $member->designation->title }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-gray-600">
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-600">
                                 {{ $member->email }}
                             </td>
                             <td class="px-6 py-4">
@@ -135,24 +135,21 @@
                                     {{ Str::limit($member->experience, 60) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-gray-500 text-xs">
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-xs">
                                 {{ $member->created_at->format('M d, Y') }}
-                            </tr>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('admin.team.show', $member) }}" 
-                                       class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                       title="View Details">
+                                       class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('admin.team.edit', $member) }}" 
-                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                       title="Edit Member">
+                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button onclick="confirmDelete({{ $member->id }}, '{{ $member->name }}')" 
-                                            class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                            title="Delete Member">
+                                            class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

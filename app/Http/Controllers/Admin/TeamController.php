@@ -70,21 +70,30 @@ class TeamController extends Controller
     /**
      * Display the specified team member.
      */
+    // public function show(Team $teamMember)
+    // {
+    //     $teamMember->load('designation');
+    //     return view('admin.team.show', compact('teamMember'));
+    // }
+     
     public function show(Team $team)
-    {
-        $team->load('designation');
-        return view('admin.team.show', compact('team'));
-    }
-
+{
+    $team->load('designation');
+    return view('admin.team.show', ['teamMember' => $team]);
+}
     /**
      * Show the form for editing the specified team member.
      */
+    // public function edit(Team $teamMember)
+    // {
+    //     $designations = Designation::orderBy('title')->get();
+    //     return view('admin.team.edit', compact('teamMember', 'designations'));
+    // }
     public function edit(Team $team)
-    {
-        $designations = Designation::orderBy('title')->get();
-        return view('admin.team.edit', compact('team', 'designations'));
-    }
-
+{
+    $designations = Designation::orderBy('title')->get();
+    return view('admin.team.edit', ['teamMember' => $team, 'designations' => $designations]);
+}
     /**
      * Update the specified team member.
      */

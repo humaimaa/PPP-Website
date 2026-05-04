@@ -10,14 +10,10 @@ use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of roles with search functionality.
-     */
     public function index(Request $request)
     {
         $query = Role::with('permissions')->withCount('users');
         
-        // Search functionality
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where('name', 'like', '%' . $search . '%');
@@ -28,9 +24,6 @@ class RoleController extends Controller
         return view('admin.roles.index', compact('roles'));
     }
 
-    /**
-     * Show the form for creating a new role.
-     */
     public function create()
     {
         $permissions = Permission::all();
@@ -38,9 +31,6 @@ class RoleController extends Controller
         return view('admin.roles.create', compact('groupedPermissions'));
     }
 
-    /**
-     * Store a newly created role.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -50,21 +40,28 @@ class RoleController extends Controller
             'permissions.*' => ['exists:permissions,id'],
         ]);
 
-        $role = Role::create([
-            'name' => $validated['name'],
-            'description' => $request->description,
-            'guard_name' => 'web',
-        ]);
+        try {
+            // Create role
+            $role = Role::create([
+                'name' => $validated['name'],
+                'description' => $request->description,
+                'guard_name' => 'web',
+            ]);
 
-        $role->syncPermissions($request->permissions);
+            // FIX: Convert permission IDs to permission objects
+            $permissions = Permission::whereIn('id', $request->permissions)->get();
+            $role->syncPermissions($permissions);
 
-        return redirect()->route('admin.roles.index')
-            ->with('success', 'Role created successfully.');
+            return redirect()->route('admin.roles.index')
+                ->with('success', "Role '{$role->name}' created successfully with " . $permissions->count() . " permissions.");
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create role: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified role.
-     */
     public function show(Role $role)
     {
         $role->load('permissions', 'users');
@@ -72,9 +69,6 @@ class RoleController extends Controller
         return view('admin.roles.show', compact('role', 'groupedPermissions'));
     }
 
-    /**
-     * Show the form for editing the specified role.
-     */
     public function edit(Role $role)
     {
         $permissions = Permission::all();
@@ -84,9 +78,6 @@ class RoleController extends Controller
         return view('admin.roles.edit', compact('role', 'groupedPermissions', 'rolePermissions'));
     }
 
-    /**
-     * Update the specified role.
-     */
     public function update(Request $request, Role $role)
     {
         $validated = $request->validate([
@@ -101,18 +92,16 @@ class RoleController extends Controller
             'description' => $request->description,
         ]);
 
-        $role->syncPermissions($request->permissions);
+        // FIX: Convert permission IDs to permission objects
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+        $role->syncPermissions($permissions);
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully.');
     }
 
-    /**
-     * Remove the specified role.
-     */
     public function destroy(Role $role)
     {
-        // Prevent deletion of system roles
         if (in_array($role->name, ['Super Admin', 'Admin'])) {
             return redirect()->route('admin.roles.index')
                 ->with('error', 'Cannot delete system role: ' . $role->name);
@@ -124,9 +113,6 @@ class RoleController extends Controller
             ->with('success', 'Role deleted successfully.');
     }
 
-    /**
-     * Bulk delete roles.
-     */
     public function bulkDelete(Request $request)
     {
         $request->validate([
@@ -134,7 +120,6 @@ class RoleController extends Controller
             'role_ids.*' => ['exists:roles,id'],
         ]);
 
-        // Prevent deletion of system roles
         $systemRoles = ['Super Admin', 'Admin'];
         $rolesToDelete = Role::whereIn('id', $request->role_ids)
             ->whereNotIn('name', $systemRoles)
@@ -165,14 +150,10 @@ class RoleController extends Controller
             ->with('success', $message);
     }
 
-    /**
-     * Group permissions by module.
-     */
     private function groupPermissions($permissions)
     {
         $grouped = [];
         
-        // Define module display names that match your seeder modules
         $modules = [
             'projects' => 'Projects',
             'tenders' => 'Tenders',
@@ -182,14 +163,11 @@ class RoleController extends Controller
             'designations' => 'Designations',
             'users' => 'Users',
             'downloads' => 'Downloads',
-            'team' => 'Team',
+            'team' => 'Team Members',
             'leadership' => 'Leadership',
             'roles' => 'Roles',
         ];
 
-        // Define allowed actions for each module
-        $allowedActions = ['view', 'create', 'edit', 'delete'];
-        
         // Initialize groups
         foreach ($modules as $key => $label) {
             $grouped[$key] = [
@@ -198,30 +176,12 @@ class RoleController extends Controller
             ];
         }
 
-        // Group permissions by module (first part before dot) and filter
+        // Group permissions by module
         foreach ($permissions as $permission) {
             $parts = explode('.', $permission->name);
-            $module = $parts[0] ?? 'other';
-            $action = $parts[1] ?? '';
+            $module = $parts[0];
             
-            // Check if this permission should be shown
-            $shouldShow = false;
-            
-            // Basic CRUD permissions
-            if (in_array($action, $allowedActions)) {
-                $shouldShow = true;
-            }
-            // toggle_status only for users module
-            elseif ($action === 'toggle_status' && $module === 'users') {
-                $shouldShow = true;
-            }
-            // set_thumbnail only for gallery module
-            elseif ($action === 'set_thumbnail' && $module === 'gallery') {
-                $shouldShow = true;
-            }
-            
-            // Only add if it should be shown and module exists
-            if ($shouldShow && isset($grouped[$module])) {
+            if (isset($grouped[$module])) {
                 $grouped[$module]['permissions'][] = $permission;
             }
         }
@@ -243,8 +203,7 @@ class RoleController extends Controller
             });
         }
 
-        // Remove empty groups and 'other' group if it exists
-        unset($grouped['other']);
+        // Remove empty groups
         return array_filter($grouped, fn($group) => count($group['permissions']) > 0);
     }
 }

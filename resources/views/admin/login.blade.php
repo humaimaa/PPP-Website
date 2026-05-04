@@ -9,15 +9,27 @@
     <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <title>Admin Login - PPP Department KPK</title>
 
-    {{-- Tailwind + Vite --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    {{-- Tailwind CSS only (remove Vite for login page to avoid conflicts) --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
         body {
             background: #f5f7fa;
+        }
+        
+        /* Ensure inputs are not being blocked by any JavaScript */
+        input {
+            pointer-events: auto !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Style overrides for Tailwind */
+        .focus\:ring-2:focus {
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.5);
         }
     </style>
 </head>
@@ -93,7 +105,7 @@
                     @enderror
                 </div>
 
-                {{-- Password Field --}}
+                {{-- Password Field - Fixed Version --}}
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">
                         <i class="fas fa-lock mr-1.5 text-emerald-700 w-4"></i>Password
@@ -110,8 +122,8 @@
                         >
                         <button
                             type="button"
-                            onclick="togglePassword()"
-                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-emerald-700 transition-colors p-1 rounded-full hover:bg-gray-100"
+                            id="togglePasswordBtn"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-emerald-700 transition-colors p-1 rounded-full hover:bg-gray-100 focus:outline-none"
                             aria-label="Toggle password visibility"
                         >
                             <i id="toggleIcon" class="fas fa-eye text-lg"></i>
@@ -170,24 +182,44 @@
 </div>
 
 <script>
-    // Toggle Password Visibility
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const toggleIcon = document.getElementById('toggleIcon');
-
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
-        }
-    }
-
-    // Auto-hide messages after 5 seconds
+    // Wait for DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function() {
+        // Get elements
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        // Check if elements exist before adding event listeners
+        if (passwordInput && toggleBtn && toggleIcon) {
+            // Add click event to toggle button
+            toggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Toggle password visibility
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+            
+            // Log that password field is working
+            console.log('Password field initialized and working');
+            
+            // Test if password field accepts input
+            passwordInput.addEventListener('input', function() {
+                console.log('Password input detected, length:', this.value.length);
+            });
+        } else {
+            console.error('Password field elements not found');
+        }
+        
+        // Auto-hide messages after 5 seconds
         const messages = document.querySelectorAll('[class*="bg-emerald-50"], [class*="bg-red-50"]');
         messages.forEach(message => {
             setTimeout(() => {
@@ -202,5 +234,8 @@
         });
     });
 </script>
+
+{{-- Add this temporary test button to verify password field works (remove after testing) --}}
+<div style="display: none;" id="debugInfo"></div>
 </body>
 </html>

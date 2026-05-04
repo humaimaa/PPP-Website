@@ -222,7 +222,19 @@
                     Create Role
                 </button>
             </div>
+{{-- Debug info - remove after fixing --}}
+@if(config('app.debug'))
+<div class="mt-4 p-3 bg-gray-100 rounded">
+    <p class="text-xs text-gray-600">
+        <strong>Debug:</strong> 
+        Total permissions in form: {{ isset($groupedPermissions) ? collect($groupedPermissions)->sum(fn($g) => count($g['permissions'])) : 0 }}
+    </p>
+</div>
+@endif
+
         </form>
+
+
     </div>
 </div>
 

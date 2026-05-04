@@ -116,14 +116,12 @@
                             <td class="px-6 py-4">
                                 <div class="flex flex-wrap gap-1 max-w-md">
                                     @php
-                                        // Limit permissions to show only first 3
                                         $displayPermissions = $role->permissions->take(3);
                                         $remainingCount = $role->permissions->count() - 3;
                                     @endphp
                                     
                                     @forelse($displayPermissions as $perm)
                                         @php
-                                            // Extract action from permission name (e.g., "projects.view" -> "view")
                                             $action = explode('.', $perm->name)[1] ?? '';
                                             $actionLabels = [
                                                 'view' => 'View',
@@ -146,7 +144,6 @@
                                             $label = $actionLabels[$action] ?? ucfirst($action);
                                             $colorClass = $actionColors[$action] ?? 'text-gray-600 bg-gray-50';
                                             
-                                            // Get module name
                                             $module = explode('.', $perm->name)[0] ?? '';
                                             $moduleLabels = [
                                                 'projects' => 'Proj',
@@ -183,24 +180,22 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    {{-- View Button --}}
                                     <a href="{{ route('admin.roles.show', $role) }}" 
                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
                                        title="View Role Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     
-                                    {{-- Edit Button --}}
                                     <a href="{{ route('admin.roles.edit', $role) }}" 
                                        class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
                                        title="Edit Role">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     
-                                    {{-- Delete Button --}}
                                     @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                                        <button onclick="confirmDelete({{ $role->id }}, '{{ $role->name }}')" 
-                                                class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                        <button type="button" 
+                                                onclick="confirmDelete({{ $role->id }}, '{{ addslashes($role->name) }}')" 
+                                                class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors delete-role-btn"
                                                 title="Delete Role">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -257,11 +252,11 @@
                 <p class="text-xs text-red-500 mt-2">Users with this role will lose its permissions.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
-                <button id="cancelDeleteBtn" 
+                <button type="button" id="cancelDeleteBtn" 
                         class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
                     Cancel
                 </button>
-                <form id="deleteForm" method="POST" class="inline">
+                <form id="deleteForm" method="POST" action="" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" 
@@ -276,7 +271,87 @@
 
 @push('scripts')
 <script>
+    // Make confirmDelete available globally
+    window.confirmDelete = function(roleId, roleName) {
+        // Prevent any default behavior
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteRoleNameSpan = document.getElementById('deleteRoleName');
+        
+        if (!deleteModal || !deleteForm) {
+            console.error('Modal or form not found');
+            return false;
+        }
+        
+        // Set the role name in the modal
+        if (deleteRoleNameSpan) {
+            deleteRoleNameSpan.textContent = roleName;
+        }
+        
+        // Set the form action URL
+        deleteForm.action = `/admin/roles/${roleId}`;
+        
+        // Show the modal
+        deleteModal.classList.remove('hidden');
+        
+        // Prevent body scrolling when modal is open
+        document.body.style.overflow = 'hidden';
+        
+        return false;
+    };
+    
+    function closeModal() {
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        if (deleteModal) {
+            deleteModal.classList.add('hidden');
+            // Restore body scrolling
+            document.body.style.overflow = '';
+            // Clear form action
+            if (deleteForm) {
+                deleteForm.action = '';
+            }
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize modal close functionality
+        const deleteModal = document.getElementById('deleteModal');
+        const cancelBtn = document.getElementById('cancelDeleteBtn');
+        
+        // Close modal on cancel button click
+        if (cancelBtn) {
+            cancelBtn.onclick = function(e) {
+                e.preventDefault();
+                closeModal();
+            };
+        }
+        
+        // Close modal when clicking outside
+        if (deleteModal) {
+            deleteModal.onclick = function(e) {
+                if (e.target === deleteModal) {
+                    closeModal();
+                }
+            };
+        }
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && deleteModal && !deleteModal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+        
+        // Initialize bulk delete functionality
+        initializeBulkDelete();
+    });
+    
+    function initializeBulkDelete() {
         const selectAllCheckbox = document.getElementById('selectAllCheckbox');
         const roleCheckboxes = document.querySelectorAll('.role-checkbox');
         const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -287,12 +362,16 @@
         function updateSelectedCount() {
             const checkedBoxes = document.querySelectorAll('.role-checkbox:checked');
             const count = checkedBoxes.length;
-            selectedCountSpan.textContent = count;
+            if (selectedCountSpan) {
+                selectedCountSpan.textContent = count;
+            }
             
-            if (count > 0) {
-                bulkDeleteBtn.style.display = 'inline-flex';
-            } else {
-                bulkDeleteBtn.style.display = 'none';
+            if (bulkDeleteBtn) {
+                if (count > 0) {
+                    bulkDeleteBtn.style.display = 'inline-flex';
+                } else {
+                    bulkDeleteBtn.style.display = 'none';
+                }
             }
         }
         
@@ -322,6 +401,7 @@
         // Bulk delete button click
         if (bulkDeleteBtn) {
             bulkDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
                 const checkedBoxes = document.querySelectorAll('.role-checkbox:checked');
                 const count = checkedBoxes.length;
                 
@@ -334,7 +414,8 @@
                 let hasSystemRole = false;
                 checkedBoxes.forEach(checkbox => {
                     const row = checkbox.closest('tr');
-                    const roleName = row.querySelector('td:nth-child(2) span')?.innerText;
+                    const roleSpan = row.querySelector('td:nth-child(2) span:first-child');
+                    const roleName = roleSpan ? roleSpan.innerText : '';
                     if (roleName === 'Super Admin' || roleName === 'Admin') {
                         hasSystemRole = true;
                     }
@@ -353,30 +434,6 @@
         
         // Initialize count on page load
         updateSelectedCount();
-    });
-    
-    // Delete confirmation function
-    function confirmDelete(roleId, roleName) {
-        const modal = document.getElementById('deleteModal');
-        const deleteRoleNameSpan = document.getElementById('deleteRoleName');
-        const deleteForm = document.getElementById('deleteForm');
-        
-        deleteRoleNameSpan.textContent = roleName;
-        deleteForm.action = `/admin/roles/${roleId}`;
-        
-        modal.classList.remove('hidden');
-        
-        // Close modal on cancel
-        document.getElementById('cancelDeleteBtn').onclick = function() {
-            modal.classList.add('hidden');
-        };
-        
-        // Close modal when clicking outside
-        modal.onclick = function(e) {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
-        };
     }
 </script>
 @endpush

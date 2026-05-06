@@ -6,11 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class News extends Model
 {
-    protected $table = 'news';
-    
-    protected $fillable = ['title', 'description', 'date', 'img'];
-    
-    protected $casts = [
-        'date' => 'date',
+    protected $fillable = [
+        'title',
+        'content',
+        'type',
+        'event_date',
+        'pdf_path',
+        'is_featured',
     ];
+
+    protected $casts = [
+        'event_date'  => 'date',
+        'is_featured' => 'boolean',
+    ];
+
+    // Scopes
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
 }

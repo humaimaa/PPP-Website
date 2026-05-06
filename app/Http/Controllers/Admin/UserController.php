@@ -8,6 +8,9 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -25,6 +28,15 @@ class UserController extends Controller
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('email', 'like', '%' . $search . '%');
             });
+        }
+        
+        // Filter by verification status
+        if ($request->has('verification_status') && $request->verification_status) {
+            if ($request->verification_status == 'verified') {
+                $query->verified();
+            } elseif ($request->verification_status == 'unverified') {
+                $query->unverified();
+            }
         }
         
         $users = $query->latest()->paginate(10);
@@ -52,6 +64,7 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'roles' => ['required', 'array'],
             'roles.*' => ['exists:roles,id'],
+            'send_verification' => ['boolean'],
         ]);
 
         $user = User::create([
@@ -59,11 +72,20 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'is_active' => true,
-            'email_verified_at' => now(), // Auto-verify email for admin-created users
         ]);
 
-        // Assign roles to user
-        $user->syncRoles($validated['roles']);
+        // Handle email verification
+        if ($request->has('send_verification') && $request->send_verification == 1) {
+            // Send verification email (user must verify)
+            event(new Registered($user));
+        } else {
+            // Auto-verify email (admin created user)
+            $user->markEmailAsVerified();
+        }
+
+        // Assign roles
+        $roleNames = Role::whereIn('id', $validated['roles'])->pluck('name')->toArray();
+        $user->syncRoles($roleNames);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
@@ -80,36 +102,23 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified user.
-     */
-    public function update(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'roles' => ['required', 'array'],
-            'roles.*' => ['exists:roles,id'],
-        ]);
+ * Update the specified user.
+ */
+public function update(Request $request, User $user)
+{
+    // Simplified validation for editing (only role is required)
+    $validated = $request->validate([
+        'roles' => ['required', 'array'],
+        'roles.*' => ['exists:roles,id'],
+    ]);
 
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
+    // Only update roles, NOT name or email
+    $roleNames = Role::whereIn('id', $validated['roles'])->pluck('name')->toArray();
+    $user->syncRoles($roleNames);
 
-        // Update password if provided
-        if ($request->filled('password')) {
-            $request->validate([
-                'password' => ['string', 'min:8', 'confirmed'],
-            ]);
-            $user->update(['password' => Hash::make($request->password)]);
-        }
-
-        // Sync roles
-        $user->syncRoles($validated['roles']);
-
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
-    }
+    return redirect()->route('admin.users.index')
+        ->with('success', 'User role updated successfully.');
+}
 
     /**
      * Remove the specified user.
@@ -162,6 +171,38 @@ class UserController extends Controller
         return back()->with('success', "User {$status} successfully.");
     }
 
+    /**
+     * Manually verify a user's email
+     */
+    public function verifyEmail(User $user)
+    {
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            return back()->with('success', "{$user->name}'s email has been verified successfully.");
+        }
+        
+        return back()->with('error', "{$user->name}'s email is already verified.");
+    }
+
+
+public function resendVerification(User $user)  // Change from $userId to User $user
+{
+    
+    try {
+        
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->back()->with('error', "{$user->name}'s email is already verified.");
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->back()->with('success', "Verification email sent to {$user->email}.");
+
+    } catch (\Exception $e) {
+        \Log::error('Verification resend failed: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Failed to send verification email: ' . $e->getMessage());
+    }
+}
     /**
      * Bulk delete users
      */
@@ -263,4 +304,7 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', "{$deactivatedCount} user(s) deactivated successfully.");
     }
+
+
+    
 }

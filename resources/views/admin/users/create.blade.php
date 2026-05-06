@@ -182,6 +182,39 @@
                 @enderror
             </div>
 
+            {{-- Email Verification Option - ADD THIS SECTION --}}
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Email Verification
+                </label>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <input type="radio" 
+                               id="verify_auto" 
+                               name="send_verification" 
+                               value="0" 
+                               checked
+                               class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300">
+                        <label for="verify_auto" class="ml-2 text-sm text-gray-700">
+                            Auto-verify email (user can login immediately)
+                        </label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" 
+                               id="verify_send" 
+                               name="send_verification" 
+                               value="1"
+                               class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300">
+                        <label for="verify_send" class="ml-2 text-sm text-gray-700">
+                            Send verification email (user must verify email before login)
+                        </label>
+                    </div>
+                </div>
+                <p class="mt-1 text-xs text-gray-500">
+                    Choose whether the user needs to verify their email address before accessing the system
+                </p>
+            </div>
+
             {{-- Preview Information --}}
             <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-start">

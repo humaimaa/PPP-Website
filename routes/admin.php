@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TenderController;
 use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\SectorController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\LeadershipMessageController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -27,8 +27,29 @@ use App\Http\Controllers\Admin\ProfileController;
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.submit');
 
+// Temporary debug route - remove after testing
+
+
+// ==================== EMAIL VERIFICATION ROUTES ====================
+// IMPORTANT: These must be accessible without authentication for the email links to work
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['signed'])
+    ->name('verification.verify');
+
+Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+    ->middleware(['throttle:6,1', 'auth'])
+    ->name('verification.send');
+
+Route::get('/email/verify', [VerificationController::class, 'show'])
+    ->middleware(['auth'])
+    ->name('verification.notice');
+
+
+
 // ==================== PROTECTED ADMIN ROUTES ====================
 Route::middleware(['auth'])->group(function () {
+
+
 
     // Dashboard - Accessible to all authenticated users
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -45,53 +66,37 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.resend-verification');
     });
 
+
     // ==================== USER MANAGEMENT ====================
-    Route::prefix('users')->name('users.')->middleware('can:users.view')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/add', [UserController::class, 'create'])->name('add')->middleware('can:users.create');
-        Route::post('/', [UserController::class, 'store'])->name('store')->middleware('can:users.create');
-        Route::post('/bulk-delete', [UserController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-        Route::post('/bulk-activate', [UserController::class, 'bulkActivate'])->name('bulk-activate')->middleware('can:users.toggle_status');
-        Route::post('/bulk-deactivate', [UserController::class, 'bulkDeactivate'])->name('bulk-deactivate')->middleware('can:users.toggle_status');
-        Route::get('/{user}', [UserController::class, 'show'])->name('show');
-        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit')->middleware('can:users.edit');
-        Route::put('/{user}', [UserController::class, 'update'])->name('update')->middleware('can:users.edit');
-        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->middleware('can:users.delete');
-        Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status')->middleware('can:users.toggle_status');
-    });
+Route::prefix('users')->name('users.')->middleware('can:users.view')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/add', [UserController::class, 'create'])->name('add')->middleware('can:users.create');
+    Route::post('/', [UserController::class, 'store'])->name('store')->middleware('can:users.create');
+    Route::post('/bulk-delete', [UserController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+    Route::post('/bulk-activate', [UserController::class, 'bulkActivate'])->name('bulk-activate')->middleware('can:users.toggle_status');
+    Route::post('/bulk-deactivate', [UserController::class, 'bulkDeactivate'])->name('bulk-deactivate')->middleware('can:users.toggle_status');
+    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit')->middleware('can:users.edit');
+    Route::put('/{user}', [UserController::class, 'update'])->name('update')->middleware('can:users.edit');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->middleware('can:users.delete');
+    Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status')->middleware('can:users.toggle_status');
+    Route::post('/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('verify-email')->middleware('can:users.edit');
+   Route::post('/{user}/resend-verification', [UserController::class, 'resendVerification'])->name('resend-verification');
+   
+});
 
     // ==================== ROLE MANAGEMENT ====================
     Route::prefix('roles')->name('roles.')->middleware('can:roles.view')->group(function () {
-
-        Route::get('/', [RoleController::class, 'index'])
-            ->name('index');
-
-        Route::get('/add', [RoleController::class, 'create'])
-            ->name('add')
-            ->middleware('can:roles.create');
-
-        Route::post('/', [RoleController::class, 'store'])
-            ->name('store')
-            ->middleware('can:roles.create');
-
-        Route::post('/bulk-delete', [RoleController::class, 'bulkDelete'])
-            ->name('bulk-delete')
-            ->middleware('can:bulk.delete');
-
-        Route::get('/{role}', [RoleController::class, 'show'])
-            ->name('show');
-
-        Route::get('/{role}/edit', [RoleController::class, 'edit'])
-            ->name('edit')
-            ->middleware('can:roles.edit');
-
-        Route::put('/{role}', [RoleController::class, 'update']) ->name('update')
-            ->middleware('can:roles.edit');
-
-        Route::delete('/{role}', [RoleController::class, 'destroy'])
-            ->name('destroy')
-            ->middleware('can:roles.delete');
+        Route::get('/', [RoleController::class, 'index'])->name('index');
+        Route::get('/add', [RoleController::class, 'create'])->name('add')->middleware('can:roles.create');
+        Route::post('/', [RoleController::class, 'store'])->name('store')->middleware('can:roles.create');
+        Route::post('/bulk-delete', [RoleController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        Route::get('/{role}', [RoleController::class, 'show'])->name('show');
+        Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit')->middleware('can:roles.edit');
+        Route::put('/{role}', [RoleController::class, 'update'])->name('update')->middleware('can:roles.edit');
+        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->middleware('can:roles.delete');
     });
+
     // ==================== PROJECT MANAGEMENT ====================
     Route::prefix('projects')->name('projects.')->middleware('can:projects.view')->group(function () {
         Route::get('/', [ProjectController::class, 'index'])->name('index');
@@ -140,21 +145,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{download}/edit', [DownloadController::class, 'edit'])->name('edit')->middleware('can:downloads.edit');
         Route::put('/{download}', [DownloadController::class, 'update'])->name('update')->middleware('can:downloads.edit');
         Route::delete('/{download}', [DownloadController::class, 'destroy'])->name('destroy')->middleware('can:downloads.delete');
-    });
-
-    // ==================== GALLERY MANAGEMENT ====================
-    Route::prefix('gallery')->name('gallery.')->middleware('can:gallery.view')->group(function () {
-        Route::get('/', [GalleryController::class, 'index'])->name('index');
-        Route::get('/add', [GalleryController::class, 'create'])->name('add')->middleware('can:gallery.create');
-        Route::post('/', [GalleryController::class, 'store'])->name('store')->middleware('can:gallery.create');
-        Route::post('/bulk-delete', [GalleryController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-        Route::get('/{gallery}', [GalleryController::class, 'show'])->name('show');
-        Route::get('/{gallery}/edit', [GalleryController::class, 'edit'])->name('edit')->middleware('can:gallery.edit');
-        Route::put('/{gallery}', [GalleryController::class, 'update'])->name('update')->middleware('can:gallery.edit');
-        Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy')->middleware('can:gallery.delete');
-        Route::post('/{gallery}/images', [GalleryController::class, 'storeImages'])->name('images.store')->middleware('can:gallery.edit');
-        Route::delete('/images/{image}', [GalleryController::class, 'destroyImage'])->name('images.destroy')->middleware('can:gallery.delete');
-        Route::post('/images/{image}/thumbnail', [GalleryController::class, 'setThumbnail'])->name('images.thumbnail')->middleware('can:gallery.edit');
     });
 
     // ==================== EVENTS MANAGEMENT ====================

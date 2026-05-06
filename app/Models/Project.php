@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-
-    protected $table = 'projects';
-
+    
     protected $fillable = [
         'name',
         'sector',
@@ -18,42 +16,22 @@ class Project extends Model
         'location',
         'cost',
         'status',
-        'overview'
+        'overview',
+        'image',
+        'category',
     ];
-
+    
     protected $casts = [
         'cost' => 'decimal:2',
     ];
-
-    /**
-     * Get the ongoing project details.
-     */
-    public function ongoingDetails()
+    
+    public function ongoingDetail()
     {
-        return $this->hasOne(OngoingProjectDetail::class, 'project_id');
+        return $this->hasOne(OngoingProjectDetail::class);
     }
-
-    /**
-     * Get the completed project details.
-     */
-    public function completedDetails()
+    
+    public function completedDetail()
     {
-        return $this->hasOne(CompletedProjectDetail::class, 'project_id');
-    }
-
-    /**
-     * Check if project has ongoing details
-     */
-    public function isOngoing()
-    {
-        return $this->ongoingDetails()->exists();
-    }
-
-    /**
-     * Check if project has completed details
-     */
-    public function isCompleted()
-    {
-        return $this->completedDetails()->exists();
+        return $this->hasOne(CompletedProjectDetail::class);
     }
 }

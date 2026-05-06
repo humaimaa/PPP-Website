@@ -26,20 +26,6 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View role details and assigned permissions</p>
                 </div>
-                <div class="flex gap-2">
-                    @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                        <a href="{{ route('admin.roles.edit', $role) }}" 
-                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-edit"></i>
-                            Edit Role
-                        </a>
-                    @endif
-                    <a href="{{ route('admin.roles.index') }}" 
-                       class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-list"></i>
-                        All Roles
-                    </a>
-                </div>
             </div>
         </div>
 

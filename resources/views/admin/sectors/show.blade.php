@@ -41,18 +41,6 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View sector details and information</p>
                 </div>
-                <div class="flex gap-2">
-                    <a href="{{ route('admin.sectors.edit', $sector) }}" 
-                       class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-edit"></i>
-                        Edit Sector
-                    </a>
-                    <a href="{{ route('admin.sectors.index') }}" 
-                       class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-list"></i>
-                        All Sectors
-                    </a>
-                </div>
             </div>
         </div>
 

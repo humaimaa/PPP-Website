@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 @section('title', 'Users Management - PPP Department KPK')
-@section('header-title', 'Users Management')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -14,21 +13,23 @@
         </div>
 
         <div class="flex flex-wrap gap-3">
-            {{-- Bulk Delete Button --}}
-            <button type="button" id="bulkDeleteBtn"
-                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                style="display: none;">
-                <i class="fas fa-trash-alt"></i>
-                Delete Selected (<span id="selectedCount">0</span>)
-            </button>
+            {{-- Bulk Delete Button - Only show if user has delete permission --}}
+            @can('users.delete')
+                <button type="button" id="bulkDeleteBtn"
+                    class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    style="display: none;">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Selected (<span id="selectedCount">0</span>)
+                </button>
+            @endcan
 
             {{-- Add User Button --}}
             @can('users.create')
-            <a href="{{ route('admin.users.add') }}"
-                class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition flex items-center">
-                <i class="fas fa-plus mr-2"></i>
-                Add New User
-            </a>
+                <a href="{{ route('admin.users.add') }}"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add New User
+                </a>
             @endcan
         </div>
     </div>
@@ -93,15 +94,17 @@
             </div>
         </div>
 
-        <!-- REMOVED the bulk delete form wrapper from here -->
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-10">
-                            <input type="checkbox" id="selectAllCheckbox"
-                                class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                        </th>
+                        {{-- Checkbox column - Only show if user has delete permission --}}
+                        @can('users.delete')
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-10">
+                                <input type="checkbox" id="selectAllCheckbox"
+                                    class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </th>
+                        @endcan
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
@@ -109,24 +112,34 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Roles</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                        
+                        {{-- Actions column - Only show if user has any action permissions --}}
+                        @if(auth()->user()->can('users.edit') || auth()->user()->can('users.delete'))
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($users as $index => $user)
                     <tr class="hover:bg-gray-50 transition {{ !$user->is_active ? 'bg-gray-50' : '' }}"
                         data-user-id="{{ $user->id }}">
-                        <td class="px-6 py-4">
-                            @if($user->id !== auth()->id())
-                            <input type="checkbox" name="user_ids[]" value="{{ $user->id }}"
-                                class="user-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            @else
-                            <span class="text-gray-300 text-xs cursor-not-allowed" title="Cannot delete yourself">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                            @endif
-                        </td>
+                        
+                        {{-- Checkbox column - Only show if user has delete permission --}}
+                        @can('users.delete')
+                            <td class="px-6 py-4">
+                                @if($user->id !== auth()->id())
+                                    <input type="checkbox" name="user_ids[]" value="{{ $user->id }}"
+                                        class="user-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                @else
+                                    <span class="text-gray-300 text-xs cursor-not-allowed" title="Cannot delete yourself">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                @endif
+                            </td>
+                        @endcan
+                        
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $users->firstItem() + $index }}</td>
+                        
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 rounded-full {{ $user->is_active ? 'bg-emerald-100' : 'bg-gray-200' }} flex items-center justify-center {{ $user->is_active ? 'text-emerald-700' : 'text-gray-500' }} font-bold mr-3">
@@ -142,7 +155,9 @@
                                 </div>
                             </div>
                         </td>
+                        
                         <td class="px-6 py-4 text-sm {{ $user->is_active ? 'text-gray-600' : 'text-gray-400' }}">{{ $user->email }}</td>
+                        
                         <td class="px-6 py-4">
                             @if($user->hasVerifiedEmail())
                             <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
@@ -154,6 +169,7 @@
                             </span>
                             @endif
                         </td>
+                        
                         <td class="px-6 py-4">
                             @if($user->roles->count() > 0)
                             <div class="flex flex-wrap gap-1">
@@ -170,6 +186,7 @@
                             <span class="text-xs text-gray-400">No roles assigned</span>
                             @endif
                         </td>
+                        
                         <td class="px-6 py-4">
                             @if($user->is_active)
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -181,96 +198,106 @@
                             </span>
                             @endif
                         </td>
+                        
                         <td class="px-6 py-4 text-sm {{ $user->is_active ? 'text-gray-500' : 'text-gray-400' }}">
                             <div class="flex flex-col">
                                 <span>{{ $user->created_at->format('M d, Y') }}</span>
                                 <span class="text-xs">{{ $user->created_at->format('h:i A') }}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center gap-1">
-                                @can('users.edit')
-                                <a href="{{ route('admin.users.edit', $user->id) }}"
-                                    class="text-blue-500 hover:text-blue-700 transition p-2 rounded hover:bg-blue-50"
-                                    title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
+                        
+                        {{-- Actions column - Only show if user has any action permissions --}}
+                        @if(auth()->user()->can('users.edit') || auth()->user()->can('users.delete'))
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    @can('users.edit')
+                                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                                            class="text-blue-500 hover:text-blue-700 transition p-2 rounded hover:bg-blue-50"
+                                            title="Edit User">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @endcan
 
-                                {{-- RESEND VERIFICATION BUTTON --}}
-                                @if(!$user->hasVerifiedEmail() && $user->id !== auth()->id())
-                                @can('users.edit')
-                                <form action="{{ route('admin.users.resend-verification', $user->id) }}" method="POST" 
-                                      class="inline-block"
-                                      onsubmit="return confirmResend('{{ addslashes($user->name) }}');">
-                                    @csrf
-                                    <button type="submit"
-                                        class="text-blue-500 hover:text-blue-700 transition p-2 rounded hover:bg-blue-50"
-                                        title="Resend Verification Email">
-                                        <i class="fas fa-envelope"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                                @endif
+                                    {{-- RESEND VERIFICATION BUTTON --}}
+                                    @if(!$user->hasVerifiedEmail() && $user->id !== auth()->id())
+                                        @can('users.edit')
+                                            <form action="{{ route('admin.users.resend-verification', $user->id) }}" method="POST" 
+                                                  class="inline-block"
+                                                  onsubmit="return confirmResend('{{ addslashes($user->name) }}');">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-blue-500 hover:text-blue-700 transition p-2 rounded hover:bg-blue-50"
+                                                    title="Resend Verification Email">
+                                                    <i class="fas fa-envelope"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endif
 
-                                {{-- MANUAL VERIFY BUTTON --}}
-                                @if(!$user->hasVerifiedEmail() && $user->id !== auth()->id())
-                                @can('users.edit')
-                                <form action="{{ route('admin.users.verify-email', $user->id) }}" method="POST"
-                                    class="inline-block">
-                                    @csrf
-                                    <button type="submit"
-                                        class="text-green-500 hover:text-green-700 transition p-2 rounded hover:bg-green-50"
-                                        title="Manually Verify Email"
-                                        onclick="return confirm('Manually verify {{ $user->name }}\'s email?');">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                                @endif
+                                    {{-- MANUAL VERIFY BUTTON --}}
+                                    @if(!$user->hasVerifiedEmail() && $user->id !== auth()->id())
+                                        @can('users.edit')
+                                            <form action="{{ route('admin.users.verify-email', $user->id) }}" method="POST"
+                                                  class="inline-block">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-green-500 hover:text-green-700 transition p-2 rounded hover:bg-green-50"
+                                                    title="Manually Verify Email"
+                                                    onclick="return confirm('Manually verify {{ $user->name }}\'s email?');">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endif
 
-                                {{-- TOGGLE STATUS BUTTON --}}
-                                @can('users.edit')
-                                @if($user->id !== auth()->id())
-                                <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST"
-                                    class="inline-block"
-                                    onsubmit="return confirm('Are you sure you want to {{ $user->is_active ? 'deactivate' : 'activate' }} this user?');">
-                                    @csrf
-                                    @method('POST')
-                                    <button type="submit"
-                                        class="{{ $user->is_active ? 'text-yellow-500 hover:text-yellow-700 hover:bg-yellow-50' : 'text-green-500 hover:text-green-700 hover:bg-green-50' }} transition p-2 rounded"
-                                        title="{{ $user->is_active ? 'Deactivate User' : 'Activate User' }}">
-                                        <i class="fas fa-{{ $user->is_active ? 'ban' : 'check-circle' }}"></i>
-                                    </button>
-                                </form>
-                                @else
-                                <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot change your own status">
-                                    <i class="fas fa-ban"></i>
-                                </span>
-                                @endif
-                                @endcan
+                                    {{-- TOGGLE STATUS BUTTON --}}
+                                    @can('users.edit')
+                                        @if($user->id !== auth()->id())
+                                            <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST"
+                                                  class="inline-block"
+                                                  onsubmit="return confirm('Are you sure you want to {{ $user->is_active ? 'deactivate' : 'activate' }} this user?');">
+                                                @csrf
+                                                @method('POST')
+                                                <button type="submit"
+                                                    class="{{ $user->is_active ? 'text-yellow-500 hover:text-yellow-700 hover:bg-yellow-50' : 'text-green-500 hover:text-green-700 hover:bg-green-50' }} transition p-2 rounded"
+                                                    title="{{ $user->is_active ? 'Deactivate User' : 'Activate User' }}">
+                                                    <i class="fas fa-{{ $user->is_active ? 'ban' : 'check-circle' }}"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot change your own status">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                        @endif
+                                    @endcan
 
-                                {{-- DELETE BUTTON --}}
-                                @can('users.delete')
-                                @if($user->id !== auth()->id())
-                                <button type="button"
-                                    onclick="confirmDelete({{ $user->id }}, '{{ addslashes($user->name) }}')"
-                                    class="text-red-500 hover:text-red-700 transition p-2 rounded hover:bg-red-50 delete-user-btn"
-                                    title="Delete User">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                @else
-                                <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot delete yourself">
-                                    <i class="fas fa-trash"></i>
-                                </span>
-                                @endif
-                                @endcan
-                            </div>
-                        </td>
+                                    {{-- DELETE BUTTON --}}
+                                    @can('users.delete')
+                                        @if($user->id !== auth()->id())
+                                            <button type="button"
+                                                onclick="confirmDelete({{ $user->id }}, '{{ addslashes($user->name) }}')"
+                                                class="text-red-500 hover:text-red-700 transition p-2 rounded hover:bg-red-50 delete-user-btn"
+                                                title="Delete User">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <span class="text-gray-300 p-2 cursor-not-allowed" title="Cannot delete yourself">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                        @endif
+                                    @endcan
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+                        @php
+                            $colspan = 8;
+                            if(auth()->user()->can('users.delete')) $colspan++;
+                            if(auth()->user()->can('users.edit') || auth()->user()->can('users.delete')) $colspan++;
+                        @endphp
+                        <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-500">
                             <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
                             <p class="text-sm">No users found.</p>
                         </td>
@@ -288,11 +315,13 @@
     </div>
 </div>
 
-{{-- Bulk Delete Form (Hidden, submitted via JavaScript) --}}
+{{-- Bulk Delete Form --}}
+@can('users.delete')
 <form id="bulkDeleteForm" action="{{ route('admin.users.bulk-delete') }}" method="POST" style="display: none;">
     @csrf
-    <input type="hidden" name="user_ids" id="bulkDeleteUserIds" value="">
+    <!-- Dynamic inputs will be added here -->
 </form>
+@endcan
 
 {{-- Delete Confirmation Modal --}}
 <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
@@ -396,85 +425,97 @@
         });
         
         // Bulk delete functionality
-        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-        const userCheckboxes = document.querySelectorAll('.user-checkbox');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-        const selectedCountSpan = document.getElementById('selectedCount');
-        const bulkDeleteForm = document.getElementById('bulkDeleteForm');
-        const bulkDeleteUserIds = document.getElementById('bulkDeleteUserIds');
-        
-        function updateSelectedCount() {
-            const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
-            const count = checkedBoxes.length;
-            if (selectedCountSpan) {
-                selectedCountSpan.textContent = count;
-            }
+        @can('users.delete')
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const userCheckboxes = document.querySelectorAll('.user-checkbox');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
             
-            if (bulkDeleteBtn) {
-                if (count > 0) {
-                    bulkDeleteBtn.style.display = 'inline-flex';
-                } else {
-                    bulkDeleteBtn.style.display = 'none';
-                }
-            }
-        }
-        
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener('change', function() {
-                userCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
-                updateSelectedCount();
-            });
-        }
-        
-        userCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                updateSelectedCount();
-                
-                if (selectAllCheckbox) {
-                    const allChecked = userCheckboxes.length === document.querySelectorAll('.user-checkbox:checked').length;
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
-        });
-        
-        if (bulkDeleteBtn) {
-            bulkDeleteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
+            function updateSelectedCount() {
                 const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
                 const count = checkedBoxes.length;
-                
-                if (count === 0) {
-                    alert('Please select at least one user to delete.');
-                    return;
+                if (selectedCountSpan) {
+                    selectedCountSpan.textContent = count;
                 }
                 
-                let hasCurrentUser = false;
-                checkedBoxes.forEach(checkbox => {
-                    const row = checkbox.closest('tr');
-                    const youBadge = row.querySelector('.text-blue-600');
-                    if (youBadge && youBadge.innerText === '(You)') {
-                        hasCurrentUser = true;
+                if (bulkDeleteBtn) {
+                    if (count > 0) {
+                        bulkDeleteBtn.style.display = 'inline-flex';
+                    } else {
+                        bulkDeleteBtn.style.display = 'none';
+                    }
+                }
+            }
+            
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    userCheckboxes.forEach(checkbox => {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+            
+            userCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedCount();
+                    
+                    if (selectAllCheckbox) {
+                        const allChecked = userCheckboxes.length === document.querySelectorAll('.user-checkbox:checked').length;
+                        selectAllCheckbox.checked = allChecked;
                     }
                 });
-                
-                if (hasCurrentUser) {
-                    alert('⚠️ Warning: You have selected your own account. You cannot delete yourself.');
-                    return;
-                }
-                
-                let confirmMessage = `Are you sure you want to delete ${count} user${count > 1 ? 's' : ''}? This action cannot be undone.`;
-                if (confirm(confirmMessage)) {
-                    // Collect all checked user IDs
-                    const selectedIds = Array.from(checkedBoxes).map(cb => cb.value);
-                    bulkDeleteUserIds.value = JSON.stringify(selectedIds);
-                    bulkDeleteForm.submit();
-                }
             });
-        }
-        
-        updateSelectedCount();
+            
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
+                    const count = checkedBoxes.length;
+                    
+                    if (count === 0) {
+                        alert('Please select at least one user to delete.');
+                        return;
+                    }
+                    
+                    let hasCurrentUser = false;
+                    checkedBoxes.forEach(checkbox => {
+                        const row = checkbox.closest('tr');
+                        const youBadge = row.querySelector('.text-blue-600');
+                        if (youBadge && youBadge.innerText === '(You)') {
+                            hasCurrentUser = true;
+                        }
+                    });
+                    
+                    if (hasCurrentUser) {
+                        alert('⚠️ Warning: You have selected your own account. You cannot delete yourself.');
+                        return;
+                    }
+                    
+                    let confirmMessage = `Are you sure you want to delete ${count} user${count > 1 ? 's' : ''}? This action cannot be undone.`;
+                    if (confirm(confirmMessage)) {
+                        // Clear any existing inputs
+                        const existingInputs = bulkDeleteForm.querySelectorAll('input[name="user_ids[]"]');
+                        existingInputs.forEach(input => input.remove());
+                        
+                        // Add hidden inputs for each selected user ID
+                        checkedBoxes.forEach(checkbox => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'user_ids[]';
+                            input.value = checkbox.value;
+                            bulkDeleteForm.appendChild(input);
+                        });
+                        
+                        // Submit the form
+                        bulkDeleteForm.submit();
+                    }
+                });
+            }
+            
+            updateSelectedCount();
+        @endcan
         
         // Auto-hide messages after 5 seconds
         setTimeout(function() {

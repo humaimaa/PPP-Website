@@ -123,47 +123,33 @@ class DesignationController extends Controller
     }
 
     /**
-     * Bulk delete designations
-     */
-    public function bulkDelete(Request $request)
-    {
-        $request->validate([
-            'designation_ids' => ['required', 'array'],
-            'designation_ids.*' => ['exists:designations,id'],
-        ]);
-
+ * Bulk delete designations
+ */
+public function bulkDelete(Request $request)
+{
+    $request->validate([
+        'designation_ids' => 'required|array',
+        'designation_ids.*' => 'exists:designations,id'
+    ]);
+    
+    try {
         $designationIds = $request->designation_ids;
+        $deletedCount = 0;
         
-        // Check which designations are in use
-        $usedDesignations = [];
-        
-        foreach ($designationIds as $id) {
-            $designation = Designation::find($id);
-            
+        foreach ($designationIds as $designationId) {
+            $designation = Designation::find($designationId);
             if ($designation) {
-                if ($designation->leadershipMessages()->exists()) {
-                    $usedDesignations[] = $designation->title;
-                } elseif ($designation->staff()->exists()) {
-                    $usedDesignations[] = $designation->title;
-                }
+                $designation->delete();
+                $deletedCount++;
             }
         }
-        
-        // If there are used designations, don't delete any
-        if (!empty($usedDesignations)) {
-            $list = implode(', ', array_slice($usedDesignations, 0, 5));
-            if (count($usedDesignations) > 5) {
-                $list .= ' and ' . (count($usedDesignations) - 5) . ' more';
-            }
-            
-            return redirect()->route('admin.designations.index')
-                ->with('error', 'Cannot delete the following designation(s) because they are in use: ' . $list . '.');
-        }
-        
-        // Delete all selected designations
-        $deletedCount = Designation::whereIn('id', $designationIds)->delete();
         
         return redirect()->route('admin.designations.index')
             ->with('success', "{$deletedCount} designation(s) deleted successfully!");
+            
+    } catch (\Exception $e) {
+        return redirect()->route('admin.designations.index')
+            ->with('error', 'Error deleting designations: ' . $e->getMessage());
     }
+}
 }

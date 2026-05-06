@@ -1,55 +1,52 @@
 @extends('layouts.admin')
 
 @section('title', 'Manage Designations - PPP Department KPK')
-@section('header-title', 'Manage Designations')
 
 @section('content')
-<div class="max-w-6xl mx-auto p-6">
-    
-    {{-- Header with Add Button --}}
-    <div class="flex justify-between items-center mb-6">
+<div class="max-w-7xl mx-auto p-6">
+
+    <div class="flex items-center justify-between mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Designations</h2>
+            <h1 class="text-2xl font-semibold text-gray-800">Designations</h1>
             <p class="text-sm text-gray-500 mt-1">Manage leadership and staff designations/titles</p>
         </div>
         <div class="flex gap-3">
-            {{-- Bulk Delete Button --}}
-            <button type="button" id="bulkDeleteBtn" 
-                    class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    style="display: none;">
-                <i class="fas fa-trash-alt"></i>
-                Delete Selected (<span id="selectedCount">0</span>)
-            </button>
+            {{-- Bulk Delete Button - Only show if user has delete permission --}}
+            @can('designations.delete')
+                <button type="button" id="bulkDeleteBtn" 
+                        class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="display: none;">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Selected (<span id="selectedCount">0</span>)
+                </button>
+            @endcan
             
-            <a href="{{ route('admin.designations.add') }}" 
-               class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition">
-                <i class="fas fa-plus"></i>
-                Add New Designation
-            </a>
+            {{-- Add Designation Button --}}
+            @can('designations.create')
+                <a href="{{ route('admin.designations.add') }}" 
+                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-plus"></i>
+                    Add New Designation
+                </a>
+            @endcan
         </div>
     </div>
 
-    {{-- Success/Error Messages --}}
     @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle mr-2"></i>
-                <span>{{ session('success') }}</span>
-            </div>
+        <div class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                <span>{{ session('error') }}</span>
-            </div>
+        <div class="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ session('error') }}
         </div>
     @endif
 
-    {{-- Designations Table --}}
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
@@ -84,80 +81,108 @@
         <form id="bulkDeleteForm" action="{{ route('admin.designations.bulk-delete') }}" method="POST">
             @csrf
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">
-                                <input type="checkbox" 
-                                       id="selectAllCheckbox" 
-                                       class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation Title</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            {{-- Checkbox column - Only show if user has delete permission --}}
+                            @can('designations.delete')
+                                <th class="px-6 py-3 text-left w-10">
+                                    <input type="checkbox" 
+                                           id="selectAllCheckbox" 
+                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                </th>
+                            @endcan
+                            <th class="px-6 py-3 text-left">#</th>
+                            <th class="px-6 py-3 text-left">Designation Title</th>
+                            <th class="px-6 py-3 text-left">Created At</th>
+                            <th class="px-6 py-3 text-left">Last Updated</th>
+                            
+                            {{-- Actions column - Only show if user has any action permissions --}}
+                            @if(auth()->user()->can('designations.edit') || auth()->user()->can('designations.delete'))
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            @endif
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="divide-y divide-gray-100 text-gray-700">
                         @forelse($designations as $index => $designation)
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                        <tr class="hover:bg-gray-50 transition" data-designation-id="{{ $designation->id }}">
+                            {{-- Checkbox column - Only show if user has delete permission --}}
+                            @can('designations.delete')
+                                <td class="px-6 py-4">
                                     <input type="checkbox" 
                                            name="designation_ids[]" 
                                            value="{{ $designation->id }}"
                                            class="designation-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $designations->firstItem() + $index }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-tag text-emerald-600 mr-2"></i>
-                                        <span class="text-sm font-medium text-gray-900">{{ $designation->title }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <i class="far fa-calendar-alt text-gray-400 mr-1"></i>
-                                    {{ $designation->created_at->format('d M, Y') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <i class="far fa-clock text-gray-400 mr-1"></i>
-                                    {{ $designation->updated_at->format('d M, Y h:i A') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            @endcan
+                            
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ $designations->firstItem() + $index }}
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-tag text-emerald-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">{{ $designation->title }}</span>
+                                </div>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <i class="far fa-calendar-alt text-gray-400 mr-1"></i>
+                                {{ $designation->created_at->format('M d, Y') }}
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <i class="far fa-clock text-gray-400 mr-1"></i>
+                                {{ $designation->updated_at->format('M d, Y') }}
+                            </td>
+                            
+                            {{-- Actions column - Only show if user has any action permissions --}}
+                            @if(auth()->user()->can('designations.edit') || auth()->user()->can('designations.delete'))
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.designations.edit', $designation) }}" 
-                                           class="text-emerald-600 hover:text-emerald-900 transition"
-                                           title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('admin.designations.destroy', $designation) }}" 
-                                              method="POST" 
-                                              onsubmit="return confirm('Are you sure you want to delete this designation? This action cannot be undone.');"
-                                              class="inline delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 transition"
-                                                    title="Delete">
+                                        {{-- Edit Button --}}
+                                        @can('designations.edit')
+                                            <a href="{{ route('admin.designations.edit', $designation) }}" 
+                                               class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                               title="Edit Designation">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        
+                                        {{-- Delete Button --}}
+                                        @can('designations.delete')
+                                            <button type="button"
+                                                    onclick="confirmDelete({{ $designation->id }}, '{{ addslashes($designation->title) }}')" 
+                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                    title="Delete Designation">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
-                                        </form>
+                                        @endcan
                                     </div>
                                 </td>
-                            </tr>
+                            @endif
+                        </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                                    <i class="fas fa-tags text-4xl mb-3 opacity-50"></i>
-                                    <p class="text-lg">No designations found</p>
+                                @php
+                                    $colspan = 5; // Base columns (#, Designation Title, Created At, Last Updated)
+                                    if(auth()->user()->can('designations.delete')) $colspan++; // Add checkbox column
+                                    if(auth()->user()->can('designations.edit') || auth()->user()->can('designations.delete')) $colspan++; // Add actions column
+                                @endphp
+                                <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                                    <i class="fas fa-tags text-4xl mb-2"></i>
+                                    <p class="text-lg mb-1">No designations found</p>
                                     @if(request('search'))
-                                        <a href="{{ route('admin.designations.index') }}" class="text-emerald-600 hover:underline text-sm mt-2 inline-block">
+                                        <a href="{{ route('admin.designations.index') }}" class="text-emerald-600 hover:underline text-sm">
                                             Clear search
                                         </a>
                                     @else
-                                        <p class="text-sm mt-1">Click "Add New Designation" to create your first designation</p>
+                                        @can('designations.create')
+                                            <a href="{{ route('admin.designations.add') }}" class="text-emerald-600 hover:underline text-sm">
+                                                Create your first designation →
+                                            </a>
+                                        @endcan
                                     @endif
                                 </td>
                             </tr>
@@ -166,15 +191,49 @@
                 </table>
             </div>
         </form>
+    </div>
 
-        {{-- Pagination --}}
-        <div class="px-6 py-4 border-t border-gray-200">
+    @if($designations->hasPages())
+        <div class="mt-4">
             {{ $designations->appends(request()->query())->links() }}
+        </div>
+    @endif
+</div>
+
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Delete Designation</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete designation "<span id="deleteDesignationName" class="font-semibold text-gray-700"></span>"?
+                </p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. Designations in use cannot be deleted.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelDeleteBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                        Delete
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 {{-- Bulk Delete Confirmation Modal --}}
+@can('designations.delete')
 <div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -201,98 +260,178 @@
         </div>
     </div>
 </div>
+@endcan
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-        const designationCheckboxes = document.querySelectorAll('.designation-checkbox');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-        const selectedCountSpan = document.getElementById('selectedCount');
-        const bulkDeleteForm = document.getElementById('bulkDeleteForm');
-        const bulkDeleteModal = document.getElementById('bulkDeleteModal');
-        const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
-        const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
-        const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
-        
-        let pendingSubmit = false;
-        
-        // Update selected count and show/hide bulk delete button
-        function updateSelectedCount() {
-            const checkedBoxes = document.querySelectorAll('.designation-checkbox:checked');
-            const count = checkedBoxes.length;
-            selectedCountSpan.textContent = count;
+        // Bulk delete functionality - Only initialize if user has delete permission
+        @can('designations.delete')
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const designationCheckboxes = document.querySelectorAll('.designation-checkbox');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+            const bulkDeleteModal = document.getElementById('bulkDeleteModal');
+            const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+            const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
+            const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
             
-            if (count > 0) {
-                bulkDeleteBtn.style.display = 'inline-flex';
-            } else {
-                bulkDeleteBtn.style.display = 'none';
-            }
-        }
-        
-        // Select/Deselect all checkboxes
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener('change', function() {
-                designationCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
-                updateSelectedCount();
-            });
-        }
-        
-        // Individual checkbox change
-        designationCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                updateSelectedCount();
-                
-                // Update select all checkbox state
-                if (selectAllCheckbox) {
-                    const allChecked = designationCheckboxes.length === document.querySelectorAll('.designation-checkbox:checked').length;
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
-        });
-        
-        // Bulk delete button click - show modal
-        if (bulkDeleteBtn) {
-            bulkDeleteBtn.addEventListener('click', function(e) {
+            // Update selected count and show/hide bulk delete button
+            function updateSelectedCount() {
                 const checkedBoxes = document.querySelectorAll('.designation-checkbox:checked');
                 const count = checkedBoxes.length;
-                
-                if (count === 0) {
-                    alert('Please select at least one designation to delete.');
-                    return;
+                if (selectedCountSpan) {
+                    selectedCountSpan.textContent = count;
                 }
                 
-                bulkDeleteCountSpan.textContent = count;
-                bulkDeleteModal.classList.remove('hidden');
+                if (bulkDeleteBtn) {
+                    if (count > 0) {
+                        bulkDeleteBtn.style.display = 'inline-flex';
+                    } else {
+                        bulkDeleteBtn.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Select/Deselect all checkboxes
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    designationCheckboxes.forEach(checkbox => {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+            
+            // Individual checkbox change
+            designationCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedCount();
+                    
+                    // Update select all checkbox state
+                    if (selectAllCheckbox) {
+                        const allChecked = designationCheckboxes.length === document.querySelectorAll('.designation-checkbox:checked').length;
+                        selectAllCheckbox.checked = allChecked;
+                    }
+                });
             });
-        }
-        
-        // Confirm bulk delete
-        if (confirmBulkDeleteBtn) {
-            confirmBulkDeleteBtn.addEventListener('click', function() {
-                bulkDeleteModal.classList.add('hidden');
-                bulkDeleteForm.submit();
+            
+            // Bulk delete button click - show modal
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const checkedBoxes = document.querySelectorAll('.designation-checkbox:checked');
+                    const count = checkedBoxes.length;
+                    
+                    if (count === 0) {
+                        alert('Please select at least one designation to delete.');
+                        return;
+                    }
+                    
+                    bulkDeleteCountSpan.textContent = count;
+                    bulkDeleteModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            
+            // Confirm bulk delete
+            if (confirmBulkDeleteBtn) {
+                confirmBulkDeleteBtn.addEventListener('click', function() {
+                    bulkDeleteModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    bulkDeleteForm.submit();
+                });
+            }
+            
+            // Cancel bulk delete
+            if (cancelBulkDeleteBtn) {
+                cancelBulkDeleteBtn.addEventListener('click', function() {
+                    bulkDeleteModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === bulkDeleteModal) {
+                    bulkDeleteModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+                if (e.target === document.getElementById('deleteModal')) {
+                    closeDeleteModal();
+                }
             });
-        }
+            
+            // Initialize count on page load
+            updateSelectedCount();
+        @endcan
         
-        // Cancel bulk delete
-        if (cancelBulkDeleteBtn) {
-            cancelBulkDeleteBtn.addEventListener('click', function() {
-                bulkDeleteModal.classList.add('hidden');
-            });
-        }
+        // Delete confirmation functions - Only define if user has delete permission
+        @can('designations.delete')
+            window.confirmDelete = function(designationId, designationTitle) {
+                const modal = document.getElementById('deleteModal');
+                const deleteDesignationNameSpan = document.getElementById('deleteDesignationName');
+                const deleteForm = document.getElementById('deleteForm');
+                
+                deleteDesignationNameSpan.textContent = designationTitle;
+                deleteForm.action = `/admin/designations/${designationId}`;
+                
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                // Close modal on cancel
+                document.getElementById('cancelDeleteBtn').onclick = function() {
+                    closeDeleteModal();
+                };
+                
+                // Close modal when clicking outside
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeDeleteModal();
+                    }
+                };
+            };
+            
+            function closeDeleteModal() {
+                const modal = document.getElementById('deleteModal');
+                const deleteForm = document.getElementById('deleteForm');
+                
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    if (deleteForm) {
+                        deleteForm.action = '';
+                    }
+                }
+            }
+        @endcan
         
-        // Close modal when clicking outside
-        window.addEventListener('click', function(e) {
-            if (e.target === bulkDeleteModal) {
-                bulkDeleteModal.classList.add('hidden');
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                @can('designations.delete')
+                    const deleteModal = document.getElementById('deleteModal');
+                    const bulkDeleteModal = document.getElementById('bulkDeleteModal');
+                    
+                    if (deleteModal && !deleteModal.classList.contains('hidden')) {
+                        closeDeleteModal();
+                    }
+                    if (bulkDeleteModal && !bulkDeleteModal.classList.contains('hidden')) {
+                        bulkDeleteModal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }
+                @endcan
             }
         });
         
-        // Initialize count on page load
-        updateSelectedCount();
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const successMsg = document.querySelector('.bg-green-50');
+            const errorMsg = document.querySelector('.bg-red-50');
+            if (successMsg) successMsg.style.display = 'none';
+            if (errorMsg) errorMsg.style.display = 'none';
+        }, 5000);
     });
 </script>
 @endpush

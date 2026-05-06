@@ -1,393 +1,604 @@
-{{-- resources/views/admin/projects/add.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Add Project - PPP Department KPK')
-@section('header-title', 'Add New Project')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    {{-- Success Message --}}
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-
-    {{-- Error Message --}}
-    @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
-            <i class="fas fa-exclamation-circle mr-2"></i>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
-
-    {{-- Validation Errors --}}
-    @if($errors->any())
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <div class="flex">
-                <div class="shrink-0">
-                    <i class="fas fa-exclamation-triangle text-red-500"></i>
-                </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
-                    <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    @endif
+<div class="max-w-7xl mx-auto p-6">
+    
+    {{-- Back Button --}}
+    <div class="mb-6">
+        <a href="{{ route('admin.projects.index') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Projects
+        </a>
+    </div>
 
     {{-- Form Card --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-            <h3 class="text-lg font-semibold text-gray-800">
-                <i class="fas fa-project-diagram mr-2 text-emerald-600"></i>
-                Project Information
-            </h3>
-            <p class="text-sm text-gray-500 mt-1">Fill in the details below to add a new project</p>
+        <div class="border-b border-gray-200 bg-linear-to-r from-emerald-50 to-green-50 px-6 py-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-project-diagram mr-2 text-emerald-600"></i>
+                    Add New Project
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Create a new project with detailed information</p>
+            </div>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data" class="p-6">
+        {{-- Error Messages --}}
+        @if($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 m-6">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data" class="p-6" id="projectForm">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Project Name --}}
-                <div>
-                    <label for="project_name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Name <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        id="project_name" 
-                        name="project_name" 
-                        value="{{ old('project_name') }}"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('project_name') border-red-500 @enderror"
-                        placeholder="Enter project name"
-                    >
-                    @error('project_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Category --}}
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                        Category <span class="text-red-500">*</span>
-                    </label>
-                    <select 
-                        id="category" 
-                        name="category" 
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('category') border-red-500 @enderror"
-                    >
-                        <option value="">Select Category</option>
-                        <option value="Transportation" {{ old('category') == 'Transportation' ? 'selected' : '' }}>Transportation</option>
-                        <option value="Healthcare" {{ old('category') == 'Healthcare' ? 'selected' : '' }}>Healthcare</option>
-                        <option value="Education" {{ old('category') == 'Education' ? 'selected' : '' }}>Education</option>
-                        <option value="Tourism" {{ old('category') == 'Tourism' ? 'selected' : '' }}>Tourism</option>
-                        <option value="Water Infrastructure" {{ old('category') == 'Water Infrastructure' ? 'selected' : '' }}>Water Infrastructure</option>
-                        <option value="Urban Development" {{ old('category') == 'Urban Development' ? 'selected' : '' }}>Urban Development</option>
-                        <option value="Energy" {{ old('category') == 'Energy' ? 'selected' : '' }}>Energy</option>
-                        <option value="Agriculture" {{ old('category') == 'Agriculture' ? 'selected' : '' }}>Agriculture</option>
-                    </select>
-                    @error('category')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Implementing Agency --}}
-                <div>
-                    <label for="implementing_agency" class="block text-sm font-medium text-gray-700 mb-2">
-                        Implementing Agency <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        id="implementing_agency" 
-                        name="implementing_agency" 
-                        value="{{ old('implementing_agency') }}"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('implementing_agency') border-red-500 @enderror"
-                        placeholder="Enter implementing agency"
-                    >
-                    @error('implementing_agency')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Project Cost --}}
-                <div>
-                    <label for="project_cost" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Cost (Rs.) <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rs.</span>
-                        <input 
-                            type="number" 
-                            id="project_cost" 
-                            name="project_cost" 
-                            step="0.01" 
-                            min="0"
-                            value="{{ old('project_cost') }}"
-                            required
-                            class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('project_cost') border-red-500 @enderror"
-                            placeholder="0.00"
-                        >
+            {{-- Basic Information Section --}}
+            <div class="mb-6 pb-4 border-b border-gray-200">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-info-circle mr-2 text-emerald-600"></i>
+                    Basic Information
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Project Name --}}
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Name <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-building"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                value="{{ old('name') }}"
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('name') border-red-500 @enderror"
+                                placeholder="Enter project name"
+                            >
+                        </div>
+                        @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('project_cost')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                {{-- Government Funding --}}
-                <div>
-                    <label for="government_funding" class="block text-sm font-medium text-gray-700 mb-2">
-                        Government Funding (Rs.) <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rs.</span>
-                        <input 
-                            type="number" 
-                            id="government_funding" 
-                            name="government_funding" 
-                            step="0.01" 
-                            min="0"
-                            value="{{ old('government_funding') }}"
-                            required
-                            class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('government_funding') border-red-500 @enderror"
-                            placeholder="0.00"
-                        >
+                    {{-- Sector Dropdown from Database --}}
+                    <div>
+                        <label for="sector" class="block text-sm font-medium text-gray-700 mb-2">
+                            Sector <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-chart-line"></i>
+                            </span>
+                            <select 
+                                id="sector" 
+                                name="sector" 
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('sector') border-red-500 @enderror"
+                            >
+                                <option value="">Select Sector</option>
+                                @foreach($sectors as $sector)
+                                    <option value="{{ $sector->name }}" {{ old('sector') == $sector->name ? 'selected' : '' }}>
+                                        {{ $sector->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Select the sector this project belongs to</p>
+                        @error('sector')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('government_funding')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                {{-- Sponsor Equity --}}
-                <div>
-                    <label for="sponsor_equity" class="block text-sm font-medium text-gray-700 mb-2">
-                        Sponsor Equity (Rs.)
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rs.</span>
-                        <input 
-                            type="number" 
-                            id="sponsor_equity" 
-                            name="sponsor_equity" 
-                            step="0.01" 
-                            min="0"
-                            value="{{ old('sponsor_equity', '0.00') }}"
-                            class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('sponsor_equity') border-red-500 @enderror"
-                            placeholder="0.00"
-                        >
+                    {{-- Implementing Authority --}}
+                    <div>
+                        <label for="implementing_authority" class="block text-sm font-medium text-gray-700 mb-2">
+                            Implementing Authority <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-university"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="implementing_authority" 
+                                name="implementing_authority" 
+                                value="{{ old('implementing_authority') }}"
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('implementing_authority') border-red-500 @enderror"
+                                placeholder="Enter implementing authority"
+                            >
+                        </div>
+                        @error('implementing_authority')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('sponsor_equity')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                {{-- Project Status --}}
-                <div>
-                    <label for="project_status" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Status <span class="text-red-500">*</span>
-                    </label>
-                    <select 
-                        id="project_status" 
-                        name="project_status" 
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('project_status') border-red-500 @enderror"
-                    >
-                        <option value="">Select Status</option>
-                        <option value="Planning" {{ old('project_status') == 'Planning' ? 'selected' : '' }}>Planning</option>
-                        <option value="Feasibility Study" {{ old('project_status') == 'Feasibility Study' ? 'selected' : '' }}>Feasibility Study</option>
-                        <option value="Bidding" {{ old('project_status') == 'Bidding' ? 'selected' : '' }}>Bidding</option>
-                        <option value="Implementation" {{ old('project_status') == 'Implementation' ? 'selected' : '' }}>Implementation</option>
-                        <option value="Completed" {{ old('project_status') == 'Completed' ? 'selected' : '' }}>Completed</option>
-                        <option value="Operational" {{ old('project_status') == 'Operational' ? 'selected' : '' }}>Operational</option>
-                    </select>
-                    @error('project_status')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+                    {{-- Location --}}
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
+                            Location
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="location" 
+                                name="location" 
+                                value="{{ old('location') }}"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('location') border-red-500 @enderror"
+                                placeholder="Enter project location"
+                            >
+                        </div>
+                        @error('location')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                {{-- Project Image --}}
-                <div class="md:col-span-2">
-                    <label for="project_image" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Image <span class="text-red-500">*</span>
-                    </label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
+                    {{-- Project Cost --}}
+                    <div>
+                        <label for="cost" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Cost (PKR) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-rupee-sign"></i>
+                            </span>
+                            <input 
+                                type="number" 
+                                id="cost" 
+                                name="cost" 
+                                step="0.01" 
+                                min="0"
+                                value="{{ old('cost') }}"
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('cost') border-red-500 @enderror"
+                                placeholder="0.00"
+                            >
+                        </div>
+                        @error('cost')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Status --}}
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Status
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-chart-simple"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="status" 
+                                name="status" 
+                                value="{{ old('status') }}"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
+                                placeholder="e.g., Planning, Implementation, Completed"
+                            >
+                        </div>
+                        @error('status')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Category --}}
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Category <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <select 
+                                id="category" 
+                                name="category" 
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
+                                onchange="toggleProjectDetails()"
+                            >
+                                <option value="">Select Category</option>
+                                <option value="Pipeline" {{ old('category') == 'Pipeline' ? 'selected' : '' }}>Pipeline</option>
+                                <option value="Ongoing" {{ old('category') == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                <option value="Completed" {{ old('category') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                            </select>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
+                        @error('category')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- Project Image Upload --}}
+            <div class="mb-6 pb-4 border-b border-gray-200">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-image mr-2 text-emerald-600"></i>
+                    Project Image
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Image <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-camera"></i>
+                            </span>
                             <input 
                                 type="file" 
-                                id="project_image" 
-                                name="project_image" 
-                                accept="image/jpeg,image/jpg,image/png,image/gif"
+                                id="image" 
+                                name="image" 
+                                accept="image/jpeg,image/png,image/jpg,image/gif"
                                 required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('project_image') border-red-500 @enderror"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('image') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                                onchange="previewImage(event)"
                             >
-                            <p class="text-xs text-gray-500 mt-2">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Max 5MB (JPG, JPEG, PNG, GIF)
-                            </p>
-                            @error('project_image')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
                         </div>
-                        <div>
-                            <div id="imagePreview" class="w-full h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center transition-all">
-                                <div class="text-center">
-                                    <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                                    <p class="text-sm text-gray-500">No image selected</p>
-                                </div>
+                        <p class="mt-1 text-xs text-gray-500">Allowed formats: JPEG, PNG, JPG, GIF. Max size: 5MB</p>
+                        @error('image')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <div id="imagePreview" class="w-full h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-500">No image selected</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{-- Project Overview --}}
-                <div class="md:col-span-2">
-                    <label for="project_overview" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Overview <span class="text-red-500">*</span>
-                    </label>
-                    <textarea 
-                        id="project_overview" 
-                        name="project_overview" 
-                        rows="5"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('project_overview') border-red-500 @enderror"
-                        placeholder="Provide a detailed overview of the project..."
-                    >{{ old('project_overview') }}</textarea>
-                    @error('project_overview')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+            {{-- Project Overview --}}
+            <div class="mb-6 pb-4 border-b border-gray-200">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-align-left mr-2 text-emerald-600"></i>
+                    Project Details
+                </h4>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="overview" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Overview <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="overview" 
+                            name="overview" 
+                            rows="5"
+                            required
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('overview') border-red-500 @enderror"
+                            placeholder="Provide a detailed overview of the project including objectives, scope, and key features..."
+                        >{{ old('overview') }}</textarea>
+                        @error('overview')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
+            </div>
 
-                {{-- Project Benefits --}}
-                <div class="md:col-span-2">
-                    <label for="benefits" class="block text-sm font-medium text-gray-700 mb-2">
-                        Project Benefits <span class="text-red-500">*</span>
-                    </label>
-                    <textarea 
-                        id="benefits" 
-                        name="benefits" 
-                        rows="5"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('benefits') border-red-500 @enderror"
-                        placeholder="List the key benefits of this project (one per line)&#10;• Benefit 1&#10;• Benefit 2&#10;• Benefit 3"
-                    >{{ old('benefits') }}</textarea>
-                    <p class="text-xs text-gray-500 mt-2">
-                        <i class="fas fa-lightbulb mr-1"></i>
-                        Tip: List benefits as bullet points (one per line)
-                    </p>
-                    @error('benefits')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+            {{-- Pipeline Projects Section --}}
+            <div id="pipeline-section" class="mb-6" style="{{ old('category') == 'Pipeline' ? 'display: block;' : 'display: none;' }}">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-600 mt-0.5 mr-3"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-blue-900">Pipeline Project</h4>
+                            <p class="text-xs text-blue-700 mt-1">
+                                Pipeline projects only require basic information. No additional details needed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ongoing Project Details Section --}}
+            <div id="ongoing-section" class="mb-6 pb-4 border-b border-gray-200" style="{{ old('category') == 'Ongoing' ? 'display: block;' : 'display: none;' }}">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-chart-line mr-2 text-emerald-600"></i>
+                    Ongoing Project Details
+                </h4>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="implementing_modality" class="block text-sm font-medium text-gray-700 mb-2">
+                            Implementing Modality <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="implementing_modality" 
+                            name="implementing_modality" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe the implementing modality (e.g., BOT, BOOT, Concession, etc.)..."
+                        >{{ old('implementing_modality') }}</textarea>
+                        @error('implementing_modality')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="government_contribution" class="block text-sm font-medium text-gray-700 mb-2">
+                            Government Contribution <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="government_contribution" 
+                            name="government_contribution" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe government contribution (financial, land, infrastructure, etc.)..."
+                        >{{ old('government_contribution') }}</textarea>
+                        @error('government_contribution')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="government_return" class="block text-sm font-medium text-gray-700 mb-2">
+                            Government Return <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="government_return" 
+                            name="government_return" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe returns to government (revenue share, taxes, royalties, etc.)..."
+                        >{{ old('government_return') }}</textarea>
+                        @error('government_return')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="private_party_return" class="block text-sm font-medium text-gray-700 mb-2">
+                            Private Party Return <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="private_party_return" 
+                            name="private_party_return" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe returns to private party (profit margin, ROI, etc.)..."
+                        >{{ old('private_party_return') }}</textarea>
+                        @error('private_party_return')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- Completed Project Details Section --}}
+            <div id="completed-section" class="mb-6 pb-4 border-b border-gray-200" style="{{ old('category') == 'Completed' ? 'display: block;' : 'display: none;' }}">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-check-circle mr-2 text-emerald-600"></i>
+                    Completed Project Details
+                </h4>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="scope" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Scope <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="scope" 
+                            name="scope" 
+                            rows="4"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe the scope of the completed project..."
+                        >{{ old('scope') }}</textarea>
+                        @error('scope')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="cost_financing_mix" class="block text-sm font-medium text-gray-700 mb-2">
+                            Cost Financing Mix <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="cost_financing_mix" 
+                            name="cost_financing_mix" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe the financing mix (e.g., 60% Government, 40% Private, loans, grants, etc.)..."
+                        >{{ old('cost_financing_mix') }}</textarea>
+                        @error('cost_financing_mix')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="project_timeline" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Timeline <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="project_timeline" 
+                            name="project_timeline" 
+                            rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe the project timeline (start date, end date, milestones, etc.)..."
+                        >{{ old('project_timeline') }}</textarea>
+                        @error('project_timeline')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="expected_financial_benefits_to_government" class="block text-sm font-medium text-gray-700 mb-2">
+                            Financial Benefits to Government <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="expected_financial_benefits_to_government" 
+                            name="expected_financial_benefits_to_government" 
+                            rows="4"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Describe the financial benefits realized by the government..."
+                        >{{ old('expected_financial_benefits_to_government') }}</textarea>
+                        @error('expected_financial_benefits_to_government')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- Preview Information --}}
+            <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-600 mt-0.5 mr-3"></i>
+                    <div>
+                        <h4 class="text-sm font-medium text-blue-900">About Projects</h4>
+                        <p class="text-xs text-blue-700 mt-1">
+                            Projects are categorized into three types: <strong>Pipeline</strong> (basic info only), 
+                            <strong>Ongoing</strong> (includes implementation details and returns), and 
+                            <strong>Completed</strong> (includes scope, timeline, and benefits). 
+                            Select the appropriate category to display relevant fields.
+                        </p>
+                    </div>
                 </div>
             </div>
 
             {{-- Form Actions --}}
-            <div class="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
-                <a 
-                    href="#" 
-                    class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
-                >
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+                <a href="{{ route('admin.projects.index') }}" 
+                   class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
                     <i class="fas fa-times mr-2"></i>
                     Cancel
                 </a>
-                <button 
-                    type="submit"
-                    class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-                >
-                    <i class="fas fa-plus mr-2"></i>
-                    Add Project
+                <button type="submit"
+                        class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                    <i class="fas fa-save mr-2"></i>
+                    Create Project
                 </button>
             </div>
         </form>
     </div>
 </div>
-@endsection
 
-@push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Image preview functionality
-        const imageInput = document.getElementById('project_image');
+    function previewImage(event) {
+        const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
         
-        if (imageInput) {
-            imageInput.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                
-                if (file) {
-                    // Check file size
-                    if (file.size > 5000000) {
-                        alert('File is too large. Maximum size is 5MB.');
-                        this.value = '';
-                        return;
-                    }
-                    
-                    // Check file type
-                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-                    if (!allowedTypes.includes(file.type)) {
-                        alert('Invalid file type. Please upload JPG, JPEG, PNG, or GIF.');
-                        this.value = '';
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.innerHTML = `
-                            <img src="${e.target.result}" 
-                                 class="w-full h-full object-contain rounded-lg" 
-                                 alt="Project preview">
-                        `;
-                        preview.classList.add('border-emerald-500');
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.innerHTML = `
-                        <div class="text-center">
-                            <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-500">No image selected</p>
-                        </div>
-                    `;
-                    preview.classList.remove('border-emerald-500');
-                }
+        if (file) {
+            if (file.size > 5242880) {
+                alert('File is too large. Maximum size is 5MB.');
+                event.target.value = '';
+                return;
+            }
+            
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Invalid file type. Please upload JPG, JPEG, PNG, or GIF.');
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover rounded-lg">
+                `;
+                preview.classList.remove('border-dashed');
+                preview.classList.add('border-solid', 'border-emerald-500');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-500">No image selected</p>
+                </div>
+            `;
+            preview.classList.remove('border-solid', 'border-emerald-500');
+            preview.classList.add('border-dashed');
+        }
+    }
+    
+    function toggleProjectDetails() {
+        const category = document.getElementById('category').value;
+        const pipelineSection = document.getElementById('pipeline-section');
+        const ongoingSection = document.getElementById('ongoing-section');
+        const completedSection = document.getElementById('completed-section');
+        
+        // Hide all sections
+        if(pipelineSection) pipelineSection.style.display = 'none';
+        if(ongoingSection) ongoingSection.style.display = 'none';
+        if(completedSection) completedSection.style.display = 'none';
+        
+        // Remove required attributes from all conditional fields first
+        removeRequiredAttributes();
+        
+        // Show and enable appropriate section
+        if (category === 'Pipeline') {
+            if(pipelineSection) pipelineSection.style.display = 'block';
+        } else if (category === 'Ongoing') {
+            if(ongoingSection) ongoingSection.style.display = 'block';
+            addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
+        } else if (category === 'Completed') {
+            if(completedSection) completedSection.style.display = 'block';
+            addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
+        }
+    }
+    
+    function removeRequiredAttributes() {
+        const allConditionalFields = [
+            'implementing_modality', 'government_contribution', 'government_return', 
+            'private_party_return', 'scope', 'cost_financing_mix', 
+            'project_timeline', 'expected_financial_benefits_to_government'
+        ];
+        
+        allConditionalFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.removeAttribute('required');
+                field.disabled = false;
+            }
+        });
+    }
+    
+    function addRequiredAttributes(fieldIds) {
+        fieldIds.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.setAttribute('required', 'required');
+                field.disabled = false;
+            }
+        });
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleProjectDetails();
+        
+        // Debug: Log when form is submitted
+        const form = document.getElementById('projectForm');
+        if(form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form is being submitted');
+                // Don't prevent default - let it submit naturally
             });
-        }
-        
-        // Auto-calculate funding validation (optional)
-        const projectCost = document.getElementById('project_cost');
-        const govFunding = document.getElementById('government_funding');
-        const sponsorEquity = document.getElementById('sponsor_equity');
-        
-        function validateFunding() {
-            const total = parseFloat(projectCost.value) || 0;
-            const gov = parseFloat(govFunding.value) || 0;
-            const sponsor = parseFloat(sponsorEquity.value) || 0;
-            
-            if (gov > total) {
-                govFunding.setCustomValidity('Government funding cannot exceed total project cost');
-            } else {
-                govFunding.setCustomValidity('');
-            }
-            
-            if ((gov + sponsor) > total) {
-                sponsorEquity.setCustomValidity('Total funding cannot exceed project cost');
-            } else {
-                sponsorEquity.setCustomValidity('');
-            }
-        }
-        
-        if (projectCost && govFunding && sponsorEquity) {
-            projectCost.addEventListener('input', validateFunding);
-            govFunding.addEventListener('input', validateFunding);
-            sponsorEquity.addEventListener('input', validateFunding);
         }
     });
 </script>
-@endpush
+@endsection

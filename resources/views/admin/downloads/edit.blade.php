@@ -3,102 +3,235 @@
 @section('title', 'Edit Document - PPP Department KPK')
 
 @section('content')
-<div class="flex justify-between items-center p-4 pt-8">
-    <h2 class="text-2xl font-bold ml-2 text-[#0A612B]">Edit Document</h2>
-    <a href="{{ route('admin.downloads.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
-        Back to Documents List
-    </a>
-</div>
+<div class="max-w-4xl mx-auto p-6">
+    
+    {{-- Back Button --}}
+    <div class="mb-6">
+        <a href="{{ route('admin.downloads.index') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Documents
+        </a>
+    </div>
 
-<main class="p-4 md:p-6">
-    {{-- Static dummy document data --}}
-    @php
-    $document = [
-        'id' => request()->route('id', 1),
-        'document_name' => 'PPP Act 2023',
-        'description' => 'Public Private Partnership Act 2023 with amendments and regulations.',
-        'file_path' => '#',
-        'file_size' => 2457600, // 2.34 MB
-        'uploaded_at' => '2024-03-15 10:30:00',
-    ];
-    @endphp
-
-    {{-- @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
+    {{-- Form Card --}}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="border-b border-gray-200 bg-linear-to-r from-emerald-50 to-green-50 px-6 py-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-edit mr-2 text-emerald-600"></i>
+                    Edit Document
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Update document information</p>
+            </div>
         </div>
-    @endif
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif --}}
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
-        <form action="#" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="grid grid-cols-1 gap-6">
-                {{-- Document Name --}}
-                <div>
-                    <label for="document_name" class="block text-sm font-medium text-gray-700">Document Name*</label>
-                    <input type="text" id="document_name" name="document_name" required
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                        value="{{ old('document_name', $document['document_name']) }}">
-                </div>
-
-                {{-- Description --}}
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="description" name="description" rows="3"
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">{{ old('description', $document['description']) }}</textarea>
-                </div>
-
-                {{-- Current File Info --}}
-                <div class="border border-gray-200 rounded-md p-4">
-                    <h3 class="text-sm font-medium text-gray-700 mb-2">Current Document</h3>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
-                        <div>
-                            <a href="{{ $document['file_path'] }}" target="_blank" class="text-emerald-600 hover:underline">
-                                View Current PDF
-                            </a>
-                            <p class="text-xs text-gray-500 mt-1">
-                                @php
-                                    $size = $document['file_size'];
-                                    if ($size >= 1073741824) {
-                                        $size = number_format($size / 1073741824, 2) . ' GB';
-                                    } elseif ($size >= 1048576) {
-                                        $size = number_format($size / 1048576, 2) . ' MB';
-                                    } elseif ($size >= 1024) {
-                                        $size = number_format($size / 1024, 2) . ' KB';
-                                    } else {
-                                        $size = $size . ' bytes';
-                                    }
-                                @endphp
-                                Uploaded: {{ date('d M Y', strtotime($document['uploaded_at'])) }} | Size: {{ $size }}
-                            </p>
-                        </div>
+        {{-- Error Messages --}}
+        @if($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 m-6">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
+            </div>
+        @endif
 
-                {{-- File Upload (for replacement) --}}
-                <div>
-                    <label for="document_file" class="block text-sm font-medium text-gray-700">Replace Document (PDF)</label>
-                    <input type="file" id="document_file" name="document_file" accept=".pdf"
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                    <p class="text-sm text-gray-500 mt-1">Max 10MB (PDF only). Leave empty to keep current file.</p>
+        <form action="{{ route('admin.downloads.update', $download) }}" method="POST" enctype="multipart/form-data" class="p-6">
+            @csrf
+            @method('PUT')
+            
+            {{-- Document Title --}}
+            <div class="mb-6">
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                    Document Title <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-heading"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        value="{{ old('title', $download->title) }}"
+                        required
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('title') border-red-500 @enderror"
+                        placeholder="e.g., Annual Report 2024, Investment Guidelines, PPP Policy Framework"
+                    >
+                </div>
+                <p class="mt-1 text-xs text-gray-500">The name/title of the document</p>
+                @error('title')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Document Type --}}
+            <div class="mb-6">
+                <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Document Type <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-tag"></i>
+                    </span>
+                    <select 
+                        id="type" 
+                        name="type" 
+                        required
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('type') border-red-500 @enderror"
+                    >
+                        <option value="">Select Document Type</option>
+                        <option value="pitchbook" {{ old('type', $download->type) == 'pitchbook' ? 'selected' : '' }}>Pitchbook</option>
+                        <option value="guidelines" {{ old('type', $download->type) == 'guidelines' ? 'selected' : '' }}>Guidelines</option>
+                        <option value="reports" {{ old('type', $download->type) == 'reports' ? 'selected' : '' }}>Reports</option>
+                        <option value="agreements" {{ old('type', $download->type) == 'agreements' ? 'selected' : '' }}>Agreements</option>
+                        <option value="act" {{ old('type', $download->type) == 'act' ? 'selected' : '' }}>Act</option>
+                        <option value="policy" {{ old('type', $download->type) == 'policy' ? 'selected' : '' }}>Policy</option>
+                    </select>
+                </div>
+                <p class="mt-1 text-xs text-gray-500">Select the category for this document</p>
+                @error('type')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Date --}}
+            <div class="mb-6">
+                <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Document Date <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-calendar-alt"></i>
+                    </span>
+                    <input 
+                        type="date" 
+                        id="date" 
+                        name="date" 
+                        value="{{ old('date', $download->date->format('Y-m-d')) }}"
+                        required
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('date') border-red-500 @enderror"
+                    >
+                </div>
+                <p class="mt-1 text-xs text-gray-500">The publication/issue date of the document</p>
+                @error('date')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Current File --}}
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Current File
+                </label>
+                <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-700">Current document: {{ basename($download->document_path) }}</p>
+                        </div>
+                        <a href="{{ route('admin.downloads.download', $download) }}" 
+                           class="text-emerald-600 hover:text-emerald-900">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-end">
-                <button type="submit" class="px-4 py-2 bg-emerald-700 text-white rounded-md hover:bg-emerald-800 transition-colors">
+            {{-- New File Upload --}}
+            <div class="mb-6">
+                <label for="document_path" class="block text-sm font-medium text-gray-700 mb-2">
+                    Replace Document File (Optional)
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <input 
+                        type="file" 
+                        id="document_path" 
+                        name="document_path" 
+                        accept=".pdf"
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('document_path') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                        onchange="previewFileInfo(event)"
+                    >
+                </div>
+                <p class="mt-1 text-xs text-gray-500">Leave empty to keep current file. Allowed format: PDF only. Maximum size: 10MB</p>
+                @error('document_path')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+
+                {{-- File info preview --}}
+                <div id="file-preview" class="mt-3 hidden">
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                        <div class="flex-1">
+                            <p id="file-name" class="text-sm font-medium text-gray-700"></p>
+                            <p id="file-size" class="text-xs text-gray-500"></p>
+                        </div>
+                        <i class="fas fa-check-circle text-emerald-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Form Actions --}}
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+                <a href="{{ route('admin.downloads.index') }}" 
+                   class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
+                </a>
+                <button type="submit"
+                        class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                    <i class="fas fa-save mr-2"></i>
                     Update Document
                 </button>
             </div>
         </form>
     </div>
-</main>
+</div>
+
+<script>
+    function previewFileInfo(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('file-preview');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        
+        if (!file) {
+            preview.classList.add('hidden');
+            return;
+        }
+        
+        // Validate file type
+        if (file.type !== 'application/pdf') {
+            alert('Please upload a valid PDF file.');
+            event.target.value = '';
+            preview.classList.add('hidden');
+            return;
+        }
+        
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB.');
+            event.target.value = '';
+            preview.classList.add('hidden');
+            return;
+        }
+        
+        // Display file info
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+        preview.classList.remove('hidden');
+    }
+</script>
 @endsection

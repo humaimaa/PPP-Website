@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->string('implementing_modality');
-            $table->decimal('government_contribution', 15, 2);
-            $table->decimal('government_return', 15, 2);
-            $table->decimal('private_party_return', 15, 2);
+            $table->string('government_contribution');
+            $table->string('government_return');
+            $table->string('private_party_return');
             $table->timestamps();
             
             // Add index for better performance

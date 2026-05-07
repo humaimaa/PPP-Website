@@ -1,105 +1,135 @@
-{{-- resources/views/admin/updates/add.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Add Update - PPP Department KPK')
-@section('header-title', 'Add Update')
+@section('header-title', 'Add New Update')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-
-    {{-- Validation Errors --}}
-    @if($errors->any())
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <div class="flex">
-                <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
-                    <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    @endif
+<div class="max-w-7xl mx-auto p-6">
+    
+    {{-- Back Button --}}
+    <div class="mb-6">
+        <a href="{{ route('admin.updates.index') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Updates
+        </a>
+    </div>
 
     {{-- Form Card --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-            <h3 class="text-lg font-semibold text-gray-800">
-                <i class="fas fa-bullhorn mr-2 text-emerald-600"></i>
-                Update Information
-            </h3>
-            <p class="text-sm text-gray-500 mt-1">Fill in the details below to add an update</p>
+        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-bullhorn mr-2 text-emerald-600"></i>
+                    Add New Update
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Create a new news update, announcement, or event</p>
+            </div>
         </div>
+
+        {{-- Validation Errors --}}
+        @if($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 m-6">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <form action="{{ route('admin.updates.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- Left Column --}}
-                <div class="space-y-4">
+                <div>
                     {{-- Title --}}
-                    <div>
+                    <div class="mb-4">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                             Title <span class="text-red-500">*</span>
                         </label>
-                        <input
-                            type="text"
-                            id="title"
-                            name="title"
-                            value="{{ old('title') }}"
-                            required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('title') border-red-500 @enderror"
-                            placeholder="Enter update title"
-                        >
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                value="{{ old('title') }}"
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('title') border-red-500 @enderror"
+                                placeholder="Enter update title"
+                            >
+                        </div>
                         @error('title')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Type --}}
-                    <div>
+                    <div class="mb-4">
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
                             Type <span class="text-red-500">*</span>
                         </label>
-                        <select
-                            id="type"
-                            name="type"
-                            required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('type') border-red-500 @enderror"
-                        >
-                            <option value="">Select Type</option>
-                            @foreach(['Update','Event','Announcement','Press Release','Notice','Circular'] as $t)
-                                <option value="{{ $t }}" {{ old('type') == $t ? 'selected' : '' }}>{{ $t }}</option>
-                            @endforeach
-                        </select>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <select
+                                id="type"
+                                name="type"
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('type') border-red-500 @enderror"
+                            >
+                                <option value="">Select Type</option>
+                                <option value="Update" {{ old('type') == 'Update' ? 'selected' : '' }}>Update</option>
+                                <option value="Announcement" {{ old('type') == 'Announcement' ? 'selected' : '' }}>Announcement</option>
+                                <option value="Press Release" {{ old('type') == 'Press Release' ? 'selected' : '' }}>Press Release</option>
+                                <option value="Notice" {{ old('type') == 'Notice' ? 'selected' : '' }}>Notice</option>
+                                <option value="Other" {{ old('type') == 'Other' ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Select the type/category of this update</p>
                         @error('type')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Event Date --}}
-                    <div id="eventDateField" class="{{ old('type') == 'Event' ? '' : 'hidden' }}">
+                    {{-- Event Date (only for Event type - but note your table doesn't have Event type) --}}
+                    <div id="eventDateField" class="mb-4" style="{{ old('type') == 'Event' ? 'display: block;' : 'display: none;' }}">
                         <label for="event_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            Event Date <span class="text-red-500">*</span>
+                            Event Date
                         </label>
-                        <input
-                            type="date"
-                            id="event_date"
-                            name="event_date"
-                            value="{{ old('event_date') }}"
-                            min="{{ date('Y-m-d') }}"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('event_date') border-red-500 @enderror"
-                        >
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <input
+                                type="date"
+                                id="event_date"
+                                name="event_date"
+                                value="{{ old('event_date') }}"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('event_date') border-red-500 @enderror"
+                            >
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Optional: Date of the event (if applicable)</p>
                         @error('event_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Featured --}}
-                    <div>
+                    <div class="mb-4">
                         <label class="flex items-center cursor-pointer">
                             <input
                                 type="checkbox"
@@ -119,22 +149,39 @@
                 </div>
 
                 {{-- Right Column --}}
-                <div class="space-y-4">
+                <div>
                     {{-- PDF Attachment --}}
-                    <div>
+                    <div class="mb-4">
                         <label for="pdf_file" class="block text-sm font-medium text-gray-700 mb-2">
                             PDF Attachment
                         </label>
-                        <input
-                            type="file"
-                            id="pdf_file"
-                            name="pdf_file"
-                            accept=".pdf,application/pdf"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('pdf_file') border-red-500 @enderror"
-                        >
-                        <p class="text-xs text-gray-500 mt-2">
-                            <i class="fas fa-file-pdf mr-1"></i> PDF only (max 10MB)
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-file-pdf"></i>
+                            </span>
+                            <input
+                                type="file"
+                                id="pdf_file"
+                                name="pdf_file"
+                                accept=".pdf,application/pdf"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('pdf_file') border-red-500 @enderror"
+                                onchange="validatePDF(event)"
+                            >
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            PDF only (max 10MB). Leave empty for no attachment.
                         </p>
+                        <div id="pdf-preview" class="mt-3 hidden">
+                            <div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                                <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                                <div class="flex-1">
+                                    <p id="pdf-name" class="text-sm font-medium text-gray-700"></p>
+                                    <p id="pdf-size" class="text-xs text-gray-500"></p>
+                                </div>
+                                <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                            </div>
+                        </div>
                         @error('pdf_file')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -143,7 +190,7 @@
                     {{-- Live Preview --}}
                     <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                         <h4 class="text-sm font-medium text-gray-700 mb-3">
-                            <i class="fas fa-eye mr-1"></i> Preview
+                            <i class="fas fa-eye mr-1"></i> Live Preview
                         </h4>
                         <div id="previewCard" class="bg-white rounded-lg border border-gray-200 p-4">
                             <div class="flex items-start justify-between mb-2">
@@ -151,7 +198,7 @@
                                 <span id="previewFeatured" class="hidden text-yellow-500"><i class="fas fa-star"></i></span>
                             </div>
                             <h5 id="previewTitle" class="font-semibold text-gray-900 mb-2">Title will appear here</h5>
-                            <p id="previewContent" class="text-sm text-gray-600">Content preview will appear here...</p>
+                            <p id="previewContent" class="text-sm text-gray-600 line-clamp-3">Content preview will appear here...</p>
                         </div>
                     </div>
                 </div>
@@ -162,32 +209,57 @@
                 <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
                     Content <span class="text-red-500">*</span>
                 </label>
-                <textarea
-                    id="content"
-                    name="content"
-                    rows="6"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('content') border-red-500 @enderror"
-                    placeholder="Write the update content here..."
-                >{{ old('content') }}</textarea>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-gray-400">
+                        <i class="fas fa-align-left"></i>
+                    </span>
+                    <textarea
+                        id="content"
+                        name="content"
+                        rows="8"
+                        required
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('content') border-red-500 @enderror"
+                        placeholder="Write the update content here..."
+                    >{{ old('content') }}</textarea>
+                </div>
                 <div class="flex justify-between mt-1">
-                    <p class="text-xs text-gray-500"><span id="charCount">0</span> characters</p>
-                    <p class="text-xs text-gray-400">Recommended: 150–500 characters</p>
+                    <p class="text-xs text-gray-500">
+                        <span id="charCount">0</span> characters
+                    </p>
+                    <p class="text-xs text-gray-400">Tip: Use proper formatting for better readability</p>
                 </div>
                 @error('content')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            {{-- Actions --}}
-            <div class="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+            {{-- Preview Information --}}
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-600 mt-0.5 mr-3"></i>
+                    <div>
+                        <h4 class="text-sm font-medium text-blue-900">About Updates</h4>
+                        <p class="text-xs text-blue-700 mt-1">
+                            Updates can be of various types: <strong>Update</strong>, <strong>Announcement</strong>, 
+                            <strong>Press Release</strong>, <strong>Notice</strong>, or <strong>Other</strong>. 
+                            Featured updates will be highlighted on the homepage. You can attach a PDF document for 
+                            detailed information, reports, or official notices.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Form Actions --}}
+            <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
                 <a href="{{ route('admin.updates.index') }}"
-                   class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-times mr-2"></i> Cancel
+                   class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
                 </a>
                 <button type="submit"
-                        class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                    <i class="fas fa-save mr-2"></i> Save Update
+                        class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                    <i class="fas fa-save mr-2"></i>
+                    Save Update
                 </button>
             </div>
         </form>
@@ -212,21 +284,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const typeColors = {
         'Update':        'bg-green-100 text-green-800',
-        'Event':         'bg-purple-100 text-purple-800',
         'Announcement':  'bg-yellow-100 text-yellow-800',
         'Press Release': 'bg-red-100 text-red-800',
         'Notice':        'bg-orange-100 text-orange-800',
-        'Circular':      'bg-blue-100 text-blue-800',
+        'Other':         'bg-gray-100 text-gray-800',
     };
 
     function toggleEventDate() {
+        // Note: 'Event' type is not in your migration but keeping for flexibility
         if (typeSelect.value === 'Event') {
-            eventDateField.classList.remove('hidden');
-            eventDateInput.required = true;
+            eventDateField.style.display = 'block';
+            if (eventDateInput) eventDateInput.required = true;
         } else {
-            eventDateField.classList.add('hidden');
-            eventDateInput.required = false;
-            eventDateInput.value = '';
+            eventDateField.style.display = 'none';
+            if (eventDateInput) {
+                eventDateInput.required = false;
+                eventDateInput.value = '';
+            }
         }
         updatePreview();
     }
@@ -234,39 +308,89 @@ document.addEventListener('DOMContentLoaded', function () {
     function updatePreview() {
         const type = typeSelect.value || 'Update';
         previewType.textContent = type;
-        previewType.className   = `inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[type] || 'bg-gray-100 text-gray-800'}`;
-        previewTitle.textContent   = titleInput.value || 'Title will appear here';
-        previewContent.textContent = contentTextarea.value || 'Content preview will appear here...';
-        previewFeatured.classList.toggle('hidden', !featuredChk.checked);
+        previewType.className = `inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[type] || 'bg-gray-100 text-gray-800'}`;
+        previewTitle.textContent = titleInput.value.trim() || 'Title will appear here';
+        previewContent.textContent = contentTextarea.value.trim() || 'Content preview will appear here...';
+        
+        if (featuredChk && featuredChk.checked) {
+            previewFeatured.classList.remove('hidden');
+        } else {
+            previewFeatured.classList.add('hidden');
+        }
     }
 
-    typeSelect.addEventListener('change', toggleEventDate);
-    titleInput.addEventListener('input', updatePreview);
-    contentTextarea.addEventListener('input', () => {
+    if (typeSelect) {
+        typeSelect.addEventListener('change', toggleEventDate);
+    }
+    
+    if (titleInput) {
+        titleInput.addEventListener('input', updatePreview);
+    }
+    
+    if (contentTextarea) {
+        contentTextarea.addEventListener('input', () => {
+            charCount.textContent = contentTextarea.value.length;
+            updatePreview();
+        });
+    }
+    
+    if (featuredChk) {
+        featuredChk.addEventListener('change', updatePreview);
+    }
+    
+    if (eventDateInput) {
+        eventDateInput.addEventListener('change', updatePreview);
+    }
+
+    // Initialize
+    if (charCount && contentTextarea) {
         charCount.textContent = contentTextarea.value.length;
-        updatePreview();
-    });
-    featuredChk.addEventListener('change', updatePreview);
-    eventDateInput.addEventListener('change', updatePreview);
-
-    // File validation
-    document.getElementById('pdf_file').addEventListener('change', function () {
-        const file = this.files[0];
-        if (!file) return;
-        if (!file.name.toLowerCase().endsWith('.pdf')) {
-            alert('Please select a valid PDF file.');
-            this.value = '';
-            return;
-        }
-        if (file.size > 10 * 1024 * 1024) {
-            alert('File size exceeds 10 MB.');
-            this.value = '';
-        }
-    });
-
+    }
     toggleEventDate();
-    charCount.textContent = contentTextarea.value.length;
     updatePreview();
 });
+
+// PDF validation function
+function validatePDF(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('pdf-preview');
+    const pdfName = document.getElementById('pdf-name');
+    const pdfSize = document.getElementById('pdf-size');
+    
+    if (!file) {
+        if (preview) preview.classList.add('hidden');
+        return;
+    }
+    
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+        alert('Please upload a valid PDF file.');
+        event.target.value = '';
+        if (preview) preview.classList.add('hidden');
+        return;
+    }
+    
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB. Current file size: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
+        event.target.value = '';
+        if (preview) preview.classList.add('hidden');
+        return;
+    }
+    
+    // Display file info
+    if (pdfName) pdfName.textContent = file.name;
+    if (pdfSize) {
+        let sizeText = '';
+        if (file.size < 1024 * 1024) {
+            sizeText = (file.size / 1024).toFixed(2) + ' KB';
+        } else {
+            sizeText = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        }
+        pdfSize.textContent = sizeText;
+    }
+    
+    if (preview) preview.classList.remove('hidden');
+}
 </script>
 @endpush

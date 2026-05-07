@@ -14,11 +14,12 @@ return new class extends Migration
             $table->string('document');
             $table->date('opening_date');
             $table->date('closing_date');
+            $table->enum('category', ['General Procurement', 'Transaction Advisory','Private Pratner Selection'])->default('Public Procurement');
             $table->string('advertisement')->nullable();
-            $table->date('extended_date')->nullable();
             $table->timestamps();
         });
     }
+
 
     public function down()
     {

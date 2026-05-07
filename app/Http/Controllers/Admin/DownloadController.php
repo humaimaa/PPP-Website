@@ -12,9 +12,24 @@ class DownloadController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $downloads = Download::orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
+        $query = Download::query();
+        
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('title', 'like', "%{$search}%");
+        }
+        
+        // Filter by category
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category', $request->category);
+        }
+        
+        $downloads = $query->latest()->paginate(10);
+        $downloads->appends($request->query());
+        
         return view('admin.downloads.index', compact('downloads'));
     }
 
@@ -31,28 +46,28 @@ class DownloadController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|in:pitchbook,guidelines,reports,agreements,act,policy',
-            'date' => 'required|date',
-            'document_path' => 'required|file|mimes:pdf|max:10240', // 10MB max
+            'category' => 'required|in:Legal Framework,Prequalified Transaction Advisory,Policies ,Regulations and Guidelines,Knowledge Hub,Pitchbook',
+            'date' => 'required|date|before_or_equal:today',
+            'document_path' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
         ]);
 
         // Handle file upload
+        $documentPath = null;
         if ($request->hasFile('document_path')) {
-            $file = $request->file('document_path');
-            $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
-            $filePath = $file->storeAs('downloads', $fileName, 'public');
-            
-            // Create new download record
-            Download::create([
-                'title' => $validated['title'],
-                'type' => $validated['type'],
-                'date' => $validated['date'],
-                'document_path' => $filePath,
-            ]);
+            $document = $request->file('document_path');
+            $documentName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $document->getClientOriginalName());
+            $documentPath = $document->storeAs('downloads', $documentName, 'public');
         }
+
+        // Create download record
+        Download::create([
+            'title' => $validated['title'],
+            'category' => $validated['category'],
+            'date' => $validated['date'],
+            'document_path' => $documentPath,
+        ]);
 
         return redirect()->route('admin.downloads.index')
             ->with('success', 'Document uploaded successfully!');
@@ -79,34 +94,26 @@ class DownloadController extends Controller
      */
     public function update(Request $request, Download $download)
     {
-        // Validate the request
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|in:pitchbook,guidelines,reports,agreements,act,policy',
-            'date' => 'required|date',
-            'document_path' => 'nullable|file|mimes:pdf|max:10240', // 10MB max, nullable for updates
+            'category' => 'required|in:Legal Framework,Prequalified Transaction Advisory,Policies ,Regulations and Guidelines,Knowledge Hub,Pitchbook',
+            'date' => 'required|date|before_or_equal:today',
+            'document_path' => 'nullable|file|mimes:pdf|max:10240',
         ]);
-
-        // Update basic fields
-        $download->title = $validated['title'];
-        $download->type = $validated['type'];
-        $download->date = $validated['date'];
 
         // Handle file upload if new file is provided
         if ($request->hasFile('document_path')) {
-            // Delete old file if exists
+            // Delete old file
             if ($download->document_path && Storage::disk('public')->exists($download->document_path)) {
                 Storage::disk('public')->delete($download->document_path);
             }
             
-            // Upload new file
-            $file = $request->file('document_path');
-            $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
-            $filePath = $file->storeAs('downloads', $fileName, 'public');
-            $download->document_path = $filePath;
+            $document = $request->file('document_path');
+            $documentName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $document->getClientOriginalName());
+            $validated['document_path'] = $document->storeAs('downloads', $documentName, 'public');
         }
 
-        $download->save();
+        $download->update($validated);
 
         return redirect()->route('admin.downloads.index')
             ->with('success', 'Document updated successfully!');
@@ -117,57 +124,37 @@ class DownloadController extends Controller
      */
     public function destroy(Download $download)
     {
-        // Delete the file from storage
+        // Delete the file
         if ($download->document_path && Storage::disk('public')->exists($download->document_path)) {
             Storage::disk('public')->delete($download->document_path);
         }
         
-        // Delete the record from database
         $download->delete();
-
+        
         return redirect()->route('admin.downloads.index')
             ->with('success', 'Document deleted successfully!');
     }
-
-    /**
-     * Download the file.
-     */
-    public function download(Download $download)
-    {
-        // Check if file exists
-        if (!Storage::disk('public')->exists($download->document_path)) {
-            return redirect()->route('admin.downloads.index')
-                ->with('error', 'File not found!');
-        }
-
-        // Return file download
-        return Storage::disk('public')->download($download->document_path, $download->title . '.pdf');
-    }
-
-
-    /**
- * Bulk delete documents
- */
-public function bulkDelete(Request $request)
-{
-    $request->validate([
-        'download_ids' => 'required|array',
-        'download_ids.*' => 'exists:downloads,id'
-    ]);
     
-    try {
-        $downloadIds = $request->download_ids;
+    /**
+     * Bulk delete documents
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'document_ids' => 'required|array',
+            'document_ids.*' => 'exists:downloads,id'
+        ]);
+        
+        $documentIds = $request->document_ids;
         $deletedCount = 0;
         
-        foreach ($downloadIds as $downloadId) {
-            $download = Download::find($downloadId);
+        foreach ($documentIds as $documentId) {
+            $download = Download::find($documentId);
             if ($download) {
-                // Delete file from storage
+                // Delete the file
                 if ($download->document_path && Storage::disk('public')->exists($download->document_path)) {
                     Storage::disk('public')->delete($download->document_path);
                 }
-                
-                // Delete the record
                 $download->delete();
                 $deletedCount++;
             }
@@ -175,10 +162,5 @@ public function bulkDelete(Request $request)
         
         return redirect()->route('admin.downloads.index')
             ->with('success', "{$deletedCount} document(s) deleted successfully!");
-            
-    } catch (\Exception $e) {
-        return redirect()->route('admin.downloads.index')
-            ->with('error', 'Error deleting documents: ' . $e->getMessage());
     }
-}
 }

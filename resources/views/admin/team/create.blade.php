@@ -1,16 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', 'Add Team Member - PPP Department KPK')
-@section('header-title', 'Add New Team Member')
+@section('title', 'Add New Tender - PPP Department KPK')
 
 @section('content')
 <div class="max-w-4xl mx-auto p-6">
     
     <div class="mb-6">
-        <a href="{{ route('admin.team.index') }}" 
+        <a href="{{ route('admin.tenders.index') }}" 
            class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
             <i class="fas fa-arrow-left mr-2"></i>
-            Back to Team Members
+            Back to Tenders
         </a>
     </div>
 
@@ -18,10 +17,10 @@
         <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">
-                    <i class="fas fa-user-plus mr-2 text-emerald-600"></i>
-                    Add New Team Member
+                    <i class="fas fa-file-alt mr-2 text-emerald-600"></i>
+                    Add New Tender
                 </h3>
-                <p class="text-sm text-gray-500 mt-1">Create a new team member profile</p>
+                <p class="text-sm text-gray-500 mt-1">Create a new tender advertisement</p>
             </div>
         </div>
 
@@ -43,22 +42,35 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.team.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+        @if(session('success'))
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 m-6">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">{{ session('success') }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <form action="{{ route('admin.tenders.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Name --}}
+                {{-- Tender Name --}}
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name <span class="text-red-500">*</span>
+                        Tender Name <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-file-signature"></i>
                         </span>
                         <input type="text" id="name" name="name" required
                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('name') border-red-500 @enderror"
-                               placeholder="Enter full name"
+                               placeholder="Enter tender name"
                                value="{{ old('name') }}">
                     </div>
                     @error('name')
@@ -66,97 +78,152 @@
                     @enderror
                 </div>
 
-                {{-- Designation --}}
+                {{-- Category --}}
                 <div>
-                    <label for="designation_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Designation <span class="text-red-500">*</span>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                        Category <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-briefcase"></i>
+                            <i class="fas fa-tag"></i>
                         </span>
-                        <select id="designation_id" name="designation_id" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('designation_id') border-red-500 @enderror">
-                            <option value="">Select Designation</option>
-                            @foreach($designations as $designation)
-                                <option value="{{ $designation->id }}" {{ old('designation_id') == $designation->id ? 'selected' : '' }}>
-                                    {{ $designation->title }}
-                                </option>
-                            @endforeach
+                        <select id="category" name="category" required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror">
+                            <option value="">Select Category</option>
+                            <option value="General Procurement" {{ old('category') == 'General Procurement' ? 'selected' : '' }}>General Procurement</option>
+                            <option value="Transaction Advisory" {{ old('category') == 'Transaction Advisory' ? 'selected' : '' }}>Transaction Advisory</option>
+                            <option value="Private Partner Selection" {{ old('category') == 'Private Partner Selection' ? 'selected' : '' }}>Private Partner Selection</option>
                         </select>
                     </div>
-                    @error('designation_id')
+                    @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Email --}}
+                {{-- Opening Date --}}
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address <span class="text-red-500">*</span>
+                    <label for="opening_date" class="block text-sm font-medium text-gray-700 mb-2">
+                        Opening Date <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-envelope"></i>
+                            <i class="fas fa-calendar-alt"></i>
                         </span>
-                        <input type="email" id="email" name="email" required
-                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('email') border-red-500 @enderror"
-                               placeholder="Enter email address"
-                               value="{{ old('email') }}">
+                        <input type="date" id="opening_date" name="opening_date" required
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('opening_date') border-red-500 @enderror"
+                               value="{{ old('opening_date') }}">
                     </div>
-                    @error('email')
+                    @error('opening_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Profile Image --}}
+                {{-- Closing Date --}}
                 <div>
-                    <label for="img" class="block text-sm font-medium text-gray-700 mb-2">
-                        Profile Image <span class="text-red-500">*</span>
+                    <label for="closing_date" class="block text-sm font-medium text-gray-700 mb-2">
+                        Closing Date <span class="text-red-500">*</span>
                     </label>
-                    <input type="file" id="img" name="img" accept="image/jpeg,image/png,image/jpg,image/webp" required
-                           class="w-full py-2.5 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('img') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-                           onchange="previewImage(event)">
-                    <p class="mt-1 text-xs text-gray-500">Allowed formats: JPEG, PNG, JPG, WEBP. Max size: 2MB. Recommended: Square image (400x400px)</p>
-                    @error('img')
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fas fa-calendar-times"></i>
+                        </span>
+                        <input type="date" id="closing_date" name="closing_date" required
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('closing_date') border-red-500 @enderror"
+                               value="{{ old('closing_date') }}">
+                    </div>
+                    @error('closing_date')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Tender Document --}}
+                <div>
+                    <label for="document" class="block text-sm font-medium text-gray-700 mb-2">
+                        Tender Document <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <input type="file" id="document" name="document" 
+                               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('document') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Allowed formats: PDF, DOC, DOCX, JPG, JPEG, PNG. Max size: 10MB</p>
+                    @error('document')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Advertisement Image --}}
+                <div>
+                    <label for="advertisement" class="block text-sm font-medium text-gray-700 mb-2">
+                        Advertisement Image
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fas fa-image"></i>
+                        </span>
+                        <input type="file" id="advertisement" name="advertisement" 
+                               accept="image/jpeg,image/png,image/jpg,image/webp"
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('advertisement') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                               onchange="previewAdvertisement(event)">
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Optional: Advertisement image/notice (JPEG, PNG, JPG, WEBP). Max size: 5MB</p>
+                    @error('advertisement')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     
-                    <div id="image-preview" class="mt-3 hidden">
+                    <div id="advertisement-preview" class="mt-3 hidden">
                         <div class="flex items-center gap-3">
-                            <img id="preview-img" src="" alt="Preview"
-                                 class="w-20 h-20 rounded-full object-cover border-4 border-emerald-100 shadow">
+                            <img id="preview-img" src="" alt="Advertisement Preview"
+                                 class="w-32 h-32 object-cover rounded-lg border-2 border-emerald-100 shadow">
                             <div class="text-sm text-gray-600">
                                 <i class="fas fa-check-circle text-emerald-600 mr-1"></i>
-                                Image preview
+                                Advertisement preview
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Experience --}}
-            <div class="mt-6">
-                <label for="experience" class="block text-sm font-medium text-gray-700 mb-2">
-                    Experience / Bio <span class="text-red-500">*</span>
-                </label>
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400">
-                        <i class="fas fa-history"></i>
-                    </span>
-                    <textarea id="experience" name="experience" rows="6" required
-                              class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('experience') border-red-500 @enderror"
-                              placeholder="Enter professional experience, qualifications, and background...">{{ old('experience') }}</textarea>
+            {{-- Additional Documents Section (if needed) --}}
+            <div class="mt-6 border-t border-gray-200 pt-6">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-paperclip mr-2 text-emerald-600"></i>
+                    Additional Documents (Optional)
+                </h4>
+                <div id="additional-docs-container">
+                    <div class="additional-doc-item grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Document Title</label>
+                            <input type="text" name="additional_docs[0][title]" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                   placeholder="e.g., BOQ Document">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
+                            <input type="date" name="additional_docs[0][publish_date]" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Document File</label>
+                            <input type="file" name="additional_docs[0][document]" 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                        </div>
+                    </div>
                 </div>
-                <p class="mt-1 text-xs text-gray-500">Include professional background, years of experience, key achievements, and qualifications</p>
-                @error('experience')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <button type="button" id="add-more-docs" 
+                        class="mt-2 inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+                    <i class="fas fa-plus-circle"></i>
+                    Add More Documents
+                </button>
             </div>
 
             {{-- Form Actions --}}
             <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
-                <a href="{{ route('admin.team.index') }}" 
+                <a href="{{ route('admin.tenders.index') }}" 
                    class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
                     <i class="fas fa-times mr-2"></i>
                     Cancel
@@ -164,7 +231,7 @@
                 <button type="submit"
                         class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
                     <i class="fas fa-save mr-2"></i>
-                    Save Team Member
+                    Save Tender
                 </button>
             </div>
         </form>
@@ -172,7 +239,9 @@
 </div>
 
 <script>
-    function previewImage(event) {
+    let docIndex = 1;
+    
+    function previewAdvertisement(event) {
         const file = event.target.files[0];
         if (!file) return;
         
@@ -180,23 +249,72 @@
         if (!allowedTypes.includes(file.type)) {
             alert('Please upload a valid image file (JPEG, PNG, JPG, or WEBP).');
             event.target.value = '';
-            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('advertisement-preview').classList.add('hidden');
             return;
         }
         
-        if (file.size > 2 * 1024 * 1024) {
-            alert('File size must be less than 2MB.');
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB.');
             event.target.value = '';
-            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('advertisement-preview').classList.add('hidden');
             return;
         }
         
         const reader = new FileReader();
         reader.onload = function (e) {
             document.getElementById('preview-img').src = e.target.result;
-            document.getElementById('image-preview').classList.remove('hidden');
+            document.getElementById('advertisement-preview').classList.remove('hidden');
         };
         reader.readAsDataURL(file);
     }
+    
+    // Add more document fields
+    document.getElementById('add-more-docs').addEventListener('click', function() {
+        const container = document.getElementById('additional-docs-container');
+        const newDocItem = document.createElement('div');
+        newDocItem.className = 'additional-doc-item grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 relative';
+        newDocItem.innerHTML = `
+            <button type="button" class="absolute -top-2 -right-2 text-red-500 hover:text-red-700 bg-white rounded-full w-6 h-6 flex items-center justify-center shadow-md" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Document Title</label>
+                <input type="text" name="additional_docs[${docIndex}][title]" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                       placeholder="e.g., BOQ Document">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
+                <input type="date" name="additional_docs[${docIndex}][publish_date]" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Document File</label>
+                <input type="file" name="additional_docs[${docIndex}][document]" 
+                       accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+            </div>
+        `;
+        container.appendChild(newDocItem);
+        docIndex++;
+    });
+    
+    // Validate closing date is after opening date
+    const openingDate = document.getElementById('opening_date');
+    const closingDate = document.getElementById('closing_date');
+    
+    function validateDates() {
+        if (openingDate.value && closingDate.value) {
+            if (new Date(closingDate.value) <= new Date(openingDate.value)) {
+                closingDate.setCustomValidity('Closing date must be after opening date');
+                closingDate.reportValidity();
+            } else {
+                closingDate.setCustomValidity('');
+            }
+        }
+    }
+    
+    openingDate.addEventListener('change', validateDates);
+    closingDate.addEventListener('change', validateDates);
 </script>
 @endsection

@@ -1,0 +1,386 @@
+@extends('layouts.admin')
+
+@section('title', $news->title . ' - Update Details - PPP Department KPK')
+
+@section('content')
+<div class="max-w-7xl mx-auto p-6">
+    
+    {{-- Back Button --}}
+    <div class="mb-6">
+        <a href="{{ route('admin.updates.index') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Updates
+        </a>
+    </div>
+
+    {{-- Update Header Card --}}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fas fa-bullhorn text-emerald-600 text-xl"></i>
+                        <h3 class="text-xl font-semibold text-gray-800">{{ $news->title }}</h3>
+                        @php
+                            $typeColors = [
+                                'Update' => 'bg-green-100 text-green-800',
+                                'Announcement' => 'bg-yellow-100 text-yellow-800',
+                                'Press Release' => 'bg-red-100 text-red-800',
+                                'Notice' => 'bg-orange-100 text-orange-800',
+                                'Other' => 'bg-gray-100 text-gray-800',
+                            ];
+                            $badgeClass = $typeColors[$news->type] ?? 'bg-gray-100 text-gray-800';
+                        @endphp
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $badgeClass }}">
+                            <i class="fas fa-tag mr-1 text-xs"></i>
+                            {{ $news->type }}
+                        </span>
+                        @if($news->is_featured)
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                <i class="fas fa-star mr-1 text-xs"></i>
+                                Featured
+                            </span>
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        Created: {{ $news->created_at->format('F d, Y') }} at {{ $news->created_at->format('h:i A') }}
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    @can('updates.edit')
+                        <a href="{{ route('admin.updates.edit', $news) }}" 
+                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-edit"></i>
+                            Edit Update
+                        </a>
+                    @endcan
+                    @can('updates.delete')
+                        <button type="button"
+                                onclick="confirmDelete({{ $news->id }}, '{{ addslashes($news->title) }}')" 
+                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-trash"></i>
+                            Delete Update
+                        </button>
+                    @endcan
+                </div>
+            </div>
+        </div>
+
+        {{-- Content Section --}}
+        <div class="p-6 border-b border-gray-200">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">
+                <i class="fas fa-align-left mr-2 text-emerald-600"></i>
+                Content
+            </h4>
+            <div class="prose max-w-none">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $news->content }}</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Basic Information --}}
+        <div class="p-6 border-b border-gray-200">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">
+                <i class="fas fa-info-circle mr-2 text-emerald-600"></i>
+                Information Details
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Update ID</label>
+                    <p class="text-gray-900 font-mono text-sm">#{{ $news->id }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Type</label>
+                    <p class="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium {{ $badgeClass }}">
+                        <i class="fas fa-tag mr-1 text-xs"></i>
+                        {{ $news->type }}
+                    </p>
+                </div>
+                @if($news->event_date)
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Event Date</label>
+                    <p class="text-gray-900">
+                        <i class="fas fa-calendar-alt text-emerald-600 mr-1"></i>
+                        {{ $news->event_date->format('F d, Y') }}
+                        <span class="text-gray-500 text-sm ml-2">
+                            ({{ $news->event_date->format('l') }})
+                        </span>
+                    </p>
+                </div>
+                @endif
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Featured Status</label>
+                    @if($news->is_featured)
+                        <p class="text-yellow-600">
+                            <i class="fas fa-star mr-1"></i>
+                            Featured Update
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">This update appears prominently on the homepage</p>
+                    @else
+                        <p class="text-gray-500">
+                            <i class="far fa-star mr-1"></i>
+                            Not Featured
+                        </p>
+                        @can('updates.edit')
+                            <button type="button"
+                                    onclick="toggleFeatured({{ $news->id }}, {{ $news->is_featured ? 'true' : 'false' }})"
+                                    class="mt-2 text-sm text-emerald-600 hover:text-emerald-700">
+                                <i class="fas fa-star mr-1"></i>
+                                Mark as Featured
+                            </button>
+                        @endcan
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- PDF Attachment Section --}}
+        @if($news->pdf_path)
+        <div class="p-6 border-b border-gray-200">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">
+                <i class="fas fa-file-pdf mr-2 text-emerald-600"></i>
+                Attached Document
+            </h4>
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-pdf text-red-600 text-3xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">Supporting Document</p>
+                        <p class="text-xs text-gray-500 mb-2">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            Uploaded: {{ $news->created_at->format('M d, Y') }}
+                        </p>
+                        <div class="flex gap-3">
+                            <a href="{{ Storage::url($news->pdf_path) }}" target="_blank" 
+                               class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+                                <i class="fas fa-external-link-alt"></i>
+                                View PDF
+                            </a>
+                            <a href="{{ Storage::url($news->pdf_path) }}" download
+                               class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                <i class="fas fa-download"></i>
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- Timeline Information --}}
+        <div class="p-6">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">
+                <i class="fas fa-history mr-2 text-emerald-600"></i>
+                Timeline Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-plus-circle text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ $news->created_at->format('F d, Y') }}</p>
+                            <p class="text-xs text-gray-500">{{ $news->created_at->format('h:i A') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-edit text-blue-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ $news->updated_at->format('F d, Y') }}</p>
+                            <p class="text-xs text-gray-500">{{ $news->updated_at->format('h:i A') }}</p>
+                            @if($news->created_at != $news->updated_at)
+                                <p class="text-xs text-gray-400 mt-1">(Updated {{ $news->updated_at->diffForHumans() }})</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Quick Actions Card --}}
+    @can('updates.edit')
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
+            <h4 class="text-md font-semibold text-gray-800">
+                <i class="fas fa-cogs mr-2 text-emerald-600"></i>
+                Quick Actions
+            </h4>
+        </div>
+        <div class="p-6">
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('admin.updates.edit', $news) }}"
+                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-edit"></i>
+                    Edit Update
+                </a>
+                
+                @if($news->is_featured)
+                    <button type="button"
+                            onclick="toggleFeatured({{ $news->id }}, true)"
+                            class="inline-flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-star"></i>
+                        Remove from Featured
+                    </button>
+                @else
+                    <button type="button"
+                            onclick="toggleFeatured({{ $news->id }}, false)"
+                            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-star"></i>
+                        Mark as Featured
+                    </button>
+                @endif
+                
+                <button type="button"
+                        onclick="window.print()"
+                        class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-print"></i>
+                    Print Details
+                </button>
+            </div>
+        </div>
+    </div>
+    @endcan
+</div>
+
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Delete Update</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete update "<span id="deleteUpdateName" class="font-semibold text-gray-700"></span>"?
+                </p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelDeleteBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Toggle Featured Form --}}
+<form id="toggleFeaturedForm" method="POST" style="display: none;">
+    @csrf
+    @method('POST')
+</form>
+
+@push('scripts')
+<script>
+    // Delete confirmation
+    window.confirmDelete = function(updateId, updateName) {
+        const modal = document.getElementById('deleteModal');
+        const deleteUpdateNameSpan = document.getElementById('deleteUpdateName');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        deleteUpdateNameSpan.textContent = updateName;
+        deleteForm.action = `/admin/updates/${updateId}`;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Close modal on cancel
+        document.getElementById('cancelDeleteBtn').onclick = function() {
+            closeDeleteModal();
+        };
+        
+        // Close modal when clicking outside
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                closeDeleteModal();
+            }
+        };
+    };
+    
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (deleteForm) {
+                deleteForm.action = '';
+            }
+        }
+    }
+    
+    // Toggle featured function
+    window.toggleFeatured = function(updateId, isCurrentlyFeatured) {
+        const action = isCurrentlyFeatured ? 'unfeature' : 'feature';
+        const form = document.getElementById('toggleFeaturedForm');
+        form.action = `/admin/updates/${updateId}/${action}`;
+        
+        const message = isCurrentlyFeatured 
+            ? 'Remove this update from featured section?' 
+            : 'Mark this update as featured? Featured updates appear prominently on the homepage.';
+        
+        if (confirm(message)) {
+            form.submit();
+        }
+    };
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        const deleteModal = document.getElementById('deleteModal');
+        if (e.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+    
+    // Print styling
+    @media print {
+        .bg-gradient-to-r, .bg-emerald-50, .bg-green-50 {
+            background: #f0fdf4 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        button, .inline-flex, .gap-2 {
+            display: none !important;
+        }
+        a {
+            text-decoration: none !important;
+        }
+        body {
+            padding: 20px !important;
+        }
+    }
+</script>
+@endpush
+@endsection

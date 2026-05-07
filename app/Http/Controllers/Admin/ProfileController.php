@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Registered;
 
 class ProfileController extends Controller
 {
@@ -48,9 +48,14 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
+        // If email changed, send new verification email
+        if ($emailChanged) {
+            event(new Registered($user));
+        }
+
         $message = 'Profile updated successfully.';
         if ($emailChanged) {
-            $message .= ' Please verify your new email address.';
+            $message .= ' A verification link has been sent to your new email address.';
         }
 
         return redirect()->route('admin.profile')
@@ -84,24 +89,5 @@ class ProfileController extends Controller
 
         return redirect()->route('admin.profile')
             ->with('success', 'Password updated successfully. Please use your new password next time you log in.');
-    }
-
-
-    /**
-     * Resend email verification link
-     */
-    public function resendVerification(Request $request)
-    {
-        $user = Auth::user();
-        
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->route('admin.profile')
-                ->with('info', 'Your email is already verified.');
-        }
-
-        $user->sendEmailVerificationNotification();
-
-        return redirect()->route('admin.profile')
-            ->with('success', 'Verification link sent to your email address.');
     }
 }

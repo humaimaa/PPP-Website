@@ -1,199 +1,537 @@
-{{-- resources/views/admin/updates/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Updates - PPP Department KPK')
-@section('header-title', 'Updates Management')
 
 @section('content')
-<div class="max-w-full mx-auto">
+<div class="max-w-7xl mx-auto p-6">
 
-    {{-- Flash Messages --}}
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-800">Updates</h1>
+            <p class="text-sm text-gray-500 mt-1">Create and manage news, announcements, and press releases</p>
+        </div>
+        <div class="flex gap-3">
+            {{-- Bulk Delete Button - Only show if user has delete permission --}}
+            @can('updates.delete')
+                <button type="button" id="bulkDeleteBtn" 
+                        class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="display: none;">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Selected (<span id="selectedCount">0</span>)
+                </button>
+            @endcan
+            
+            @can('updates.create')
+                <a href="{{ route('admin.updates.create') }}"
+                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-plus"></i>
+                    Add Update
+                </a>
+            @endcan
+        </div>
+    </div>
+
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span>{{ session('success') }}</span>
+        <div class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center" role="alert">
-            <i class="fas fa-exclamation-circle mr-2"></i>
-            <span>{{ session('error') }}</span>
+        <div class="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ session('error') }}
         </div>
     @endif
 
-    {{-- Action Bar --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div class="flex items-center gap-3">
-            <h2 class="text-xl font-semibold text-gray-800">
-                <i class="fas fa-bullhorn mr-2 text-emerald-600"></i>
-                All Updates
-            </h2>
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                {{ $total }} Total
-            </span>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        <i class="fas fa-bullhorn mr-2 text-emerald-600"></i>
+                        All Updates
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Total: <span class="font-semibold text-emerald-600">{{ $news->total() }}</span> updates
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <form method="GET" action="{{ route('admin.updates.index') }}" class="flex gap-2">
+                        <select name="type" 
+                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                            <option value="">All Types</option>
+                            <option value="Update" {{ request('type') == 'Update' ? 'selected' : '' }}>Update</option>
+                            <option value="Announcement" {{ request('type') == 'Announcement' ? 'selected' : '' }}>Announcement</option>
+                            <option value="Press Release" {{ request('type') == 'Press Release' ? 'selected' : '' }}>Press Release</option>
+                            <option value="Notice" {{ request('type') == 'Notice' ? 'selected' : '' }}>Notice</option>
+                            <option value="Other" {{ request('type') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        
+                        <select name="featured" 
+                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                            <option value="">All Status</option>
+                            <option value="1" {{ request('featured') == '1' ? 'selected' : '' }}>Featured Only</option>
+                            <option value="0" {{ request('featured') == '0' ? 'selected' : '' }}>Non-Featured</option>
+                        </select>
+                        
+                        <input type="text" 
+                               name="search" 
+                               value="{{ request('search') }}"
+                               placeholder="Search updates by title..." 
+                               class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
+                        <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        @if(request('search') || request('type') || request('featured'))
+                            <a href="{{ route('admin.updates.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
         </div>
-        <a href="{{ route('admin.updates.add') }}"
-           class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-            <i class="fas fa-plus mr-2"></i>
-            Add Update
-        </a>
-    </div>
 
-    {{-- Filter Tabs --}}
-    @php
-        $activeFilter = request('type', 'all');
-        $filters = [
-            'all'          => ['label' => 'All',           'icon' => 'fa-list'],
-            'Update'       => ['label' => 'Updates',       'icon' => 'fa-sync-alt'],
-            'Event'        => ['label' => 'Events',        'icon' => 'fa-calendar-alt'],
-            'Announcement' => ['label' => 'Announcements', 'icon' => 'fa-bullhorn'],
-            'Press Release'=> ['label' => 'Press Releases','icon' => 'fa-newspaper'],
-            'Notice'       => ['label' => 'Notices',       'icon' => 'fa-bell'],
-            'featured'     => ['label' => 'Featured',      'icon' => 'fa-star'],
-        ];
-    @endphp
-    <div class="mb-6 flex flex-wrap gap-2">
-        @foreach($filters as $key => $filter)
-            <a href="{{ route('admin.updates.index', $key !== 'all' ? ['type' => $key] : []) }}"
-               class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                      {{ $activeFilter === $key
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                <i class="fas {{ $filter['icon'] }} mr-1 {{ $key === 'featured' ? 'text-yellow-500' : '' }}"></i>
-                {{ $filter['label'] }}
-            </a>
-        @endforeach
-    </div>
-
-    {{-- Updates Table --}}
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title &amp; Content</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($news as $item)
-                        @php
-                            $typeColors = [
-                                'Update'       => 'bg-green-100 text-green-800',
-                                'Event'        => 'bg-purple-100 text-purple-800',
-                                'Announcement' => 'bg-yellow-100 text-yellow-800',
-                                'Press Release'=> 'bg-red-100 text-red-800',
-                                'Notice'       => 'bg-orange-100 text-orange-800',
-                                'Circular'     => 'bg-blue-100 text-blue-800',
-                            ];
-                            $badgeClass = $typeColors[$item->type] ?? 'bg-gray-100 text-gray-800';
-                            $displayDate = $item->event_date ?? $item->created_at;
-                            $dateLabel   = $item->event_date ? 'Event Date' : 'Published';
-                        @endphp
-                        <tr class="hover:bg-gray-50 transition-colors">
+        <form id="bulkDeleteForm" action="{{ route('admin.updates.bulk-delete') }}" method="POST">
+            @csrf
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                        <tr>
+                            {{-- Checkbox column - Only show if user has delete permission --}}
+                            @can('updates.delete')
+                                <th class="px-6 py-3 text-left w-10">
+                                    <input type="checkbox" 
+                                           id="selectAllCheckbox" 
+                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                </th>
+                            @endcan
+                            <th class="px-6 py-3 text-left">ID</th>
+                            <th class="px-6 py-3 text-left">Title & Content</th>
+                            <th class="px-6 py-3 text-left">Type</th>
+                            <th class="px-6 py-3 text-left">Event Date</th>
+                            <th class="px-6 py-3 text-left">Featured</th>
+                            <th class="px-6 py-3 text-left">PDF</th>
+                            <th class="px-6 py-3 text-left">Created</th>
+                            
+                            {{-- Actions column - Only show if user has any action permissions --}}
+                            @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-700">
+                        @forelse($news as $item)
+                        <tr class="hover:bg-gray-50 transition" data-update-id="{{ $item->id }}">
+                            {{-- Checkbox column - Only show if user has delete permission --}}
+                            @can('updates.delete')
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" 
+                                           name="update_ids[]" 
+                                           value="{{ $item->id }}"
+                                           class="update-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                </td>
+                            @endcan
+                            
+                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
+                                #{{ $item->id }}
+                            </td>
+                            
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ $item->title }}
-                                    @if($item->is_featured)
-                                        <i class="fas fa-star text-yellow-500 ml-2 text-xs"></i>
-                                    @endif
-                                </div>
-                                <div class="text-sm text-gray-500 mt-1 line-clamp-2">
-                                    {{ Str::limit($item->content, 100) }}
+                                <div>
+                                    <span class="font-medium text-gray-900">{{ $item->title }}</span>
+                                    <div class="text-xs text-gray-500 mt-1 line-clamp-2">
+                                        {{ Str::limit($item->content, 80) }}
+                                    </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $badgeClass }}">
-                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                            
+                            <td class="px-6 py-4">
+                                @php
+                                    $typeColors = [
+                                        'Update' => 'bg-green-100 text-green-800',
+                                        'Announcement' => 'bg-yellow-100 text-yellow-800',
+                                        'Press Release' => 'bg-red-100 text-red-800',
+                                        'Notice' => 'bg-orange-100 text-orange-800',
+                                        'Other' => 'bg-gray-100 text-gray-800',
+                                    ];
+                                    $badgeClass = $typeColors[$item->type] ?? 'bg-gray-100 text-gray-800';
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium {{ $badgeClass }}">
+                                    <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ $item->type }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    <i class="far fa-calendar-alt mr-1 text-gray-400"></i>
-                                    {{ \Carbon\Carbon::parse($displayDate)->format('d M Y') }}
-                                </div>
-                                <div class="text-xs text-gray-400">{{ $dateLabel }}</div>
+                            
+                            <td class="px-6 py-4">
+                                @if($item->event_date)
+                                    <div class="text-sm text-gray-900">
+                                        {{ $item->event_date->format('M d, Y') }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        Event Date
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 text-sm">—</span>
+                                @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            
+                            <td class="px-6 py-4">
                                 @if($item->is_featured)
-                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        <i class="fas fa-star mr-1"></i> Featured
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-star mr-1 text-xs"></i>
+                                        Featured
                                     </span>
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            
+                            <td class="px-6 py-4">
                                 @if($item->pdf_path)
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank"
-                                       class="text-emerald-600 hover:text-emerald-800 p-2 rounded hover:bg-emerald-50 inline-flex items-center">
-                                        <i class="fas fa-file-pdf mr-1"></i>
-                                        <span class="text-sm">View</span>
+                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" 
+                                       class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700">
+                                        <i class="fas fa-file-pdf text-lg"></i>
+                                        <span class="text-xs">View</span>
                                     </a>
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center gap-1">
-                                    <a href="{{ route('admin.updates.edit', $item) }}"
-                                       class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50"
-                                       title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.updates.destroy', $item) }}" method="POST"
-                                          onsubmit="return confirm('Delete \'{{ addslashes($item->title) }}\'? This cannot be undone.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50"
-                                                title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                            
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600">{{ $item->created_at->format('M d, Y') }}</span>
+                                    <span class="text-xs text-gray-400">{{ $item->created_at->format('h:i A') }}</span>
                                 </div>
                             </td>
+                            
+                            {{-- Actions column --}}
+                            @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {{-- View Button --}}
+                                        @can('updates.view')
+                                            <a href="{{ route('admin.updates.show', $item) }}" 
+                                               class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                               title="View Update Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @endcan
+                                        
+                                        {{-- Edit Button --}}
+                                        @can('updates.edit')
+                                            <a href="{{ route('admin.updates.edit', $item) }}" 
+                                               class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                               title="Edit Update">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        
+                                        {{-- Toggle Featured Button --}}
+                                        @can('updates.edit')
+                                            <button type="button"
+                                                    onclick="toggleFeatured({{ $item->id }}, {{ $item->is_featured ? 'true' : 'false' }})" 
+                                                    class="{{ $item->is_featured ? 'text-yellow-600 hover:text-yellow-900' : 'text-gray-500 hover:text-yellow-600' }} p-2 rounded hover:bg-yellow-50 transition-colors"
+                                                    title="{{ $item->is_featured ? 'Remove Featured' : 'Mark as Featured' }}">
+                                                <i class="fas fa-star"></i>
+                                            </button>
+                                        @endcan
+                                        
+                                        {{-- Delete Button --}}
+                                        @can('updates.delete')
+                                            <button type="button"
+                                                    onclick="confirmDelete({{ $item->id }}, '{{ addslashes($item->title) }}')" 
+                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                    title="Delete Update">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center">
-                                    <i class="fas fa-bullhorn text-4xl text-gray-400 mb-3"></i>
-                                    <p class="text-gray-500 text-lg mb-2">No updates found</p>
-                                    <p class="text-gray-400 text-sm">Try changing your filter or
-                                        <a href="{{ route('admin.updates.add') }}" class="text-emerald-600 hover:underline">add a new update</a>.
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        {{-- Pagination --}}
-        @if($news->hasPages())
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="text-sm text-gray-600">
-                        Showing
-                        <span class="font-medium">{{ $news->firstItem() }}</span>
-                        to
-                        <span class="font-medium">{{ $news->lastItem() }}</span>
-                        of
-                        <span class="font-medium">{{ $news->total() }}</span>
-                        results
-                    </div>
-                    {{ $news->links() }}
-                </div>
+                        @empty
+                            <tr>
+                                @php
+                                    $colspan = 8; // Base columns
+                                    if(auth()->user()->can('updates.delete')) $colspan++; // Add checkbox column
+                                    if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // Add actions column
+                                @endphp
+                                <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                                    <i class="fas fa-bullhorn text-4xl mb-2"></i>
+                                    <p class="text-lg mb-1">No updates found</p>
+                                    @if(request('search') || request('type') || request('featured'))
+                                        <a href="{{ route('admin.updates.index') }}" class="text-emerald-600 hover:underline text-sm">
+                                            Clear filters
+                                        </a>
+                                    @else
+                                        @can('updates.create')
+                                            <a href="{{ route('admin.updates.create') }}" class="text-emerald-600 hover:underline text-sm">
+                                                Create your first update →
+                                            </a>
+                                        @endcan
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @endif
+        </form>
+    </div>
+
+    @if($news->hasPages())
+        <div class="mt-4">
+            {{ $news->appends(request()->query())->links() }}
+        </div>
+    @endif
+</div>
+
+{{-- Delete Confirmation Modal --}}
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Delete Update</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete update "<span id="deleteUpdateName" class="font-semibold text-gray-700"></span>"?
+                </p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelDeleteBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+{{-- Bulk Delete Confirmation Modal --}}
+@can('updates.delete')
+<div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Bulk Delete Updates</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete <span id="bulkDeleteCount" class="font-semibold text-gray-700"></span> update(s)?
+                </p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelBulkDeleteBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <button id="confirmBulkDeleteBtn" 
+                        class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
+
+{{-- Toggle Featured Form --}}
+<form id="toggleFeaturedForm" method="POST" style="display: none;">
+    @csrf
+    @method('POST')
+</form>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Bulk delete functionality - Only initialize if user has delete permission
+        @can('updates.delete')
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const updateCheckboxes = document.querySelectorAll('.update-checkbox');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+            const bulkDeleteModal = document.getElementById('bulkDeleteModal');
+            const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+            const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
+            const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
+            
+            function updateSelectedCount() {
+                const checkedBoxes = document.querySelectorAll('.update-checkbox:checked');
+                const count = checkedBoxes.length;
+                if (selectedCountSpan) {
+                    selectedCountSpan.textContent = count;
+                }
+                
+                if (bulkDeleteBtn) {
+                    if (count > 0) {
+                        bulkDeleteBtn.style.display = 'inline-flex';
+                    } else {
+                        bulkDeleteBtn.style.display = 'none';
+                    }
+                }
+            }
+            
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    updateCheckboxes.forEach(checkbox => {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+            
+            updateCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedCount();
+                    
+                    if (selectAllCheckbox) {
+                        const allChecked = updateCheckboxes.length === document.querySelectorAll('.update-checkbox:checked').length;
+                        selectAllCheckbox.checked = allChecked;
+                    }
+                });
+            });
+            
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const checkedBoxes = document.querySelectorAll('.update-checkbox:checked');
+                    const count = checkedBoxes.length;
+                    
+                    if (count === 0) {
+                        alert('Please select at least one update to delete.');
+                        return;
+                    }
+                    
+                    bulkDeleteCountSpan.textContent = count;
+                    bulkDeleteModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            
+            if (confirmBulkDeleteBtn) {
+                confirmBulkDeleteBtn.addEventListener('click', function() {
+                    const checkedBoxes = document.querySelectorAll('.update-checkbox:checked');
+                    checkedBoxes.forEach(checkbox => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'update_ids[]';
+                        input.value = checkbox.value;
+                        bulkDeleteForm.appendChild(input);
+                    });
+                    bulkDeleteForm.submit();
+                });
+            }
+            
+            if (cancelBulkDeleteBtn) {
+                cancelBulkDeleteBtn.addEventListener('click', function() {
+                    bulkDeleteModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === bulkDeleteModal) {
+                    bulkDeleteModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+                if (e.target === document.getElementById('deleteModal')) {
+                    closeDeleteModal();
+                }
+            });
+            
+            updateSelectedCount();
+        @endcan
+        
+        // Delete confirmation functions
+        @can('updates.delete')
+            window.confirmDelete = function(updateId, updateName) {
+                const modal = document.getElementById('deleteModal');
+                const deleteUpdateNameSpan = document.getElementById('deleteUpdateName');
+                const deleteForm = document.getElementById('deleteForm');
+                
+                deleteUpdateNameSpan.textContent = updateName;
+                deleteForm.action = `/admin/updates/${updateId}`;
+                
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                document.getElementById('cancelDeleteBtn').onclick = function() {
+                    closeDeleteModal();
+                };
+                
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeDeleteModal();
+                    }
+                };
+            };
+            
+            function closeDeleteModal() {
+                const modal = document.getElementById('deleteModal');
+                const deleteForm = document.getElementById('deleteForm');
+                
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    if (deleteForm) {
+                        deleteForm.action = '';
+                    }
+                }
+            }
+        @endcan
+        
+        // Toggle featured function
+        @can('updates.edit')
+            window.toggleFeatured = function(updateId, isCurrentlyFeatured) {
+                const action = isCurrentlyFeatured ? 'unfeature' : 'feature';
+                const form = document.getElementById('toggleFeaturedForm');
+                form.action = `/admin/updates/${updateId}/${action}`;
+                form.submit();
+            };
+        @endcan
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                @can('updates.delete')
+                    const deleteModal = document.getElementById('deleteModal');
+                    const bulkDeleteModal = document.getElementById('bulkDeleteModal');
+                    
+                    if (deleteModal && !deleteModal.classList.contains('hidden')) {
+                        closeDeleteModal();
+                    }
+                    if (bulkDeleteModal && !bulkDeleteModal.classList.contains('hidden')) {
+                        bulkDeleteModal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }
+                @endcan
+            }
+        });
+        
+        setTimeout(function() {
+            const successMsg = document.querySelector('.bg-green-50');
+            const errorMsg = document.querySelector('.bg-red-50');
+            if (successMsg) successMsg.style.display = 'none';
+            if (errorMsg) errorMsg.style.display = 'none';
+        }, 5000);
+    });
+</script>
+@endpush
 @endsection

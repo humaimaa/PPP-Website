@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->enum('type', ['Update', 'Announcement', 'Press Release', 'Notice', 'Circular'])->default('Update');
+            $table->enum('type', ['Update', 'Announcement', 'Press Release', 'Notice', 'Other'])->default('Update');
             $table->date('event_date')->nullable();
             $table->string('pdf_path')->nullable();
             $table->boolean('is_featured')->default(false);

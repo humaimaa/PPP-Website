@@ -21,8 +21,8 @@ class DesignationController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
         
-        // Order by title alphabetically
-        $designations = $query->orderBy('title')->paginate(15);
+        // Order by order field first, then by title
+        $designations = $query->orderBy('order')->orderBy('title')->paginate(15);
         
         return view('admin.designations.index', compact('designations'));
     }
@@ -42,14 +42,18 @@ class DesignationController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255|unique:designations,title',
+            'order' => 'nullable|integer|min:0',
         ], [
             'title.required' => 'The designation title is required.',
             'title.unique' => 'This designation already exists. Please enter a unique title.',
             'title.max' => 'The designation title cannot exceed 255 characters.',
+            'order.integer' => 'Order must be a valid number.',
+            'order.min' => 'Order must be at least 0.',
         ]);
         
         Designation::create([
             'title' => $request->title,
+            'order' => $request->order ?? 0,
         ]);
         
         return redirect()->route('admin.designations.index')
@@ -76,14 +80,18 @@ class DesignationController extends Controller
                 'max:255',
                 Rule::unique('designations', 'title')->ignore($designation->id),
             ],
+            'order' => 'nullable|integer|min:0',
         ], [
             'title.required' => 'The designation title is required.',
             'title.unique' => 'This designation already exists. Please enter a unique title.',
             'title.max' => 'The designation title cannot exceed 255 characters.',
+            'order.integer' => 'Order must be a valid number.',
+            'order.min' => 'Order must be at least 0.',
         ]);
         
         $designation->update([
             'title' => $request->title,
+            'order' => $request->order ?? $designation->order,
         ]);
         
         return redirect()->route('admin.designations.index')
@@ -95,61 +103,76 @@ class DesignationController extends Controller
      */
     public function destroy(Designation $designation)
     {
-        // Check if designation is being used in other tables
-        $isUsed = false;
-        $usageMessage = '';
-        
-        // Check leadership_messages table
-        if ($designation->leadershipMessages()->exists()) {
-            $isUsed = true;
-            $usageMessage = 'leadership messages';
-        }
-        
-        // Check staff table (if you have a staff table)
-        if ($designation->staff()->exists()) {
-            $isUsed = true;
-            $usageMessage = 'staff members';
-        }
-        
-        if ($isUsed) {
+        // Check if designation is being used
+        if ($designation->isUsed()) {
+            $usageDetails = $designation->getUsageDetails();
             return redirect()->route('admin.designations.index')
-                ->with('error', 'Cannot delete this designation because it is currently being used by ' . $usageMessage . '.');
+                ->with('error', 'Cannot delete this designation because it is currently being used by ' . $usageDetails . '. Please reassign or delete those records first.');
         }
         
         $designation->delete();
         
         return redirect()->route('admin.designations.index')
-            ->with('success', 'Designation deleted successfully!');
+            ->with('success', 'Designation "' . $designation->title . '" deleted successfully!');
     }
 
     /**
- * Bulk delete designations
- */
-public function bulkDelete(Request $request)
-{
-    $request->validate([
-        'designation_ids' => 'required|array',
-        'designation_ids.*' => 'exists:designations,id'
-    ]);
-    
-    try {
+     * Bulk delete designations
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'designation_ids' => 'required|array',
+            'designation_ids.*' => 'exists:designations,id'
+        ]);
+        
         $designationIds = $request->designation_ids;
         $deletedCount = 0;
+        $failedDeletions = [];
         
         foreach ($designationIds as $designationId) {
             $designation = Designation::find($designationId);
-            if ($designation) {
+            if ($designation && !$designation->isUsed()) {
                 $designation->delete();
                 $deletedCount++;
+            } else if ($designation && $designation->isUsed()) {
+                $failedDeletions[] = $designation->title;
             }
         }
         
+        $message = '';
+        if ($deletedCount > 0) {
+            $message .= $deletedCount . ' designation(s) deleted successfully! ';
+        }
+        
+        if (count($failedDeletions) > 0) {
+            $message .= 'Cannot delete: ' . implode(', ', $failedDeletions) . ' (currently in use).';
+        }
+        
+        if ($deletedCount > 0 || count($failedDeletions) > 0) {
+            return redirect()->route('admin.designations.index')
+                ->with('warning', trim($message));
+        }
+        
         return redirect()->route('admin.designations.index')
-            ->with('success', "{$deletedCount} designation(s) deleted successfully!");
-            
-    } catch (\Exception $e) {
-        return redirect()->route('admin.designations.index')
-            ->with('error', 'Error deleting designations: ' . $e->getMessage());
+            ->with('error', 'No designations were deleted. Please select valid designations that are not in use.');
     }
-}
+    
+    /**
+     * Update order of designations (for drag-and-drop sorting)
+     */
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'orders' => 'required|array',
+            'orders.*.id' => 'exists:designations,id',
+            'orders.*.order' => 'integer|min:0',
+        ]);
+        
+        foreach ($request->orders as $item) {
+            Designation::where('id', $item['id'])->update(['order' => $item['order']]);
+        }
+        
+        return response()->json(['success' => true]);
+    }
 }

@@ -113,21 +113,21 @@
 @endphp
 
 <!-- Page Header -->
-<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $album['title'] }}</h1>
+<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+        <div class="text-center px-4 pt-26">
+            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">{{ $album['title'] }}</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
     <img src="{{ $album['cover_image'] }}" alt="{{ $album['title'] }}" class="w-full h-full object-cover">
 </section>
 
-<section class="py-10 bg-white">
+<section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('events.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300" aria-label="Back to gallery">
+            <a href="{{ route('events.index') }}" class="text-accent-1 hover:text-accent-2 inline-flex items-center transition-colors duration-300" aria-label="Back to gallery">
                 <i class="fas fa-arrow-left mr-2" aria-hidden="true"></i>
                 Back to Gallery
             </a>
@@ -135,26 +135,26 @@
         
         <!-- Album Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-[#0D2818] mb-4">{{ $album['title'] }}</h1>
-            <div class="flex flex-wrap gap-4 text-gray-500 mb-6 pb-6 border-b border-gray-200">
+            <h1 class="text-3xl md:text-4xl font-bold text-text-green mb-4">{{ $album['title'] }}</h1>
+            <div class="flex flex-wrap gap-4 text-text-muted mb-6 pb-6 border-b border-background-light">
                 <div class="flex items-center">
-                    <i class="fas fa-calendar-alt text-[#0A612B] mr-2" aria-hidden="true"></i>
+                    <i class="fas fa-calendar-alt text-accent-1 mr-2" aria-hidden="true"></i>
                     <span>{{ $album['date'] }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-map-marker-alt text-[#0A612B] mr-2" aria-hidden="true"></i>
+                    <i class="fas fa-map-marker-alt text-accent-1 mr-2" aria-hidden="true"></i>
                     <span>{{ $album['event_location'] }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-images text-[#0A612B] mr-2" aria-hidden="true"></i>
+                    <i class="fas fa-images text-accent-1 mr-2" aria-hidden="true"></i>
                     <span>{{ count($images) }} Photos</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-camera text-[#0A612B] mr-2" aria-hidden="true"></i>
+                    <i class="fas fa-camera text-accent-1 mr-2" aria-hidden="true"></i>
                     <span>{{ $album['photographer'] }}</span>
                 </div>
             </div>
-            <p class="text-gray-700 text-lg leading-relaxed">{{ $album['description'] }}</p>
+            <p class="text-text-muted text-lg leading-relaxed">{{ $album['description'] }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->
@@ -175,7 +175,7 @@
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                              loading="lazy">
                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <div class="text-white text-center">
+                            <div class="text-text-primary text-center">
                                 <i class="fas fa-search-plus text-2xl mb-1" aria-hidden="true"></i>
                                 <p class="text-xs">Click to view</p>
                             </div>
@@ -189,7 +189,7 @@
         <!-- Download All Button -->
         <div class="text-center mt-12">
             <button id="downloadAllBtn" 
-                    class="inline-flex items-center px-6 py-3 bg-[#0A612B] text-white rounded-lg font-semibold hover:bg-[#0D2818] transition-colors duration-300 shadow-md"
+                    class="inline-flex items-center px-6 py-3 bg-accent-1 text-text-primary rounded-lg font-semibold hover:bg-accent-2 transition-colors duration-300 shadow-md"
                     aria-label="Download all photos as ZIP archive">
                 <i class="fas fa-download mr-2" aria-hidden="true"></i>
                 Download All Photos (ZIP)
@@ -199,11 +199,11 @@
 </section>
 
 <!-- Toast Notification Container -->
-<div id="toastContainer" class="fixed bottom-4 right-4 z-[10002] space-y-2"></div>
+<div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
 <!-- Enhanced Lightbox Modal with Zoom Controls -->
 <div id="lightboxModal" 
-     class="fixed inset-0 bg-black/95 z-[10000] hidden justify-center items-center overflow-hidden"
+     class="fixed inset-0 bg-black/95 z-50 hidden justify-center items-center overflow-hidden"
      role="dialog"
      aria-modal="true"
      aria-label="Image gallery lightbox"
@@ -211,7 +211,7 @@
     <div class="relative w-full h-full flex justify-center items-center overflow-hidden">
         
         <!-- Top Right Controls Group -->
-        <div class="absolute top-5 right-5 flex gap-2.5 z-[10001]">
+        <div class="absolute top-5 right-5 flex gap-2.5 z-10">
             <button id="downloadCurrentBtn" 
                     class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-lg cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Download current image">
@@ -225,13 +225,13 @@
         </div>
         
         <!-- Bottom Left Zoom Controls -->
-        <div class="absolute bottom-5 left-5 flex gap-2.5 bg-black/60 px-4 py-2 rounded-full z-[10001]">
+        <div class="absolute bottom-5 left-5 flex gap-2.5 bg-black/60 px-4 py-2 rounded-full z-10">
             <button id="zoomOutBtn" 
                     class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Zoom out">
                 <i class="fas fa-search-minus" aria-hidden="true"></i>
             </button>
-            <span id="zoomLevel" class="text-white text-sm min-w-[45px] text-center leading-10" aria-live="polite">100%</span>
+            <span id="zoomLevel" class="text-white text-sm min-w-11.25 text-center leading-10" aria-live="polite">100%</span>
             <button id="zoomInBtn" 
                     class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Zoom in">
@@ -245,7 +245,7 @@
         </div>
         
         <!-- Image Counter -->
-        <div id="lightboxCounter" class="absolute top-5 left-5 bg-black/60 text-white px-4 py-2 rounded-full text-sm z-[10001]" aria-live="polite"></div>
+        <div id="lightboxCounter" class="absolute top-5 left-5 bg-black/60 text-white px-4 py-2 rounded-full text-sm z-10" aria-live="polite"></div>
         
         <!-- Image Container -->
         <div id="imageContainer" class="relative flex justify-center items-center w-full h-full overflow-hidden cursor-default">
@@ -255,18 +255,18 @@
         </div>
         
         <!-- Caption - positioned slightly above bottom -->
-        <div id="lightboxCaption" class="absolute bg-black/70 text-white px-5 py-3 rounded-md text-center text-sm z-[10001] max-w-[80%] md:max-w-[60%] backdrop-blur-sm"
+        <div id="lightboxCaption" class="absolute bg-black/70 text-white px-5 py-3 rounded-md text-center text-sm z-10 max-w-[80%] md:max-w-[60%] backdrop-blur-sm"
              style="bottom: 80px; left: 50%; transform: translateX(-50%);">
         </div>
         
-        <!-- Navigation Buttons with > and < icons -->
+        <!-- Navigation Buttons -->
         <button id="prevImage" 
-                class="absolute left-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-[10001]"
+                class="absolute left-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-10"
                 aria-label="Previous image">
             &lt;
         </button>
         <button id="nextImage" 
-                class="absolute right-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-[10001]"
+                class="absolute right-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-10"
                 aria-label="Next image">
             &gt;
         </button>
@@ -383,12 +383,6 @@
         ZOOM: 200,
         TOAST: 3000,
         BUTTON_RESET: 1500
-    };
-    
-    const COLORS = {
-        SUCCESS: '#10B981',
-        ERROR: '#EF4444',
-        INFO: '#3B82F6'
     };
     
     // ==================== DOM ELEMENTS ====================

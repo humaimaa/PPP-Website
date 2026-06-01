@@ -11,10 +11,10 @@ return new class extends Migration
         Schema::create('ongoing_project_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->string('implementing_modality');
-            $table->string('government_contribution');
-            $table->string('government_return');
-            $table->string('private_party_return');
+            $table->text('implementing_modality');
+            $table->text('government_contribution');
+            $table->text('government_return');
+            $table->text('private_party_return');
             $table->timestamps();
             
             // Add index for better performance

@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
+use App\Models\Download;
+use App\Models\Tender;  
+use App\Models\CompletedProjectDetail;
+use App\Models\OngoingProjectDetail;
+use App\Models\LeadershipMessage;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -23,44 +29,176 @@ class PageController extends Controller
     }
 
     /**
-     * About page with optional section parameter
+     * About page - main overview
      */
-    public function about($section = 'overview')
+    public function about()
     {
-        return view('user.about', compact('section'));
+        return view('user.about.index');
     }
 
     /**
-     * Tenders page with optional section parameter
+     * Functions page
      */
-    public function tenders($section = 'active')
+    public function function()
     {
-        return view('user.tenders', compact('section'));
+        return view('user.about.function');
+    }
+
+    /**
+     * Message from leadership page
+     */
+    public function message()
+    {
+        // Fetch all leadership messages
+        $messages = LeadershipMessage::all();
+        
+        // Return view with messages data
+        return view('user.about.message', compact('messages'));
+    }
+
+    /**
+     * Organogram page
+     */
+    public function organogram()
+    {
+        return view('user.about.organogram');
+    }
+    
+    /**
+     * Team page
+     */
+   public function team()
+{
+    // Load team members with their designations, ordered by designation.order
+    $team = \App\Models\Team::with(['designation' => function($query) {
+        $query->orderBy('order', 'asc');
+    }])
+    ->get()
+    ->sortBy(function($member) {
+        return $member->designation->order ?? 999; // Fallback for members without designation
+    });
+    
+    return view('user.about.team', compact('team'));
+}
+
+    /**
+     * Mission & Vision page
+     */
+    public function missionVision()
+    {
+        return view('user.about.mission-vision');
     }
 
     /**
      * Projects page with optional status parameter
      */
-    public function projectsIndex($status = 'all')
+    public function projectsIndex($status = 'pipeline')
     {
+        $validStatuses = ['pipeline', 'ongoing', 'operational', 'complete'];
+
+        if (!in_array($status, $validStatuses)) {
+            $status = 'pipeline';
+        }
+
+        // Map 'complete' to 'operational' for the view
+        if ($status === 'complete') {
+            $status = 'operational';
+        }
+
         return view('user.projects.index', compact('status'));
     }
 
     /**
-     * Individual project detail page
+     * Project show page
      */
-    public function projectsShow($id)
+    public function projectShow($id)
     {
-        return view('user.projects.show', compact('id'));
+        // Fetch the project with its details based on category
+        $project = Project::findOrFail($id);
+        
+        $pipelineDetails = null;
+        $ongoingDetails = null;
+        $completedDetails = null;
+        $achievements = [];
+        
+        // Fetch category-specific details
+        if ($project->category === 'Pipeline') {
+            $pipelineDetails = $project->pipelineDetail;
+        }
+        elseif ($project->category === 'Ongoing') {
+            $ongoingDetails = OngoingProjectDetail::where('project_id', $project->id)->first();
+        }
+        elseif ($project->category === 'Completed') {
+            $completedDetails = CompletedProjectDetail::where('project_id', $project->id)->first();
+            
+            // Example achievements for completed projects
+            $achievements = [
+                'Successfully completed within budget',
+                'Created 500+ local jobs',
+                'Served 100,000+ beneficiaries',
+                'Received international recognition for best practices'
+            ];
+        }
+        
+        return view('user.projects.show', compact(
+            'project', 
+            'pipelineDetails', 
+            'ongoingDetails', 
+            'completedDetails',
+            'achievements'
+        ));
+    }
+
+
+
+    /**
+     * Events page
+     */
+    public function eventsIndex()
+    {
+        return view('user.events.index');
     }
 
     /**
-     * Updates index page
+     * Events page
      */
     public function updatesIndex()
     {
         return view('user.updates.index');
     }
+
+/**
+ * Tenders page with optional section parameter
+ */
+public function tenders($section = 'general-procurement')
+{
+    $validSections = [
+        'general-procurement',
+        'transaction-advisory',
+        'private-partner'
+    ];
+
+    if (!in_array($section, $validSections)) {
+        $section = 'general-procurement';
+    }
+
+    // Map URL sections to database category values
+    $categoryMapping = [
+        'general-procurement' => 'General Procurement',
+        'transaction-advisory' => 'Transaction Advisory',
+        'private-partner' => 'Private Partner Selection'
+    ];
+
+    $category = $categoryMapping[$section];
+
+    // Fetch all tenders (both active and archived) ordered by closing date desc
+    $allTenders = Tender::where('category', $category)
+        ->orderBy('closing_date', 'desc')
+        ->with('additionalDocs')
+        ->get();
+
+    return view('user.tenders', compact('section', 'allTenders'));
+}
 
     /**
      * Individual updates detail page
@@ -68,14 +206,6 @@ class PageController extends Controller
     public function updatesShow($id)
     {
         return view('user.updates.show', compact('id'));
-    }
-
-    /**
-     * Gallery index page
-     */
-    public function eventIndex()
-    {
-        return view('user.events.index');
     }
 
     /**
@@ -87,21 +217,11 @@ class PageController extends Controller
     }
 
     /**
-     * Downloads page
-     */
-    public function downloads()
-    {
-        return view('user.downloads', [
-            'documents' => collect([])
-        ]);
-    }
-
-    /**
      * API endpoint for downloading files
      */
     public function apiDownloadFile($id)
     {
-        // We'll implement this in Step 4
+        // Implement file download logic
         return response()->json(['success' => true]);
     }
 
@@ -110,7 +230,7 @@ class PageController extends Controller
      */
     public function apiPreviewFile($id)
     {
-        // We'll implement this in Step 4
+        // Implement file preview logic
         return response()->json(['success' => true]);
     }
 

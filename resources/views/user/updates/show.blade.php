@@ -98,9 +98,9 @@
 @endphp
 
 <!-- Page Header -->
-<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
+<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+        <div class="text-center px-4 pt-26">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 line-clamp-2">{{ $news['title'] }}</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
@@ -113,7 +113,7 @@
         <div class="max-w-5xl mx-auto">
             <!-- Back Button -->
             <div class="mb-8">
-                <a href="{{ route('updates.index') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300">
+                <a href="{{ route('media.room.updates') }}" class="text-[#0A612B] hover:text-[#0D2818] inline-flex items-center transition-colors duration-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>

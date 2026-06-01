@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\User\ResourceController;
+use App\Http\Controllers\User\AboutController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -13,29 +15,35 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 
-// About page (with optional section parameter - default to 'overview')
-Route::get('/about/{section?}', [PageController::class, 'about'])->name('about');
+// About pages - simplified route structure
+Route::prefix('about')->name('about.')->group(function () {
+    Route::get('/', [AboutController::class, 'about'])->name('index');
+    Route::get('/functions', [AboutController::class, 'function'])->name('functions');
+    Route::get('/message', [AboutController::class, 'message'])->name('message');
+    Route::get('/mission-vision', [AboutController::class, 'missionVision'])->name('mission-vision');
+    Route::get('/team', [AboutController::class, 'team'])->name('team');
+    Route::get('/organogram', [AboutController::class, 'organogram'])->name('organogram');
+});
 
-// Tenders page (with optional section parameter - default to 'active')
+// Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [PageController::class, 'tenders'])->name('tenders');
 
-// Projects page (with optional status parameter - default to 'all')
+// Projects page (with optional status parameter)
 Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->name('projects.index');
 
 // Individual project detail page
-Route::get('/project/{id}', [PageController::class, 'projectsShow'])->name('projects.show');
+Route::get('/project/{id}', [PageController::class, 'projectShow'])->name('projects.show');
 
-// Media Routes
-Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates.index');
+// Resource Center (Downloads) with optional section parameter
+Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');
 
-Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
-
-// Gallery Routes
-Route::get('/events', [PageController::class, 'eventIndex'])->name('events.index');
-
-Route::get('events/gallery/{id}', [PageController::class, 'eventGallery'])->name('events.gallery');
-
-Route::get('/downloads', [PageController::class, 'downloads'])->name('media.downloads');
+// Media Room Routes
+Route::prefix('media-room')->name('media.room.')->group(function () {
+    Route::get('/events', [PageController::class, 'eventsIndex'])->name('events');
+    Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates');
+    Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
+    Route::get('/events/gallery/{id}', [PageController::class, 'eventGallery'])->name('events.gallery');
+});
 
 // API endpoint for downloading files
 Route::post('/api/downloads/{id}', [PageController::class, 'apiDownloadFile'])->name('api.downloads.file');
@@ -46,10 +54,8 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
-//middleware
+// ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
-
     Route::resource('permissions', PermissionController::class)->except(['show']);
     Route::resource('roles', RoleController::class)->except(['show']);
-
 });

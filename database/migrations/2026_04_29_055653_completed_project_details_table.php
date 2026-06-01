@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->text('scope');
-            $table->string('cost_financing_mix');
-            $table->string('project_timeline');
+            $table->text('cost_financing_mix');
+            $table->text('project_timeline');
             $table->text('expected_financial_benefits_to_government');
             $table->timestamps();
             

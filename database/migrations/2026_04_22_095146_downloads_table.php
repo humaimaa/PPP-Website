@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('downloads', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->enum('category', ['Legal Framework', 'Prequalified Transaction Advisory', 'Policies ,Regulations and Guidelines', 'Knowledge Hub','Pitchbook'])->default('Other');
+            $table->enum('category', ['Legal Framework', 'Prequalified Transaction Advisory', 'Policies ,Regulations and Guidelines', 'Knowledge Hub'])->default('Legal Framework');
             $table->string('document_path');
             $table->date('date');
 

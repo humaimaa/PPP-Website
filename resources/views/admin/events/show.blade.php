@@ -34,13 +34,6 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">Complete details of the event and gallery images</p>
                 </div>
-                <div class="flex gap-2">
-                    <a href="{{ route('admin.events.edit', $event) }}" 
-                       class="inline-flex items-center px-3 py-1.5 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 transition">
-                        <i class="fas fa-edit mr-1"></i>
-                        Edit Event
-                    </a>
-                </div>
             </div>
         </div>
 

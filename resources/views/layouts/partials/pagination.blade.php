@@ -54,21 +54,22 @@
 
 @if($total > $perPage)
     <div class="mt-12 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-        <div class="text-sm text-gray-500">
-            Showing <span class="font-medium">{{ $start }}</span> to <span class="font-medium">{{ $end }}</span> of 
-            <span class="font-medium">{{ $total }}</span> results
+        <div class="text-sm text-text-muted">
+            Showing <span class="font-medium text-text-green">{{ $start }}</span> to 
+            <span class="font-medium text-text-green">{{ $end }}</span> of 
+            <span class="font-medium text-text-green">{{ $total }}</span> results
         </div>
         
         <nav class="flex items-center space-x-1 sm:space-x-2" aria-label="Pagination">
             {{-- Previous Button --}}
             @if($currentPage > 1)
                 <a href="{{ buildPaginationUrl($baseUrl, $queryParams, $currentPage - 1) }}" 
-                   class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#0A612B] text-sm sm:text-base transition duration-200">
+                   class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">
                     <span class="sr-only">Previous</span>
                     Previous
                 </a>
             @else
-                <span class="px-3 py-1 rounded-md border border-gray-200 text-gray-400 text-sm sm:text-base cursor-not-allowed">
+                <span class="px-3 py-1 rounded-md border border-background-light text-text-muted/50 text-sm sm:text-base cursor-not-allowed">
                     Previous
                 </span>
             @endif
@@ -80,39 +81,39 @@
                 
                 // First page
                 if ($startPage > 1) {
-                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, 1) . '" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#0A612B] text-sm sm:text-base transition duration-200">1</a>';
+                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, 1) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">1</a>';
                     if ($startPage > 2) {
-                        echo '<span class="px-3 py-1 text-gray-500 text-sm sm:text-base">...</span>';
+                        echo '<span class="px-3 py-1 text-text-muted text-sm sm:text-base">...</span>';
                     }
                 }
                 
                 // Page numbers
                 for ($i = $startPage; $i <= $endPage; $i++) {
                     if ($i == $currentPage) {
-                        echo '<span class="px-3 py-1 rounded-md bg-[#0A612B] text-white text-sm sm:text-base shadow-sm">' . $i . '</span>';
+                        echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $i . '</span>';
                     } else {
-                        echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $i) . '" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#0A612B] text-sm sm:text-base transition duration-200">' . $i . '</a>';
+                        echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $i) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $i . '</a>';
                     }
                 }
                 
                 // Last page
                 if ($endPage < $lastPage) {
                     if ($endPage < $lastPage - 1) {
-                        echo '<span class="px-3 py-1 text-gray-500 text-sm sm:text-base">...</span>';
+                        echo '<span class="px-3 py-1 text-text-muted text-sm sm:text-base">...</span>';
                     }
-                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $lastPage) . '" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#0A612B] text-sm sm:text-base transition duration-200">' . $lastPage . '</a>';
+                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $lastPage) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $lastPage . '</a>';
                 }
             @endphp
             
             {{-- Next Button --}}
             @if($currentPage < $lastPage)
                 <a href="{{ buildPaginationUrl($baseUrl, $queryParams, $currentPage + 1) }}" 
-                   class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#0A612B] text-sm sm:text-base transition duration-200">
+                   class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">
                     Next
                     <span class="sr-only">Next</span>
                 </a>
             @else
-                <span class="px-3 py-1 rounded-md border border-gray-200 text-gray-400 text-sm sm:text-base cursor-not-allowed">
+                <span class="px-3 py-1 rounded-md border border-background-light text-text-muted/50 text-sm sm:text-base cursor-not-allowed">
                     Next
                 </span>
             @endif

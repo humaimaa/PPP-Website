@@ -1,3 +1,4 @@
+/* home-animate.css */
 /* Custom animations that can't be done with Tailwind */
 @keyframes fade-in-up {
     from {
@@ -19,7 +20,8 @@
     }
 }
 
-.animate-fade-in-up {
+/* Text-only animations */
+.animate-text-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
     opacity: 0;
 }
@@ -31,3 +33,132 @@
 .animation-delay-200 {
     animation-delay: 0.2s;
 }
+
+/* Scroll-triggered text animations */
+.animate-on-scroll-title {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll-title.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-on-scroll-text {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animate-on-scroll-text.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+        #divisions-grid .bg-white\/10 {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        #divisions-grid .bg-white\/10 .text-white {
+            color: #1f2937;
+        }
+
+        #divisions-grid .bg-white\/10 .text-green-400 {
+            color: #15803d;
+        }
+
+        #divisions-grid .bg-white\/10 .text-gray-300 {
+            color: #6b7280;
+        }
+
+        #divisions-grid .bg-white\/10 .text-gray-400 {
+            color: #9ca3af;
+        }
+
+        #divisions-grid .bg-white\/10 .text-gray-500 {
+            color: #6b7280;
+        }
+
+        #divisions-grid .bg-white\/10:hover {
+            background-color: #f3f4f6;
+        }
+
+        #division-projects-list .bg-white\/10 {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        #division-projects-list .bg-white\/10 .text-white {
+            color: #1f2937;
+        }
+
+        #division-projects-list .bg-white\/10 .text-gray-300 {
+            color: #6b7280;
+        }
+
+        #division-projects-list .bg-white\/10 .text-green-400 {
+            color: #15803d;
+        }
+
+        #division-projects-list .bg-white\/10 .text-blue-400 {
+            color: #1d4ed8;
+        }
+
+        #division-projects-list .bg-white\/10 .text-orange-400 {
+            color: #c2410c;
+        }
+
+        .group:hover .group-hover\:block {
+            display: block !important;
+        }
+
+        .leaflet-container {
+            cursor: default !important;
+        }
+
+        .leaflet-grab {
+            cursor: default !important;
+        }
+
+        .leaflet-control-zoom {
+            display: none !important;
+        }
+
+        .leaflet-container:active {
+            cursor: default;
+        }
+
+        /* Logo scrolling animation */
+        .logo-scroll-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .logo-track {
+            display: flex;
+            animation: scrollLogos 25s linear infinite;
+            width: fit-content;
+        }
+
+        @keyframes scrollLogos {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Pause animation on hover */
+        .logo-scroll-container:hover .logo-track {
+            animation-play-state: paused;
+        }
+
+        .partner-logo {
+            transition: all 0.3s ease;
+        }

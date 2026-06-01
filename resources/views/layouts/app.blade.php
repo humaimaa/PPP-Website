@@ -13,15 +13,15 @@
     @stack('styles')
 </head>
 
-<body class="font-sans background-white text-text-primary">
-    @include('.layouts.partials.loader')
-    @include('.layouts.partials.header')
+<body class="font-sans">
+    @include('layouts.partials.loader')
+    @include('layouts.partials.header')
 
     <main>
         @yield('content')
     </main>
 
-    @include('.layouts.partials.footer')
+    @include('layouts.partials.footer')
     
     <!-- Page specific JS -->
     @stack('scripts')

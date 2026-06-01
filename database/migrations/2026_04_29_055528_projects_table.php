@@ -17,8 +17,9 @@ return new class extends Migration
             $table->decimal('cost', 15, 2);
             $table->string('status')->nullable();
             $table->text('overview');
-            $table->string('image'); // This is correct
-            $table->enum('category', ['Pipeline', 'Ongoing', 'Completed']); // FIXED: removed string() before enum
+            $table->string('image'); 
+            $table->enum('division', ['Bannu', 'Dera Ismail Khan', 'Hazara', 'Kohat', 'Malakand', 'Mardan', 'Peshawar', 'FATA']);
+            $table->enum('category', ['Pipeline', 'Ongoing', 'Completed']);
             $table->timestamps();
         });
     }

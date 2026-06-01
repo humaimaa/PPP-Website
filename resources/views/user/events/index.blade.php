@@ -5,12 +5,12 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Photo Gallery</h1>
+<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+        <div class="text-center px-4 pt-26">
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">Photo Gallery</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
+            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
                 Explore moments from our PPP projects, events, and initiatives across Khyber Pakhtunkhwa
             </p>
         </div>
@@ -18,7 +18,7 @@
     <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop" alt="Gallery Banner" class="w-full h-full object-cover">
 </section>
 
-<section class="py-10 bg-white">
+<section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         @php
@@ -90,8 +90,8 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($paginatedAlbums as $album)
-            <div class="group cursor-pointer" onclick="window.location='{{ route('events.gallery', $album['id']) }}'">
-                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="group cursor-pointer" onclick="window.location='{{ route('media.room.events.gallery', $album['id']) }}'">
+                <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <!-- Image Container -->
                     <div class="relative overflow-hidden h-64">
                         <img src="{{ $album['cover_image'] }}" 
@@ -101,33 +101,33 @@
                         
                         <!-- Overlay with image count -->
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <div class="bg-[#0A612B] text-white px-4 py-2 rounded-full flex items-center">
+                            <div class="bg-accent-1 text-text-primary px-4 py-2 rounded-full flex items-center">
                                 <i class="fas fa-images mr-2"></i>
                                 {{ $album['image_count'] }} Photos
                             </div>
                         </div>
                         
                         <!-- Category/Tag -->
-                        <div class="absolute top-4 left-4 bg-[#0A612B] text-white px-3 py-1 rounded-full text-xs font-medium">
+                        <div class="absolute top-4 left-4 bg-accent-1 text-text-primary px-3 py-1 rounded-full text-xs font-medium">
                             <i class="fas fa-calendar-alt mr-1"></i> {{ $album['date'] }}
                         </div>
                     </div>
                     
                     <!-- Card Content -->
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-[#0D2818] mb-2 group-hover:text-[#0A612B] transition-colors duration-300">
+                        <h3 class="text-xl font-bold text-text-green mb-2 group-hover:text-accent-1 transition-colors duration-300">
                             {{ $album['title'] }}
                         </h3>
-                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                        <p class="text-text-muted text-sm mb-3 line-clamp-2">
                             {{ $album['description'] }}
                         </p>
-                        <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
-                            <div class="flex items-center text-gray-500 text-sm">
-                                <i class="fas fa-map-marker-alt text-[#0A612B] mr-1"></i>
+                        <div class="flex justify-between items-center mt-4 pt-3 border-t border-background-light">
+                            <div class="flex items-center text-text-muted text-sm">
+                                <i class="fas fa-map-marker-alt text-accent-1 mr-1"></i>
                                 {{ $album['event_location'] }}
                             </div>
-                            <div class="flex items-center text-gray-500 text-sm">
-                                <i class="fas fa-images text-[#0A612B] mr-1"></i>
+                            <div class="flex items-center text-text-muted text-sm">
+                                <i class="fas fa-images text-accent-1 mr-1"></i>
                                 {{ $album['image_count'] }} photos
                             </div>
                         </div>
@@ -136,9 +136,9 @@
             </div>
             @empty
             <div class="col-span-full text-center py-12">
-                <i class="fas fa-images text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Albums Found</h3>
-                <p class="text-gray-500">No photo albums available at the moment. Please check back later.</p>
+                <i class="fas fa-images text-6xl text-text-muted mb-4"></i>
+                <h3 class="text-2xl font-semibold text-text-green mb-2">No Albums Found</h3>
+                <p class="text-text-muted">No photo albums available at the moment. Please check back later.</p>
             </div>
             @endforelse
         </div>
@@ -150,7 +150,7 @@
             'lastPage' => $lastPage,
             'total' => $totalAlbums,
             'perPage' => $perPage,
-            'routeName' => 'gallery.index'
+            'routeName' => 'events.index'
         ])
         @endif
     </div>

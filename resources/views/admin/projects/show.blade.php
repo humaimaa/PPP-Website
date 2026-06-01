@@ -99,11 +99,20 @@
                             </p>
                         </div>
                         @if($project->location)
-                            <div class="col-span-2">
+                            <div>
                                 <p class="text-xs text-gray-500 uppercase tracking-wider">Location</p>
                                 <p class="text-sm font-medium text-gray-900">
                                     <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
                                     {{ $project->location }}
+                                </p>
+                            </div>
+                        @endif
+                        @if($project->division)
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wider">Division</p>
+                                <p class="text-sm font-medium text-gray-900">
+                                    <i class="fas fa-building text-gray-400 mr-1"></i>
+                                    {{ $project->division }}
                                 </p>
                             </div>
                         @endif

@@ -1,3 +1,4 @@
+// home-animate.js
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -7,110 +8,211 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
-    initializeHomeAnimations();
+    initializeTextAnimations();
     initializeStatsCounter();
     initScrollArrow();
     initPositionAwareButton();
     initProjectCards();
 });
 
-function initializeHomeAnimations() {
-    // Hero section fade out on scroll
-    const heroSection = document.querySelector('.hero-video-section');
-    if (heroSection) {
-        gsap.to(heroSection, {
-            scrollTrigger: {
-                trigger: heroSection,
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1.5,
-                onUpdate: (self) => {
-                    const opacity = 1 - (self.progress * 0.8);
-                    heroSection.style.opacity = opacity;
-                }
-            }
-        });
+function initializeTextAnimations() {
+    // Hero section text animations
+    const heroTitle = document.querySelector('.hero-video-section h1');
+    const heroSubtitle = document.querySelector('.hero-video-section p');
+    
+    if (heroTitle) {
+        gsap.fromTo(heroTitle, 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.8, delay: 0.2 }
+        );
+    }
+    
+    if (heroSubtitle) {
+        gsap.fromTo(heroSubtitle,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.8, delay: 0.4 }
+        );
     }
 
-    // About section animations
-    const aboutSection = document.querySelector('#about-section');
-    if (aboutSection) {
-        const aboutImage = aboutSection.querySelector('img');
-        if (aboutImage) {
-            gsap.from(aboutImage, {
+    // About section text animations
+    const aboutHeading = document.querySelector('#about-section .w-full:not(#about-section .w-full:first-child) h2');
+    const aboutParagraphs = document.querySelectorAll('#about-section .w-full:not(#about-section .w-full:first-child) p');
+    const aboutListItems = document.querySelectorAll('#about-section ul li');
+    const aboutButton = document.querySelector('#about-section .btn-position-aware');
+    
+    if (aboutHeading) {
+        gsap.fromTo(aboutHeading,
+            { opacity: 0, x: -30 },
+            {
                 scrollTrigger: {
-                    trigger: aboutSection,
+                    trigger: '#about-section',
                     start: 'top 80%',
-                    end: 'bottom 20%',
                     toggleActions: 'play none none reverse'
                 },
-                duration: 1,
-                scale: 0.9,
-                opacity: 0,
+                opacity: 1,
+                x: 0,
+                duration: 0.6,
                 ease: 'power2.out'
-            });
-        }
-
-        const aboutContent = aboutSection.querySelector('.w-full:not(#about-section .w-full:first-child)');
-        if (aboutContent && aboutContent.classList.contains('about-content')) {
-            gsap.from(aboutContent, {
+            }
+        );
+    }
+    
+    if (aboutParagraphs.length) {
+        aboutParagraphs.forEach((paragraph, index) => {
+            gsap.fromTo(paragraph,
+                { opacity: 0, x: -20 },
+                {
+                    scrollTrigger: {
+                        trigger: '#about-section',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.6,
+                    delay: index * 0.2,
+                    ease: 'power2.out'
+                }
+            );
+        });
+    }
+    
+    if (aboutListItems.length) {
+        aboutListItems.forEach((item, index) => {
+            gsap.fromTo(item,
+                { opacity: 0, x: -15 },
+                {
+                    scrollTrigger: {
+                        trigger: '#about-section',
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    ease: 'power2.out'
+                }
+            );
+        });
+    }
+    
+    if (aboutButton) {
+        gsap.fromTo(aboutButton,
+            { opacity: 0, y: 20 },
+            {
                 scrollTrigger: {
-                    trigger: aboutSection,
-                    start: 'top 70%',
-                    end: 'bottom 20%',
+                    trigger: '#about-section',
+                    start: 'top 80%',
                     toggleActions: 'play none none reverse'
                 },
-                duration: 1,
-                x: -50,
-                opacity: 0,
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                delay: 0.4,
                 ease: 'power2.out'
-            });
-        }
+            }
+        );
+    }
 
-        const listItems = aboutSection.querySelectorAll('ul li');
-        listItems.forEach((item, index) => {
-            gsap.from(item, {
+    // Departmental Leadership section animations
+    const leadershipSection = document.querySelector('#about-section + section');
+    if (leadershipSection) {
+        const leadershipTitle = leadershipSection.querySelector('h2');
+        const leadershipImage = leadershipSection.querySelector('img');
+        const leadershipContent = leadershipSection.querySelector('.lg\\:w-1\\/2');
+        
+        if (leadershipTitle) {
+            gsap.fromTo(leadershipTitle,
+                { opacity: 0, y: 20 },
+                {
+                    scrollTrigger: {
+                        trigger: leadershipSection,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: 'power2.out'
+                }
+            );
+        }
+        
+        if (leadershipImage) {
+            gsap.fromTo(leadershipImage,
+                { opacity: 0, scale: 0.9 },
+                {
+                    scrollTrigger: {
+                        trigger: leadershipSection,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.7,
+                    delay: 0.2,
+                    ease: 'power2.out'
+                }
+            );
+        }
+        
+        if (leadershipContent) {
+            gsap.fromTo(leadershipContent,
+                { opacity: 0, x: 30 },
+                {
+                    scrollTrigger: {
+                        trigger: leadershipSection,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.6,
+                    delay: 0.3,
+                    ease: 'power2.out'
+                }
+            );
+        }
+    }
+
+    // Section titles animations
+    const sectionTitles = document.querySelectorAll('.animate-on-scroll-title');
+    sectionTitles.forEach((title) => {
+        gsap.fromTo(title,
+            { opacity: 0, y: 20 },
+            {
                 scrollTrigger: {
-                    trigger: aboutSection,
-                    start: 'top 70%',
+                    trigger: title,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
                 },
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'power2.out'
+            }
+        );
+    });
+
+    // Text content animations
+    const textContents = document.querySelectorAll('.animate-on-scroll-text');
+    textContents.forEach((text) => {
+        gsap.fromTo(text,
+            { opacity: 0, y: 15 },
+            {
+                scrollTrigger: {
+                    trigger: text,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                y: 0,
                 duration: 0.5,
-                x: -20,
-                opacity: 0,
-                delay: index * 0.1,
+                delay: 0.2,
                 ease: 'power2.out'
-            });
-        });
-    }
-
-    // Stats section animations
-    const statsSection = document.querySelector('#stats-section');
-    if (statsSection) {
-        gsap.from(statsSection.querySelector('.container'), {
-            scrollTrigger: {
-                trigger: statsSection,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
-            },
-            duration: 1,
-            opacity: 0,
-            y: 30,
-            ease: 'power2.out'
-        });
-    }
-
-    // Stat cards stagger animation
-    gsap.from('.stat-card', {
-        scrollTrigger: {
-            trigger: '#stats-section',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-        },
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        stagger: 0.15,
-        ease: 'power2.out'
+            }
+        );
     });
 }
 

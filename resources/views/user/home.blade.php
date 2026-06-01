@@ -18,8 +18,10 @@
     <div class="absolute inset-0 flex items-center justify-center z-10">
         <div class="text-center px-4 max-w-4xl">
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
                 Public Private Partnership Unit
             </h1>
+            <p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
             <p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta eos quia repudiandae iusto, voluptas ratione harum architecto iste molestiae facere neque explicabo hic! Aspernatur sapiente placeat voluptatibus necessitatibus reiciendis dignissimos!
             </p>
@@ -53,6 +55,7 @@
         </div>
 
         <div class="md:order-first py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
+            <div class="w-full about-content">
             <div class="w-full about-content">
                 <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
                 <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Department KPK</h2>
@@ -139,10 +142,55 @@
     </div>
 </section>
 
+<!-- Departmental Leadership Section -->
+<section class="py-12 bg-linear-to-br from-[#0D2818] to-[#1a4d2e] text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
+            <div class="w-20 h-1 bg-[#DAD7CD] mx-auto"></div>
+        </div>
+        
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+            <!-- Chief's Photo -->
+            <div class="lg:w-1/3">
+                <div class="relative rounded-lg overflow-hidden shadow-2xl">
+                    <img src="{{ asset('images/boy.jpg') }}" alt="Chief PPP Department" 
+                         class="w-full h-100 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
+                        <h3 class="text-2xl font-bold">Mr. Muhammad Ali</h3>
+                        <p class="text-[#DAD7CD]">Chief Executive Officer</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lg:w-1/2">
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold">Message from the Chief</h3>
+                    <p class="text-gray-200 leading-relaxed">
+                        As the Chief Executive of PPP Department KPK, I am honored to lead a team dedicated to transforming 
+                        the province through strategic public-private partnerships. Our commitment to transparency, innovation, 
+                        and excellence drives every project we undertake.
+                    </p>
+                    <div class="mt-6">
+                        <!-- Email section removed as requested -->
+                        <div class="flex items-center space-x-2 text-[#DAD7CD] mt-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                            </svg>
+                            <span>+92 91 921 1234 Ext: 101</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Stats Section -->
 <section class="w-full py-10 px-12 md:px-12 bg-background-white" id="stats-section">
     <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4 animate-on-scroll-title">Our Impact in Numbers</h2>
             <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4 animate-on-scroll-title">Our Impact in Numbers</h2>
             <div class="w-24 h-1 bg-accent-1 mx-auto rounded"></div>
         </div>
@@ -159,6 +207,7 @@
             <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary/99 border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-accent-1 mb-3" data-count="{{ $stat['count'] }}">0</div>
                 <p class="text-text-secondary text-sm md:text-base font-medium animate-on-scroll-text">{{ $stat['label'] }}</p>
+                <p class="text-text-secondary text-sm md:text-base font-medium animate-on-scroll-text">{{ $stat['label'] }}</p>
             </div>
             @endforeach
         </div>
@@ -169,6 +218,7 @@
 <section class="pt-10 w-full" id="projects-section">
     <div class="w-full px-0">
         <div class="text-center mb-12 overflow-hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-primary animate-on-scroll-title">Our Project Categories</h2>
             <h2 class="text-3xl md:text-4xl font-bold text-text-primary animate-on-scroll-title">Our Project Categories</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
@@ -204,6 +254,7 @@
     <div class="w-full px-0">
         <div class="text-center mb-4 overflow-hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">Our Pitchbook</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">Our Pitchbook</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
         <div class="flex justify-center items-center w-full">
@@ -224,8 +275,10 @@
     <div class="relative z-10 px-4 mx-auto text-center md:px-6 lg:px-8 max-w-7xl">
         <div class="max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
+            <h2 class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
                 Our Vision for Sustainable Development
             </h2>
+            <p class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
             <p class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
                 We are committed to fostering public-private partnerships that drive innovation, infrastructure
                 development, and economic growth across Khyber Pakhtunkhwa.
@@ -336,10 +389,113 @@
 </section>
 
 
+<!-- Map Section -->
+<section class="bg-background-white" id="map-section">
+    <div class="container-fluid px-4 sm:px-6 lg:px-8 bg-background-gray/10 py-10">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
+            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto animate-on-scroll-text">Click on any division to view its projects and details</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Map Container -->
+            <div class="w-full lg:w-1/2 z-10">
+                <div id="kp-choropleth-map" class="overflow-hidden h-100 md:h-160"
+                    style="background-color: transparent; cursor: default;"></div>
+            </div>
+
+            <!-- Projects Stats Panel -->
+            <div class="w-full lg:w-1/2">
+                <div id="stats-panel"
+                    class="bg-background-white shadow-lg rounded-lg p-6 transition-all duration-300 h-full border border-gray-100">
+                    <!-- Default View (No Division Selected) -->
+                    <div id="default-view">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
+                            <h3 class="text-xl font-bold text-text-black">Projects Overview</h3>
+                            <button id="reset-view"
+                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Show
+                                All</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="total-projects">0</div>
+                                <div class="text-sm text-text-muted mt-1">Total Projects</div>
+                            </div>
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="total-investment">0</div>
+                                <div class="text-sm text-text-muted mt-1">Total Investment (PKR Cr)</div>
+                            </div>
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="total-divisions">7</div>
+                                <div class="text-sm text-text-muted mt-1">Divisions</div>
+                            </div>
+                        </div>
+
+                        <h4 class="font-semibold mb-3 text-lg text-text-black">All Divisions</h4>
+                        <div id="divisions-grid"
+                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-100 overflow-y-auto pr-1">
+                        </div>
+                    </div>
+
+                    <!-- Division Detail View (Initially Hidden) -->
+                    <div id="division-view" class="hidden">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
+                            <h3 class="text-xl font-bold text-text-black" id="division-title"></h3>
+                            <button id="back-to-all"
+                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Back
+                                to All</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="division-total-projects">0</div>
+                                <div class="text-sm text-text-muted mt-1">Total Projects</div>
+                            </div>
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="division-total-investment">0</div>
+                                <div class="text-sm text-text-muted mt-1">Total Investment (PKR Cr)</div>
+                            </div>
+                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
+                                <div class="text-3xl font-bold text-primary" id="division-avg-cost">0</div>
+                                <div class="text-sm text-text-muted mt-1">Avg Project Cost (Cr)</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-4">
+                            <div class="bg-green-50 rounded p-2">
+                                <div class="font-bold text-primary text-lg" id="division-active">0</div>
+                                <div class="text-xs text-text-muted">Active</div>
+                            </div>
+                            <div class="bg-blue-50 rounded p-2">
+                                <div class="font-bold text-primary text-lg" id="division-completed">0</div>
+                                <div class="text-xs text-text-muted">Completed</div>
+                            </div>
+                            <div class="bg-orange-50 rounded p-2">
+                                <div class="font-bold text-primary text-lg" id="division-planned">0</div>
+                                <div class="text-xs text-text-muted">Planned</div>
+                            </div>
+                        </div>
+
+                        <h4 class="font-semibold mb-2 text-sm text-text-black">Projects by Sector</h4>
+                        <div id="sector-chart" class="mb-4" style="height: 200px;"></div>
+
+                        <h4 class="font-semibold mb-2 text-sm text-text-black">Project Details</h4>
+                        <div id="division-projects-list" class="space-y-2 max-h-62.5 overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <!-- News Section -->
 <section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 overflow-hidden">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">News & Updates</h2>
             <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">News & Updates</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
@@ -381,6 +537,7 @@
 
         <div class="pt-8 flex justify-center">
             <a href="{{ route('media.room.updates') }}"
+            <a href="{{ route('media.room.updates') }}"
                 class="inline-block rounded-lg text-text-primary text-sm uppercase tracking-widest bg-accent-1 py-3 px-8 hover:bg-accent-2 transition-all duration-300 hover:scale-105">
                 More Updates
             </a>
@@ -388,6 +545,14 @@
     </div>
 </section>
 
+
+<!-- Our Partners Section with Scrolling Logos -->
+<section class="py-12 bg-background-gray/50 overflow-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>
+            <div class="w-20 h-1 bg-accent-1 mx-auto rounded-full"></div>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Collaborating with leading organizations to drive sustainable development in Khyber Pakhtunkhwa</p>
 
 <!-- Our Partners Section with Scrolling Logos -->
 <section class="py-12 bg-background-gray/50 overflow-hidden">
@@ -426,7 +591,60 @@
                     </div>
                     <div class="partner-logo flex-shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="Partner 8" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+        <!-- Infinite scrolling logo carousel -->
+        <div class="relative">
+            <div class="logo-scroll-container overflow-hidden">
+                <div class="logo-track flex items-center gap-12 md:gap-16">
+                    <!-- First set of logos -->
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Partner 1" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Partner 2" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Partner 3" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Partner 4" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="Partner 5" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Partner 6" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Partner 7" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="Partner 8" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    
+                    <!-- Duplicate set for seamless loop -->
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Partner 1" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Partner 2" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Partner 3" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Partner 4" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="Partner 5" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Partner 6" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Partner 7" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo flex-shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="Partner 8" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     
                     <!-- Duplicate set for seamless loop -->
                     <div class="partner-logo flex-shrink-0">

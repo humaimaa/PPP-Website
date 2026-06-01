@@ -26,8 +26,10 @@ Route::prefix('about')->name('about.')->group(function () {
 });
 
 // Tenders page (with optional section parameter)
+// Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [PageController::class, 'tenders'])->name('tenders');
 
+// Projects page (with optional status parameter)
 // Projects page (with optional status parameter)
 Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->name('projects.index');
 
@@ -54,6 +56,7 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
+// ==================== ADMIN ROUTES ====================
 // ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('permissions', PermissionController::class)->except(['show']);

@@ -208,23 +208,79 @@ class TenderController extends Controller
     }
 
     /**
- * Delete an additional document
- */
-public function deleteAdditionalDoc($id)
-{
-    try {
-        $doc = TenderAdditionalDoc::findOrFail($id);
-        
-        // Delete the file
-        if ($doc->document && Storage::disk('public')->exists($doc->document)) {
-            Storage::disk('public')->delete($doc->document);
-        }
-        
-        $doc->delete();
-        
-        return redirect()->back()->with('success', 'Additional document deleted successfully.');
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Error deleting document: ' . $e->getMessage());
+     * Archive a tender (sets is_archived = true).
+     */
+    public function archive(Tender $tender)
+    {
+        $tender->update(['is_archived' => true]);
+
+        return redirect()->route('admin.tenders.show', $tender)
+            ->with('success', 'Tender archived successfully.');
     }
-}
+
+    /**
+     * Unarchive a tender (sets is_archived = false).
+     */
+    public function unarchive(Tender $tender)
+    {
+        $tender->update(['is_archived' => false]);
+
+        return redirect()->route('admin.tenders.show', $tender)
+            ->with('success', 'Tender unarchived successfully.');
+    }
+
+    /**
+     * Bulk delete tenders.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'integer|exists:tenders,id',
+        ]);
+
+        $tenders = Tender::whereIn('id', $request->ids)->get();
+
+        foreach ($tenders as $tender) {
+            if ($tender->document && Storage::disk('public')->exists($tender->document)) {
+                Storage::disk('public')->delete($tender->document);
+            }
+
+            if ($tender->advertisement && Storage::disk('public')->exists($tender->advertisement)) {
+                Storage::disk('public')->delete($tender->advertisement);
+            }
+
+            foreach ($tender->additionalDocs as $doc) {
+                if ($doc->document && Storage::disk('public')->exists($doc->document)) {
+                    Storage::disk('public')->delete($doc->document);
+                }
+            }
+
+            $tender->delete();
+        }
+
+        return redirect()->route('admin.tenders.index')
+            ->with('success', count($request->ids) . ' tender(s) deleted successfully.');
+    }
+
+    /**
+     * Delete an additional document.
+     */
+    public function deleteAdditionalDoc($id)
+    {
+        try {
+            $doc = TenderAdditionalDoc::findOrFail($id);
+            
+            // Delete the file
+            if ($doc->document && Storage::disk('public')->exists($doc->document)) {
+                Storage::disk('public')->delete($doc->document);
+            }
+            
+            $doc->delete();
+            
+            return redirect()->back()->with('success', 'Additional document deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error deleting document: ' . $e->getMessage());
+        }
+    }
 }

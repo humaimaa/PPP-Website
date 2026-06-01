@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Alpine from 'alpinejs';
 
-// Register GSAP plugins
+// Register GSAP plugins (keeping for potential future use, but not used for section animations)
 gsap.registerPlugin(ScrollTrigger);
 
 // ========== NAVBAR DROPDOWN COMPONENT ==========

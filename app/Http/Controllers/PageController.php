@@ -147,6 +147,7 @@ class PageController extends Controller
             'completedDetails',
             'achievements'
         ));
+<<<<<<< HEAD
     }
 
 
@@ -160,6 +161,55 @@ class PageController extends Controller
     }
 
     /**
+=======
+    }
+
+    /**
+ * Resource Center / Downloads page with optional section parameter
+ */
+public function downloads($section = 'legal-framework')
+{
+    $validSections = [
+        'legal-framework',
+        'pre-qualified-advisors',
+        'policies-regulations',
+        'knowledge-hub'
+    ];
+
+    if (!in_array($section, $validSections)) {
+        $section = 'legal-framework';
+    }
+
+    // Map URL sections to database category values
+    $categoryMapping = [
+        'legal-framework' => 'Legal Framework',
+        'pre-qualified-advisors' => 'Prequalified Transaction Advisory',
+        'policies-regulations' => 'Policies ,Regulations and Guidelines',
+        'knowledge-hub' => 'Knowledge Hub'
+    ];
+
+    // Get the corresponding database category
+    $category = $categoryMapping[$section];
+
+    // Fetch downloads filtered by category
+    $downloads = Download::where('category', $category)
+        ->orderBy('date', 'desc')
+        ->paginate(12);
+
+    // Return the view with section and downloads
+    return view('user.downloads', compact('section', 'downloads'));
+}
+
+    /**
+     * Events page
+     */
+    public function eventsIndex()
+    {
+        return view('user.events.index');
+    }
+
+    /**
+>>>>>>> b32403fc1fe7700c15202303dd81552e1a18f5cd
      * Events page
      */
     public function updatesIndex()

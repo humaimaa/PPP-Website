@@ -74,7 +74,7 @@
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('tenders.create')
-                <a href="{{ route('admin.tenders.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('tenders.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Tender</a>
+                <a href="{{ route('admin.tenders.create') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.tenders.create') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Tender</a>
                 @endcan
                 <a href="{{ route('admin.tenders.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('tenders.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Tenders</a>
             </div>
@@ -99,7 +99,7 @@
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('news.create')
-                <a href="{{ route('admin.updates.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.updates.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Update</a>
+                <a href="{{ route('admin.updates.create') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.updates.create') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Update</a>
                 @endcan
                 <a href="{{ route('admin.updates.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.updates.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Updates</a>
             </div>

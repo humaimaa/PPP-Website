@@ -27,11 +27,7 @@ use App\Http\Controllers\Admin\ProfileController;
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.submit');
 
-// Temporary debug route - remove after testing
-
-
 // ==================== EMAIL VERIFICATION ROUTES ====================
-// IMPORTANT: These must be accessible without authentication for the email links to work
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
     ->middleware(['signed'])
     ->name('verification.verify');
@@ -45,13 +41,10 @@ Route::get('/email/verify', [VerificationController::class, 'show'])
     ->name('verification.notice');
 
 
-
 // ==================== PROTECTED ADMIN ROUTES ====================
 Route::middleware(['auth'])->group(function () {
 
-
-
-    // Dashboard - Accessible to all authenticated users
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [DashboardController::class, 'index']);
 
@@ -65,7 +58,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('.password');
         Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.resend-verification');
     });
-
 
     // ==================== USER MANAGEMENT ====================
     Route::prefix('users')->name('users.')->middleware('can:users.view')->group(function () {
@@ -82,7 +74,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status')->middleware('can:users.toggle_status');
         Route::post('/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('verify-email')->middleware('can:users.edit');
         Route::post('/{user}/resend-verification', [UserController::class, 'resendVerification'])->name('resend-verification');
-
     });
 
     // ==================== ROLE MANAGEMENT ====================
@@ -112,7 +103,10 @@ Route::middleware(['auth'])->group(function () {
     // ==================== NEWS/UPDATES MANAGEMENT ====================
     Route::prefix('updates')->name('updates.')->middleware('can:news.view')->group(function () {
         Route::get('/', [NewsController::class, 'index'])->name('index');
-        Route::get('/add', [NewsController::class, 'create'])->name('add')->middleware('can:news.create');
+        Route::get('/create', [NewsController::class, 'create'])->name('create')->middleware('can:news.create');
+        Route::post('/{news}/feature', [NewsController::class, 'feature'])->name('feature')->middleware('can:news.edit');
+        Route::post('/{news}/unfeature', [NewsController::class, 'unfeature'])->name('unfeature')->middleware('can:news.edit');
+        Route::post('/{news}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('toggle-featured')->middleware('can:news.edit');
         Route::post('/', [NewsController::class, 'store'])->name('store')->middleware('can:news.create');
         Route::post('/bulk-delete', [NewsController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
         Route::get('/{news}', [NewsController::class, 'show'])->name('show');
@@ -124,15 +118,22 @@ Route::middleware(['auth'])->group(function () {
     // ==================== TENDERS MANAGEMENT ====================
     Route::prefix('tenders')->name('tenders.')->middleware('can:tenders.view')->group(function () {
         Route::get('/', [TenderController::class, 'index'])->name('index');
-        Route::get('/create', [TenderController::class, 'create'])->name('add')->middleware('can:tenders.create');
+
+        // FIX: was name('add'), blade views expect name('create')
+        Route::get('/create', [TenderController::class, 'create'])->name('create')->middleware('can:tenders.create');
         Route::post('/', [TenderController::class, 'store'])->name('store')->middleware('can:tenders.create');
         Route::post('/bulk-delete', [TenderController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:tenders.delete');
-        Route::get('/{tender}', [TenderController::class, 'show'])->name('show')->middleware('can:tenders.view');
+
+        // Archive / Unarchive routes (used in show.blade.php)
+        Route::post('/{tender}/archive', [TenderController::class, 'archive'])->name('archive')->middleware('can:tenders.edit');
+        Route::post('/{tender}/unarchive', [TenderController::class, 'unarchive'])->name('unarchive')->middleware('can:tenders.edit');
+
+        Route::get('/{tender}', [TenderController::class, 'show'])->name('show');
         Route::get('/{tender}/edit', [TenderController::class, 'edit'])->name('edit')->middleware('can:tenders.edit');
         Route::put('/{tender}', [TenderController::class, 'update'])->name('update')->middleware('can:tenders.edit');
         Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy')->middleware('can:tenders.delete');
 
-        // Additional document routes
+        // Additional document delete
         Route::delete('/additional-docs/{doc}', [TenderController::class, 'deleteAdditionalDoc'])
             ->name('delete-additional-doc')
             ->middleware('can:tenders.edit');

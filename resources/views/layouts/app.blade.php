@@ -13,7 +13,7 @@
     @stack('styles')
 </head>
 
-<body class="font-sans background-white text-text-primary">
+<body class="font-sans ">
     @include('.layouts.partials.loader')
     @include('.layouts.partials.header')
 

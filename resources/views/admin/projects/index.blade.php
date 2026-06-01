@@ -94,6 +94,7 @@
                             <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Image</th>
                             <th class="px-6 py-3 text-left">Project Name</th>
+                            <th class="px-6 py-3 text-left">Location/Division</th>
                             <th class="px-6 py-3 text-left">Sector</th>
                             <th class="px-6 py-3 text-left">Cost (PKR)</th>
                             <th class="px-6 py-3 text-left">Category</th>
@@ -139,11 +140,29 @@
                             <td class="px-6 py-4">
                                 <div>
                                     <span class="font-medium text-gray-900">{{ $project->name }}</span>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <i class="fas fa-building mr-1"></i>
+                                        {{ $project->implementing_authority ? Str::limit($project->implementing_authority, 30) : 'N/A' }}
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <div>
                                     @if($project->location)
-                                        <div class="text-xs text-gray-500 mt-1">
-                                            <i class="fas fa-map-marker-alt mr-1"></i>
-                                            {{ Str::limit($project->location, 40) }}
+                                        <div class="text-sm text-gray-900">
+                                            <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
+                                            {{ Str::limit($project->location, 30) }}
                                         </div>
+                                    @endif
+                                    @if($project->division)
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            <i class="fas fa-building text-gray-400 mr-1"></i>
+                                            Division: {{ $project->division }}
+                                        </div>
+                                    @endif
+                                    @if(!$project->location && !$project->division)
+                                        <span class="text-gray-400 text-sm">—</span>
                                     @endif
                                 </div>
                             </td>
@@ -158,9 +177,6 @@
                             <td class="px-6 py-4">
                                 <div class="text-sm font-semibold text-gray-900">
                                     Rs. {{ number_format($project->cost, 2) }}
-                                </div>
-                                <div class="text-xs text-gray-500">
-                                    {{ $project->implementing_authority ? Str::limit($project->implementing_authority, 20) : 'N/A' }}
                                 </div>
                             </td>
                             
@@ -220,7 +236,7 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 8; // Base columns (ID, Image, Project Name, Sector, Cost, Category, Status)
+                                    $colspan = 9; // Base columns (ID, Image, Project Name, Location/Division, Sector, Cost, Category, Status)
                                     if(auth()->user()->can('projects.delete')) $colspan++; // Add checkbox column
                                     if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete')) $colspan++; // Add actions column
                                 @endphp

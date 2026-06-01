@@ -18,6 +18,7 @@ class Project extends Model
         'status',
         'overview',
         'image',
+        'division',
         'category',
     ];
     

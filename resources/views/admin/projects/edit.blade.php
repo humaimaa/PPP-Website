@@ -4,11 +4,11 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
-    
+
     {{-- Back Button --}}
     <div class="mb-6">
-        <a href="{{ route('admin.projects.index') }}" 
-           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+        <a href="{{ route('admin.projects.index') }}"
+            class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
             <i class="fas fa-arrow-left mr-2"></i>
             Back to Projects
         </a>
@@ -28,27 +28,28 @@
 
         {{-- Error Messages --}}
         @if($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 m-6">
-                <div class="flex">
-                    <div class="shrink-0">
-                        <i class="fas fa-exclamation-triangle text-red-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
-                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 m-6">
+            <div class="flex">
+                <div class="shrink-0">
+                    <i class="fas fa-exclamation-triangle text-red-500"></i>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                    <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
+        </div>
         @endif
 
-        <form action="{{ route('admin.projects.update', $project->id) }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <form action="{{ route('admin.projects.update', $project->id) }}" method="POST" enctype="multipart/form-data"
+            class="p-6">
             @csrf
             @method('PUT')
-            
+
             {{-- Basic Information Section --}}
             <div class="mb-6 pb-4 border-b border-gray-200">
                 <h4 class="text-md font-semibold text-gray-800 mb-4">
@@ -65,18 +66,12 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-building"></i>
                             </span>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                value="{{ old('name', $project->name) }}"
-                                required
+                            <input type="text" id="name" name="name" value="{{ old('name', $project->name) }}" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('name') border-red-500 @enderror"
-                                placeholder="Enter project name"
-                            >
+                                placeholder="Enter project name">
                         </div>
                         @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -89,23 +84,20 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-chart-line"></i>
                             </span>
-                            <select 
-                                id="sector" 
-                                name="sector" 
-                                required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('sector') border-red-500 @enderror"
-                            >
+                            <select id="sector" name="sector" required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('sector') border-red-500 @enderror">
                                 <option value="">Select Sector</option>
                                 @foreach($sectors as $sector)
-                                    <option value="{{ $sector->name }}" {{ old('sector', $project->sector) == $sector->name ? 'selected' : '' }}>
-                                        {{ $sector->name }}
-                                    </option>
+                                <option value="{{ $sector->name }}" {{ old('sector', $project->sector) == $sector->name
+                                    ? 'selected' : '' }}>
+                                    {{ $sector->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the sector this project belongs to</p>
                         @error('sector')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -118,18 +110,13 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-university"></i>
                             </span>
-                            <input 
-                                type="text" 
-                                id="implementing_authority" 
-                                name="implementing_authority" 
-                                value="{{ old('implementing_authority', $project->implementing_authority) }}"
-                                required
+                            <input type="text" id="implementing_authority" name="implementing_authority"
+                                value="{{ old('implementing_authority', $project->implementing_authority) }}" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('implementing_authority') border-red-500 @enderror"
-                                placeholder="Enter implementing authority"
-                            >
+                                placeholder="Enter implementing authority">
                         </div>
                         @error('implementing_authority')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -142,17 +129,38 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-map-marker-alt"></i>
                             </span>
-                            <input 
-                                type="text" 
-                                id="location" 
-                                name="location" 
+                            <input type="text" id="location" name="location"
                                 value="{{ old('location', $project->location) }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('location') border-red-500 @enderror"
-                                placeholder="Enter project location"
-                            >
+                                placeholder="Enter project location">
                         </div>
                         @error('location')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Division --}}
+                    <div>
+                        <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
+                            Division
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-building"></i>
+                            </span>
+                            <select id="division" name="division"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('division') border-red-500 @enderror">
+                                <option value="">Select Division</option>
+                                @foreach($divisions as $division)
+                                <option value="{{ $division }}" {{ old('division', $project->division) == $division ?
+                                    'selected' : '' }}>
+                                    {{ $division }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('division')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -165,20 +173,13 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-dollar-sign"></i>
                             </span>
-                            <input 
-                                type="number" 
-                                id="cost" 
-                                name="cost" 
-                                step="0.01" 
-                                min="0"
-                                value="{{ old('cost', $project->cost) }}"
-                                required
+                            <input type="number" id="cost" name="cost" step="0.01" min="0"
+                                value="{{ old('cost', $project->cost) }}" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('cost') border-red-500 @enderror"
-                                placeholder="0.00"
-                            >
+                                placeholder="0.00">
                         </div>
                         @error('cost')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -191,17 +192,12 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-chart-simple"></i>
                             </span>
-                            <input 
-                                type="text" 
-                                id="status" 
-                                name="status" 
-                                value="{{ old('status', $project->status) }}"
+                            <input type="text" id="status" name="status" value="{{ old('status', $project->status) }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
-                                placeholder="e.g., Planning, Implementation, Completed"
-                            >
+                                placeholder="e.g., Planning, Implementation, Completed">
                         </div>
                         @error('status')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -214,22 +210,21 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-tag"></i>
                             </span>
-                            <select 
-                                id="category" 
-                                name="category" 
-                                required
+                            <select id="category" name="category" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
-                                onchange="toggleProjectDetails()"
-                            >
+                                onchange="toggleProjectDetails()">
                                 <option value="">Select Category</option>
-                                <option value="Pipeline" {{ old('category', $project->category) == 'Pipeline' ? 'selected' : '' }}>Pipeline</option>
-                                <option value="Ongoing" {{ old('category', $project->category) == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
-                                <option value="Completed" {{ old('category', $project->category) == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Pipeline" {{ old('category', $project->category) == 'Pipeline' ?
+                                    'selected' : '' }}>Pipeline</option>
+                                <option value="Ongoing" {{ old('category', $project->category) == 'Ongoing' ? 'selected'
+                                    : '' }}>Ongoing</option>
+                                <option value="Completed" {{ old('category', $project->category) == 'Completed' ?
+                                    'selected' : '' }}>Completed</option>
                             </select>
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
                         @error('category')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -250,29 +245,27 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-camera"></i>
                             </span>
-                            <input 
-                                type="file" 
-                                id="image" 
-                                name="image" 
-                                accept="image/jpeg,image/png,image/jpg,image/gif"
+                            <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('image') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-                                onchange="previewImage(event)"
-                            >
+                                onchange="previewImage(event)">
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image. Allowed formats: JPEG, PNG, JPG, GIF. Max size: 5MB</p>
+                        <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image. Allowed formats: JPEG,
+                            PNG, JPG, GIF. Max size: 5MB</p>
                         @error('image')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <div id="imagePreview" class="w-full h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                        <div id="imagePreview"
+                            class="w-full h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
                             @if($project->image && Storage::disk('public')->exists($project->image))
-                                <img src="{{ Storage::url($project->image) }}" class="w-full h-full object-cover rounded-lg" alt="{{ $project->name }}">
+                            <img src="{{ Storage::url($project->image) }}" class="w-full h-full object-cover rounded-lg"
+                                alt="{{ $project->name }}">
                             @else
-                                <div class="text-center">
-                                    <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                                    <p class="text-sm text-gray-500">No image selected</p>
-                                </div>
+                            <div class="text-center">
+                                <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-500">No image selected</p>
+                            </div>
                             @endif
                         </div>
                     </div>
@@ -290,16 +283,11 @@
                         <label for="overview" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Overview <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="overview" 
-                            name="overview" 
-                            rows="5"
-                            required
+                        <textarea id="overview" name="overview" rows="5" required
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('overview') border-red-500 @enderror"
-                            placeholder="Provide a detailed overview of the project including objectives, scope, and key features..."
-                        >{{ old('overview', $project->overview) }}</textarea>
+                            placeholder="Provide a detailed overview of the project including objectives, scope, and key features...">{{ old('overview', $project->overview) }}</textarea>
                         @error('overview')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -331,15 +319,11 @@
                         <label for="implementing_modality" class="block text-sm font-medium text-gray-700 mb-2">
                             Implementing Modality <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="implementing_modality" 
-                            name="implementing_modality" 
-                            rows="3"
+                        <textarea id="implementing_modality" name="implementing_modality" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the implementing modality (e.g., BOT, BOOT, Concession, etc.)..."
-                        >{{ old('implementing_modality', $project->ongoingDetail->implementing_modality ?? '') }}</textarea>
+                            placeholder="Describe the implementing modality (e.g., BOT, BOOT, Concession, etc.)...">{{ old('implementing_modality', $project->ongoingDetail->implementing_modality ?? '') }}</textarea>
                         @error('implementing_modality')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -347,15 +331,11 @@
                         <label for="government_contribution" class="block text-sm font-medium text-gray-700 mb-2">
                             Government Contribution <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="government_contribution" 
-                            name="government_contribution" 
-                            rows="3"
+                        <textarea id="government_contribution" name="government_contribution" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe government contribution (financial, land, infrastructure, etc.)..."
-                        >{{ old('government_contribution', $project->ongoingDetail->government_contribution ?? '') }}</textarea>
+                            placeholder="Describe government contribution (financial, land, infrastructure, etc.)...">{{ old('government_contribution', $project->ongoingDetail->government_contribution ?? '') }}</textarea>
                         @error('government_contribution')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -363,15 +343,11 @@
                         <label for="government_return" class="block text-sm font-medium text-gray-700 mb-2">
                             Government Return <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="government_return" 
-                            name="government_return" 
-                            rows="3"
+                        <textarea id="government_return" name="government_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe returns to government (revenue share, taxes, royalties, etc.)..."
-                        >{{ old('government_return', $project->ongoingDetail->government_return ?? '') }}</textarea>
+                            placeholder="Describe returns to government (revenue share, taxes, royalties, etc.)...">{{ old('government_return', $project->ongoingDetail->government_return ?? '') }}</textarea>
                         @error('government_return')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -379,15 +355,11 @@
                         <label for="private_party_return" class="block text-sm font-medium text-gray-700 mb-2">
                             Private Party Return <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="private_party_return" 
-                            name="private_party_return" 
-                            rows="3"
+                        <textarea id="private_party_return" name="private_party_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe returns to private party (profit margin, ROI, etc.)..."
-                        >{{ old('private_party_return', $project->ongoingDetail->private_party_return ?? '') }}</textarea>
+                            placeholder="Describe returns to private party (profit margin, ROI, etc.)...">{{ old('private_party_return', $project->ongoingDetail->private_party_return ?? '') }}</textarea>
                         @error('private_party_return')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -404,15 +376,11 @@
                         <label for="scope" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Scope <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="scope" 
-                            name="scope" 
-                            rows="4"
+                        <textarea id="scope" name="scope" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the scope of the completed project..."
-                        >{{ old('scope', $project->completedDetail->scope ?? '') }}</textarea>
+                            placeholder="Describe the scope of the completed project...">{{ old('scope', $project->completedDetail->scope ?? '') }}</textarea>
                         @error('scope')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -420,15 +388,11 @@
                         <label for="cost_financing_mix" class="block text-sm font-medium text-gray-700 mb-2">
                             Cost Financing Mix <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="cost_financing_mix" 
-                            name="cost_financing_mix" 
-                            rows="3"
+                        <textarea id="cost_financing_mix" name="cost_financing_mix" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the financing mix (e.g., 60% Government, 40% Private, loans, grants, etc.)..."
-                        >{{ old('cost_financing_mix', $project->completedDetail->cost_financing_mix ?? '') }}</textarea>
+                            placeholder="Describe the financing mix (e.g., 60% Government, 40% Private, loans, grants, etc.)...">{{ old('cost_financing_mix', $project->completedDetail->cost_financing_mix ?? '') }}</textarea>
                         @error('cost_financing_mix')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -436,31 +400,25 @@
                         <label for="project_timeline" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Timeline <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="project_timeline" 
-                            name="project_timeline" 
-                            rows="3"
+                        <textarea id="project_timeline" name="project_timeline" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the project timeline (start date, end date, milestones, etc.)..."
-                        >{{ old('project_timeline', $project->completedDetail->project_timeline ?? '') }}</textarea>
+                            placeholder="Describe the project timeline (start date, end date, milestones, etc.)...">{{ old('project_timeline', $project->completedDetail->project_timeline ?? '') }}</textarea>
                         @error('project_timeline')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="expected_financial_benefits_to_government" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="expected_financial_benefits_to_government"
+                            class="block text-sm font-medium text-gray-700 mb-2">
                             Financial Benefits to Government <span class="text-red-500">*</span>
                         </label>
-                        <textarea 
-                            id="expected_financial_benefits_to_government" 
-                            name="expected_financial_benefits_to_government" 
-                            rows="4"
+                        <textarea id="expected_financial_benefits_to_government"
+                            name="expected_financial_benefits_to_government" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the financial benefits realized by the government..."
-                        >{{ old('expected_financial_benefits_to_government', $project->completedDetail->expected_financial_benefits_to_government ?? '') }}</textarea>
+                            placeholder="Describe the financial benefits realized by the government...">{{ old('expected_financial_benefits_to_government', $project->completedDetail->expected_financial_benefits_to_government ?? '') }}</textarea>
                         @error('expected_financial_benefits_to_government')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -473,9 +431,9 @@
                     <div>
                         <h4 class="text-sm font-medium text-blue-900">About Projects</h4>
                         <p class="text-xs text-blue-700 mt-1">
-                            Projects are categorized into three types: <strong>Pipeline</strong> (basic info only), 
-                            <strong>Ongoing</strong> (includes implementation details and returns), and 
-                            <strong>Completed</strong> (includes scope, timeline, and benefits). 
+                            Projects are categorized into three types: <strong>Pipeline</strong> (basic info only),
+                            <strong>Ongoing</strong> (includes implementation details and returns), and
+                            <strong>Completed</strong> (includes scope, timeline, and benefits).
                             Select the appropriate category to display relevant fields.
                         </p>
                     </div>
@@ -484,13 +442,13 @@
 
             {{-- Form Actions --}}
             <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
-                <a href="{{ route('admin.projects.index') }}" 
-                   class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                <a href="{{ route('admin.projects.index') }}"
+                    class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
                     <i class="fas fa-times mr-2"></i>
                     Cancel
                 </a>
                 <button type="submit"
-                        class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                    class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
                     <i class="fas fa-save mr-2"></i>
                     Update Project
                 </button>

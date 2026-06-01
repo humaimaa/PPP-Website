@@ -17,12 +17,6 @@ class OngoingProjectDetail extends Model
         'private_party_return',
     ];
     
-    protected $casts = [
-        'government_contribution' => 'decimal:2',
-        'government_return' => 'decimal:2',
-        'private_party_return' => 'decimal:2',
-    ];
-    
     public function project()
     {
         return $this->belongsTo(Project::class);

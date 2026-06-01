@@ -5,9 +5,9 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
+<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+        <div class="text-center px-4 pt-26">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Updates</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
@@ -111,7 +111,7 @@
                     <div>
                         <h3
                             class="text-xl font-bold text-[#0D2818] mb-3 hover:text-[#0A612B] transition-colors duration-300">
-                            <a href="{{ route('updates.show', $news['id']) }}">{{ $news['title'] }}</a>
+                            <a href="{{ route('media.room.updates.show', $news['id']) }}">{{ $news['title'] }}</a>
                         </h3>
                         <p class="text-gray-600 line-clamp-3 text-justify">{{ $news['description'] }}</p>
                     </div>
@@ -121,7 +121,7 @@
                                 <i class="far fa-calendar-alt mr-1"></i> {{ $news['date'] }}
                             </span>
                         </div>
-                        <a href="{{ route('updates.show', $news['id']) }}"
+                        <a href="{{ route('media.room.updates.show', $news['id']) }}"
                             class="text-[#0A612B] font-medium hover:text-[#0D2818] transition-colors duration-300 inline-flex items-center">
                             Read More
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,7 +152,7 @@
         'lastPage' => $lastPage,
         'total' => $totalNews,
         'perPage' => $perPage,
-        'routeName' => 'updates.index'
+        'routeName' => 'media.room.updates'
         ])
         @endif
     </div>

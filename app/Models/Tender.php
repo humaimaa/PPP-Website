@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tender extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;  // REMOVED SoftDeletes from here
     
     protected $fillable = [
         'name',
@@ -17,15 +16,11 @@ class Tender extends Model
         'closing_date',
         'category',
         'advertisement',
-        'is_active',
-        'is_archived'
     ];
     
     protected $casts = [
         'opening_date' => 'date',
         'closing_date' => 'date',
-        'is_active' => 'boolean',
-        'is_archived' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -51,7 +46,7 @@ class Tender extends Model
      */
     public function isOpen()
     {
-        return !$this->is_archived && $this->closing_date->isFuture();
+        return $this->closing_date->isFuture();
     }
     
     /**
@@ -75,9 +70,7 @@ class Tender extends Model
      */
     public function getStatusAttribute()
     {
-        if ($this->is_archived) {
-            return 'Archived';
-        } elseif ($this->isClosed()) {
+        if ($this->isClosed()) {
             return 'Closed';
         } elseif ($this->isUpcoming()) {
             return 'Upcoming';
@@ -91,9 +84,7 @@ class Tender extends Model
      */
     public function getStatusColorAttribute()
     {
-        if ($this->is_archived) {
-            return 'gray';
-        } elseif ($this->isClosed()) {
+        if ($this->isClosed()) {
             return 'red';
         } elseif ($this->isUpcoming()) {
             return 'yellow';

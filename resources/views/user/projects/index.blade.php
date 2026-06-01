@@ -8,10 +8,10 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/30 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+        <div class="text-center px-4 pt-26">
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 @if(($status ?? 'all') === 'operational')
                 Operational Projects
                 @elseif(($status ?? 'all') === 'ongoing')
@@ -23,7 +23,7 @@
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
+            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
                 @if(($status ?? 'all') === 'operational')
                 Successfully completed and operational PPP projects transforming KPK
                 @elseif(($status ?? 'all') === 'ongoing')
@@ -39,245 +39,178 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
 </section>
 
-<!-- Navigation Tabs -->
-<section class="bg-white shadow-md sticky top-16 z-40">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap space-x-4 md:space-x-8">
-            <a href="{{ route('projects.index', 'all') }}"
-                class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($status ?? 'all') === 'all' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                All Projects
-            </a>
-            <a href="{{ route('projects.index', 'pipeline') }}"
-                class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($status ?? 'all') === 'pipeline' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                Pipeline
-            </a>
-            <a href="{{ route('projects.index', 'ongoing') }}"
-                class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($status ?? 'all') === 'ongoing' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                Ongoing
-            </a>
-            <a href="{{ route('projects.index', 'operational') }}"
-                class="inline-block py-4 px-2 font-semibold transition duration-300 border-b-2 {{ ($status ?? 'all') === 'operational' ? 'border-[#0A612B] text-[#0A612B]' : 'border-transparent text-gray-600 hover:text-[#0A612B]' }}">
-                Operational
-            </a>
-        </div>
-    </div>
-</section>
-
-<section class="py-10 bg-white">
+<section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             @php
-            // Define all projects with pipeline, ongoing, operational statuses
+            // Using database table structure: name, location, overview, category, division, cost, status, image
             $allProjects = [
-            // PIPELINE PROJECTS (Upcoming/Planning Phase)
+            // PIPELINE PROJECTS (category = 'Pipeline')
             [
             'id' => 1,
-            'title' => 'KPK Waste-to-Energy Plant',
-            'category' => 'Energy',
-            'category_color' => 'yellow',
+            'name' => 'KPK Waste-to-Energy Plant',
+            'location' => 'Peshawar',
+            'overview' => 'Integrated waste management system with recycling facilities and energy generation from municipal solid waste, producing 25MW of clean energy. This project will help reduce landfill waste and provide sustainable energy to thousands of homes.',
+            'category' => 'Pipeline',
+            'division' => 'Peshawar',
+            'cost' => 75000000,
             'status' => 'pipeline',
-            'status_color' => 'blue',
-            'timeline' => 'Starting: Q1 2025',
-            'description' => 'Integrated waste management system with recycling facilities and energy generation from
-            municipal solid waste, producing 25MW of clean energy.',
-            'image' => 'project-4.jpg',
-            'investment' => '$75 Million',
-            'partner' => 'EcoEnergy International',
-            'location' => 'Peshawar'
+            'image' => 'project-4.jpg'
             ],
             [
             'id' => 2,
-            'title' => 'Chitral Eco Resort',
-            'category' => 'Tourism',
-            'category_color' => 'purple',
+            'name' => 'Chitral Eco Resort',
+            'location' => 'Chitral',
+            'overview' => 'Eco-friendly resort complex promoting sustainable tourism and local employment in the scenic Chitral Valley. The resort will feature solar power, rainwater harvesting, and organic farming.',
+            'category' => 'Pipeline',
+            'division' => 'Malakand',
+            'cost' => 20000000,
             'status' => 'pipeline',
-            'status_color' => 'blue',
-            'timeline' => 'Starting: Q2 2025',
-            'description' => 'Eco-friendly resort complex promoting sustainable tourism and local employment in the
-            scenic Chitral Valley.',
-            'image' => 'project-1.jpg',
-            'investment' => '$20 Million',
-            'partner' => 'EcoResorts International',
-            'location' => 'Chitral'
+            'image' => 'project-1.jpg'
             ],
             [
             'id' => 3,
-            'title' => 'STEM Schools Program',
-            'category' => 'Education',
-            'category_color' => 'yellow',
+            'name' => 'STEM Schools Program',
+            'location' => 'Multiple Districts',
+            'overview' => 'Establishment of 10 model schools focused on science, technology, engineering and mathematics education across KPK. These schools will provide quality education to underprivileged students.',
+            'category' => 'Pipeline',
+            'division' => 'Multiple',
+            'cost' => 30000000,
             'status' => 'pipeline',
-            'status_color' => 'blue',
-            'timeline' => 'Starting: Q3 2025',
-            'description' => 'Establishment of 10 model schools focused on science, technology, engineering and
-            mathematics education across KPK.',
-            'image' => 'project-3.jpg',
-            'investment' => '$30 Million',
-            'partner' => 'Education First Foundation',
-            'location' => 'Multiple Districts'
+            'image' => 'project-3.jpg'
             ],
 
-            // ONGOING PROJECTS (Currently in progress)
+            // ONGOING PROJECTS (category = 'Ongoing')
             [
             'id' => 4,
-            'title' => 'Peshawar Rapid Transit System',
-            'category' => 'Transportation',
-            'category_color' => 'green',
+            'name' => 'Peshawar Rapid Transit System',
+            'location' => 'Peshawar',
+            'overview' => 'Urban mass transit system with 30 km dedicated bus lanes connecting major city centers, reducing travel time by 60%. The project includes modern buses, dedicated lanes, and smart ticketing system.',
+            'category' => 'Ongoing',
+            'division' => 'Peshawar',
+            'cost' => 120000000,
             'status' => 'ongoing',
-            'status_color' => 'green',
-            'timeline' => 'Est. Completion: Dec 2024',
-            'description' => 'Urban mass transit system with 30 km dedicated bus lanes connecting major city centers,
-            reducing travel time by 60%.',
-            'image' => 'project-1.jpg',
-            'investment' => '$120 Million',
-            'partner' => 'TransPeshawar Pvt Ltd',
-            'location' => 'Peshawar'
+            'image' => 'project-1.jpg'
             ],
             [
             'id' => 5,
-            'title' => 'KPK Water Filtration Plants',
-            'category' => 'Water',
-            'category_color' => 'green',
+            'name' => 'KPK Water Filtration Plants',
+            'location' => 'Rural KPK',
+            'overview' => 'Installation of 50 water filtration plants across rural KPK to provide clean drinking water to 1 million residents. Each plant can filter 10,000 gallons per day.',
+            'category' => 'Ongoing',
+            'division' => 'Multiple',
+            'cost' => 25000000,
             'status' => 'ongoing',
-            'status_color' => 'green',
-            'timeline' => 'Est. Completion: Jun 2024',
-            'description' => 'Installation of 50 water filtration plants across rural KPK to provide clean drinking
-            water to 1 million residents.',
-            'image' => 'project-5.jpg',
-            'investment' => '$25 Million',
-            'partner' => 'Clean Water Initiative',
-            'location' => 'Rural KPK'
+            'image' => 'project-5.jpg'
             ],
             [
             'id' => 6,
-            'title' => 'Kumrat Valley Development',
-            'category' => 'Tourism',
-            'category_color' => 'purple',
+            'name' => 'Kumrat Valley Development',
+            'location' => 'Upper Dir',
+            'overview' => 'Sustainable tourism infrastructure including eco-lodges, trails, and visitor centers in the scenic Kumrat Valley. The project aims to boost local economy while preserving natural beauty.',
+            'category' => 'Ongoing',
+            'division' => 'Malakand',
+            'cost' => 15000000,
             'status' => 'ongoing',
-            'status_color' => 'purple',
-            'timeline' => 'Est. Completion: May 2024',
-            'description' => 'Sustainable tourism infrastructure including eco-lodges, trails, and visitor centers in
-            the scenic Kumrat Valley.',
-            'image' => 'project-6.jpg',
-            'investment' => '$15 Million',
-            'partner' => 'KPK Tourism Development Corp',
-            'location' => 'Upper Dir'
+            'image' => 'project-6.jpg'
             ],
             [
             'id' => 7,
-            'title' => 'KPK Agri-Tech Initiative',
-            'category' => 'Agriculture',
-            'category_color' => 'green',
+            'name' => 'KPK Agri-Tech Initiative',
+            'location' => 'Multiple Districts',
+            'overview' => 'Modernization of agricultural practices through technology adoption, training centers, and supply chain improvements. Farmers will receive training in modern farming techniques.',
+            'category' => 'Ongoing',
+            'division' => 'Multiple',
+            'cost' => 40000000,
             'status' => 'ongoing',
-            'status_color' => 'green',
-            'timeline' => 'Est. Completion: Dec 2025',
-            'description' => 'Modernization of agricultural practices through technology adoption, training centers, and
-            supply chain improvements.',
-            'image' => 'project-2.jpg',
-            'investment' => '$40 Million',
-            'partner' => 'AgriTech Pakistan',
-            'location' => 'Multiple Districts'
+            'image' => 'project-2.jpg'
             ],
             [
             'id' => 8,
-            'title' => 'Abbottabad IT Park',
-            'category' => 'Technology',
-            'category_color' => 'indigo',
+            'name' => 'Abbottabad IT Park',
+            'location' => 'Abbottabad',
+            'overview' => 'State-of-the-art technology park fostering innovation, startups, and IT education in the region. The park will house tech companies and provide training to youth.',
+            'category' => 'Ongoing',
+            'division' => 'Hazara',
+            'cost' => 35000000,
             'status' => 'ongoing',
-            'status_color' => 'indigo',
-            'timeline' => 'Est. Completion: Aug 2024',
-            'description' => 'State-of-the-art technology park fostering innovation, startups, and IT education in the
-            region.',
-            'image' => 'project-5.jpg',
-            'investment' => '$35 Million',
-            'partner' => 'TechHub Pakistan',
-            'location' => 'Abbottabad'
+            'image' => 'project-5.jpg'
             ],
 
-            // OPERATIONAL PROJECTS (Completed and running)
+            // OPERATIONAL PROJECTS (category = 'Completed')
             [
             'id' => 9,
-            'title' => 'Mardan Medical Complex',
-            'category' => 'Healthcare',
-            'category_color' => 'blue',
+            'name' => 'Mardan Medical Complex',
+            'location' => 'Mardan',
+            'overview' => '500-bed specialized healthcare facility with modern equipment and specialized departments serving northern KPK. The hospital serves over 1000 patients daily.',
+            'category' => 'Completed',
+            'division' => 'Mardan',
+            'cost' => 45000000,
             'status' => 'operational',
-            'status_color' => 'green',
-            'timeline' => 'Operational since: Jun 2022',
-            'description' => '500-bed specialized healthcare facility with modern equipment and specialized departments
-            serving northern KPK.',
-            'image' => 'project-2.jpg',
-            'investment' => '$45 Million',
-            'partner' => 'Mardan Healthcare Consortium',
-            'location' => 'Mardan'
+            'image' => 'project-2.jpg'
             ],
             [
             'id' => 10,
-            'title' => 'Swat Hydropower Project',
-            'category' => 'Energy',
-            'category_color' => 'blue',
+            'name' => 'Swat Hydropower Project',
+            'location' => 'Swat',
+            'overview' => '150MW run-of-the-river hydropower plant providing clean energy to 200,000 households in the region. The plant generates 500 GWh annually.',
+            'category' => 'Completed',
+            'division' => 'Malakand',
+            'cost' => 180000000,
             'status' => 'operational',
-            'status_color' => 'green',
-            'timeline' => 'Operational since: Mar 2021',
-            'description' => '150MW run-of-the-river hydropower plant providing clean energy to 200,000 households in
-            the region.',
-            'image' => 'project-4.jpg',
-            'investment' => '$180 Million',
-            'partner' => 'Green Energy Solutions',
-            'location' => 'Swat'
+            'image' => 'project-4.jpg'
             ],
             [
             'id' => 11,
-            'title' => 'Peshawar Smart City - Phase 1',
-            'category' => 'Urban Development',
-            'category_color' => 'blue',
+            'name' => 'Peshawar Smart City - Phase 1',
+            'location' => 'Peshawar',
+            'overview' => 'Phase 1 implementation of smart city technologies including traffic management, surveillance, and digital services. The system has reduced traffic congestion by 40%.',
+            'category' => 'Completed',
+            'division' => 'Peshawar',
+            'cost' => 60000000,
             'status' => 'operational',
-            'status_color' => 'green',
-            'timeline' => 'Operational since: Jan 2023',
-            'description' => 'Phase 1 implementation of smart city technologies including traffic management,
-            surveillance, and digital services.',
-            'image' => 'project-3.jpg',
-            'investment' => '$60 Million',
-            'partner' => 'Smart City Solutions',
-            'location' => 'Peshawar'
+            'image' => 'project-3.jpg'
             ],
             [
             'id' => 12,
-            'title' => 'Karak Highway Project',
-            'category' => 'Transportation',
-            'category_color' => 'green',
+            'name' => 'Karak Highway Project',
+            'location' => 'Karak',
+            'overview' => '4-lane highway connecting Karak to major trade routes, reducing travel time by 45%. The highway has boosted economic activity in the region.',
+            'category' => 'Completed',
+            'division' => 'Kohat',
+            'cost' => 95000000,
             'status' => 'operational',
-            'status_color' => 'green',
-            'timeline' => 'Operational since: Oct 2022',
-            'description' => '4-lane highway connecting Karak to major trade routes, reducing travel time by 45%.',
-            'image' => 'project-6.jpg',
-            'investment' => '$95 Million',
-            'partner' => 'National Highway Authority',
-            'location' => 'Karak'
+            'image' => 'project-6.jpg'
             ],
             [
             'id' => 13,
-            'title' => 'Hayatabad Housing Scheme',
-            'category' => 'Housing',
-            'category_color' => 'blue',
+            'name' => 'Hayatabad Housing Scheme',
+            'location' => 'Peshawar',
+            'overview' => 'Affordable housing project providing 2,000 residential units for low and middle-income families. The scheme includes parks, schools, and community centers.',
+            'category' => 'Completed',
+            'division' => 'Peshawar',
+            'cost' => 85000000,
             'status' => 'operational',
-            'status_color' => 'green',
-            'timeline' => 'Operational since: Dec 2022',
-            'description' => 'Affordable housing project providing 2,000 residential units for low and middle-income
-            families.',
-            'image' => 'project-1.jpg',
-            'investment' => '$85 Million',
-            'partner' => 'Habib Construction Services',
-            'location' => 'Peshawar'
+            'image' => 'project-1.jpg'
             ]
             ];
 
-            // Filter projects based on status
-            if (($status ?? 'all') === 'all') {
-            $filteredProjects = $allProjects;
+            // Filter projects based on status (using category field from database)
+            if (($status ?? 'all') === 'operational') {
+                $filteredProjects = array_filter($allProjects, function($project) {
+                    return $project['category'] === 'Completed';
+                });
+            } elseif (($status ?? 'all') === 'ongoing') {
+                $filteredProjects = array_filter($allProjects, function($project) {
+                    return $project['category'] === 'Ongoing';
+                });
+            } elseif (($status ?? 'all') === 'pipeline') {
+                $filteredProjects = array_filter($allProjects, function($project) {
+                    return $project['category'] === 'Pipeline';
+                });
             } else {
-            $filteredProjects = array_filter($allProjects, function($project) use ($status) {
-            return $project['status'] === $status;
-            });
+                $filteredProjects = $allProjects;
             }
 
             // Re-index the array
@@ -296,10 +229,9 @@
 
             @forelse($paginatedProjects as $project)
             <!-- Project Card -->
-            <div
-                class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div class="h-48 overflow-hidden relative">
-                    <img src="{{ asset('images/' . $project['image']) }}" alt="{{ $project['title'] }}"
+                    <img src="{{ asset('images/' . $project['image']) }}" alt="{{ $project['name'] }}"
                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
 
                     <!-- Status Badge -->
@@ -307,41 +239,17 @@
                             @if($project['status'] === 'operational') bg-green-600
                             @elseif($project['status'] === 'ongoing') bg-yellow-500
                             @else bg-blue-600 @endif 
-                            text-white px-3 py-1 rounded-full text-xs font-medium capitalize">
+                            text-text-primary px-3 py-1 rounded-full text-xs font-medium capitalize">
                         {{ ucfirst($project['status']) }}
                     </div>
-
-                    <!-- Investment Badge -->
-                    <div
-                        class="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        {{ $project['investment'] }}
-                    </div>
-
                 </div>
+
                 <div class="p-6">
-                    <div class="flex items-center mb-2">
-                        <span class="w-3 h-3 rounded-full 
-                                @if($project['category_color'] === 'blue') bg-blue-600
-                                @elseif($project['category_color'] === 'green') bg-green-600
-                                @elseif($project['category_color'] === 'yellow') bg-yellow-500
-                                @elseif($project['category_color'] === 'purple') bg-purple-600
-                                @else bg-indigo-600 @endif 
-                                mr-2"></span>
-                        <span class="text-sm font-medium 
-                                @if($project['category_color'] === 'blue') text-blue-600
-                                @elseif($project['category_color'] === 'green') text-green-600
-                                @elseif($project['category_color'] === 'yellow') text-yellow-600
-                                @elseif($project['category_color'] === 'purple') text-purple-600
-                                @else text-indigo-600 @endif">
-                            {{ $project['category'] }}
-                        </span>
-                    </div>
-
-                    <h3 class="text-xl font-bold text-[#0D2818] mb-3">{{ $project['title'] }}</h3>
-                    <p class="text-gray-600 mb-3 line-clamp-3">{{ $project['description'] }}</p>
-
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-text-green mb-3 line-clamp-2">{{ $project['name'] }}</h3>
+                    
                     <!-- Location -->
-                    <div class="flex items-center text-gray-500 text-sm mb-2">
+                    <div class="flex items-center text-text-muted text-sm mb-3">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
@@ -352,21 +260,13 @@
                         {{ $project['location'] }}
                     </div>
 
-                    <div class="flex justify-between items-center mt-4">
-                        <div>
-                            <span class="text-sm text-gray-500">
-                                @if($project['status'] === 'operational')
-                                {{ $project['timeline'] }}
-                                @elseif($project['status'] === 'ongoing')
-                                {{ $project['timeline'] }}
-                                @else
-                                {{ $project['timeline'] }}
-                                @endif
-                            </span>
-                            <p class="text-xs text-gray-400 mt-1">{{ $project['partner'] }}</p>
-                        </div>
+                    <!-- Overview/Description (4 lines with ellipsis) -->
+                    <p class="text-text-muted mb-4 line-clamp-4">{{ $project['overview'] }}</p>
+
+                    <!-- View Details Button -->
+                    <div class="mt-4 pt-3 border-t border-background-light">
                         <a href="{{ route('projects.show', $project['id']) }}"
-                            class="text-[#0A612B] font-medium hover:text-[#0D2818] transition-colors duration-300 inline-flex items-center">
+                            class="text-accent-1 font-medium hover:text-accent-2 transition-colors duration-300 inline-flex items-center text-sm">
                             View Details
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
@@ -374,62 +274,59 @@
                             </svg>
                         </a>
                     </div>
-
-
                 </div>
             </div>
             @empty
             <div class="col-span-full text-center py-12">
-                <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-24 h-24 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Projects Found</h3>
-                <p class="text-gray-500">No projects available in this category at the moment.</p>
+                <h3 class="text-2xl font-semibold text-text-green mb-2">No Projects Found</h3>
+                <p class="text-text-muted">No projects available in this category at the moment.</p>
             </div>
             @endforelse
         </div>
 
         <!-- Pagination Component -->
-               <!-- Pagination Component -->
         @if($totalProjects > $perPage)
-@include('layouts.partials.pagination', [
-    'currentPage' => $currentPage,
-    'lastPage' => $lastPage,
-    'total' => $totalProjects,
-    'perPage' => $perPage,
-    'status' => $status ?? 'all',
-    'routeName' => 'projects.index'
-])
-@endif
+            @include('layouts.partials.pagination', [
+                'currentPage' => $currentPage,
+                'lastPage' => $lastPage,
+                'total' => $totalProjects,
+                'perPage' => $perPage,
+                'status' => $status ?? 'all',
+                'routeName' => 'projects.index'
+            ])
+        @endif
     </div>
 </section>
 
 <!-- Statistics Section -->
-<section class="py-10 bg-[#DAD7CD] text-[#0D2818]">
+<section class="py-10 bg-background-light/50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Impact at a Glance</h2>
-            <div class="w-20 h-1 bg-[#0D2818] mx-auto"></div>
-            <p class="text-[#0D2818]-300 mt-4 max-w-2xl mx-auto">Making a difference through strategic partnerships</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Impact at a Glance</h2>
+            <div class="w-20 h-1 bg-text-green mx-auto"></div>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Making a difference through strategic partnerships</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#0D2818] mb-2">3</div>
-                <p class="text-[#0D2818]-300">Pipeline Projects</p>
+                <div class="text-4xl font-bold text-accent-1 mb-2">3</div>
+                <p class="text-text-muted">Pipeline Projects</p>
             </div>
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#0D2818] mb-2">5</div>
-                <p class="text-[#0D2818]-300">Ongoing Projects</p>
+                <div class="text-4xl font-bold text-accent-1 mb-2">5</div>
+                <p class="text-text-muted">Ongoing Projects</p>
             </div>
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#0D2818] mb-2">5</div>
-                <p class="text-[#0D2818]-300">Operational Projects</p>
+                <div class="text-4xl font-bold text-accent-1 mb-2">5</div>
+                <p class="text-text-muted">Operational Projects</p>
             </div>
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#0D2818] mb-2">$2.5B+</div>
-                <p class="text-[#0D2818]-300">Total Investment</p>
+                <div class="text-4xl font-bold text-accent-1 mb-2">$2.5B+</div>
+                <p class="text-text-muted">Total Investment</p>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Alpine from 'alpinejs';
 
-// Register GSAP plugins
+// Register GSAP plugins (keeping for potential future use, but not used for section animations)
 gsap.registerPlugin(ScrollTrigger);
 
 // ========== NAVBAR DROPDOWN COMPONENT ==========
@@ -10,7 +10,6 @@ function navbarDropdown() {
     return {
         dropdownOpen: null,
         mobileMenuOpen: false,
-        isScrolled: false,
         
         toggleDropdown(dropdown) {
             // Close if clicking the same dropdown, otherwise open the new one
@@ -49,14 +48,6 @@ function navbarDropdown() {
                     }
                 }
             });
-            
-            // Initialize scroll detection
-            this.checkScroll();
-            window.addEventListener('scroll', () => this.checkScroll());
-        },
-        
-        checkScroll() {
-            this.isScrolled = window.scrollY > 50;
         }
     };
 }
@@ -104,18 +95,6 @@ function initializeLogoRotation() {
             logo.style.animationPlayState = 'running';
         });
     }
-}
-
-// ========== MOBILE DROPDOWN HANDLER ==========
-function initializeMobileDropdowns() {
-    // Handle closing other mobile dropdowns when one opens
-    document.addEventListener('close-other-mobile', (e) => {
-        document.querySelectorAll('[x-data]').forEach(el => {
-            if (el.__x && el.__x.$data.open && el.__x.$data.open !== true) {
-                el.__x.$data.open = false;
-            }
-        });
-    });
 }
 
 // ========== STATS COUNTER ANIMATION ==========
@@ -186,6 +165,7 @@ function initializeProjectCards() {
     const projectCards = document.querySelectorAll('.project-category-card');
     
     projectCards.forEach(card => {
+        // Keep only hover effects, no click handlers
         card.addEventListener('mouseenter', () => {
             const img = card.querySelector('img');
             if (img) {
@@ -199,6 +179,14 @@ function initializeProjectCards() {
             if (img) {
                 img.style.transform = 'scale(1)';
                 img.style.opacity = '1';
+            }
+        });
+        
+        // Optional: Keep click functionality if needed
+        card.addEventListener('click', () => {
+            const category = card.getAttribute('data-category');
+            if (category) {
+                window.location.href = `/projects/category/${category}`;
             }
         });
     });
@@ -266,45 +254,14 @@ function initializeScrollArrow() {
     }
 }
 
-// ========== ANIMATION ON SCROLL (GSAP) ==========
-function initializeGSAPAnimations() {
-    // Fade in animations for sections
-    gsap.utils.toArray('section').forEach((section, i) => {
-        gsap.from(section, {
-            scrollTrigger: {
-                trigger: section,
-                start: 'top 80%',
-                end: 'top 50%',
-                scrub: 0.5
-            },
-            opacity: 0,
-            y: 50,
-            duration: 1
-        });
-    });
-    
-    // About section image animation
-    const aboutImage = document.querySelector('#about-section img');
-    if (aboutImage) {
-        gsap.from(aboutImage, {
-            scrollTrigger: {
-                trigger: '#about-section',
-                start: 'top 70%',
-                end: 'top 50%',
-                scrub: 0.5
-            },
-            opacity: 0,
-            x: -50,
-            duration: 1
-        });
-    }
-}
+// ========== REMOVED: initializeGSAPAnimations - No longer needed ==========
+// All section fade-in and scroll animations have been removed
+// Only the navbar, stats counter, and hover effects remain
 
 // ========== INITIALIZE EVERYTHING ON DOM LOAD ==========
 document.addEventListener('DOMContentLoaded', () => {
     initializeNavbarScroll();
     initializeLogoRotation();
-    initializeMobileDropdowns();
     initializeStatsCounter();
     initializeHeroOverlay();
     initializeProjectCards();
@@ -312,10 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSmoothScroll();
     initializeScrollArrow();
     
-    // Initialize GSAP animations only if GSAP is available
-    if (typeof gsap !== 'undefined') {
-        initializeGSAPAnimations();
-    }
+    // GSAP animations for sections have been REMOVED
+    // Only navbar and interactive elements remain
 });
 
 // ========== WINDOW LOAD (for images and complete load) ==========

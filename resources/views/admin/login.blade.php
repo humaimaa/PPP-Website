@@ -235,7 +235,6 @@
     });
 </script>
 
-{{-- Add this temporary test button to verify password field works (remove after testing) --}}
-<div style="display: none;" id="debugInfo"></div>
+
 </body>
 </html>

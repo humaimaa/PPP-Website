@@ -25,7 +25,7 @@
   --color-background-card: #0D2617;
   --color-background-white: #ffffff;
   --color-background-gray: #888888; 
-  --color-background-dark: #0D2617;
+  --color-background-light: #DEE2DF; 
 
   --color-text-primary: #ffffff;
   --color-text-black: #000000;
@@ -122,10 +122,10 @@
 
 /* ========== NAVBAR SPECIFIC STYLES ========== */
 
-/* Navbar base styles */
+/* Navbar base styles - Glass effect initially */
 .navbar {
   transition: all 0.3s ease;
-  background-color: transparent;
+  background: transparent;
 }
 
 /* Navbar scrolled state - Solid Green */
@@ -145,32 +145,21 @@
   transition: all 0.3s ease;
 }
 
-/* Dropdown styles - Base (transparent) */
+/* Dropdown styles - ALWAYS SOLID GREEN */
 .dropdown-menu {
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Dropdown scrolled state - Solid Green */
+/* Dropdown on scrolled state - Still solid green */
 .navbar-scrolled .dropdown-menu {
-  background: var(--color-primary) !important;
-  backdrop-filter: blur(0px);
+  background-color: var(--color-primary) !important;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Mobile menu base styles */
-.mobile-menu {
-  background-color: var(--color-primary);
-}
-
-.navbar-scrolled .mobile-menu {
-  background-color: var(--color-primary-dark);
-}
-
-/* ========== DROPDOWN ITEM HOVER STYLES - TEXT COLOR CHANGE ONLY ========== */
+/* Dropdown item hover styles - text color change only */
 .dropdown-item {
   position: relative;
   transition: all 0.3s ease;
@@ -206,13 +195,13 @@
   color: var(--color-accent-1) !important;
 }
 
-/* Mobile menu improvements */
-.mobile-menu-item {
-  transition: all 0.3s ease;
+/* Mobile menu styles */
+.mobile-menu {
+  background-color: var(--color-primary);
 }
 
-.mobile-menu-item:active {
-  transform: scale(0.98);
+.navbar-scrolled .mobile-menu {
+  background-color: var(--color-primary-dark);
 }
 
 /* Mobile menu links hover - text color change */

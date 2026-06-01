@@ -46,6 +46,13 @@
         </div>
     @endif
 
+    @if(session('warning'))
+        <div class="mb-4 flex items-center gap-3 bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm px-4 py-3 rounded-lg">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ session('warning') }}
+        </div>
+    @endif
+
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
             <div class="flex items-center justify-between">
@@ -94,6 +101,8 @@
                             @endcan
                             <th class="px-6 py-3 text-left">#</th>
                             <th class="px-6 py-3 text-left">Designation Title</th>
+                            <th class="px-6 py-3 text-left">Order</th>
+                            <th class="px-6 py-3 text-left">Status</th>
                             <th class="px-6 py-3 text-left">Created At</th>
                             <th class="px-6 py-3 text-left">Last Updated</th>
                             
@@ -109,10 +118,16 @@
                             {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('designations.delete')
                                 <td class="px-6 py-4">
-                                    <input type="checkbox" 
-                                           name="designation_ids[]" 
-                                           value="{{ $designation->id }}"
-                                           class="designation-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                    @if(!$designation->isUsed())
+                                        <input type="checkbox" 
+                                               name="designation_ids[]" 
+                                               value="{{ $designation->id }}"
+                                               class="designation-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                    @else
+                                        <span title="Cannot delete - in use" class="text-gray-300 cursor-not-allowed">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    @endif
                                 </td>
                             @endcan
                             
@@ -125,6 +140,22 @@
                                     <i class="fas fa-tag text-emerald-600 mr-2"></i>
                                     <span class="text-sm font-medium text-gray-900">{{ $designation->title }}</span>
                                 </div>
+                            </td>
+                            
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ $designation->order }}
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                @if($designation->isUsed())
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-link mr-1"></i> In Use
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Available
+                                    </span>
+                                @endif
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -150,14 +181,20 @@
                                             </a>
                                         @endcan
                                         
-                                        {{-- Delete Button --}}
+                                        {{-- Delete Button - Only show if not in use --}}
                                         @can('designations.delete')
-                                            <button type="button"
-                                                    onclick="confirmDelete({{ $designation->id }}, '{{ addslashes($designation->title) }}')" 
-                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                                    title="Delete Designation">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                            @if(!$designation->isUsed())
+                                                <button type="button"
+                                                        onclick="confirmDelete({{ $designation->id }}, '{{ addslashes($designation->title) }}')" 
+                                                        class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                        title="Delete Designation">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            @else
+                                                <span class="text-gray-400 p-2 cursor-not-allowed" title="Cannot delete - in use">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+                                            @endif
                                         @endcan
                                     </div>
                                 </td>
@@ -166,7 +203,7 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 5; // Base columns (#, Designation Title, Created At, Last Updated)
+                                    $colspan = 6; // Base columns (#, Title, Order, Status, Created At, Last Updated)
                                     if(auth()->user()->can('designations.delete')) $colspan++; // Add checkbox column
                                     if(auth()->user()->can('designations.edit') || auth()->user()->can('designations.delete')) $colspan++; // Add actions column
                                 @endphp
@@ -212,7 +249,7 @@
                 <p class="text-sm text-gray-500">
                     Are you sure you want to delete designation "<span id="deleteDesignationName" class="font-semibold text-gray-700"></span>"?
                 </p>
-                <p class="text-xs text-red-500 mt-2">This action cannot be undone. Designations in use cannot be deleted.</p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
                 <button id="cancelDeleteBtn" 
@@ -245,7 +282,7 @@
                 <p class="text-sm text-gray-500">
                     Are you sure you want to delete <span id="bulkDeleteCount" class="font-semibold text-gray-700"></span> designation(s)?
                 </p>
-                <p class="text-xs text-red-500 mt-2">This action cannot be undone. Designations in use cannot be deleted.</p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. Designations in use will be skipped.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
                 <button id="cancelBulkDeleteBtn" 
@@ -294,11 +331,13 @@
                 }
             }
             
-            // Select/Deselect all checkboxes
+            // Select/Deselect all checkboxes (only selectable ones)
             if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function() {
                     designationCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
+                        if (!checkbox.disabled) {
+                            checkbox.checked = selectAllCheckbox.checked;
+                        }
                     });
                     updateSelectedCount();
                 });
@@ -429,8 +468,10 @@
         setTimeout(function() {
             const successMsg = document.querySelector('.bg-green-50');
             const errorMsg = document.querySelector('.bg-red-50');
+            const warningMsg = document.querySelector('.bg-yellow-50');
             if (successMsg) successMsg.style.display = 'none';
             if (errorMsg) errorMsg.style.display = 'none';
+            if (warningMsg) warningMsg.style.display = 'none';
         }, 5000);
     });
 </script>

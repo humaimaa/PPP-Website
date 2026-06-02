@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LeadershipMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class LeadershipMessageController extends Controller
 {
@@ -46,9 +47,9 @@ class LeadershipMessageController extends Controller
     {
         $request->validate([
             'name'        => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
+            'designation' => ['required', 'string', Rule::in(LeadershipMessage::getDesignations())],
             'message'     => 'required|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'       => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data = $request->only(['name', 'designation', 'message']);
@@ -90,7 +91,7 @@ class LeadershipMessageController extends Controller
 
         $request->validate([
             'name'        => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
+            'designation' => ['required', 'string', Rule::in(LeadershipMessage::getDesignations())],
             'message'     => 'required|string',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);

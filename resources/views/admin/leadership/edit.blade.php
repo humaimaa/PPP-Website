@@ -75,30 +75,37 @@
                 @enderror
             </div>
 
-            {{-- Designation --}}
-            <div class="mb-6">
-                <label for="designation" class="block text-sm font-medium text-gray-700 mb-2">
-                    Designation <span class="text-red-500">*</span>
-                </label>
-                <div class="relative">
-                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        <i class="fas fa-briefcase"></i>
-                    </span>
-                    <input 
-                        type="text" 
-                        id="designation" 
-                        name="designation" 
-                        value="{{ old('designation', $message->designation) }}"
-                        required
-                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('designation') border-red-500 @enderror"
-                        placeholder="Enter position/title (e.g., Secretary, PPP Department)"
-                    >
-                </div>
-                <p class="mt-1 text-xs text-gray-500">Official position/title of the person</p>
-                @error('designation')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
+            {{-- Designation Dropdown --}}
+<div class="mb-6">
+    <label for="designation" class="block text-sm font-medium text-gray-700 mb-2">
+        Designation <span class="text-red-500">*</span>
+    </label>
+    <div class="relative">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="fas fa-briefcase"></i>
+        </span>
+        <select 
+            id="designation" 
+            name="designation" 
+            required
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('designation') border-red-500 @enderror appearance-none bg-white"
+        >
+            <option value="">Select Designation</option>
+            <option value="Chief Minister" {{ old('designation', $message->designation) == 'Chief Minister' ? 'selected' : '' }}>Chief Minister</option>
+            <option value="Chief Secretary" {{ old('designation', $message->designation) == 'Chief Secretary' ? 'selected' : '' }}>Chief Secretary</option>
+            <option value="Secretary P&D" {{ old('designation', $message->designation) == 'Secretary P&D' ? 'selected' : '' }}>Secretary P&D</option>
+            <option value="Chief PPP" {{ old('designation', $message->designation) == 'Chief PPP' ? 'selected' : '' }}>Chief PPP</option>
+            <option value="Assistant Chief PPP" {{ old('designation', $message->designation) == 'Assistant Chief PPP' ? 'selected' : '' }}>Assistant Chief PPP</option>
+        </select>
+        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+            <i class="fas fa-chevron-down"></i>
+        </span>
+    </div>
+    <p class="mt-1 text-xs text-gray-500">Select the official designation from the list</p>
+    @error('designation')
+        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
+</div>
 
             {{-- Message --}}
             <div class="mb-6">

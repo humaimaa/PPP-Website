@@ -28,66 +28,7 @@ class PageController extends Controller
         return view('user.pitchbook');
     }
 
-    /**
-     * About page - main overview
-     */
-    public function about()
-    {
-        return view('user.about.index');
-    }
 
-    /**
-     * Functions page
-     */
-    public function function()
-    {
-        return view('user.about.function');
-    }
-
-    /**
-     * Message from leadership page
-     */
-    public function message()
-    {
-        // Fetch all leadership messages
-        $messages = LeadershipMessage::all();
-        
-        // Return view with messages data
-        return view('user.about.message', compact('messages'));
-    }
-
-    /**
-     * Organogram page
-     */
-    public function organogram()
-    {
-        return view('user.about.organogram');
-    }
-    
-    /**
-     * Team page
-     */
-   public function team()
-{
-    // Load team members with their designations, ordered by designation.order
-    $team = \App\Models\Team::with(['designation' => function($query) {
-        $query->orderBy('order', 'asc');
-    }])
-    ->get()
-    ->sortBy(function($member) {
-        return $member->designation->order ?? 999; // Fallback for members without designation
-    });
-    
-    return view('user.about.team', compact('team'));
-}
-
-    /**
-     * Mission & Vision page
-     */
-    public function missionVision()
-    {
-        return view('user.about.mission-vision');
-    }
 
     /**
      * Projects page with optional status parameter
@@ -147,7 +88,6 @@ class PageController extends Controller
             'completedDetails',
             'achievements'
         ));
-<<<<<<< HEAD
     }
 
 
@@ -161,55 +101,6 @@ class PageController extends Controller
     }
 
     /**
-=======
-    }
-
-    /**
- * Resource Center / Downloads page with optional section parameter
- */
-public function downloads($section = 'legal-framework')
-{
-    $validSections = [
-        'legal-framework',
-        'pre-qualified-advisors',
-        'policies-regulations',
-        'knowledge-hub'
-    ];
-
-    if (!in_array($section, $validSections)) {
-        $section = 'legal-framework';
-    }
-
-    // Map URL sections to database category values
-    $categoryMapping = [
-        'legal-framework' => 'Legal Framework',
-        'pre-qualified-advisors' => 'Prequalified Transaction Advisory',
-        'policies-regulations' => 'Policies ,Regulations and Guidelines',
-        'knowledge-hub' => 'Knowledge Hub'
-    ];
-
-    // Get the corresponding database category
-    $category = $categoryMapping[$section];
-
-    // Fetch downloads filtered by category
-    $downloads = Download::where('category', $category)
-        ->orderBy('date', 'desc')
-        ->paginate(12);
-
-    // Return the view with section and downloads
-    return view('user.downloads', compact('section', 'downloads'));
-}
-
-    /**
-     * Events page
-     */
-    public function eventsIndex()
-    {
-        return view('user.events.index');
-    }
-
-    /**
->>>>>>> b32403fc1fe7700c15202303dd81552e1a18f5cd
      * Events page
      */
     public function updatesIndex()

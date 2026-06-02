@@ -10,7 +10,7 @@
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Tenders & Opportunities
             </h1>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
+            <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-white mt-4 text-lg">@if($section == 'general-procurement') General Procurement @elseif($section == 'transaction-advisory') Transaction Advisory @else Private Partner Selection @endif</p>
         </div>
     </div>

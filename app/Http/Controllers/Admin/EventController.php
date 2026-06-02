@@ -106,65 +106,78 @@ class EventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Event $event)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'event_date' => 'required|date',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
-            'deleted_images' => 'nullable|array',
-            'deleted_images.*' => 'exists:gallery,id',
-        ]);
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, Event $event)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'location' => 'nullable|string|max:255',
+        'description' => 'nullable|string',
+        'event_date' => 'required|date',
+        'images' => 'nullable|array',
+        'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        'deleted_images' => 'nullable|array',
+        'deleted_images.*' => 'exists:gallery,id',
+        'thumbnail' => 'nullable|string', // Can be ID or 'new_X'
+    ]);
 
-        // Update event details
-        $event->update([
-            'title' => $validated['title'],
-            'location' => $validated['location'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'event_date' => $validated['event_date'],
-        ]);
+    // Update event details
+    $event->update([
+        'title' => $validated['title'],
+        'location' => $validated['location'] ?? null,
+        'description' => $validated['description'] ?? null,
+        'event_date' => $validated['event_date'],
+    ]);
 
-        // Handle deleted images
-        if (isset($validated['deleted_images']) && !empty($validated['deleted_images'])) {
-            foreach ($validated['deleted_images'] as $imageId) {
-                $gallery = Gallery::find($imageId);
-                if ($gallery) {
-                    Storage::disk('public')->delete($gallery->image);
-                    $gallery->delete();
-                }
+    // Handle deleted images
+    if (isset($validated['deleted_images']) && !empty($validated['deleted_images'])) {
+        foreach ($validated['deleted_images'] as $imageId) {
+            $gallery = Gallery::find($imageId);
+            if ($gallery) {
+                Storage::disk('public')->delete($gallery->image);
+                $gallery->delete();
             }
         }
-
-        // Handle thumbnail update
-        if ($request->has('thumbnail')) {
-            // Reset all thumbnails to false
-            $event->gallery()->update(['is_thumbnail' => false]);
-            
-            // Set the new thumbnail
-            Gallery::where('id', $request->thumbnail)->update(['is_thumbnail' => true]);
-        }
-
-        // Upload new images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('events/gallery', 'public');
-                
-                Gallery::create([
-                    'event_id' => $event->id,
-                    'image' => $path,
-                    'is_thumbnail' => false, // New images are not thumbnails by default
-                ]);
-            }
-        }
-
-        return redirect()->route('admin.events.index')
-            ->with('success', 'Event updated successfully.');
     }
+
+    // Upload new images
+    $newImageIndices = [];
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $index => $image) {
+            $path = $image->store('events/gallery', 'public');
+            
+            $gallery = Gallery::create([
+                'event_id' => $event->id,
+                'image' => $path,
+                'is_thumbnail' => false,
+            ]);
+            $newImageIndices[$index] = $gallery->id;
+        }
+    }
+
+    // Handle thumbnail update
+    if ($request->has('thumbnail')) {
+        $thumbnail = $request->thumbnail;
+        
+        // Reset all thumbnails
+        $event->gallery()->update(['is_thumbnail' => false]);
+        
+        // Check if thumbnail is a new image
+        if (str_starts_with($thumbnail, 'new_')) {
+            $newIndex = (int) explode('_', $thumbnail)[1];
+            if (isset($newImageIndices[$newIndex])) {
+                Gallery::where('id', $newImageIndices[$newIndex])->update(['is_thumbnail' => true]);
+            }
+        } else {
+            // Thumbnail is an existing image ID
+            Gallery::where('id', $thumbnail)->update(['is_thumbnail' => true]);
+        }
+    }
+
+    return redirect()->route('admin.events.index')
+        ->with('success', 'Event updated successfully.');
+}
 
     /**
      * Remove the specified resource from storage.

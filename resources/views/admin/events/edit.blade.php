@@ -17,7 +17,7 @@
 
     {{-- Form Card --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="border-b border-gray-200 bg-linear-to-r from-emerald-50 to-green-50 px-6 py-4">
+        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">
                     <i class="fas fa-edit mr-2 text-emerald-600"></i>
@@ -46,7 +46,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" class="p-6" id="eventForm">
             @csrf
             @method('PUT')
             
@@ -113,7 +113,7 @@
                             type="date" 
                             id="event_date" 
                             name="event_date" 
-                            value="{{ old('event_date', $event->event_date->format('Y-m-d')) }}"
+                            value="{{ old('event_date', $event->event_date instanceof \Carbon\Carbon ? $event->event_date->format('Y-m-d') : $event->event_date) }}"
                             required
                             class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('event_date') border-red-500 @enderror"
                         >
@@ -156,14 +156,14 @@
                     </label>
                     <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach($event->gallery as $index => $gallery)
-                                <div class="relative group">
-                                    <img src="{{ asset('storage/' . $gallery->image) }}" 
+                            @foreach($event->gallery as $index => $galleryItem)
+                                <div class="relative group" data-image-id="{{ $galleryItem->id }}">
+                                    <img src="{{ asset('storage/' . $galleryItem->image) }}" 
                                          alt="Gallery image"
                                          class="w-full h-32 object-cover rounded-lg border border-gray-200">
                                     
                                     {{-- Thumbnail Badge --}}
-                                    @if($gallery->is_thumbnail)
+                                    @if($galleryItem->is_thumbnail)
                                         <div class="absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded flex items-center">
                                             <i class="fas fa-star mr-1 text-xs"></i>
                                             Thumbnail
@@ -172,16 +172,16 @@
                                     
                                     {{-- Action Buttons --}}
                                     <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                        @if(!$gallery->is_thumbnail)
+                                        @if(!$galleryItem->is_thumbnail)
                                             <button type="button" 
-                                                    onclick="setAsThumbnail({{ $gallery->id }})"
+                                                    onclick="setAsThumbnail({{ $galleryItem->id }})"
                                                     class="p-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
                                                     title="Set as thumbnail">
                                                 <i class="fas fa-star"></i>
                                             </button>
                                         @endif
                                         <button type="button" 
-                                                onclick="confirmImageDelete({{ $gallery->id }})"
+                                                onclick="confirmImageDelete({{ $galleryItem->id }})"
                                                 class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                                                 title="Delete image">
                                             <i class="fas fa-trash"></i>
@@ -222,7 +222,7 @@
                     <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p class="text-sm text-blue-700">
                             <i class="fas fa-info-circle mr-2"></i>
-                            Select one image as the thumbnail if you don't have an existing thumbnail. The thumbnail will be used as the cover image for this event.
+                            New images will be added to the gallery. If you want to set a new image as thumbnail, select the radio button.
                         </p>
                     </div>
                 </div>
@@ -237,6 +237,9 @@
 
             {{-- Hidden inputs for tracking deleted images --}}
             <div id="deletedImagesContainer"></div>
+
+            {{-- Hidden input for thumbnail selection --}}
+            <input type="hidden" name="thumbnail" id="thumbnailInput" value="{{ $event->gallery->where('is_thumbnail', true)->first()->id ?? '' }}">
 
             {{-- Preview Information --}}
             <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -301,160 +304,35 @@
 <script>
     let imageToDelete = null;
     let deletedImages = [];
-
-    // Template for new image field
-    const imageTemplate = `
-        <div class="new-image-field bg-white rounded-lg border border-gray-200 p-4">
-            <div class="flex items-start justify-between mb-3">
-                <span class="text-sm font-medium text-gray-700">New Image</span>
-                <button 
-                    type="button" 
-                    class="remove-image-btn text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors"
-                    title="Remove Image"
-                >
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Select Image <span class="text-red-500">*</span>
-                    </label>
-                    <input 
-                        type="file" 
-                        name="images[]" 
-                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                        class="image-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-                        required
-                    >
-                    <p class="text-xs text-gray-500 mt-1">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        JPG, PNG, GIF, WEBP (Max 5MB)
-                    </p>
-                </div>
-                <div class="flex items-center">
-                    <label class="flex items-center cursor-pointer">
-                        <input 
-                            type="radio" 
-                            name="thumbnail" 
-                            value="new"
-                            class="thumbnail-radio h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded-full transition-colors"
-                        >
-                        <span class="ml-3 text-sm font-medium text-gray-700">
-                            <i class="fas fa-star mr-1 text-yellow-500"></i>
-                            Set as Thumbnail
-                        </span>
-                    </label>
-                </div>
-            </div>
-            <div class="image-preview mt-3 hidden">
-                <img src="" alt="Preview" class="h-32 w-auto rounded-lg border border-gray-200 object-cover">
-            </div>
-        </div>
-    `;
-
-    // Handle thumbnail radio for new images
-    function handleThumbnailRadio(clickedRadio) {
-        if (clickedRadio.checked) {
-            document.querySelectorAll('.thumbnail-radio').forEach(radio => {
-                if (radio !== clickedRadio) {
-                    radio.checked = false;
-                }
-            });
-        }
-    }
-
-    // Image preview for new images
-    function attachImagePreviewListeners() {
-        document.querySelectorAll('.image-input').forEach(input => {
-            input.removeEventListener('change', imagePreviewHandler);
-            input.addEventListener('change', imagePreviewHandler);
-        });
-    }
-
-    function imagePreviewHandler(e) {
-        const file = e.target.files[0];
-        const imageField = e.target.closest('.new-image-field');
-        const previewDiv = imageField.querySelector('.image-preview');
-        const previewImg = previewDiv.querySelector('img');
-        
-        if (file) {
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            if (!allowedTypes.includes(file.type)) {
-                alert('Please select a valid image file (JPG, PNG, GIF, WEBP).');
-                e.target.value = '';
-                previewDiv.classList.add('hidden');
-                return;
-            }
-            
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB. Please choose a smaller file.');
-                e.target.value = '';
-                previewDiv.classList.add('hidden');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                previewDiv.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewDiv.classList.add('hidden');
-        }
-    }
-
-    // Remove new image field
-    function attachRemoveListeners() {
-        document.querySelectorAll('.remove-image-btn').forEach(btn => {
-            btn.removeEventListener('click', removeImageHandler);
-            btn.addEventListener('click', removeImageHandler);
-        });
-    }
-
-    function removeImageHandler(e) {
-        e.target.closest('.new-image-field').remove();
-    }
-
-    // Add new image field
-    function addNewImageField() {
-        const container = document.getElementById('imagesContainer');
-        container.insertAdjacentHTML('beforeend', imageTemplate);
-        
-        // Attach listeners to new elements
-        attachThumbnailListeners();
-        attachImagePreviewListeners();
-        attachRemoveListeners();
-    }
-
-    // Attach thumbnail listeners
-    function attachThumbnailListeners() {
-        document.querySelectorAll('.thumbnail-radio').forEach(radio => {
-            radio.removeEventListener('change', thumbnailChangeHandler);
-            radio.addEventListener('change', thumbnailChangeHandler);
-        });
-    }
-
-    function thumbnailChangeHandler(e) {
-        handleThumbnailRadio(e.target);
-    }
+    let newImageCounter = 0;
+    let selectedNewThumbnailIndex = null;
 
     // Set as thumbnail for existing images
     window.setAsThumbnail = function(imageId) {
-        fetch('{{ route("admin.events.set-thumbnail", "") }}/' + imageId, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ image_id: imageId })
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  location.reload();
-              }
-          });
+        document.getElementById('thumbnailInput').value = imageId;
+        
+        // Update UI to show thumbnail badge
+        document.querySelectorAll('[data-image-id]').forEach(container => {
+            const badge = container.querySelector('.absolute.top-2.left-2');
+            if (badge && container.dataset.imageId == imageId) {
+                if (!badge.querySelector('.fa-star')) {
+                    badge.innerHTML = '<i class="fas fa-star mr-1 text-xs"></i> Thumbnail';
+                }
+            } else if (badge) {
+                badge.remove();
+            }
+        });
+        
+        // Add badge to newly selected thumbnail
+        const selectedContainer = document.querySelector(`[data-image-id="${imageId}"]`);
+        if (selectedContainer && !selectedContainer.querySelector('.absolute.top-2.left-2')) {
+            const badge = document.createElement('div');
+            badge.className = 'absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded flex items-center';
+            badge.innerHTML = '<i class="fas fa-star mr-1 text-xs"></i> Thumbnail';
+            selectedContainer.appendChild(badge);
+        }
+        
+        alert('Thumbnail updated successfully!');
     };
 
     // Confirm image deletion
@@ -475,8 +353,13 @@
             document.getElementById('deletedImagesContainer').appendChild(input);
             
             // Remove the image from DOM
-            const imageElement = document.querySelector(`button[onclick="confirmImageDelete(${imageToDelete})"]`).closest('.relative');
+            const imageElement = document.querySelector(`[data-image-id="${imageToDelete}"]`);
             if (imageElement) {
+                // Check if deleted image was thumbnail
+                const thumbnailInput = document.getElementById('thumbnailInput');
+                if (thumbnailInput.value == imageToDelete) {
+                    thumbnailInput.value = '';
+                }
                 imageElement.remove();
             }
             
@@ -492,15 +375,164 @@
         imageToDelete = null;
     };
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        const addImageBtn = document.getElementById('addImageBtn');
-        if (addImageBtn) {
-            addImageBtn.addEventListener('click', addNewImageField);
+    // Add new image field
+    function addNewImageField() {
+        const container = document.getElementById('imagesContainer');
+        const newIndex = newImageCounter++;
+        
+        const newFieldHtml = `
+            <div class="new-image-field bg-white rounded-lg border border-gray-200 p-4" data-new-index="${newIndex}">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-sm font-medium text-gray-700">New Image ${newIndex + 1}</span>
+                    <button 
+                        type="button" 
+                        class="remove-image-btn text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors"
+                        title="Remove Image"
+                    >
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Select Image <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="file" 
+                            name="images[]" 
+                            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                            class="image-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                            required
+                            onchange="previewNewImage(this, ${newIndex})"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            JPG, PNG, GIF, WEBP (Max 5MB)
+                        </p>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="flex items-center cursor-pointer">
+                            <input 
+                                type="radio" 
+                                name="new_thumbnail" 
+                                value="${newIndex}"
+                                class="new-thumbnail-radio h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded-full transition-colors"
+                                onchange="selectNewThumbnail(${newIndex})"
+                            >
+                            <span class="ml-3 text-sm font-medium text-gray-700">
+                                <i class="fas fa-star mr-1 text-yellow-500"></i>
+                                Set as Thumbnail
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="image-preview mt-3 hidden" id="preview-${newIndex}">
+                    <img src="" alt="Preview" class="h-32 w-auto rounded-lg border border-gray-200 object-cover">
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', newFieldHtml);
+        
+        // Add remove listener to the new button
+        const removeBtn = container.querySelector(`.new-image-field:last-child .remove-image-btn`);
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function(e) {
+                e.target.closest('.new-image-field').remove();
+                updateNewImageLabels();
+            });
+        }
+    }
+
+    // Preview new image
+    window.previewNewImage = function(input, index) {
+        const file = input.files[0];
+        const previewDiv = document.getElementById(`preview-${index}`);
+        const previewImg = previewDiv.querySelector('img');
+        
+        if (file) {
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPG, PNG, GIF, WEBP).');
+                input.value = '';
+                previewDiv.classList.add('hidden');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB. Please choose a smaller file.');
+                input.value = '';
+                previewDiv.classList.add('hidden');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewDiv.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewDiv.classList.add('hidden');
+        }
+    };
+
+    // Select new thumbnail
+    window.selectNewThumbnail = function(index) {
+        selectedNewThumbnailIndex = index;
+        
+        // Uncheck all other new thumbnail radios
+        document.querySelectorAll('.new-thumbnail-radio').forEach(radio => {
+            if (radio.value != index) {
+                radio.checked = false;
+            }
+        });
+        
+        // Clear existing thumbnail selection from current images
+        document.getElementById('thumbnailInput').value = '';
+    };
+
+    // Update labels for new images
+    function updateNewImageLabels() {
+        const newFields = document.querySelectorAll('.new-image-field');
+        newFields.forEach((field, idx) => {
+            const label = field.querySelector('.text-sm.font-medium.text-gray-700');
+            if (label) {
+                label.textContent = `New Image ${idx + 1}`;
+            }
+            const radio = field.querySelector('.new-thumbnail-radio');
+            if (radio) {
+                radio.value = idx;
+            }
+        });
+    }
+
+    // Form validation before submit
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+        const thumbnailInput = document.getElementById('thumbnailInput');
+        const newThumbnailSelected = selectedNewThumbnailIndex !== null;
+        const hasNewImages = document.querySelectorAll('.new-image-field').length > 0;
+        const hasCurrentImages = {{ $event->gallery->count() }} > 0;
+        
+        // Check if there's at least one thumbnail
+        if (!thumbnailInput.value && !newThumbnailSelected) {
+            e.preventDefault();
+            alert('Please select a thumbnail image for this event (either from existing images or from new images).');
+            return;
         }
         
-        attachThumbnailListeners();
+        // If new thumbnail is selected, set the thumbnail value to 'new' with index
+        if (newThumbnailSelected) {
+            const hiddenThumbnail = document.createElement('input');
+            hiddenThumbnail.type = 'hidden';
+            hiddenThumbnail.name = 'thumbnail';
+            hiddenThumbnail.value = 'new_' + selectedNewThumbnailIndex;
+            this.appendChild(hiddenThumbnail);
+        }
     });
+
+    // Initialize add image button
+    document.getElementById('addImageBtn').addEventListener('click', addNewImageField);
 
     // Close modal on escape key
     document.addEventListener('keydown', function(event) {

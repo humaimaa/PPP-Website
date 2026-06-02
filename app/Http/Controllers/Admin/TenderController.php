@@ -38,7 +38,7 @@ class TenderController extends Controller
             'opening_date' => 'required|date',
             'closing_date' => 'required|date|after:opening_date',
             'document' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'advertisement' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'advertisement' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
             'additional_docs' => 'nullable|array',
             'additional_docs.*.title' => 'nullable|string|max:255',
             'additional_docs.*.publish_date' => 'nullable|date',
@@ -123,12 +123,20 @@ class TenderController extends Controller
             'opening_date' => 'required|date',
             'closing_date' => 'required|date|after:opening_date',
             'document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'advertisement' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'advertisement' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
             'additional_docs' => 'nullable|array',
             'additional_docs.*.title' => 'nullable|string|max:255',
             'additional_docs.*.publish_date' => 'nullable|date',
             'additional_docs.*.document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ]);
+
+        // Prepare data for update (only database columns)
+        $updateData = [
+            'name' => $validated['name'],
+            'category' => $validated['category'],
+            'opening_date' => $validated['opening_date'],
+            'closing_date' => $validated['closing_date'],
+        ];
 
         // Handle main document upload
         if ($request->hasFile('document')) {
@@ -139,7 +147,7 @@ class TenderController extends Controller
             
             $document = $request->file('document');
             $documentName = time() . '_document_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $document->getClientOriginalName());
-            $validated['document'] = $document->storeAs('tenders/documents', $documentName, 'public');
+            $updateData['document'] = $document->storeAs('tenders/documents', $documentName, 'public');
         }
 
         // Handle advertisement upload
@@ -151,10 +159,11 @@ class TenderController extends Controller
             
             $advertisement = $request->file('advertisement');
             $advertisementName = time() . '_ad_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $advertisement->getClientOriginalName());
-            $validated['advertisement'] = $advertisement->storeAs('tenders/advertisements', $advertisementName, 'public');
+            $updateData['advertisement'] = $advertisement->storeAs('tenders/advertisements', $advertisementName, 'public');
         }
 
-        $tender->update($validated);
+        // Update the tender
+        $tender->update($updateData);
 
         // Handle additional documents
         if ($request->has('additional_docs')) {
@@ -194,73 +203,20 @@ class TenderController extends Controller
             Storage::disk('public')->delete($tender->advertisement);
         }
         
-        // Delete additional documents (cascade will handle database records)
-        foreach ($tender->additionalDocs as $doc) {
+        // Delete additional documents - they will be automatically deleted from DB due to cascade
+        // But we need to delete the physical files
+        $additionalDocs = TenderAdditionalDoc::where('tender_id', $tender->id)->get();
+        foreach ($additionalDocs as $doc) {
             if ($doc->document && Storage::disk('public')->exists($doc->document)) {
                 Storage::disk('public')->delete($doc->document);
             }
         }
         
+        // Delete the tender (additional docs will be deleted automatically due to cascade)
         $tender->delete();
         
         return redirect()->route('admin.tenders.index')
             ->with('success', 'Tender deleted successfully!');
-    }
-
-    /**
-     * Archive a tender (sets is_archived = true).
-     */
-    public function archive(Tender $tender)
-    {
-        $tender->update(['is_archived' => true]);
-
-        return redirect()->route('admin.tenders.show', $tender)
-            ->with('success', 'Tender archived successfully.');
-    }
-
-    /**
-     * Unarchive a tender (sets is_archived = false).
-     */
-    public function unarchive(Tender $tender)
-    {
-        $tender->update(['is_archived' => false]);
-
-        return redirect()->route('admin.tenders.show', $tender)
-            ->with('success', 'Tender unarchived successfully.');
-    }
-
-    /**
-     * Bulk delete tenders.
-     */
-    public function bulkDelete(Request $request)
-    {
-        $request->validate([
-            'ids'   => 'required|array',
-            'ids.*' => 'integer|exists:tenders,id',
-        ]);
-
-        $tenders = Tender::whereIn('id', $request->ids)->get();
-
-        foreach ($tenders as $tender) {
-            if ($tender->document && Storage::disk('public')->exists($tender->document)) {
-                Storage::disk('public')->delete($tender->document);
-            }
-
-            if ($tender->advertisement && Storage::disk('public')->exists($tender->advertisement)) {
-                Storage::disk('public')->delete($tender->advertisement);
-            }
-
-            foreach ($tender->additionalDocs as $doc) {
-                if ($doc->document && Storage::disk('public')->exists($doc->document)) {
-                    Storage::disk('public')->delete($doc->document);
-                }
-            }
-
-            $tender->delete();
-        }
-
-        return redirect()->route('admin.tenders.index')
-            ->with('success', count($request->ids) . ' tender(s) deleted successfully.');
     }
 
     /**
@@ -271,16 +227,56 @@ class TenderController extends Controller
         try {
             $doc = TenderAdditionalDoc::findOrFail($id);
             
-            // Delete the file
+            // Delete the physical file
             if ($doc->document && Storage::disk('public')->exists($doc->document)) {
                 Storage::disk('public')->delete($doc->document);
             }
             
+            // Delete the database record
             $doc->delete();
             
             return redirect()->back()->with('success', 'Additional document deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error deleting document: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Bulk delete tenders.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:tenders,id',
+        ]);
+
+        $tenders = Tender::whereIn('id', $request->ids)->get();
+
+        foreach ($tenders as $tender) {
+            // Delete main document
+            if ($tender->document && Storage::disk('public')->exists($tender->document)) {
+                Storage::disk('public')->delete($tender->document);
+            }
+
+            // Delete advertisement
+            if ($tender->advertisement && Storage::disk('public')->exists($tender->advertisement)) {
+                Storage::disk('public')->delete($tender->advertisement);
+            }
+
+            // Delete additional documents physical files
+            $additionalDocs = TenderAdditionalDoc::where('tender_id', $tender->id)->get();
+            foreach ($additionalDocs as $doc) {
+                if ($doc->document && Storage::disk('public')->exists($doc->document)) {
+                    Storage::disk('public')->delete($doc->document);
+                }
+            }
+
+            // Delete the tender (additional docs will be deleted automatically due to cascade)
+            $tender->delete();
+        }
+
+        return redirect()->route('admin.tenders.index')
+            ->with('success', count($request->ids) . ' tender(s) deleted successfully.');
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\User\ResourceController;
 use App\Http\Controllers\User\AboutController;
+use App\Http\Controllers\User\TenderController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -26,10 +27,8 @@ Route::prefix('about')->name('about.')->group(function () {
 });
 
 // Tenders page (with optional section parameter)
-// Tenders page (with optional section parameter)
-Route::get('/tenders/{section?}', [PageController::class, 'tenders'])->name('tenders');
+Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-// Projects page (with optional status parameter)
 // Projects page (with optional status parameter)
 Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->name('projects.index');
 
@@ -56,7 +55,6 @@ Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFil
 // Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
-// ==================== ADMIN ROUTES ====================
 // ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('permissions', PermissionController::class)->except(['show']);

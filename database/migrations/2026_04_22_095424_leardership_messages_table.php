@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('leadership_messages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('dsignation', ['Chief Minister', 'Chief Secretary', 'Secretary P&D', 'Chief PPP', 'Assistant Chief PPP']);            
+            $table->enum('designation', ['Chief Minister', 'Chief Secretary', 'Secretary P&D', 'Chief PPP', 'Assistant Chief PPP']);            
             $table->text('message');
             $table->timestamps();
              $table->string('image')->nullable();

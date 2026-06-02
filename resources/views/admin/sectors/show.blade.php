@@ -79,9 +79,7 @@
                         <i class="far fa-calendar-alt text-gray-400 mr-2"></i>
                         {{ $sector->created_at->format('F d, Y') }}
                     </div>
-                    <div class="text-xs text-gray-400 mt-1">
-                        {{ $sector->created_at->format('h:i A') }}
-                    </div>
+                    
                 </div>
 
                 {{-- Last Updated --}}
@@ -93,9 +91,7 @@
                         <i class="far fa-clock text-gray-400 mr-2"></i>
                         {{ $sector->updated_at->format('F d, Y') }}
                     </div>
-                    <div class="text-xs text-gray-400 mt-1">
-                        {{ $sector->updated_at->format('h:i A') }}
-                    </div>
+                   
                 </div>
 
                 {{-- Tagline/Description --}}

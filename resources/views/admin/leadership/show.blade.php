@@ -68,7 +68,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Created At</label>
                     <div class="text-gray-700">
                         <i class="far fa-calendar-alt text-gray-400 mr-2"></i>
-                        {{ $message->created_at->format('F d, Y h:i A') }}
+                        {{ $message->created_at->format('F d, Y ') }}
                     </div>
                 </div>
 
@@ -77,7 +77,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Last Updated</label>
                     <div class="text-gray-700">
                         <i class="far fa-clock text-gray-400 mr-2"></i>
-                        {{ $message->updated_at->format('F d, Y h:i A') }}
+                        {{ $message->updated_at->format('F d, Y ') }}
                     </div>
                 </div>
             </div>

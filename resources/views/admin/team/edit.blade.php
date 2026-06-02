@@ -256,14 +256,14 @@
                         <label class="block text-xs font-medium text-gray-500 mb-1">Created At</label>
                         <div class="text-sm text-gray-700">
                             <i class="far fa-calendar-alt text-gray-400 mr-1"></i>
-                            {{ $teamMember->created_at->format('F d, Y h:i A') }}
+                            {{ $teamMember->created_at->format('F d, Y ') }}
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">Last Updated</label>
                         <div class="text-sm text-gray-700">
                             <i class="far fa-clock text-gray-400 mr-1"></i>
-                            {{ $teamMember->updated_at->format('F d, Y h:i A') }}
+                            {{ $teamMember->updated_at->format('F d, Y ') }}
                         </div>
                     </div>
                 </div>

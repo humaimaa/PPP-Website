@@ -75,7 +75,7 @@
                     </label>
                     <p class="text-gray-900">
                         <i class="far fa-clock mr-1 text-emerald-500"></i>
-                        {{ $event->created_at->format('l, d F Y h:i A') }}
+                        {{ $event->created_at->format('l, d F Y ') }}
                     </p>
                 </div>
             </div>

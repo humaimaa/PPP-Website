@@ -94,7 +94,6 @@
                             <option value="Prequalified Transaction Advisory" {{ old('category') == 'Prequalified Transaction Advisory' ? 'selected' : '' }}>Prequalified Transaction Advisory</option>
                             <option value="Policies ,Regulations and Guidelines" {{ old('category') == 'Policies ,Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
                             <option value="Knowledge Hub" {{ old('category') == 'Knowledge Hub' ? 'selected' : '' }}>Knowledge Hub</option>
-                            <option value="Pitchbook" {{ old('category') == 'Pitchbook' ? 'selected' : '' }}>Pitchbook</option>
                         </select>
                     </div>
                     <p class="mt-1 text-xs text-gray-500">Select the category for this document</p>
@@ -181,7 +180,6 @@
                             <br>• <strong>Prequalified Transaction Advisory</strong> - Advisory documents
                             <br>• <strong>Policies, Regulations and Guidelines</strong> - Policy documents
                             <br>• <strong>Knowledge Hub</strong> - Reports, studies, and research
-                            <br>• <strong>Pitchbook</strong> - Investment opportunities and pitches
                             <br><br>
                             <strong>File Requirements:</strong> PDF only, max 10MB
                         </p>

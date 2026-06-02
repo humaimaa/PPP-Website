@@ -103,17 +103,24 @@ class DesignationController extends Controller
      */
     public function destroy(Designation $designation)
     {
-        // Check if designation is being used
-        if ($designation->isUsed()) {
-            $usageDetails = $designation->getUsageDetails();
+        try {
+            // Check if designation is being used by team members
+            if ($designation->isUsed()) {
+                $usageDetails = $designation->getUsageDetails();
+                return redirect()->route('admin.designations.index')
+                    ->with('error', 'Cannot delete this designation because it is currently being used by ' . $usageDetails . '. Please reassign or delete those team members first.');
+            }
+            
+            $designationTitle = $designation->title;
+            $designation->delete();
+            
             return redirect()->route('admin.designations.index')
-                ->with('error', 'Cannot delete this designation because it is currently being used by ' . $usageDetails . '. Please reassign or delete those records first.');
+                ->with('success', 'Designation "' . $designationTitle . '" deleted successfully!');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('admin.designations.index')
+                ->with('error', 'Error deleting designation: ' . $e->getMessage());
         }
-        
-        $designation->delete();
-        
-        return redirect()->route('admin.designations.index')
-            ->with('success', 'Designation "' . $designation->title . '" deleted successfully!');
     }
 
     /**
@@ -146,7 +153,7 @@ class DesignationController extends Controller
         }
         
         if (count($failedDeletions) > 0) {
-            $message .= 'Cannot delete: ' . implode(', ', $failedDeletions) . ' (currently in use).';
+            $message .= 'Cannot delete: ' . implode(', ', $failedDeletions) . ' (currently in use by team members).';
         }
         
         if ($deletedCount > 0 || count($failedDeletions) > 0) {
@@ -163,16 +170,21 @@ class DesignationController extends Controller
      */
     public function updateOrder(Request $request)
     {
-        $request->validate([
-            'orders' => 'required|array',
-            'orders.*.id' => 'exists:designations,id',
-            'orders.*.order' => 'integer|min:0',
-        ]);
-        
-        foreach ($request->orders as $item) {
-            Designation::where('id', $item['id'])->update(['order' => $item['order']]);
+        try {
+            $request->validate([
+                'orders' => 'required|array',
+                'orders.*.id' => 'exists:designations,id',
+                'orders.*.order' => 'integer|min:0',
+            ]);
+            
+            foreach ($request->orders as $item) {
+                Designation::where('id', $item['id'])->update(['order' => $item['order']]);
+            }
+            
+            return response()->json(['success' => true, 'message' => 'Order updated successfully!']);
+            
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error updating order: ' . $e->getMessage()], 500);
         }
-        
-        return response()->json(['success' => true]);
     }
 }

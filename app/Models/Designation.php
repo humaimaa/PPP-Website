@@ -15,27 +15,20 @@ class Designation extends Model
     ];
 
     /**
-     * Get the leadership messages for this designation
+     * Get the team members with this designation
      */
-    public function leadershipMessages()
+    public function team()
     {
-        return $this->hasMany(LeadershipMessage::class);
-    }
-
-    /**
-     * Get the staff members with this designation
-     */
-    public function staff()
-    {
-        return $this->hasMany(Staff::class);
+        return $this->hasMany(Team::class, 'designation_id');
     }
 
     /**
      * Check if designation is being used anywhere
+     * Only check team table (leadership_messages uses ENUM, not foreign key)
      */
     public function isUsed()
     {
-        return $this->leadershipMessages()->exists() || $this->staff()->exists();
+        return $this->team()->exists();
     }
 
     /**
@@ -45,14 +38,9 @@ class Designation extends Model
     {
         $usage = [];
         
-        $leadershipCount = $this->leadershipMessages()->count();
-        if ($leadershipCount > 0) {
-            $usage[] = $leadershipCount . ' leadership message(s)';
-        }
-        
-        $staffCount = $this->staff()->count();
-        if ($staffCount > 0) {
-            $usage[] = $staffCount . ' staff member(s)';
+        $teamCount = $this->team()->count();
+        if ($teamCount > 0) {
+            $usage[] = $teamCount . ' team member(s)';
         }
         
         return implode(' and ', $usage);

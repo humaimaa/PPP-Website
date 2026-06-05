@@ -147,7 +147,7 @@
     </div>
 </section>
 
-<!-- Stats Section -->
+{{-- <!-- Stats Section -->
 <section class="w-full py-10 px-12 md:px-12 bg-background-white" id="stats-section">
     <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
@@ -171,7 +171,7 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- Sectors Section - Dynamic from Database (4 per row) -->
 <section class="pt-10 w-full bg-background-light" id="sectors-section">
@@ -202,7 +202,7 @@
         </div>
     </div>
 </section>
-
+{{-- 
 <!-- Pitchbook Section -->
 <section class="py-10 bg-background-white w-full">
     <div class="w-full px-0">
@@ -217,7 +217,7 @@
             </a>
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- Vision Message Section -->
 <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
@@ -239,7 +239,7 @@
 </section>
 
 <!-- Map Section -->
-<section class="bg-background-white" id="map-section">
+{{-- <section class="bg-background-white" id="map-section">
     <div class="container-fluid px-4 sm:px-6 lg:px-8 bg-background-gray/10 py-10">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-primary animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
@@ -335,7 +335,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
 <!-- News Section - Dynamic from Database using existing route (with images) -->
 <section class="py-10 bg-background-white" id="news-section">

@@ -24,18 +24,23 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         @php
-            // Define hierarchy order
+            // Define hierarchy order (excluding Chief PPP)
             $hierarchyOrder = [
                 'Chief Minister',
                 'Chief Secretary',
                 'Secretary P&D',
-                'Chief PPP',
                 'Assistant Chief PPP'
             ];
             
+            // Filter out Chief PPP messages from the already passed $messages collection
+            $filteredMessages = $messages->filter(function($message) {
+                return $message->designation !== 'Chief PPP';
+            });
+            
             // Sort messages by hierarchy
-            $sortedMessages = $messages->sortBy(function($message) use ($hierarchyOrder) {
-                return array_search($message->dsignation, $hierarchyOrder);
+            $sortedMessages = $filteredMessages->sortBy(function($message) use ($hierarchyOrder) {
+                $position = array_search($message->designation, $hierarchyOrder);
+                return $position === false ? 999 : $position;
             });
         @endphp
         
@@ -69,12 +74,13 @@
                         <!-- Designation Badge -->
                         <div class="inline-block mb-4">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold 
-                                @if($message->dsignation == 'Chief Minister') bg-accent-1 text-text-primary
-                                @elseif($message->dsignation == 'Chief Secretary') bg-primary text-text-primary
-                                @elseif($message->dsignation == 'Secretary P&D') bg-primary-light text-text-primary
+                                @if($message->designation == 'Chief Minister') bg-accent-1 text-text-primary
+                                @elseif($message->designation == 'Chief Secretary') bg-primary text-text-primary
+                                @elseif($message->designation == 'Secretary P&D') bg-primary-light text-text-primary
+                                @elseif($message->designation == 'Assistant Chief PPP') bg-green-700 text-text-primary
                                 @else bg-background-primary/80 text-text-primary
                                 @endif">
-                                {{ $message->dsignation }}
+                                {{ $message->designation }}
                             </span>
                         </div>
                         
@@ -108,6 +114,24 @@
             <p class="text-text-muted">Leadership messages will be displayed here soon.</p>
         </div>
         @endforelse
+        
+        <!-- Optional: Display note if Chief PPP message exists (without using model in view) -->
+        @php
+            $hasChiefPpp = $messages->contains('designation', 'Chief PPP');
+        @endphp
+        
+        @if($hasChiefPpp)
+        <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="text-sm text-yellow-700">
+                    <strong>Note:</strong> The message from Chief PPP has been excluded from this view as requested.
+                </p>
+            </div>
+        </div>
+        @endif
     </div>
 </section>
 

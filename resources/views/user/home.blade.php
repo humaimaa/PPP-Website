@@ -393,7 +393,7 @@
 </section>
 
 <!-- Our Partners Section with Scrolling Logos -->
-<section class="py-12 bg-background-gray/50 overflow-hidden">
+<section class="py-12 bg-background-white overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>
@@ -405,56 +405,55 @@
         <div class="relative">
             <div class="logo-scroll-container overflow-hidden">
                 <div class="logo-track flex items-center gap-12 md:gap-16">
-                    <!-- First set of logos -->
+                    <!-- Original set of logos -->
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Infosys" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Google" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Microsoft" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Starbucks" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="IBM" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Instagram" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Pepsi" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="BMW" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
-                    </div>
-                    
+
                     <!-- Duplicate set for seamless loop -->
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Infosys" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Google" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Microsoft" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Starbucks" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="IBM" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    
+                    <!-- Third set for smoother infinite scroll -->
+                    <div class="partner-logo shrink-0">
+                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Instagram" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Pepsi" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="BMW" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
+                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                    </div>
+                    <div class="partner-logo shrink-0">
+                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                 </div>
             </div>

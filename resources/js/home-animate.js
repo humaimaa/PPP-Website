@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeStatsCounter();
     initSmoothScrollArrow();
     initPositionAwareButton();
+    initPartnerLogosScroll();
 });
 
 function initializeTextAnimations() {
@@ -332,6 +333,79 @@ function initPositionAwareButton() {
             span.style.left = relX + 'px';
             span.style.width = '0';
             span.style.height = '0';
+        });
+    });
+}
+
+// Alternative: Using GSAP's built-in repeat functionality
+function initPartnerLogosScroll() {
+    const logoContainer = document.querySelector('.logo-scroll-container');
+    const logoTrack = document.querySelector('.logo-track');
+    
+    if (!logoContainer || !logoTrack) return;
+    
+    // First, duplicate the content enough times for smooth infinite scroll
+    const trackWidth = logoTrack.scrollWidth;
+    const containerWidth = logoContainer.clientWidth;
+    
+    // Calculate how many copies we need (at least 3 copies for smooth loop)
+    const copiesNeeded = Math.ceil((containerWidth * 2) / trackWidth) + 2;
+    
+    for (let i = 0; i < copiesNeeded; i++) {
+        const logos = Array.from(logoTrack.querySelectorAll('.partner-logo'));
+        logos.forEach(logo => {
+            const clone = logo.cloneNode(true);
+            logoTrack.appendChild(clone);
+        });
+    }
+    
+    // Get the width of one set (original width before duplication)
+    const originalSetWidth = trackWidth;
+    const totalWidth = logoTrack.scrollWidth;
+    
+    // Create the seamless infinite scroll animation
+    const tl = gsap.timeline({
+        repeat: -1,
+        onRepeat: function() {
+            // When we reach the end, instantly jump back to the start
+            gsap.set(logoTrack, { x: 0 });
+        }
+    });
+    
+    // Animate from 0 to -originalSetWidth
+    tl.to(logoTrack, {
+        x: -originalSetWidth,
+        duration: 30,
+        ease: "none"
+    });
+    
+    // Pause on hover
+    logoContainer.addEventListener('mouseenter', () => {
+        tl.pause();
+    });
+    
+    // Resume on leave
+    logoContainer.addEventListener('mouseleave', () => {
+        tl.resume();
+    });
+    
+    // Add hover effects for individual logos
+    const logos = document.querySelectorAll('.partner-logo');
+    logos.forEach(logo => {
+        logo.addEventListener('mouseenter', () => {
+            gsap.to(logo, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+        
+        logo.addEventListener('mouseleave', () => {
+            gsap.to(logo, {
+                scale: 1,
+                duration: 0.3,
+                ease: "power2.out"
+            });
         });
     });
 }

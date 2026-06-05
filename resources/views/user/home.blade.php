@@ -184,12 +184,18 @@
         <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             @foreach($sectors as $sector)
             <div class="sector-card relative h-64 overflow-hidden group w-full">
-                <div class="absolute inset-0 bg-linear-to-t from-transparent to-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <!-- Gradient overlay - changes on hover to lighter green -->
+                <div class="absolute inset-0 z-10 transition-all duration-500" 
+                     style="background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));"></div>
+                <div class="absolute inset-0 z-10 transition-all duration-500 opacity-0 group-hover:opacity-100" 
+                     style="background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));"></div>
+                
                 <img src="{{ asset('storage/' . $sector->img) }}" alt="{{ $sector->name }} Sector"
-                    class="w-full h-full object-cover transition-all duration-600 group-hover:scale-110 group-hover:opacity-30">
+                    class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110">
+                
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
-                    <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2">{{ $sector->name }}</h3>
-                    <p class="text-text-primary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0">{{ $sector->tagline }}</p>
+                    <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">{{ $sector->name }}</h3>
+                    <p class="text-text-secondary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">{{ $sector->tagline }}</p>
                 </div>
             </div>
             @endforeach

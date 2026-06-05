@@ -64,9 +64,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         {{ $news->created_at->format('F d, Y') }}
-                        @if($news->created_at != $news->updated_at)
-                            <span class="ml-2 text-xs text-text-muted">(Updated: {{ $news->updated_at->format('F d, Y') }})</span>
-                        @endif
+
                     </div>
                     <div class="flex items-center text-text-muted">
                         <svg class="w-5 h-5 mr-2 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,19 +88,6 @@
                 $hasLongContent = strlen($firstParagraph) > 300;
             @endphp
             
-            @if($hasLongContent)
-            <div class="mb-6 p-4 bg-background-light/20 rounded-lg border-l-4 border-accent-1">
-                <div class="flex items-start">
-                    <svg class="w-5 h-5 text-accent-1 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>
-                        <span class="text-sm font-semibold text-accent-1">Summary</span>
-                        <p class="text-text-muted text-sm mt-1 leading-relaxed">{{ $excerpt }}...</p>
-                    </div>
-                </div>
-            </div>
-            @endif
 
             <!-- News Content -->
             <div class="prose prose-lg max-w-none text-text-muted">
@@ -130,33 +115,6 @@
             </div>
             @endif
 
-            <!-- Share Section -->
-            <div class="mt-8 pt-6 border-t border-gray-200">
-                <h3 class="text-sm font-semibold text-text-black mb-3">Share this update:</h3>
-                <div class="flex space-x-3">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 
-                       target="_blank"
-                       class="p-2 bg-gray-100 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
-                        </svg>
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?text={{ urlencode($news->title) }}&url={{ urlencode(url()->current()) }}" 
-                       target="_blank"
-                       class="p-2 bg-gray-100 rounded-full hover:bg-blue-400 hover:text-white transition-all duration-300">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/>
-                        </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(url()->current()) }}&title={{ urlencode($news->title) }}" 
-                       target="_blank"
-                       class="p-2 bg-gray-100 rounded-full hover:bg-blue-700 hover:text-white transition-all duration-300">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
 
             <!-- Navigation between posts -->
             <div class="mt-8 pt-6 border-t border-gray-200">

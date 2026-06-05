@@ -337,7 +337,7 @@
     </div>
 </section>
 
-<!-- News Section - Dynamic from Database using existing route -->
+<!-- News Section - Dynamic from Database using existing route (with images) -->
 <section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 overflow-hidden">
@@ -349,13 +349,19 @@
             @foreach($latestNews as $news)
             <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div class="h-48 overflow-hidden bg-background-primary/10">
-                    @if($news->pdf_path)
+                    @if($news->img_path)
+                        <!-- Show the update's image if available -->
+                        <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    @elseif($news->pdf_path)
+                        <!-- Fallback: PDF icon -->
                         <div class="w-full h-full flex items-center justify-center bg-background-primary/5">
                             <svg class="w-16 h-16 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
                         </div>
                     @else
+                        <!-- Final fallback: gradient with type text -->
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
                             <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                         </div>

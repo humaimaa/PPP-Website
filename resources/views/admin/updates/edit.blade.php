@@ -147,11 +147,11 @@
                     <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 mt-4">
                         <p class="text-sm text-gray-600">
                             <i class="far fa-calendar-plus mr-2 text-emerald-600"></i>
-                            Created: <span class="font-medium">{{ $news->created_at->format('F d, Y  ') }}</span>
+                            Created: <span class="font-medium">{{ $news->created_at->format('F d, Y') }}</span>
                         </p>
                         <p class="text-sm text-gray-600 mt-2">
                             <i class="far fa-calendar-check mr-2 text-emerald-600"></i>
-                            Last Updated: <span class="font-medium">{{ $news->updated_at->format('F d, Y  ') }}</span>
+                            Last Updated: <span class="font-medium">{{ $news->updated_at->format('F d, Y') }}</span>
                         </p>
                     </div>
                 </div>
@@ -233,17 +233,15 @@
                                     <i class="fas fa-star"></i>
                                 </span>
                             </div>
-                            {{-- Live preview image (shows new selection if any, otherwise current) --}}
-                            <div id="livePreviewImageContainer" class="mb-3">
-                                @if($news->img_path)
-                                    <img id="livePreviewImage" src="{{ Storage::url($news->img_path) }}" 
-                                         alt="Preview image" class="w-full h-32 object-cover rounded-lg border border-gray-200">
-                                @else
-                                    <div id="livePreviewImagePlaceholder" class="w-full h-32 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400">
-                                        <i class="fas fa-image text-2xl"></i>
-                                        <span class="ml-2 text-sm">No image</span>
-                                    </div>
-                                @endif
+                            {{-- Live preview image - always present, but hidden if no image --}}
+                            <div id="livePreviewImageContainer" class="mb-3 relative">
+                                <img id="livePreviewImage" src="{{ $news->img_path ? Storage::url($news->img_path) : '' }}" 
+                                     alt="Preview image" 
+                                     class="w-full h-32 object-cover rounded-lg border border-gray-200 {{ $news->img_path ? '' : 'hidden' }}">
+                                <div id="livePreviewImagePlaceholder" class="w-full h-32 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 {{ $news->img_path ? 'hidden' : 'flex' }}">
+                                    <i class="fas fa-image text-2xl"></i>
+                                    <span class="ml-2 text-sm">No image</span>
+                                </div>
                             </div>
                             <h5 id="previewTitle" class="font-semibold text-gray-900 mb-2">{{ old('title', $news->title) }}</h5>
                             <p id="previewContent" class="text-sm text-gray-600 line-clamp-3">{{ old('content', Str::limit($news->content, 150)) }}</p>
@@ -334,7 +332,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewFeatured = document.getElementById('previewFeatured');
     const imageInput      = document.getElementById('image');
     const livePreviewImg  = document.getElementById('livePreviewImage');
-    const livePreviewContainer = document.getElementById('livePreviewImageContainer');
     const livePreviewPlaceholder = document.getElementById('livePreviewImagePlaceholder');
 
     const typeColors = {
@@ -364,35 +361,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Update live preview when a new image is selected
+    // Update live preview image when a new file is selected
     function updateLivePreviewImage(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                if (livePreviewImg) {
-                    livePreviewImg.src = e.target.result;
-                    livePreviewImg.classList.remove('hidden');
-                    if (livePreviewContainer) {
-                        // Remove placeholder if exists
-                        if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'none';
-                        // Ensure image is shown
-                        livePreviewImg.style.display = 'block';
-                    }
-                }
+                livePreviewImg.src = e.target.result;
+                livePreviewImg.classList.remove('hidden');
+                livePreviewPlaceholder.classList.add('hidden');
             };
             reader.readAsDataURL(file);
         } else {
-            // If no new image, revert to current image (from server) if exists
-            if (livePreviewImg) {
-                const currentImageSrc = "{{ $news->img_path ? Storage::url($news->img_path) : '' }}";
-                if (currentImageSrc) {
-                    livePreviewImg.src = currentImageSrc;
-                    livePreviewImg.style.display = 'block';
-                    if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'none';
-                } else {
-                    livePreviewImg.style.display = 'none';
-                    if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'flex';
-                }
+            // No new file: revert to current image if exists
+            const currentSrc = "{{ $news->img_path ? Storage::url($news->img_path) : '' }}";
+            if (currentSrc) {
+                livePreviewImg.src = currentSrc;
+                livePreviewImg.classList.remove('hidden');
+                livePreviewPlaceholder.classList.add('hidden');
+            } else {
+                livePreviewImg.classList.add('hidden');
+                livePreviewPlaceholder.classList.remove('hidden');
             }
         }
     }
@@ -423,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Initialize
+    // Initialize character count and preview
     if (charCount && contentTextarea) {
         charCount.textContent = contentTextarea.value.length;
     }
@@ -468,7 +456,7 @@ function validateAndPreviewImage(event) {
             : (file.size / 1024 / 1024).toFixed(2) + ' MB';
     }
 
-    // Show thumbnail preview
+    // Show thumbnail preview in the separate box
     if (imgThumb) {
         const reader = new FileReader();
         reader.onload = e => { imgThumb.src = e.target.result; };

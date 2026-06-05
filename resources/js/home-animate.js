@@ -1,4 +1,3 @@
-// home-animate.js
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -10,9 +9,8 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 document.addEventListener('DOMContentLoaded', () => {
     initializeTextAnimations();
     initializeStatsCounter();
-    initScrollArrow();
+    initSmoothScrollArrow();
     initPositionAwareButton();
-    initProjectCards();
 });
 
 function initializeTextAnimations() {
@@ -35,8 +33,8 @@ function initializeTextAnimations() {
     }
 
     // About section text animations
-    const aboutHeading = document.querySelector('#about-section .w-full:not(#about-section .w-full:first-child) h2');
-    const aboutParagraphs = document.querySelectorAll('#about-section .w-full:not(#about-section .w-full:first-child) p');
+    const aboutHeading = document.querySelector('#about-section .order-first h2, #about-section .md\\:order-last h2');
+    const aboutParagraphs = document.querySelectorAll('#about-section .order-first p, #about-section .md\\:order-last p');
     const aboutListItems = document.querySelectorAll('#about-section ul li');
     const aboutButton = document.querySelector('#about-section .btn-position-aware');
     
@@ -116,7 +114,7 @@ function initializeTextAnimations() {
     }
 
     // Departmental Leadership section animations
-    const leadershipSection = document.querySelector('#about-section + section');
+    const leadershipSection = document.querySelector('.bg-gradient-to-br');
     if (leadershipSection) {
         const leadershipTitle = leadershipSection.querySelector('h2');
         const leadershipImage = leadershipSection.querySelector('img');
@@ -267,52 +265,39 @@ function initializeStatsCounter() {
     });
 }
 
-// Smooth scroll arrow function
-function initScrollArrow() {
-    const arrow = document.getElementById('arrow');
+// Smooth scroll arrow to bottom of page
+function initSmoothScrollArrow() {
+    const arrow = document.getElementById('scroll-down-arrow');
     if (!arrow) return;
     
     arrow.addEventListener('click', function(e) {
         e.preventDefault();
         
-        let footer = document.querySelector('footer');
-        if (!footer) {
-            footer = document.querySelector('.footer');
-        }
-        
-        if (!footer) return;
-        
-        const targetPosition = footer.offsetTop;
+        // Get the bottom of the page
+        const targetPosition = document.body.scrollHeight;
         const startPosition = window.scrollY;
         const distance = targetPosition - startPosition;
         
         if (Math.abs(distance) < 10) return;
         
-        const duration = 3500;
+        const duration = 2000; // 2 seconds for smooth slow scroll
         const startTime = performance.now();
         
-        const linearInterpolation = (start, end, progress) => {
-            return start + (end - start) * progress;
-        };
-        
-        const smoothEasing = (t) => {
-            return t < 0.5 
-                ? 2 * t * t 
-                : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        // Easing function for smooth deceleration
+        const easeOutCubic = (t) => {
+            return 1 - Math.pow(1 - t, 3);
         };
         
         function animateScroll(currentTime) {
             const elapsed = currentTime - startTime;
             let progress = Math.min(1, elapsed / duration);
-            const easedProgress = smoothEasing(progress);
-            const newPosition = linearInterpolation(startPosition, targetPosition, easedProgress);
+            const easedProgress = easeOutCubic(progress);
+            const newPosition = startPosition + (distance * easedProgress);
             
             window.scrollTo(0, newPosition);
             
             if (progress < 1) {
                 requestAnimationFrame(animateScroll);
-            } else {
-                window.scrollTo(0, targetPosition);
             }
         }
         
@@ -347,20 +332,6 @@ function initPositionAwareButton() {
             span.style.left = relX + 'px';
             span.style.width = '0';
             span.style.height = '0';
-        });
-    });
-}
-
-// Initialize Project Cards
-function initProjectCards() {
-    const projectCards = document.querySelectorAll('.project-category-card');
-    
-    projectCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const category = card.getAttribute('data-category');
-            if (category) {
-                window.location.href = `/projects/category/${category}`;
-            }
         });
     });
 }

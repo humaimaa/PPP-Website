@@ -7,11 +7,12 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\User\ResourceController;
 use App\Http\Controllers\User\AboutController;
 use App\Http\Controllers\User\TenderController;
+use App\Http\Controllers\User\HomeController;
 
 // ==================== PUBLIC ROUTES ====================
 
 // Homepage
-Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');

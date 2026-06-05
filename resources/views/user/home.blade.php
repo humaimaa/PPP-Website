@@ -95,7 +95,7 @@
     </div>
 </section>
 
-<!-- Departmental Leadership Section - Dynamic -->
+<!-- Departmental Leadership Section - Dynamic from Database -->
 <section class="py-12 bg-gradient-to-br from-primary to-primary-light text-text-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -164,7 +164,7 @@
                 ];
             @endphp
             @foreach($stats as $stat)
-            <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
+            <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary/5 border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-accent-1 mb-3" data-count="{{ $stat['count'] }}">0</div>
                 <p class="text-text-muted text-sm md:text-base font-medium animate-on-scroll-text">{{ $stat['label'] }}</p>
             </div>
@@ -173,23 +173,23 @@
     </div>
 </section>
 
-<!-- Sectors Section - Dynamic from Database (4 per row) -->
+<!-- Sectors Section - Dynamic from Database (4 per row) - Same Design as Projects Section -->
 <section class="pt-10 w-full bg-background-light" id="sectors-section">
-    <div class="w-full px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-0">
         <div class="text-center mb-12 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green animate-on-scroll-title">Our Project Sectors</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-primary animate-on-scroll-title">Our Project Sectors</h2>
+            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             @foreach($sectors as $sector)
-            <div class="sector-card relative h-64 overflow-hidden rounded-lg shadow-md group w-full">
-                <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/30 to-transparent z-10"></div>
+            <div class="sector-card relative h-64 overflow-hidden group w-full">
+                <div class="absolute inset-0 bg-gradient-to-t from-transparent to-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <img src="{{ asset('storage/' . $sector->img) }}" alt="{{ $sector->name }} Sector"
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                <div class="absolute inset-0 z-20 flex flex-col items-center justify-end text-center p-5">
-                    <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400">{{ $sector->name }}</h3>
-                    <p class="text-text-secondary text-sm mt-2 max-w-[90%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0">{{ $sector->tagline }}</p>
+                    class="w-full h-full object-cover transition-all duration-600 group-hover:scale-110 group-hover:opacity-30">
+                <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
+                    <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2">{{ $sector->name }}</h3>
+                    <p class="text-text-primary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0">{{ $sector->tagline }}</p>
                 </div>
             </div>
             @endforeach
@@ -199,10 +199,10 @@
 
 <!-- Pitchbook Section -->
 <section class="py-10 bg-background-white w-full">
-    <div class="w-full px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-0">
         <div class="text-center mb-4 overflow-hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">Our Pitchbook</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
+            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
         <div class="flex justify-center items-center w-full">
             <a href="{{ url('/pitchbook') }}" class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1">
@@ -237,7 +237,7 @@
     <div class="container-fluid px-4 sm:px-6 lg:px-8 bg-background-gray/10 py-10">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-primary animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
+            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
             <p class="text-text-muted mt-4 max-w-2xl mx-auto animate-on-scroll-text">Click on any division to view its projects and details</p>
         </div>
 
@@ -334,11 +334,11 @@
 </section>
 
 <!-- News Section - Dynamic from Database -->
-<section class="py-10 bg-background-light" id="news-section">
+<section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green animate-on-scroll-title">News & Updates</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">News & Updates</h2>
+            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -389,7 +389,7 @@
 </section>
 
 <!-- Our Partners Section with Scrolling Logos -->
-<section class="py-12 bg-background-gray/10 overflow-hidden">
+<section class="py-12 bg-background-gray/50 overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>

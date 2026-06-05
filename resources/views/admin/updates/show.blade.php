@@ -81,17 +81,13 @@
             </div>
         </div>
 
-        {{-- Basic Information --}}
+        {{-- Basic Information (ID removed) --}}
         <div class="p-6 border-b border-gray-200">
             <h4 class="text-md font-semibold text-gray-800 mb-4">
                 <i class="fas fa-info-circle mr-2 text-emerald-600"></i>
                 Information Details
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Update ID</label>
-                    <p class="text-gray-900 font-mono text-sm">#{{ $news->id }}</p>
-                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Type</label>
                     <p class="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium {{ $badgeClass }}">
@@ -124,51 +120,25 @@
                             <i class="far fa-star mr-1"></i>
                             Not Featured
                         </p>
-                        @can('updates.edit')
-                            <button type="button"
-                                    onclick="toggleFeatured({{ $news->id }}, {{ $news->is_featured ? 'true' : 'false' }})"
-                                    class="mt-2 text-sm text-emerald-600 hover:text-emerald-700">
-                                <i class="fas fa-star mr-1"></i>
-                                Mark as Featured
-                            </button>
-                        @endcan
                     @endif
                 </div>
             </div>
         </div>
 
-        {{-- PDF Attachment Section --}}
-        @if($news->pdf_path)
+        {{-- Image Attachment Section (fixed property name) --}}
+        @if($news->img_path)
         <div class="p-6 border-b border-gray-200">
             <h4 class="text-md font-semibold text-gray-800 mb-4">
-                <i class="fas fa-file-pdf mr-2 text-emerald-600"></i>
-                Attached Document
+                <i class="fas fa-image mr-2 text-emerald-600"></i>
+                Attached Image
             </h4>
             <div class="bg-gray-50 rounded-lg p-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-file-pdf text-red-600 text-3xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900 mb-1">Supporting Document</p>
-                        <p class="text-xs text-gray-500 mb-2">
-                            <i class="fas fa-calendar-alt mr-1"></i>
-                            Uploaded: {{ $news->created_at->format('M d, Y') }}
-                        </p>
-                        <div class="flex gap-3">
-                            <a href="{{ Storage::url($news->pdf_path) }}" target="_blank" 
-                               class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
-                                <i class="fas fa-external-link-alt"></i>
-                                View PDF
-                            </a>
-                            <a href="{{ Storage::url($news->pdf_path) }}" download
-                               class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium">
-                                <i class="fas fa-download"></i>
-                                Download PDF
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}"
+                     class="w-full max-h-80 object-cover rounded-lg border border-gray-200">
+                <p class="text-xs text-gray-500 mt-2">
+                    <i class="fas fa-calendar-alt mr-1"></i>
+                    Uploaded: {{ $news->created_at->format('M d, Y') }}
+                </p>
             </div>
         </div>
         @endif
@@ -211,49 +181,7 @@
         </div>
     </div>
 
-    {{-- Quick Actions Card --}}
-    @can('updates.edit')
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
-            <h4 class="text-md font-semibold text-gray-800">
-                <i class="fas fa-cogs mr-2 text-emerald-600"></i>
-                Quick Actions
-            </h4>
-        </div>
-        <div class="p-6">
-            <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.updates.edit', $news) }}"
-                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                    <i class="fas fa-edit"></i>
-                    Edit Update
-                </a>
-                
-                @if($news->is_featured)
-                    <button type="button"
-                            onclick="toggleFeatured({{ $news->id }}, true)"
-                            class="inline-flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-star"></i>
-                        Remove from Featured
-                    </button>
-                @else
-                    <button type="button"
-                            onclick="toggleFeatured({{ $news->id }}, false)"
-                            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-star"></i>
-                        Mark as Featured
-                    </button>
-                @endif
-                
-                <button type="button"
-                        onclick="window.print()"
-                        class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                    <i class="fas fa-print"></i>
-                    Print Details
-                </button>
-            </div>
-        </div>
-    </div>
-    @endcan
+    {{-- QUICK ACTIONS CARD REMOVED --}}
 </div>
 
 {{-- Delete Confirmation Modal --}}
@@ -334,7 +262,7 @@
         }
     }
     
-    // Toggle featured function
+    // Toggle featured function (still needed if any button exists, but since quick actions removed, may not be used. Keeping for safety.)
     window.toggleFeatured = function(updateId, isCurrentlyFeatured) {
         const action = isCurrentlyFeatured ? 'unfeature' : 'feature';
         const form = document.getElementById('toggleFeaturedForm');
@@ -363,24 +291,6 @@
             closeDeleteModal();
         }
     });
-    
-    // Print styling
-    @media print {
-        .bg-gradient-to-r, .bg-emerald-50, .bg-green-50 {
-            background: #f0fdf4 !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
-        button, .inline-flex, .gap-2 {
-            display: none !important;
-        }
-        a {
-            text-decoration: none !important;
-        }
-        body {
-            padding: 20px !important;
-        }
-    }
 </script>
 @endpush
 @endsection

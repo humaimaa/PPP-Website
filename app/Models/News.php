@@ -14,10 +14,9 @@ class News extends Model
         'is_featured',
     ];
 
-    // protected $casts = [
-    //     'event_date'  => 'date',
-    //     'is_featured' => 'boolean',
-    // ];
+    protected $casts = [
+        'is_featured' => 'boolean',
+    ];
 
     // Scopes
     public function scopeFeatured($query)

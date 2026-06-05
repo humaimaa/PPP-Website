@@ -53,25 +53,23 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'      => 'required|string|max:255',
-            'content'    => 'required|string',
-            'type'       => 'required|in:Update,Announcement,Press Release,Notice,Other',
-            'event_date' => 'nullable|date',
-            'pdf_file'   => 'nullable|file|mimes:pdf|max:10240',
-            'is_featured'=> 'nullable|boolean',
+            'title'       => 'required|string|max:255',
+            'content'     => 'required|string',
+            'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
+            'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
+            'is_featured' => 'nullable|boolean',
         ]);
 
-        $pdfPath = null;
-        if ($request->hasFile('pdf_file')) {
-            $pdfPath = $request->file('pdf_file')->store('news/pdfs', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('news/images', 'public');
         }
 
         News::create([
             'title'       => $validated['title'],
             'content'     => $validated['content'],
             'type'        => $validated['type'],
-            'event_date'  => $validated['event_date'] ?? null,
-            'pdf_path'    => $pdfPath,
+            'img_path'    => $imagePath,
             'is_featured' => $request->boolean('is_featured'),
         ]);
 
@@ -102,29 +100,28 @@ class NewsController extends Controller
     public function update(Request $request, News $news)
     {
         $validated = $request->validate([
-            'title'      => 'required|string|max:255',
-            'content'    => 'required|string',
-            'type'       => 'required|in:Update,Announcement,Press Release,Notice,Other',
-            'event_date' => 'nullable|date',
-            'pdf_file'   => 'nullable|file|mimes:pdf|max:10240',
-            'is_featured'=> 'nullable|boolean',
+            'title'       => 'required|string|max:255',
+            'content'     => 'required|string',
+            'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
+            'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
+            'is_featured' => 'nullable|boolean',
         ]);
 
-        $pdfPath = $news->pdf_path;
+        $imagePath = $news->img_path;
 
-        if ($request->hasFile('pdf_file')) {
-            if ($news->pdf_path && Storage::disk('public')->exists($news->pdf_path)) {
-                Storage::disk('public')->delete($news->pdf_path);
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
+                Storage::disk('public')->delete($news->img_path);
             }
-            $pdfPath = $request->file('pdf_file')->store('news/pdfs', 'public');
+            $imagePath = $request->file('image')->store('news/images', 'public');
         }
 
         $news->update([
             'title'       => $validated['title'],
             'content'     => $validated['content'],
             'type'        => $validated['type'],
-            'event_date'  => $validated['event_date'] ?? null,
-            'pdf_path'    => $pdfPath,
+            'img_path'    => $imagePath,
             'is_featured' => $request->boolean('is_featured'),
         ]);
 
@@ -138,8 +135,8 @@ class NewsController extends Controller
      */
     public function destroy(News $news)
     {
-        if ($news->pdf_path && Storage::disk('public')->exists($news->pdf_path)) {
-            Storage::disk('public')->delete($news->pdf_path);
+        if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
+            Storage::disk('public')->delete($news->img_path);
         }
 
         $news->delete();
@@ -155,9 +152,9 @@ class NewsController extends Controller
     public function toggleFeatured(News $news)
     {
         $news->update(['is_featured' => !$news->is_featured]);
-        
+
         $status = $news->is_featured ? 'featured' : 'unfeatured';
-        
+
         return redirect()
             ->route('admin.updates.index')
             ->with('success', "Update {$status} successfully!");
@@ -169,7 +166,7 @@ class NewsController extends Controller
     public function feature(News $news)
     {
         $news->update(['is_featured' => true]);
-        
+
         return redirect()
             ->route('admin.updates.index')
             ->with('success', 'Update featured successfully!');
@@ -181,7 +178,7 @@ class NewsController extends Controller
     public function unfeature(News $news)
     {
         $news->update(['is_featured' => false]);
-        
+
         return redirect()
             ->route('admin.updates.index')
             ->with('success', 'Update removed from featured!');
@@ -193,19 +190,19 @@ class NewsController extends Controller
     public function bulkDelete(Request $request)
     {
         $request->validate([
-            'update_ids' => 'required|array',
-            'update_ids.*' => 'exists:news,id'
+            'update_ids'   => 'required|array',
+            'update_ids.*' => 'exists:news,id',
         ]);
 
-        $updateIds = $request->update_ids;
+        $updateIds    = $request->update_ids;
         $deletedCount = 0;
 
         foreach ($updateIds as $updateId) {
             $news = News::find($updateId);
             if ($news) {
-                // Delete PDF if exists
-                if ($news->pdf_path && Storage::disk('public')->exists($news->pdf_path)) {
-                    Storage::disk('public')->delete($news->pdf_path);
+                // Delete image if exists
+                if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
+                    Storage::disk('public')->delete($news->img_path);
                 }
                 $news->delete();
                 $deletedCount++;

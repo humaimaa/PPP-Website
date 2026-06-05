@@ -35,10 +35,10 @@
                         <i class="fas fa-exclamation-triangle text-red-500"></i>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors: </h3>
                         <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
                             @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <li>{{ $error }} </li>
                             @endforeach
                         </ul>
                     </div>
@@ -72,7 +72,7 @@
                             >
                         </div>
                         @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
                         @enderror
                     </div>
 
@@ -101,7 +101,7 @@
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the type/category of this update</p>
                         @error('type')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
                         @enderror
                     </div>
 
@@ -122,9 +122,9 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('event_date') border-red-500 @enderror"
                             >
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Optional: Date of the event (if applicable)</p>
+                        <p class="mt-1 text-xs text-gray-500">Optional: Date of the event (if applicable) </p>
                         @error('event_date')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
                         @enderror
                     </div>
 
@@ -150,40 +150,44 @@
 
                 {{-- Right Column --}}
                 <div>
-                    {{-- PDF Attachment --}}
+                    {{-- Image Attachment --}}
                     <div class="mb-4">
-                        <label for="pdf_file" class="block text-sm font-medium text-gray-700 mb-2">
-                            PDF Attachment
+                        <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                            Image Attachment
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-file-pdf"></i>
+                                <i class="fas fa-image"></i>
                             </span>
                             <input
                                 type="file"
-                                id="pdf_file"
-                                name="pdf_file"
-                                accept=".pdf,application/pdf"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('pdf_file') border-red-500 @enderror"
-                                onchange="validatePDF(event)"
+                                id="image"
+                                name="image"
+                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('image') border-red-500 @enderror"
+                                onchange="validateImage(event)"
                             >
                         </div>
                         <p class="mt-1 text-xs text-gray-500">
                             <i class="fas fa-info-circle mr-1"></i>
-                            PDF only (max 10MB). Leave empty for no attachment.
+                            JPG, PNG, GIF, or WEBP (max 2MB). Leave empty for no attachment.
                         </p>
-                        <div id="pdf-preview" class="mt-3 hidden">
-                            <div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                                <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
-                                <div class="flex-1">
-                                    <p id="pdf-name" class="text-sm font-medium text-gray-700"></p>
-                                    <p id="pdf-size" class="text-xs text-gray-500"></p>
+                        <div id="image-preview" class="mt-3 hidden">
+                            <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="fas fa-image text-emerald-600 text-2xl"></i>
+                                    <div class="flex-1">
+                                        <p id="image-name" class="text-sm font-medium text-gray-700"></p>
+                                        <p id="image-size" class="text-xs text-gray-500"></p>
+                                    </div>
+                                    <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
                                 </div>
-                                <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                                <img id="image-thumb" src="" alt="Preview"
+                                     class="w-full max-h-40 object-cover rounded-lg border border-emerald-200">
                             </div>
                         </div>
-                        @error('pdf_file')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @error('image')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
                         @enderror
                     </div>
 
@@ -196,6 +200,10 @@
                             <div class="flex items-start justify-between mb-2">
                                 <span id="previewType" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Update</span>
                                 <span id="previewFeatured" class="hidden text-yellow-500"><i class="fas fa-star"></i></span>
+                            </div>
+                            {{-- Image preview inside live preview card --}}
+                            <div id="previewImageContainer" class="mb-3 hidden">
+                                <img id="previewImage" src="" alt="Preview image" class="w-full h-32 object-cover rounded-lg border border-gray-200">
                             </div>
                             <h5 id="previewTitle" class="font-semibold text-gray-900 mb-2">Title will appear here</h5>
                             <p id="previewContent" class="text-sm text-gray-600 line-clamp-3">Content preview will appear here...</p>
@@ -229,7 +237,7 @@
                     <p class="text-xs text-gray-400">Tip: Use proper formatting for better readability</p>
                 </div>
                 @error('content')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
                 @enderror
             </div>
 
@@ -242,8 +250,8 @@
                         <p class="text-xs text-blue-700 mt-1">
                             Updates can be of various types: <strong>Update</strong>, <strong>Announcement</strong>, 
                             <strong>Press Release</strong>, <strong>Notice</strong>, or <strong>Other</strong>. 
-                            Featured updates will be highlighted on the homepage. You can attach a PDF document for 
-                            detailed information, reports, or official notices.
+                            Featured updates will be highlighted on the homepage. You can attach an image for
+                            visual context or illustration.
                         </p>
                     </div>
                 </div>
@@ -270,17 +278,20 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const typeSelect      = document.getElementById('type');
-    const eventDateField  = document.getElementById('eventDateField');
-    const eventDateInput  = document.getElementById('event_date');
+    const typeSelect = document.getElementById('type');
+    const eventDateField = document.getElementById('eventDateField');
+    const eventDateInput = document.getElementById('event_date');
     const contentTextarea = document.getElementById('content');
-    const charCount       = document.getElementById('charCount');
-    const titleInput      = document.getElementById('title');
-    const featuredChk     = document.getElementById('is_featured');
-    const previewType     = document.getElementById('previewType');
-    const previewTitle    = document.getElementById('previewTitle');
-    const previewContent  = document.getElementById('previewContent');
+    const charCount = document.getElementById('charCount');
+    const titleInput = document.getElementById('title');
+    const featuredChk = document.getElementById('is_featured');
+    const previewType = document.getElementById('previewType');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewContent = document.getElementById('previewContent');
     const previewFeatured = document.getElementById('previewFeatured');
+    const imageInput = document.getElementById('image');
+    const previewImageContainer = document.getElementById('previewImageContainer');
+    const previewImage = document.getElementById('previewImage');
 
     const typeColors = {
         'Update':        'bg-green-100 text-green-800',
@@ -319,6 +330,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Update live preview when image is selected
+    function updateImagePreview() {
+        const file = imageInput.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewImageContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImageContainer.classList.add('hidden');
+            previewImage.src = '';
+        }
+    }
+
     if (typeSelect) {
         typeSelect.addEventListener('change', toggleEventDate);
     }
@@ -342,6 +369,13 @@ document.addEventListener('DOMContentLoaded', function () {
         eventDateInput.addEventListener('change', updatePreview);
     }
 
+    if (imageInput) {
+        imageInput.addEventListener('change', function() {
+            updateImagePreview();
+            // Also update any existing image validation preview (optional)
+        });
+    }
+
     // Initialize
     if (charCount && contentTextarea) {
         charCount.textContent = contentTextarea.value.length;
@@ -350,47 +384,67 @@ document.addEventListener('DOMContentLoaded', function () {
     updatePreview();
 });
 
-// PDF validation function
-function validatePDF(event) {
+// Image validation function (also updates live preview)
+function validateImage(event) {
     const file = event.target.files[0];
-    const preview = document.getElementById('pdf-preview');
-    const pdfName = document.getElementById('pdf-name');
-    const pdfSize = document.getElementById('pdf-size');
-    
+    const previewDiv = document.getElementById('image-preview');
+    const imgName = document.getElementById('image-name');
+    const imgSize = document.getElementById('image-size');
+    const imgThumb = document.getElementById('image-thumb');
+    const previewImageContainer = document.getElementById('previewImageContainer');
+    const previewImage = document.getElementById('previewImage');
+
     if (!file) {
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
+        if (previewImageContainer) previewImageContainer.classList.add('hidden');
         return;
     }
-    
+
     // Validate file type
-    if (file.type !== 'application/pdf') {
-        alert('Please upload a valid PDF file.');
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPG, PNG, GIF, or WEBP).');
         event.target.value = '';
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
+        if (previewImageContainer) previewImageContainer.classList.add('hidden');
         return;
     }
-    
-    // Validate file size (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-        alert('File size must be less than 10MB. Current file size: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
+
+    // Validate file size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB. Current file size: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
         event.target.value = '';
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
+        if (previewImageContainer) previewImageContainer.classList.add('hidden');
         return;
     }
-    
-    // Display file info
-    if (pdfName) pdfName.textContent = file.name;
-    if (pdfSize) {
-        let sizeText = '';
-        if (file.size < 1024 * 1024) {
-            sizeText = (file.size / 1024).toFixed(2) + ' KB';
-        } else {
-            sizeText = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-        }
-        pdfSize.textContent = sizeText;
+
+    // Display file info in the separate preview box
+    if (imgName) imgName.textContent = file.name;
+    if (imgSize) {
+        imgSize.textContent = file.size < 1024 * 1024
+            ? (file.size / 1024).toFixed(2) + ' KB'
+            : (file.size / 1024 / 1024).toFixed(2) + ' MB';
     }
-    
-    if (preview) preview.classList.remove('hidden');
+
+    // Show thumbnail in the separate preview box
+    if (imgThumb) {
+        const reader = new FileReader();
+        reader.onload = e => { imgThumb.src = e.target.result; };
+        reader.readAsDataURL(file);
+    }
+
+    if (previewDiv) previewDiv.classList.remove('hidden');
+
+    // Also update the live preview image
+    if (previewImageContainer && previewImage) {
+        const readerLive = new FileReader();
+        readerLive.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImageContainer.classList.remove('hidden');
+        };
+        readerLive.readAsDataURL(file);
+    }
 }
 </script>
 @endpush

@@ -124,29 +124,6 @@
                         @enderror
                     </div>
 
-                    {{-- Event Date (Optional) --}}
-                    <div class="mb-4" id="eventDateField">
-                        <label for="event_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            Event Date
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-calendar-alt"></i>
-                            </span>
-                            <input
-                                type="date"
-                                id="event_date"
-                                name="event_date"
-                                value="{{ old('event_date', $news->event_date ? $news->event_date->format('Y-m-d') : '') }}"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('event_date') border-red-500 @enderror"
-                            >
-                        </div>
-                        <p class="mt-1 text-xs text-gray-500">Optional: Date of the event (if applicable)</p>
-                        @error('event_date')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
                     {{-- Featured --}}
                     <div class="mb-4">
                         <label class="flex items-center cursor-pointer">
@@ -166,80 +143,77 @@
                         <p class="text-xs text-gray-500 mt-1 ml-8">Featured items appear prominently on the homepage</p>
                     </div>
 
-                    {{-- Timestamps Info --}}
+                    {{-- Timestamps Info (ID removed) --}}
                     <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 mt-4">
                         <p class="text-sm text-gray-600">
                             <i class="far fa-calendar-plus mr-2 text-emerald-600"></i>
-                            Created: <span class="font-medium">{{ $news->created_at->format('F d, Y \a\t h:i A') }}</span>
+                            Created: <span class="font-medium">{{ $news->created_at->format('F d, Y  ') }}</span>
                         </p>
                         <p class="text-sm text-gray-600 mt-2">
                             <i class="far fa-calendar-check mr-2 text-emerald-600"></i>
-                            Last Updated: <span class="font-medium">{{ $news->updated_at->format('F d, Y \a\t h:i A') }}</span>
-                        </p>
-                        <p class="text-sm text-gray-600 mt-2">
-                            <i class="fas fa-hashtag mr-2 text-emerald-600"></i>
-                            ID: <span class="font-medium">#{{ $news->id }}</span>
+                            Last Updated: <span class="font-medium">{{ $news->updated_at->format('F d, Y  ') }}</span>
                         </p>
                     </div>
                 </div>
 
                 {{-- Right Column --}}
                 <div>
-                    {{-- PDF Attachment --}}
+                    {{-- Current Image Container --}}
+                    @if($news->img_path)
                     <div class="mb-4">
-                        <label for="pdf_file" class="block text-sm font-medium text-gray-700 mb-2">
-                            PDF Attachment
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
+                        <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <img src="{{ Storage::url($news->img_path) }}" alt="Current image"
+                                 class="w-full max-h-48 object-cover rounded-lg border border-gray-200">
+                            <p class="text-xs text-gray-500 mt-2 text-center">Current attached image</p>
+                        </div>
+                    </div>
+                    @endif
+
+                    {{-- New Image Selection --}}
+                    <div class="mb-4">
+                        <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                            Replace Image (optional)
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-file-pdf"></i>
+                                <i class="fas fa-image"></i>
                             </span>
                             <input
                                 type="file"
-                                id="pdf_file"
-                                name="pdf_file"
-                                accept=".pdf,application/pdf"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('pdf_file') border-red-500 @enderror"
-                                onchange="validatePDF(event)"
+                                id="image"
+                                name="image"
+                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 @error('image') border-red-500 @enderror"
+                                onchange="validateAndPreviewImage(event)"
                             >
                         </div>
                         <p class="mt-1 text-xs text-gray-500">
                             <i class="fas fa-info-circle mr-1"></i>
-                            PDF only (max 10MB). Leave empty to keep the current file.
+                            JPG, PNG, GIF or WEBP (max 2MB). Leave empty to keep the current image.
                         </p>
-                        
-                        @if($news->pdf_path)
-                            <div class="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+
+                        {{-- New image preview (temporary) --}}
+                        <div id="new-image-preview" class="mt-3 hidden">
+                            <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="fas fa-image text-emerald-600 text-2xl"></i>
                                     <div class="flex-1">
-                                        <p class="text-sm text-gray-600 mb-1">Current file:</p>
-                                        <a href="{{ Storage::url($news->pdf_path) }}" target="_blank" 
-                                           class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
-                                            <i class="fas fa-external-link-alt"></i>
-                                            View Current PDF
-                                        </a>
+                                        <p id="new-image-name" class="text-sm font-medium text-gray-700"></p>
+                                        <p id="new-image-size" class="text-xs text-gray-500"></p>
                                     </div>
+                                    <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
                                 </div>
-                            </div>
-                        @endif
-                        
-                        <div id="pdf-preview" class="mt-3 hidden">
-                            <div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                                <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
-                                <div class="flex-1">
-                                    <p id="pdf-name" class="text-sm font-medium text-gray-700"></p>
-                                    <p id="pdf-size" class="text-xs text-gray-500"></p>
-                                </div>
-                                <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                                <img id="new-image-thumb" src="" alt="New image preview"
+                                     class="w-full max-h-40 object-cover rounded-lg border border-emerald-200">
                             </div>
                         </div>
-                        @error('pdf_file')
+                        @error('image')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Live Preview --}}
+                    {{-- Live Preview (with image support) --}}
                     <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                         <h4 class="text-sm font-medium text-gray-700 mb-3">
                             <i class="fas fa-eye mr-1"></i> Live Preview
@@ -259,12 +233,24 @@
                                     <i class="fas fa-star"></i>
                                 </span>
                             </div>
+                            {{-- Live preview image (shows new selection if any, otherwise current) --}}
+                            <div id="livePreviewImageContainer" class="mb-3">
+                                @if($news->img_path)
+                                    <img id="livePreviewImage" src="{{ Storage::url($news->img_path) }}" 
+                                         alt="Preview image" class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                                @else
+                                    <div id="livePreviewImagePlaceholder" class="w-full h-32 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400">
+                                        <i class="fas fa-image text-2xl"></i>
+                                        <span class="ml-2 text-sm">No image</span>
+                                    </div>
+                                @endif
+                            </div>
                             <h5 id="previewTitle" class="font-semibold text-gray-900 mb-2">{{ old('title', $news->title) }}</h5>
                             <p id="previewContent" class="text-sm text-gray-600 line-clamp-3">{{ old('content', Str::limit($news->content, 150)) }}</p>
                         </div>
                         <p class="text-xs text-gray-500 mt-2">
                             <i class="fas fa-sync-alt mr-1"></i>
-                            Preview updates as you type
+                            Preview updates as you type or select a new image
                         </p>
                     </div>
                 </div>
@@ -309,8 +295,8 @@
                         <p class="text-xs text-blue-700 mt-1">
                             Updates can be of various types: <strong>Update</strong>, <strong>Announcement</strong>, 
                             <strong>Press Release</strong>, <strong>Notice</strong>, or <strong>Other</strong>. 
-                            Featured updates will be highlighted on the homepage. You can attach a PDF document for 
-                            detailed information, reports, or official notices.
+                            Featured updates will be highlighted on the homepage. You can attach an image for 
+                            visual context or illustration.
                         </p>
                     </div>
                 </div>
@@ -346,6 +332,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewTitle    = document.getElementById('previewTitle');
     const previewContent  = document.getElementById('previewContent');
     const previewFeatured = document.getElementById('previewFeatured');
+    const imageInput      = document.getElementById('image');
+    const livePreviewImg  = document.getElementById('livePreviewImage');
+    const livePreviewContainer = document.getElementById('livePreviewImageContainer');
+    const livePreviewPlaceholder = document.getElementById('livePreviewImagePlaceholder');
 
     const typeColors = {
         'Update':        'bg-green-100 text-green-800',
@@ -374,6 +364,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Update live preview when a new image is selected
+    function updateLivePreviewImage(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (livePreviewImg) {
+                    livePreviewImg.src = e.target.result;
+                    livePreviewImg.classList.remove('hidden');
+                    if (livePreviewContainer) {
+                        // Remove placeholder if exists
+                        if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'none';
+                        // Ensure image is shown
+                        livePreviewImg.style.display = 'block';
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // If no new image, revert to current image (from server) if exists
+            if (livePreviewImg) {
+                const currentImageSrc = "{{ $news->img_path ? Storage::url($news->img_path) : '' }}";
+                if (currentImageSrc) {
+                    livePreviewImg.src = currentImageSrc;
+                    livePreviewImg.style.display = 'block';
+                    if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'none';
+                } else {
+                    livePreviewImg.style.display = 'none';
+                    if (livePreviewPlaceholder) livePreviewPlaceholder.style.display = 'flex';
+                }
+            }
+        }
+    }
+
     if (typeSelect) {
         typeSelect.addEventListener('change', updatePreview);
     }
@@ -393,6 +416,13 @@ document.addEventListener('DOMContentLoaded', function () {
         featuredChk.addEventListener('change', updatePreview);
     }
 
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            updateLivePreviewImage(file);
+        });
+    }
+
     // Initialize
     if (charCount && contentTextarea) {
         charCount.textContent = contentTextarea.value.length;
@@ -400,47 +430,52 @@ document.addEventListener('DOMContentLoaded', function () {
     updatePreview();
 });
 
-// PDF validation function
-function validatePDF(event) {
+// Image validation and preview (separate box for new image selection)
+function validateAndPreviewImage(event) {
     const file = event.target.files[0];
-    const preview = document.getElementById('pdf-preview');
-    const pdfName = document.getElementById('pdf-name');
-    const pdfSize = document.getElementById('pdf-size');
-    
+    const previewDiv = document.getElementById('new-image-preview');
+    const imgName = document.getElementById('new-image-name');
+    const imgSize = document.getElementById('new-image-size');
+    const imgThumb = document.getElementById('new-image-thumb');
+
     if (!file) {
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
         return;
     }
-    
+
     // Validate file type
-    if (file.type !== 'application/pdf') {
-        alert('Please upload a valid PDF file.');
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPG, PNG, GIF, or WEBP).');
         event.target.value = '';
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
         return;
     }
-    
-    // Validate file size (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-        alert('File size must be less than 10MB. Current file size: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
+
+    // Validate file size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB. Current file size: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
         event.target.value = '';
-        if (preview) preview.classList.add('hidden');
+        if (previewDiv) previewDiv.classList.add('hidden');
         return;
     }
-    
+
     // Display file info
-    if (pdfName) pdfName.textContent = file.name;
-    if (pdfSize) {
-        let sizeText = '';
-        if (file.size < 1024 * 1024) {
-            sizeText = (file.size / 1024).toFixed(2) + ' KB';
-        } else {
-            sizeText = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-        }
-        pdfSize.textContent = sizeText;
+    if (imgName) imgName.textContent = file.name;
+    if (imgSize) {
+        imgSize.textContent = file.size < 1024 * 1024
+            ? (file.size / 1024).toFixed(2) + ' KB'
+            : (file.size / 1024 / 1024).toFixed(2) + ' MB';
     }
-    
-    if (preview) preview.classList.remove('hidden');
+
+    // Show thumbnail preview
+    if (imgThumb) {
+        const reader = new FileReader();
+        reader.onload = e => { imgThumb.src = e.target.result; };
+        reader.readAsDataURL(file);
+    }
+
+    if (previewDiv) previewDiv.classList.remove('hidden');
 }
 </script>
 @endpush

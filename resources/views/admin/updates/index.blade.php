@@ -108,14 +108,11 @@
                                            class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </th>
                             @endcan
-                            <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Title & Content</th>
                             <th class="px-6 py-3 text-left">Type</th>
-                            
                             <th class="px-6 py-3 text-left">Featured</th>
-                            <th class="px-6 py-3 text-left">PDF</th>
+                            <th class="px-6 py-3 text-left">Image</th>
                             <th class="px-6 py-3 text-left">Created</th>
-                            
                             {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
                                 <th class="px-6 py-3 text-right">Actions</th>
@@ -134,10 +131,6 @@
                                            class="update-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </td>
                             @endcan
-                            
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
-                                #{{ $item->id }}
-                            </td>
                             
                             <td class="px-6 py-4">
                                 <div>
@@ -165,8 +158,6 @@
                                 </span>
                             </td>
                             
-                          
-                            
                             <td class="px-6 py-4">
                                 @if($item->is_featured)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -179,12 +170,9 @@
                             </td>
                             
                             <td class="px-6 py-4">
-                                @if($item->pdf_path)
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" 
-                                       class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700">
-                                        <i class="fas fa-file-pdf text-lg"></i>
-                                        <span class="text-xs">View</span>
-                                    </a>
+                                @if($item->img_path)
+                                    <img src="{{ Storage::url($item->img_path) }}" alt="{{ $item->title }}"
+                                         class="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm">
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
@@ -193,7 +181,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex flex-col">
                                     <span class="text-sm text-gray-600">{{ $item->created_at->format('M d, Y') }}</span>
-                                    <span class="text-xs text-gray-400">{{ $item->created_at->format('h:i A') }}</span>
+                                    
                                 </div>
                             </td>
                             
@@ -245,9 +233,10 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 8; // Base columns
-                                    if(auth()->user()->can('updates.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // Add actions column
+                                    // Count columns: checkbox (if delete), title, type, featured, image, created, actions
+                                    $colspan = 6; // title, type, featured, image, created
+                                    if(auth()->user()->can('updates.delete')) $colspan++; // checkbox column
+                                    if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // actions column
                                 @endphp
                                 <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                     <i class="fas fa-bullhorn text-4xl mb-2"></i>

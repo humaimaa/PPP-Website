@@ -7,7 +7,7 @@
 <!-- Page Header -->
 <section class="relative h-[50vh] md:h-[60vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center">
-        <div class="text-center px-4 max-w-4xl">
+        <div class="text-center px-4 pt-26 max-w-4xl">
             <!-- Type Badge -->
             <div class="inline-block mb-4">
                 <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-accent-1 text-text-primary">
@@ -25,19 +25,16 @@
             </p>
         </div>
     </div>
+    
     @if($news->img_path)
+        <!-- Image exists - show image -->
         <img src="{{ asset('storage/' . $news->img_path) }}" alt="{{ $news->title }}" class="w-full h-full object-cover">
     @elseif($news->featured_image)
+        <!-- Featured image exists - show image -->
         <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" class="w-full h-full object-cover">
     @else
-        <div class="w-full h-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center">
-            <div class="text-center">
-                <svg class="w-20 h-20 text-white/50 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                </svg>
-                <span class="text-white text-2xl md:text-4xl font-bold">{{ $news->type ?? 'News' }}</span>
-            </div>
-        </div>
+        <!-- No image - show plain background (solid color, no text/graphics) -->
+        <div class="w-full h-full" style="background: linear-gradient(135deg, #1a3a28 0%, #0d2617 100%);"></div>
     @endif
 </section>
 
@@ -128,7 +125,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m-6 4h6m-6 0H6"></path>
                     </svg>
                     Download PDF Document
-                    <span class="text-xs text-text-muted ml-2">({{ $news->pdf_path ? 'PDF File' : '' }})</span>
+                    <span class="text-xs text-text-muted ml-2">(PDF File)</span>
                 </a>
             </div>
             @endif

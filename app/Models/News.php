@@ -10,7 +10,7 @@ class News extends Model
         'title',
         'content',
         'type',
-        'pdf_path',
+        'img_path',
         'is_featured',
     ];
 

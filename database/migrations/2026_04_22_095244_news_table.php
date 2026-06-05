@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->enum('type', ['Update', 'Announcement', 'Press Release', 'Notice', 'Other'])->default('Update');
-            $table->string('pdf_path')->nullable();
+            $table->string('img_path')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });

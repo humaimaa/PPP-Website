@@ -111,7 +111,7 @@
                             <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Title & Content</th>
                             <th class="px-6 py-3 text-left">Type</th>
-                            <th class="px-6 py-3 text-left">Event Date</th>
+                            
                             <th class="px-6 py-3 text-left">Featured</th>
                             <th class="px-6 py-3 text-left">PDF</th>
                             <th class="px-6 py-3 text-left">Created</th>
@@ -165,18 +165,7 @@
                                 </span>
                             </td>
                             
-                            <td class="px-6 py-4">
-                                @if($item->event_date)
-                                    <div class="text-sm text-gray-900">
-                                        {{ $item->event_date->format('M d, Y') }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">
-                                        Event Date
-                                    </div>
-                                @else
-                                    <span class="text-gray-400 text-sm">—</span>
-                                @endif
-                            </td>
+                          
                             
                             <td class="px-6 py-4">
                                 @if($item->is_featured)

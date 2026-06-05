@@ -356,7 +356,7 @@
                             </svg>
                         </div>
                     @else
-                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
                             <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                         </div>
                     @endif
@@ -369,7 +369,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ $news->title }}</h3>
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
-                    <a href="{{ route('media.room.updates.show', $news->id) }}"
+                    <a href="{{ url('/media-room/updates/' . $news->id) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
                         <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +383,7 @@
 
         @if($latestNews->count() > 0)
         <div class="pt-8 flex justify-center">
-            <a href="{{ route('media.room.updates') }}"
+            <a href="{{ url('/media-room/updates') }}"
                 class="inline-block rounded-lg text-text-primary text-sm uppercase tracking-widest bg-accent-1 py-3 px-8 hover:bg-accent-2 transition-all duration-300 hover:scale-105">
                 More Updates
             </a>

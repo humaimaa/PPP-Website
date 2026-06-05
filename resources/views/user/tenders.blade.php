@@ -177,7 +177,7 @@
                 <h3 class="text-xl font-bold mb-4 text-text-black">Deadlines & Process</h3>
                 <div class="space-y-4">
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-calendar-day"></i>
                         </div>
                         <div>
@@ -186,7 +186,7 @@
                         </div>
                     </div>
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-hourglass-half"></i>
                         </div>
                         <div>
@@ -195,7 +195,7 @@
                         </div>
                     </div>
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-award"></i>
                         </div>
                         <div>

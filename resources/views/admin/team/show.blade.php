@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="p-6">
             {{-- Profile Image --}}
             <div class="flex justify-center mb-8">
@@ -97,7 +97,7 @@
             <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="text-xs text-gray-400">
                     <i class="far fa-clock mr-1"></i>
-                    Last updated: {{ $teamMember->updated_at->format('F d, Y ') }}
+                    Last updated: {{ $teamMember->updated_at->format('F d, Y h:i A') }}
                 </div>
             </div>
         </div>

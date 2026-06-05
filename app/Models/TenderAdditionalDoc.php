@@ -20,8 +20,6 @@ class TenderAdditionalDoc extends Model
     
     protected $casts = [
         'publish_date' => 'date',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
     
     /**
@@ -41,29 +39,5 @@ class TenderAdditionalDoc extends Model
             return \Illuminate\Support\Facades\Storage::url($this->document);
         }
         return null;
-    }
-    
-    /**
-     * Get formatted publish date.
-     */
-    public function getFormattedPublishDateAttribute()
-    {
-        return $this->publish_date->format('d M Y');
-    }
-    
-    /**
-     * Scope for documents by tender
-     */
-    public function scopeForTender($query, $tenderId)
-    {
-        return $query->where('tender_id', $tenderId);
-    }
-    
-    /**
-     * Scope ordered by publish date descending
-     */
-    public function scopeLatest($query)
-    {
-        return $query->orderBy('publish_date', 'desc');
     }
 }

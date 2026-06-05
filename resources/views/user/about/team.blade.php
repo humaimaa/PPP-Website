@@ -78,6 +78,14 @@
                             <span class="break-all">{{ $chief->email }}</span>
                         </div>
                         @endif
+                        @if($chief->phone)
+                        <div class="flex items-center space-x-2 text-[#DAD7CD] mt-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                            </svg>
+                            <span>{{ $chief->phone }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -86,76 +94,75 @@
 </section>
 @endif
 
-<!-- All Other Team Members Grouped by Designation -->
+<!-- Research Officers Section (Order 2 & 3) -->
 @foreach($otherGroups as $designationId => $members)
 @php
     $designation = $members->first()->designation;
-    $designationName = $designation->title ?? 'Other';
+    $designationName = $designation->title ?? 'Team Members';
+    $designationOrder = $designation->order ?? 999;
     $memberCount = $members->count();
+    
+    // Determine section styling based on order
+    if ($designationOrder == 2 || $designationOrder == 3) {
+        $bgClass = 'bg-gray-100';
+        $cardStyle = 'officer';
+    } else {
+        $bgClass = 'bg-white';
+        $cardStyle = 'analyst';
+    }
 @endphp
 
-<section class="py-16 bg-white">
+<section class="py-12 {{ $bgClass }}">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-3">
-                {{ $designationName }}
-            </h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto rounded-full"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto">
-                {{ $designation->description ?? 'Leading with excellence and dedication' }}
-            </p>
+        <div class="text-center mb-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">{{ $designationName }}</h2>
+            <div class="w-20 h-1 bg-[#0A612B] mx-auto mt-4"></div>
+            <p class="text-gray-600 mt-4">{{ $designation->description ?? 'Dedicated professionals supporting PPP initiatives' }}</p>
         </div>
         
-        <!-- Dynamic Grid - Centers cards if only one -->
+        <!-- Dynamic Grid - Centers cards based on count -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 {{ $memberCount == 1 ? 'lg:grid-cols-1 max-w-md mx-auto' : ($memberCount == 2 ? 'lg:grid-cols-2 max-w-3xl mx-auto' : '') }}">
             @foreach($members as $member)
-            <!-- Original Card Design -->
-            <div class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-accent-1/20">
-                <!-- Image Container with subtle overlay -->
-                <div class="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                    <div class="h-72 overflow-hidden">
+                @if($cardStyle == 'officer')
+                <!-- Research Officer Card Style (Like your reference) -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}" 
+                         alt="{{ $member->name }}" 
+                         class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-[#0D2818]">{{ $member->name }}</h3>
+                        <p class="text-[#0A612B] font-semibold mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
+                        @if($member->email)
+                        <div class="mt-3">
+                            <a href="mailto:{{ $member->email }}" class="text-[#0A612B] hover:text-[#0D2818] text-sm break-all inline-flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                                {{ $member->email }}
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @else
+                <!-- Research Analyst Card Style (Like your reference) -->
+                <div class="bg-gray-100 rounded-lg p-6 text-center hover:shadow-md transition duration-300">
+                    <div class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}" 
                              alt="{{ $member->name }}" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                             class="w-full h-full object-cover">
                     </div>
-                    <!-- Subtle gradient overlay on image -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                
-                <!-- Content -->
-                <div class="p-6">
-                    <!-- Name and Designation -->
-                    <div class="mb-4">
-                        <h3 class="text-xl font-bold text-text-black mb-1 group-hover:text-accent-1 transition-colors duration-300">
-                            {{ $member->name }}
-                        </h3>
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-0.5 bg-accent-1/50 rounded-full"></div>
-                            <p class="text-sm font-medium text-accent-1">
-                                {{ $member->designation->title ?? 'Team Member' }}
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience/Description -->
-                    <div class="text-text-muted text-sm leading-relaxed mb-5 line-clamp-3 min-h-[60px]">
-                        {!! nl2br(e($member->experience)) !!}
-                    </div>
-                    
-                    <!-- Email Displayed Directly -->
+                    <h3 class="text-lg font-bold text-[#0D2818]">{{ $member->name }}</h3>
+                    <p class="text-[#0A612B] text-sm font-medium">{{ $member->designation->title ?? 'Team Member' }}</p>
+                    <p class="text-gray-500 text-xs mt-2 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
                     @if($member->email)
-                    <div class="pt-4 border-t border-gray-100">
-                        <a href="mailto:{{ $member->email }}" 
-                           class="flex items-center gap-2 text-gray-500 hover:text-accent-1 transition-all duration-300 group/link break-all">
-                            <svg class="w-4 h-4 transition-transform group-hover/link:-translate-y-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            <span class="text-sm">{{ $member->email }}</span>
-                        </a>
-                    </div>
+                    <a href="mailto:{{ $member->email }}" class="inline-block mt-3 text-[#0A612B] hover:text-[#0D2818] text-xs break-all">
+                        {{ Str::limit($member->email, 25) }}
+                    </a>
                     @endif
                 </div>
-            </div>
+                @endif
             @endforeach
         </div>
     </div>

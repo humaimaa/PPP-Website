@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\Download;
-use App\Models\Tender;  
 use App\Models\CompletedProjectDetail;
 use App\Models\OngoingProjectDetail;
-use App\Models\LeadershipMessage;
-use Illuminate\Http\Request;
+
 
 class PageController extends Controller
 {
@@ -92,39 +89,7 @@ class PageController extends Controller
 
 
 
-    /**
-     * Events page
-     */
-    public function eventsIndex()
-    {
-        return view('user.events.index');
-    }
-
-    /**
-     * Events page
-     */
-    public function updatesIndex()
-    {
-        return view('user.updates.index');
-    }
-
-
-
-    /**
-     * Individual updates detail page
-     */
-    public function updatesShow($id)
-    {
-        return view('user.updates.show', compact('id'));
-    }
-
-    /**
-     * Gallery album page
-     */
-    public function eventGallery($id)
-    {
-        return view('user.events.gallery', compact('id'));
-    }
+  
 
     /**
      * API endpoint for downloading files

@@ -20,99 +20,120 @@
 </section>
 
 @php
-    // Group team members by designation_id and sort by designation order
     $groupedTeam = $team->groupBy(function($member) {
         return $member->designation_id;
     })->sortBy(function($members) {
         return $members->first()->designation->order ?? 999;
     });
 
-    // Find chief/CEO (designation order 1)
-    $chiefMembers = $groupedTeam->filter(function($members) {
-        return $members->first()->designation->order == 1;
-    })->flatten();
+    // Orders 1 & 2 = Leadership (Chief + Assistant Chief)
+    $leadershipGroups = $groupedTeam->filter(function($members) {
+        return in_array($members->first()->designation->order, [1, 2]);
+    });
 
-    // Get other groups (excluding chief)
+    // Orders 3+ = rest of the team
     $otherGroups = $groupedTeam->filter(function($members) {
-        return $members->first()->designation->order != 1;
+        return !in_array($members->first()->designation->order, [1, 2]);
     });
 @endphp
 
-<!-- Departmental Leadership Section (Chief/Director) -->
-@if($chiefMembers->isNotEmpty())
-@php $chief = $chiefMembers->first(); @endphp
-<section class="py-12 bg-gradient-to-br from-[#0D2818] to-[#1a4d2e] text-white">
+<!-- ═══════════════════════════════════════════
+     DEPARTMENTAL LEADERSHIP  (orders 1 & 2)
+     Cards: tall image + info panel below,
+     slightly larger than officer cards,
+     centred on dark-green background
+════════════════════════════════════════════ -->
+@if($leadershipGroups->isNotEmpty())
+<section class="py-16 bg-gradient-to-br from-[#0D2818] to-[#1a4d2e] text-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
             <div class="w-20 h-1 bg-[#DAD7CD] mx-auto"></div>
         </div>
 
-        <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
-            <!-- Chief's Photo -->
-            <div class="lg:w-1/3">
-                <div class="relative rounded-lg overflow-hidden shadow-2xl">
-                    <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
-                         alt="{{ $chief->name }}"
-                         class="w-full h-[400px] object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                        <h3 class="text-2xl font-bold">{{ $chief->name }}</h3>
-                        <p class="text-[#DAD7CD]">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
+        @foreach($leadershipGroups as $designationId => $members)
+        @php
+            $designation   = $members->first()->designation;
+            $memberCount   = $members->count();
+            // Centre 1 or 2 cards nicely
+            $gridExtra = match(true) {
+                $memberCount == 1 => 'lg:grid-cols-1 max-w-sm mx-auto',
+                $memberCount == 2 => 'lg:grid-cols-2 max-w-3xl mx-auto',
+                default           => '',
+            };
+        @endphp
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10 {{ $gridExtra }}">
+            @foreach($members as $member)
+            {{-- ── Leadership Card ── --}}
+            <div class="rounded-xl overflow-hidden shadow-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition duration-300">
+                {{-- Tall photo --}}
+                <div class="relative">
+                    <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/boy.jpg') }}"
+                         alt="{{ $member->name }}"
+                         class="w-full h-72 object-cover">
+                    {{-- Gradient badge at bottom of image --}}
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-5 py-4">
+                        <span class="inline-block bg-[#0A612B] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            {{ $member->designation->title ?? 'Leadership' }}
+                        </span>
                     </div>
                 </div>
-            </div>
-
-            <div class="lg:w-1/2">
-                <div class="space-y-4">
-                    <h3 class="text-2xl font-bold">Message from the Chief</h3>
-                    <p class="text-gray-200 leading-relaxed text-justify">
-                        {!! nl2br(e($chief->message ?? $chief->experience ?? 'As the Chief Executive of PPP Department KPK, I am honored to lead a team dedicated to transforming the province through strategic public-private partnerships. Our commitment to transparency, innovation, and excellence drives every project we undertake.')) !!}
+                {{-- Info panel --}}
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-1">{{ $member->name }}</h3>
+                    <p class="text-[#DAD7CD] text-sm leading-relaxed line-clamp-3">
+                        {!! nl2br(e($member->message ?? $member->experience ?? '')) !!}
                     </p>
-                    <div class="mt-6">
-                        @if($chief->email)
-                        <div class="flex items-center space-x-2 text-[#DAD7CD]">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="mt-4 space-y-2">
+                        @if($member->email)
+                        <a href="mailto:{{ $member->email }}"
+                           class="flex items-center gap-2 text-[#DAD7CD] hover:text-white text-sm break-all transition">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
-                            <span class="break-all">{{ $chief->email }}</span>
-                        </div>
+                            {{ $member->email }}
+                        </a>
                         @endif
-                        @if($chief->phone)
-                        <div class="flex items-center space-x-2 text-[#DAD7CD] mt-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        @if($member->phone)
+                        <div class="flex items-center gap-2 text-[#DAD7CD] text-sm">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                             </svg>
-                            <span>{{ $chief->phone }}</span>
+                            {{ $member->phone }}
                         </div>
                         @endif
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
+        @endforeach
+
     </div>
 </section>
 @endif
 
-<!-- Other Designation Sections -->
+<!-- ═══════════════════════════════════════════
+     OTHER DESIGNATIONS  (orders 3+)
+════════════════════════════════════════════ -->
 @foreach($otherGroups as $designationId => $members)
 @php
-    $designation = $members->first()->designation;
+    $designation     = $members->first()->designation;
     $designationName = $designation->title ?? 'Team Members';
     $designationOrder = $designation->order ?? 999;
-    $memberCount = $members->count();
+    $memberCount     = $members->count();
 
-    // Orders 2 & 3 → Research Officer card style (tall image, white card, shadow)
-    // Orders 4+   → Research Analyst card style (circular avatar, centered, gray card)
-    $isOfficerStyle = ($designationOrder == 2 || $designationOrder == 3);
-    $bgClass = $isOfficerStyle ? 'bg-gray-100' : 'bg-white';
+    // Orders 3 & 4 → Officer card (tall image, white, shadow)
+    // Orders 5+     → Analyst card (circular avatar, centered, gray)
+    $isOfficerStyle = ($designationOrder <= 4);
+    $bgClass        = $isOfficerStyle ? 'bg-gray-100' : 'bg-white';
 
-    // Grid centering helpers
-    $gridExtra = '';
-    if ($memberCount == 1) {
-        $gridExtra = 'lg:grid-cols-1 max-w-md mx-auto';
-    } elseif ($memberCount == 2) {
-        $gridExtra = 'lg:grid-cols-2 max-w-3xl mx-auto';
-    }
+    $gridExtra = match(true) {
+        $memberCount == 1 => 'lg:grid-cols-1 max-w-md mx-auto',
+        $memberCount == 2 => 'lg:grid-cols-2 max-w-3xl mx-auto',
+        default           => '',
+    };
 @endphp
 
 <section class="py-12 {{ $bgClass }}">
@@ -127,7 +148,7 @@
             @foreach($members as $member)
 
                 @if($isOfficerStyle)
-                {{-- ── Research Officer Card (tall image, white card with shadow) ── --}}
+                {{-- ── Research Officer Card ── --}}
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
                     <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                          alt="{{ $member->name }}"
@@ -139,7 +160,7 @@
                         @if($member->email)
                         <div class="mt-3">
                             <a href="mailto:{{ $member->email }}"
-                               class="text-[#0A612B] hover:text-[#0D2818] text-sm break-all inline-flex items-center gap-2">
+                               class="text-[#0A612B] hover:text-[#0D2818] text-sm break-all inline-flex items-center gap-2 transition">
                                 <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                                 </svg>
@@ -151,7 +172,7 @@
                 </div>
 
                 @else
-                {{-- ── Research Analyst Card (circular avatar, centered, gray card) ── --}}
+                {{-- ── Research Analyst Card ── --}}
                 <div class="bg-gray-100 rounded-lg p-6 text-center hover:shadow-md transition duration-300">
                     <div class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
@@ -163,7 +184,7 @@
                     <p class="text-gray-500 text-xs mt-2 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
                     @if($member->email)
                     <a href="mailto:{{ $member->email }}"
-                       class="inline-block mt-3 text-[#0A612B] hover:text-[#0D2818] text-xs break-all">
+                       class="inline-block mt-3 text-[#0A612B] hover:text-[#0D2818] text-xs break-all transition">
                         {{ Str::limit($member->email, 25) }}
                     </a>
                     @endif

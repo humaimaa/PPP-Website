@@ -1,17 +1,14 @@
 <?php
 
-// Change this line
-namespace App\Http\Controllers\User;  // Add 'User' to namespace
+namespace App\Http\Controllers\User;
 
-// Keep these
 use App\Http\Controllers\Controller;
-
 use App\Models\Team;
 use App\Models\LeadershipMessage;
 
 class AboutController extends Controller
 {
-        /**
+    /**
      * About page - main overview
      */
     public function about()
@@ -36,7 +33,7 @@ class AboutController extends Controller
         $messages = LeadershipMessage::all();
         
         // Return view with messages data
-        return view('user.about.message', compact('messages'));
+        return view('user.about.messages', compact('messages'));
     }
 
     /**
@@ -47,18 +44,18 @@ class AboutController extends Controller
         return view('user.about.organogram');
     }
     
-    /**
-     * Team page
-     */
-   public function team()
+   /**
+ * Team page
+ */
+public function team()
 {
     // Load team members with their designations, ordered by designation.order
-    $team = \App\Models\Team::with(['designation' => function($query) {
+    $team = Team::with(['designation' => function($query) {
         $query->orderBy('order', 'asc');
     }])
     ->get()
     ->sortBy(function($member) {
-        return $member->designation->order ?? 999; // Fallback for members without designation
+        return $member->designation->order ?? 999;
     });
     
     return view('user.about.team', compact('team'));

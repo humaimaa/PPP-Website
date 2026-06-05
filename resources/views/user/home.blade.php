@@ -43,7 +43,7 @@
             <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
                 <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Department KPK Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
+                <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
                         <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Department Headquarters</h3>
                         <p class="text-xs text-text-secondary lg:text-sm">Peshawar, Khyber Pakhtunkhwa</p>
@@ -96,7 +96,7 @@
 </section>
 
 <!-- Departmental Leadership Section - Dynamic from Database -->
-<section class="py-12 bg-gradient-to-br from-primary to-primary-light text-text-primary">
+<section class="py-12 bg-linear-to-br from-primary to-primary-light text-text-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
@@ -111,7 +111,7 @@
                     <img src="{{ $leadershipMessage->image ? asset('storage/' . $leadershipMessage->image) : asset('images/boy.jpg') }}" 
                          alt="{{ $leadershipMessage->name }}" 
                          class="w-full h-96 object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $leadershipMessage->name }}</h3>
                         <p class="text-accent-1">{{ $leadershipMessage->designation }}</p>
                     </div>
@@ -164,7 +164,7 @@
                 ];
             @endphp
             @foreach($stats as $stat)
-            <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary/5 border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
+            <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-accent-1 mb-3" data-count="{{ $stat['count'] }}">0</div>
                 <p class="text-text-muted text-sm md:text-base font-medium animate-on-scroll-text">{{ $stat['label'] }}</p>
             </div>
@@ -173,7 +173,7 @@
     </div>
 </section>
 
-<!-- Sectors Section - Dynamic from Database (4 per row) - Same Design as Projects Section -->
+<!-- Sectors Section - Dynamic from Database (4 per row) -->
 <section class="pt-10 w-full bg-background-light" id="sectors-section">
     <div class="w-full px-0">
         <div class="text-center mb-12 overflow-hidden">
@@ -184,7 +184,7 @@
         <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             @foreach($sectors as $sector)
             <div class="sector-card relative h-64 overflow-hidden group w-full">
-                <div class="absolute inset-0 bg-gradient-to-t from-transparent to-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-transparent to-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                 <img src="{{ asset('storage/' . $sector->img) }}" alt="{{ $sector->name }} Sector"
                     class="w-full h-full object-cover transition-all duration-600 group-hover:scale-110 group-hover:opacity-30">
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
@@ -244,7 +244,7 @@
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Map Container -->
             <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" class="overflow-hidden h-96 md:h-[500px]"
+                <div id="kp-choropleth-map" class="overflow-hidden h-96 md:h-125"
                     style="background-color: transparent; cursor: default;"></div>
             </div>
 
@@ -252,13 +252,12 @@
             <div class="w-full lg:w-1/2">
                 <div id="stats-panel"
                     class="bg-background-white shadow-lg rounded-lg p-6 transition-all duration-300 h-full border border-gray-100">
-                    <!-- Default View (No Division Selected) -->
+                    <!-- Default View -->
                     <div id="default-view">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
                             <h3 class="text-xl font-bold text-text-black">Projects Overview</h3>
                             <button id="reset-view"
-                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Show
-                                All</button>
+                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Show All</button>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -282,13 +281,12 @@
                         </div>
                     </div>
 
-                    <!-- Division Detail View (Initially Hidden) -->
+                    <!-- Division Detail View -->
                     <div id="division-view" class="hidden">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
                             <h3 class="text-xl font-bold text-text-black" id="division-title"></h3>
                             <button id="back-to-all"
-                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Back
-                                to All</button>
+                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Back to All</button>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -333,7 +331,7 @@
     </div>
 </section>
 
-<!-- News Section - Dynamic from Database -->
+<!-- News Section - Dynamic from Database using existing route -->
 <section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 overflow-hidden">
@@ -352,7 +350,7 @@
                             </svg>
                         </div>
                     @else
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                             <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                         </div>
                     @endif
@@ -365,7 +363,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ $news->title }}</h3>
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
-                    <a href="{{ route('news.show', $news->id) }}"
+                    <a href="{{ route('media.room.updates.show', $news->id) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
                         <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,54 +400,54 @@
             <div class="logo-scroll-container overflow-hidden">
                 <div class="logo-track flex items-center gap-12 md:gap-16">
                     <!-- First set of logos -->
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Infosys" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Google" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Microsoft" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Starbucks" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="IBM" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Instagram" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Pepsi" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="BMW" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                     
                     <!-- Duplicate set for seamless loop -->
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.png/800px-Infosys_logo.png" alt="Infosys" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Google" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Microsoft_logo.svg/800px-Microsoft_logo.svg.png" alt="Microsoft" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Starbucks" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" alt="IBM" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Instagram" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Pepsi_logo_2014.svg/1200px-Pepsi_logo_2014.svg.png" alt="Pepsi" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
-                    <div class="partner-logo flex-shrink-0">
+                    <div class="partner-logo shrink-0">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1200px-BMW.svg.png" alt="BMW" class="h-12 md:h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100">
                     </div>
                 </div>

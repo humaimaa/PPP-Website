@@ -8,6 +8,7 @@ use App\Http\Controllers\User\ResourceController;
 use App\Http\Controllers\User\AboutController;
 use App\Http\Controllers\User\TenderController;
 use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\MediaroomController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -41,10 +42,10 @@ Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads
 
 // Media Room Routes
 Route::prefix('media-room')->name('media.room.')->group(function () {
-    Route::get('/events', [PageController::class, 'eventsIndex'])->name('events');
-    Route::get('/updates', [PageController::class, 'updatesIndex'])->name('updates');
-    Route::get('/updates/{id}', [PageController::class, 'updatesShow'])->name('updates.show');
-    Route::get('/events/gallery/{id}', [PageController::class, 'eventGallery'])->name('events.gallery');
+    Route::get('/events', [MediaroomController::class, 'eventsIndex'])->name('events');
+    Route::get('/updates', [MediaroomController::class, 'updatesIndex'])->name('updates');
+    Route::get('/updates/{id}', [MediaroomController::class, 'updatesShow'])->name('updates.show');
+    Route::get('/events/gallery/{id}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
 });
 
 // API endpoint for downloading files

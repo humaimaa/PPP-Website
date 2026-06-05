@@ -121,7 +121,7 @@
             <div class="lg:w-1/2">
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
-                    <p class="text-text-secondary leading-relaxed">
+                    <p class="text-text-secondary text-justify leading-relaxed">
                         {{ $leadershipMessage->message }}
                     </p>
                     <div class="mt-6">
@@ -136,7 +136,7 @@
                                 <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                                 </svg>
-                                <span>+92 91 921 1234 Ext: 101</span>
+                                <span>+92 91 921 1234 </span>
                             </div>
                         </div>
                     </div>
@@ -177,7 +177,7 @@
 <section class="pt-10 w-full bg-background-light" id="sectors-section">
     <div class="w-full px-0">
         <div class="text-center mb-12 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-primary animate-on-scroll-title">Our Project Sectors</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-green animate-on-scroll-title">Our Project Sectors</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
@@ -195,7 +195,7 @@
                 
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
                     <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">{{ $sector->name }}</h3>
-                    <p class="text-text-secondary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">{{ $sector->tagline }}</p>
+                    <p class="text-text-secondary text-sm  mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">{{ $sector->tagline }}</p>
                 </div>
             </div>
             @endforeach

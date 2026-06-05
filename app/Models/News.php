@@ -10,15 +10,14 @@ class News extends Model
         'title',
         'content',
         'type',
-        'event_date',
         'pdf_path',
         'is_featured',
     ];
 
-    protected $casts = [
-        'event_date'  => 'date',
-        'is_featured' => 'boolean',
-    ];
+    // protected $casts = [
+    //     'event_date'  => 'date',
+    //     'is_featured' => 'boolean',
+    // ];
 
     // Scopes
     public function scopeFeatured($query)

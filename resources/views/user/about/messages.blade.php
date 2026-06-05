@@ -114,24 +114,7 @@
             <p class="text-text-muted">Leadership messages will be displayed here soon.</p>
         </div>
         @endforelse
-        
-        <!-- Optional: Display note if Chief PPP message exists (without using model in view) -->
-        @php
-            $hasChiefPpp = $messages->contains('designation', 'Chief PPP');
-        @endphp
-        
-        @if($hasChiefPpp)
-        <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-            <div class="flex items-center">
-                <svg class="w-6 h-6 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <p class="text-sm text-yellow-700">
-                    <strong>Note:</strong> The message from Chief PPP has been excluded from this view as requested.
-                </p>
-            </div>
-        </div>
-        @endif
+
     </div>
 </section>
 

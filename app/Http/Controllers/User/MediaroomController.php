@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class MediaroomController extends Controller
 {
@@ -18,11 +19,13 @@ class MediaroomController extends Controller
     }
 
     /**
-     * Updates page
+     * Updates page with pagination
      */
-    public function updatesIndex()
+    public function updatesIndex(Request $request)
     {
-        $updates = News::orderBy('created_at', 'desc')->paginate(9);
+        $perPage = 6; // Number of items per page
+        $updates = News::orderBy('created_at', 'desc')->paginate($perPage);
+        
         return view('user.updates.index', compact('updates'));
     }
 
@@ -32,7 +35,17 @@ class MediaroomController extends Controller
     public function updatesShow($id)
     {
         $news = News::findOrFail($id);
-        return view('user.updates.show', compact('news'));
+        
+        // Get previous and next news for navigation
+        $previousNews = News::where('created_at', '<', $news->created_at)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        $nextNews = News::where('created_at', '>', $news->created_at)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        
+        return view('user.updates.show', compact('news', 'previousNews', 'nextNews'));
     }
 
     /**

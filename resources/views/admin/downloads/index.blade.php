@@ -145,7 +145,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-gray-500 text-xs">
                                     <i class="far fa-clock mr-1"></i>
-                                    {{ $download->created_at->format('M d, Y h:i A') }}
+                                    {{ $download->created_at->format('M d, Y ') }}
                                 </div>
                              </td>
                             <td class="px-6 py-4 whitespace-nowrap">

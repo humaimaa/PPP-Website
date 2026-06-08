@@ -14,7 +14,7 @@ class ProjectController extends Controller
     /**
      * Projects page with optional status parameter
      */
-    public function projectsIndex($status = 'pipeline')
+    public function index($status = 'pipeline')  // Changed from projectsIndex to index
     {
         $validStatuses = ['pipeline', 'ongoing', 'operational', 'complete', 'all'];
 
@@ -55,7 +55,7 @@ class ProjectController extends Controller
     /**
      * Project show page
      */
-    public function projectShow($id)
+    public function show($id)  // Changed from projectShow to show
     {
         // Fetch the project with its details based on category
         $project = Project::findOrFail($id);

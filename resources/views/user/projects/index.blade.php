@@ -110,7 +110,7 @@
 
                     <!-- Cost -->
                     <div class="text-sm font-semibold text-accent-1 mb-3">
-                        PKR {{ number_format($project->cost / 100000000, 2) }} Billion
+                        PKR {{$project->cost  }} 
                     </div>
 
                     <!-- Overview/Description (3 lines with ellipsis) -->

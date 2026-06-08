@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="mt-4 md:mt-0 text-right">
-                            <p class="text-2xl font-bold text-accent-1">PKR {{ number_format($project->cost / 100000000, 2) }} Billion</p>
+                            <p class="text-2xl font-bold text-accent-1">PKR {{ $project->cost  }} </p>
                             <p class="text-sm text-text-muted">Total Investment</p>
                         </div>
                     </div>

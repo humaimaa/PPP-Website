@@ -76,7 +76,7 @@ class ProjectController extends Controller
     }
 public function store(Request $request)
 {
-    try {
+   try {
         // Validate basic project data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -92,6 +92,20 @@ public function store(Request $request)
         ]);
 
         // Rest of your code remains the same...
+    }catch (\Illuminate\Validation\ValidationException $e) {
+        throw $e;
+    } catch (\Exception $e) {
+        DB::rollback();
+        if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        
+        \Log::error('Project creation failed: ' . $e->getMessage());
+        \Log::error($e->getTraceAsString());
+        
+        return redirect()->back()
+            ->with('error', 'Error creating project: ' . $e->getMessage())
+            ->withInput();
     }
 }
 

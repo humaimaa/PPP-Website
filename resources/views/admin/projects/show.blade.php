@@ -65,11 +65,11 @@
                             </p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 uppercase tracking-wider">Project Cost</p>
-                            <p class="text-sm font-semibold text-gray-900">
-                                Rs. {{ number_format($project->cost, 2) }}
-                            </p>
-                        </div>
+    <p class="text-xs text-gray-500 uppercase tracking-wider">Project Cost</p>
+    <p class="text-sm font-semibold text-gray-900">
+        {{ $project->cost }}
+    </p>
+</div>
                         <div>
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Category</p>
                             <p>

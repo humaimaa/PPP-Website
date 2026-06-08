@@ -175,10 +175,10 @@
                             </td>
                             
                             <td class="px-6 py-4">
-                                <div class="text-sm font-semibold text-gray-900">
-                                    Rs. {{ number_format($project->cost, 2) }}
-                                </div>
-                            </td>
+    <div class="text-sm font-semibold text-gray-900">
+        {{ $project->cost }}
+    </div>
+</td>
                             
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

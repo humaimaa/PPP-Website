@@ -95,11 +95,11 @@
     </div>
 </section>
 
-<!-- Departmental Leadership Section - Dynamic from Database -->
+<!-- Departmental Leadership Section - Dynamic from Database (Chief Minister) -->
 <section class="py-12 bg-linear-to-br from-primary to-primary-light text-text-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Message from Leadership</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
         
@@ -124,54 +124,12 @@
                     <p class="text-text-secondary text-justify leading-relaxed">
                         {{ $leadershipMessage->message }}
                     </p>
-                    <div class="mt-6">
-                        <div class="flex flex-col space-y-2 text-text-secondary">
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                                <span>ceo@ppp.kp.gov.pk</span>
-                            </div>
-                            <div class="flex items-center space-x-2 mt-2">
-                                <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-                                </svg>
-                                <span>+92 91 921 1234 </span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
         @endif
     </div>
 </section>
-
-{{-- <!-- Stats Section -->
-<section class="w-full py-10 px-12 md:px-12 bg-background-white" id="stats-section">
-    <div class="container mx-auto max-w-6xl">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4 animate-on-scroll-title">Our Impact in Numbers</h2>
-            <div class="w-24 h-1 bg-accent-1 mx-auto rounded"></div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            @php
-                $stats = [
-                    ['count' => 50, 'label' => 'Projects Completed'],
-                    ['count' => 25, 'label' => 'Active Projects'],
-                    ['count' => 100, 'label' => 'Trusted Partners'],
-                    ['count' => 500, 'label' => 'Jobs Created']
-                ];
-            @endphp
-            @foreach($stats as $stat)
-            <div class="text-center p-5 md:p-8 rounded-xl bg-background-primary border border-background-primary/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:border-accent-1/50 hover:shadow-lg">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-accent-1 mb-3" data-count="{{ $stat['count'] }}">0</div>
-                <p class="text-text-muted text-sm md:text-base font-medium animate-on-scroll-text">{{ $stat['label'] }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section> --}}
 
 <!-- Sectors Section - Dynamic from Database (4 per row) -->
 <section class="pt-10 w-full bg-background-light" id="sectors-section">
@@ -202,22 +160,6 @@
         </div>
     </div>
 </section>
-{{-- 
-<!-- Pitchbook Section -->
-<section class="py-10 bg-background-white w-full">
-    <div class="w-full px-0">
-        <div class="text-center mb-4 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">Our Pitchbook</h2>
-            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
-        </div>
-        <div class="flex justify-center items-center w-full">
-            <a href="{{ url('/pitchbook') }}" class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <img src="{{ asset('images/Pitchbook-Cover.png') }}" alt="Pitchbook Icon" 
-                    class="w-60 h-40 md:w-90 md:h-50 drop-shadow-lg hover:drop-shadow-xl">
-            </a>
-        </div>
-    </div>
-</section> --}}
 
 <!-- Vision Message Section -->
 <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
@@ -237,105 +179,6 @@
         </div>
     </div>
 </section>
-
-<!-- Map Section -->
-{{-- <section class="bg-background-white" id="map-section">
-    <div class="container-fluid px-4 sm:px-6 lg:px-8 bg-background-gray/10 py-10">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-primary animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
-            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto animate-on-scroll-text">Click on any division to view its projects and details</p>
-        </div>
-
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Map Container -->
-            <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" class="overflow-hidden h-96 md:h-125"
-                    style="background-color: transparent; cursor: default;"></div>
-            </div>
-
-            <!-- Projects Stats Panel -->
-            <div class="w-full lg:w-1/2">
-                <div id="stats-panel"
-                    class="bg-background-white shadow-lg rounded-lg p-6 transition-all duration-300 h-full border border-gray-100">
-                    <!-- Default View -->
-                    <div id="default-view">
-                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
-                            <h3 class="text-xl font-bold text-text-black">Projects Overview</h3>
-                            <button id="reset-view"
-                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Show All</button>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="total-projects">0</div>
-                                <div class="text-sm text-text-muted mt-1">Total Projects</div>
-                            </div>
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="total-investment">0</div>
-                                <div class="text-sm text-text-muted mt-1">Total Investment (PKR Cr)</div>
-                            </div>
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="total-divisions">7</div>
-                                <div class="text-sm text-text-muted mt-1">Divisions</div>
-                            </div>
-                        </div>
-
-                        <h4 class="font-semibold mb-3 text-lg text-text-black">All Divisions</h4>
-                        <div id="divisions-grid"
-                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
-                        </div>
-                    </div>
-
-                    <!-- Division Detail View -->
-                    <div id="division-view" class="hidden">
-                        <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
-                            <h3 class="text-xl font-bold text-text-black" id="division-title"></h3>
-                            <button id="back-to-all"
-                                class="text-xs bg-gray-100 hover:bg-gray-200 text-text-black px-3 py-1 rounded transition">Back to All</button>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="division-total-projects">0</div>
-                                <div class="text-sm text-text-muted mt-1">Total Projects</div>
-                            </div>
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="division-total-investment">0</div>
-                                <div class="text-sm text-text-muted mt-1">Total Investment (PKR Cr)</div>
-                            </div>
-                            <div class="text-center bg-gray-50 rounded-lg p-3 shadow-sm">
-                                <div class="text-3xl font-bold text-primary" id="division-avg-cost">0</div>
-                                <div class="text-sm text-text-muted mt-1">Avg Project Cost (Cr)</div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-4">
-                            <div class="bg-green-50 rounded p-2">
-                                <div class="font-bold text-primary text-lg" id="division-active">0</div>
-                                <div class="text-xs text-text-muted">Active</div>
-                            </div>
-                            <div class="bg-blue-50 rounded p-2">
-                                <div class="font-bold text-primary text-lg" id="division-completed">0</div>
-                                <div class="text-xs text-text-muted">Completed</div>
-                            </div>
-                            <div class="bg-orange-50 rounded p-2">
-                                <div class="font-bold text-primary text-lg" id="division-planned">0</div>
-                                <div class="text-xs text-text-muted">Planned</div>
-                            </div>
-                        </div>
-
-                        <h4 class="font-semibold mb-2 text-sm text-text-black">Projects by Sector</h4>
-                        <div id="sector-chart" class="mb-4" style="height: 200px;"></div>
-
-                        <h4 class="font-semibold mb-2 text-sm text-text-black">Project Details</h4>
-                        <div id="division-projects-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> --}}
 
 <!-- News Section - Dynamic from Database using existing route (with images) -->
 <section class="py-10 bg-background-white" id="news-section">
@@ -362,7 +205,7 @@
                         </div>
                     @else
                         <!-- Final fallback: gradient with type text -->
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                             <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                         </div>
                     @endif

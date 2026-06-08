@@ -24,21 +24,16 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         @php
-            // Define hierarchy order (excluding Chief PPP)
+            // Define hierarchy order (excluding Chief Minister since it's filtered out)
             $hierarchyOrder = [
-                'Chief Minister',
                 'Chief Secretary',
+                'Chief Secretary Development',
                 'Secretary P&D',
-                'Assistant Chief PPP'
+                'Chief PPP'
             ];
             
-            // Filter out Chief PPP messages from the already passed $messages collection
-            $filteredMessages = $messages->filter(function($message) {
-                return $message->designation !== 'Chief PPP';
-            });
-            
             // Sort messages by hierarchy
-            $sortedMessages = $filteredMessages->sortBy(function($message) use ($hierarchyOrder) {
+            $sortedMessages = $messages->sortBy(function($message) use ($hierarchyOrder) {
                 $position = array_search($message->designation, $hierarchyOrder);
                 return $position === false ? 999 : $position;
             });
@@ -74,10 +69,10 @@
                         <!-- Designation Badge -->
                         <div class="inline-block mb-4">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold 
-                                @if($message->designation == 'Chief Minister') bg-accent-1 text-text-primary
-                                @elseif($message->designation == 'Chief Secretary') bg-primary text-text-primary
-                                @elseif($message->designation == 'Secretary P&D') bg-primary-light text-text-primary
-                                @elseif($message->designation == 'Assistant Chief PPP') bg-green-700 text-text-primary
+                                @if($message->designation == 'Chief Secretary') bg-primary text-text-primary
+                                @elseif($message->designation == 'Chief Secretary Development') bg-primary-light text-text-primary
+                                @elseif($message->designation == 'Secretary P&D') bg-green-700 text-text-primary
+                                @elseif($message->designation == 'Chief PPP') bg-accent-1 text-text-primary
                                 @else bg-background-primary/80 text-text-primary
                                 @endif">
                                 {{ $message->designation }}

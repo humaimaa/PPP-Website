@@ -16,8 +16,15 @@ class HomeController extends Controller
         // Get all sectors for display (4 per row)
         $sectors = Sector::all();
         
-        // Get leadership messages (show the Chief PPP first if exists, otherwise first record)
-        $leadershipMessage = LeadershipMessage::where('designation', 'Chief PPP')->first();
+        // Get leadership messages - prioritize Chief Minister
+        $leadershipMessage = LeadershipMessage::where('designation', 'Chief Minister')->first();
+        
+        // If no Chief Minister message, try Chief Secretary
+        if (!$leadershipMessage) {
+            $leadershipMessage = LeadershipMessage::where('designation', 'Chief Secretary')->first();
+        }
+        
+        // If still no message, get the first available
         if (!$leadershipMessage) {
             $leadershipMessage = LeadershipMessage::first();
         }

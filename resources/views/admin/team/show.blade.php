@@ -82,22 +82,21 @@
                 </div>
             </div>
 
-            {{-- Experience --}}
+            {{-- Contact Number --}}
             <div>
-                <label class="block text-sm font-medium text-gray-500 mb-2">Experience / Bio</label>
+                <label class="block text-sm font-medium text-gray-500 mb-2">Contact Number</label>
                 <div class="bg-gray-50 rounded-lg p-4 text-gray-700 leading-relaxed">
-                    <i class="fas fa-quote-left text-gray-400 mr-2"></i>
-                    <div class="whitespace-pre-line mt-2">
-                        {{ $teamMember->experience }}
+                    <i class="fas fa-phone text-gray-400 mr-2"></i>
+                    <div class="">
+                        {{ $teamMember->contact_number }}
                     </div>
-                </div>
-            </div>
+                </div>            </div>
 
             {{-- Last Updated --}}
             <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="text-xs text-gray-400">
                     <i class="far fa-clock mr-1"></i>
-                    Last updated: {{ $teamMember->updated_at->format('F d, Y h:i A') }}
+                    Last updated: {{ $teamMember->updated_at->format('F d, Y ') }}
                 </div>
             </div>
         </div>

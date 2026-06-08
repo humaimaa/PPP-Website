@@ -43,28 +43,9 @@
                             </span>
                         @endif
                     </div>
-                    <p class="text-sm text-gray-500 mt-1">
-                        <i class="fas fa-calendar-alt mr-1"></i>
-                        Created: {{ $news->created_at->format('F d, Y') }} at {{ $news->created_at->format('h:i A') }}
-                    </p>
+                    
                 </div>
-                <div class="flex gap-2">
-                    @can('updates.edit')
-                        <a href="{{ route('admin.updates.edit', $news) }}" 
-                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-edit"></i>
-                            Edit Update
-                        </a>
-                    @endcan
-                    @can('updates.delete')
-                        <button type="button"
-                                onclick="confirmDelete({{ $news->id }}, '{{ addslashes($news->title) }}')" 
-                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-trash"></i>
-                            Delete Update
-                        </button>
-                    @endcan
-                </div>
+                
             </div>
         </div>
 
@@ -158,7 +139,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->created_at->format('F d, Y') }}</p>
-                            <p class="text-xs text-gray-500">{{ $news->created_at->format('h:i A') }}</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -170,7 +151,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->updated_at->format('F d, Y') }}</p>
-                            <p class="text-xs text-gray-500">{{ $news->updated_at->format('h:i A') }}</p>
+                            
                             @if($news->created_at != $news->updated_at)
                                 <p class="text-xs text-gray-400 mt-1">(Updated {{ $news->updated_at->diffForHumans() }})</p>
                             @endif

@@ -97,7 +97,7 @@
                             <th class="px-6 py-3 text-left">Name</th>
                             <th class="px-6 py-3 text-left">Designation</th>
                             <th class="px-6 py-3 text-left">Email</th>
-                            <th class="px-6 py-3 text-left">Experience</th>
+                            <th class="px-6 py-3 text-left">Contact Number</th>
                             <th class="px-6 py-3 text-left">Created</th>
                             
                             {{-- Actions column - Only show if user has any action permissions --}}

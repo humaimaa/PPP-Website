@@ -31,12 +31,8 @@
                           method="POST" 
                           onsubmit="return confirm('Are you sure you want to delete this team member? This action cannot be undone.');">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-trash-alt"></i>
-                            Delete
-                        </button>
+                        
+                        
                     </form>
                 </div>
             </div>
@@ -216,30 +212,29 @@
                 </div>
             </div>
 
-            {{-- Experience Section --}}
+            {{-- Contact Information Section --}}
             <div class="mb-6 pb-4 border-b border-gray-200">
                 <h4 class="text-md font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-chart-line mr-2 text-emerald-600"></i>
-                    Experience & Qualifications
+                    <i class="fas fa-phone mr-2 text-emerald-600"></i>
+                    Contact Information
                 </h4>
                 <div>
-                    <label for="experience" class="block text-sm font-medium text-gray-700 mb-2">
-                        Experience / Bio <span class="text-red-500">*</span>
+                    <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Number <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-3 text-gray-400">
-                            <i class="fas fa-history"></i>
+                            <i class="fas fa-phone"></i>
                         </span>
-                        <textarea 
-                            id="experience" 
-                            name="experience" 
-                            rows="6" 
+                        <input type="text" 
+                            id="contact_number" 
+                            name="contact_number" 
                             required
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('experience') border-red-500 @enderror"
-                            placeholder="Enter professional experience, qualifications, and background...">{{ old('experience', $teamMember->experience) }}</textarea>
+                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('contact_number') border-red-500 @enderror"
+                            placeholder="Enter contact number...">{{ old('contact_number', $teamMember->contact_number) }}
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">Include professional background, years of experience, key achievements, and qualifications</p>
-                    @error('experience')
+                    <p class="mt-1 text-xs text-gray-500">Enter the team member's contact number</p>
+                    @error('contact_number')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -277,7 +272,7 @@
                         <h4 class="text-sm font-medium text-blue-900">About Team Members</h4>
                         <p class="text-xs text-blue-700 mt-1">
                             Team members will be displayed on the frontend team page with their photo, name, designation, 
-                            email, and experience. This helps showcase the department's expertise and leadership.
+                            email, and contact number. This helps showcase the department's expertise and leadership.
                             <br><br>
                             <strong>Note:</strong> If you upload a new profile photo, the old one will be automatically deleted.
                         </p>

@@ -173,18 +173,13 @@
                                 <div class="text-sm text-gray-900">
                                     {{ $tender->opening_date ? $tender->opening_date->format('M d, Y') : 'N/A' }}
                                 </div>
-                                <div class="text-xs text-gray-500">
-                                    {{ $tender->opening_date ? $tender->opening_date->format('h:i A') : '' }}
-                                </div>
                             </td>
                             
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
                                     {{ $tender->closing_date ? $tender->closing_date->format('M d, Y') : 'N/A' }}
                                 </div>
-                                <div class="text-xs text-gray-500">
-                                    {{ $tender->closing_date ? $tender->closing_date->format('h:i A') : '' }}
-                                </div>
+                                
                                 @if($tender->closing_date && $tender->closing_date->isFuture())
                                     <div class="text-xs text-emerald-600 mt-1">
                                         <i class="fas fa-hourglass-half"></i>

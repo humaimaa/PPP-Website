@@ -196,11 +196,11 @@
                 <div class="flex gap-6 text-xs text-gray-500">
                     <div>
                         <i class="far fa-calendar-alt mr-1"></i>
-                        Created: {{ $project->created_at->format('F d, Y h:i A') }}
+                        Created: {{ $project->created_at->format('F d, Y ') }}
                     </div>
                     <div>
                         <i class="far fa-clock mr-1"></i>
-                        Last Updated: {{ $project->updated_at->format('F d, Y h:i A') }}
+                        Last Updated: {{ $project->updated_at->format('F d, Y ') }}
                     </div>
                 </div>
             </div>

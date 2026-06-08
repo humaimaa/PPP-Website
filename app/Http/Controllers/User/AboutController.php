@@ -29,8 +29,17 @@ class AboutController extends Controller
      */
     public function message()
     {
-        // Fetch all leadership messages EXCEPT Chief Minister
+        // Define the order based on enum values (excluding Chief Minister)
+        $order = [
+            'Chief Secretary',
+            'Additional Chief Secretary Development',
+            'Secretary P&D',
+            'Chief PPP'
+        ];
+        
+        // Fetch all leadership messages EXCEPT Chief Minister and order by the custom order
         $messages = LeadershipMessage::where('designation', '!=', 'Chief Minister')
+            ->orderByRaw("FIELD(designation, '" . implode("','", $order) . "')")
             ->get();
         
         // Return view with messages data

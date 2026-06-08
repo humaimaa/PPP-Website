@@ -24,16 +24,21 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         @php
-            // Define hierarchy order (excluding Chief Minister since it's filtered out)
+            // Define hierarchy order based on enum values (excluding Chief Minister)
             $hierarchyOrder = [
                 'Chief Secretary',
-                'Chief Secretary Development',
+                'Additional Chief Secretary Development',
                 'Secretary P&D',
                 'Chief PPP'
             ];
             
+            // Filter out Chief Minister and sort messages by hierarchy
+            $filteredMessages = $messages->filter(function($message) {
+                return $message->designation !== 'Chief Minister';
+            });
+            
             // Sort messages by hierarchy
-            $sortedMessages = $messages->sortBy(function($message) use ($hierarchyOrder) {
+            $sortedMessages = $filteredMessages->sortBy(function($message) use ($hierarchyOrder) {
                 $position = array_search($message->designation, $hierarchyOrder);
                 return $position === false ? 999 : $position;
             });
@@ -70,7 +75,7 @@
                         <div class="inline-block mb-4">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold 
                                 @if($message->designation == 'Chief Secretary') bg-primary text-text-primary
-                                @elseif($message->designation == 'Chief Secretary Development') bg-primary-light text-text-primary
+                                @elseif($message->designation == 'Additional Chief Secretary Development') bg-primary-light text-text-primary
                                 @elseif($message->designation == 'Secretary P&D') bg-green-700 text-text-primary
                                 @elseif($message->designation == 'Chief PPP') bg-accent-1 text-text-primary
                                 @else bg-background-primary/80 text-text-primary

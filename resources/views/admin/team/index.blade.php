@@ -23,7 +23,7 @@
             
             {{-- Add Team Member Button --}}
             @can('team.create')
-                <a href="{{ route('admin.team.create') }}"
+                <a href="{{ route('admin.team.add') }}"
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                     <i class="fas fa-plus"></i>
                     Add Team Member

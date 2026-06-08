@@ -31,11 +31,7 @@
                           method="POST" 
                           onsubmit="return confirm('Are you sure you want to delete this team member? This action cannot be undone.');">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </button>
+                       
                     </form>
                 </div>
             </div>

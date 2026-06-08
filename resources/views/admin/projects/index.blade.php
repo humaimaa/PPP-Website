@@ -13,36 +13,37 @@
         <div class="flex gap-3">
             {{-- Bulk Delete Button - Only show if user has delete permission --}}
             @can('projects.delete')
-                <button type="button" id="bulkDeleteBtn" 
-                        class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        style="display: none;">
-                    <i class="fas fa-trash-alt"></i>
-                    Delete Selected (<span id="selectedCount">0</span>)
-                </button>
+            <button type="button" id="bulkDeleteBtn"
+                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                style="display: none;">
+                <i class="fas fa-trash-alt"></i>
+                Delete Selected (<span id="selectedCount">0</span>)
+            </button>
             @endcan
-            
+
             @can('projects.create')
-                <a href="{{ route('admin.projects.add') }}"
-                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                    <i class="fas fa-plus"></i>
-                    Add Project
-                </a>
+            <a href="{{ route('admin.projects.add') }}"
+                class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                <i class="fas fa-plus"></i>
+                Add Project
+            </a>
             @endcan
         </div>
     </div>
 
     @if(session('success'))
-        <div class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
-            <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
-        </div>
+    <div
+        class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
+        <i class="fas fa-check-circle"></i>
+        {{ session('success') }}
+    </div>
     @endif
 
     @if(session('error'))
-        <div class="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ session('error') }}
-        </div>
+    <div class="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ session('error') }}
+    </div>
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -59,18 +60,18 @@
                 </div>
                 <div class="flex gap-2">
                     <form method="GET" action="{{ route('admin.projects.index') }}" class="flex gap-2">
-                        <input type="text" 
-                               name="search" 
-                               value="{{ request('search') }}"
-                               placeholder="Search projects by name..." 
-                               class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
-                        <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="Search projects by name..."
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
+                        <button type="submit"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search"></i>
                         </button>
                         @if(request('search'))
-                            <a href="{{ route('admin.projects.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-times"></i>
-                            </a>
+                        <a href="{{ route('admin.projects.index') }}"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-times"></i>
+                        </a>
                         @endif
                     </form>
                 </div>
@@ -85,11 +86,10 @@
                         <tr>
                             {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('projects.delete')
-                                <th class="px-6 py-3 text-left w-10">
-                                    <input type="checkbox" 
-                                           id="selectAllCheckbox" 
-                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                </th>
+                            <th class="px-6 py-3 text-left w-10">
+                                <input type="checkbox" id="selectAllCheckbox"
+                                    class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </th>
                             @endcan
                             <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Image</th>
@@ -99,10 +99,11 @@
                             <th class="px-6 py-3 text-left">Cost (PKR)</th>
                             <th class="px-6 py-3 text-left">Category</th>
                             <th class="px-6 py-3 text-left">Status</th>
-                            
+
                             {{-- Actions column - Only show if user has any action permissions --}}
-                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete'))
-                                <th class="px-6 py-3 text-right">Actions</th>
+                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                            auth()->user()->can('projects.delete'))
+                            <th class="px-6 py-3 text-right">Actions</th>
                             @endif
                         </tr>
                     </thead>
@@ -111,75 +112,74 @@
                         <tr class="hover:bg-gray-50 transition" data-project-id="{{ $project->id }}">
                             {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('projects.delete')
-                                <td class="px-6 py-4">
-                                    <input type="checkbox" 
-                                           name="project_ids[]" 
-                                           value="{{ $project->id }}"
-                                           class="project-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                </td>
+                            <td class="px-6 py-4">
+                                <input type="checkbox" name="project_ids[]" value="{{ $project->id }}"
+                                    class="project-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </td>
                             @endcan
-                            
+
                             <td class="px-6 py-4 font-mono text-xs text-gray-500">
                                 #{{ $project->id }}
                             </td>
-                            
+
                             <td class="px-6 py-4">
                                 @if($project->image && Storage::disk('public')->exists($project->image))
-                                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-                                        <img src="{{ Storage::url($project->image) }}" 
-                                             alt="{{ $project->name }}"
-                                             class="w-full h-full object-cover">
-                                    </div>
+                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                                    <img src="{{ Storage::url($project->image) }}" alt="{{ $project->name }}"
+                                        class="w-full h-full object-cover">
+                                </div>
                                 @else
-                                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                                        <i class="fas fa-image text-gray-400"></i>
-                                    </div>
+                                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-400"></i>
+                                </div>
                                 @endif
                             </td>
-                            
+
                             <td class="px-6 py-4">
                                 <div>
                                     <span class="font-medium text-gray-900">{{ $project->name }}</span>
                                     <div class="text-xs text-gray-500 mt-1">
                                         <i class="fas fa-building mr-1"></i>
-                                        {{ $project->implementing_authority ? Str::limit($project->implementing_authority, 30) : 'N/A' }}
+                                        {{ $project->implementing_authority ?
+                                        Str::limit($project->implementing_authority, 30) : 'N/A' }}
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <td class="px-6 py-4">
                                 <div>
                                     @if($project->location)
-                                        <div class="text-sm text-gray-900">
-                                            <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
-                                            {{ Str::limit($project->location, 30) }}
-                                        </div>
+                                    <div class="text-sm text-gray-900">
+                                        <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
+                                        {{ Str::limit($project->location, 30) }}
+                                    </div>
                                     @endif
                                     @if($project->division)
-                                        <div class="text-xs text-gray-500 mt-1">
-                                            <i class="fas fa-building text-gray-400 mr-1"></i>
-                                            Division: {{ $project->division }}
-                                        </div>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <i class="fas fa-building text-gray-400 mr-1"></i>
+                                        Division: {{ $project->division }}
+                                    </div>
                                     @endif
                                     @if(!$project->location && !$project->division)
-                                        <span class="text-gray-400 text-sm">—</span>
+                                    <span class="text-gray-400 text-sm">—</span>
                                     @endif
                                 </div>
                             </td>
-                            
+
                             <td class="px-6 py-4">
-                                <span class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                <span
+                                    class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
                                     <i class="fas fa-chart-line mr-1 text-xs"></i>
                                     {{ $project->sector }}
                                 </span>
                             </td>
-                            
+
                             <td class="px-6 py-4">
-    <div class="text-sm font-semibold text-gray-900">
-        {{ $project->cost }}
-    </div>
-</td>
-                            
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $project->cost }}
+                                </div>
+                            </td>
+
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                     @if($project->category == 'Pipeline') bg-blue-100 text-blue-800
@@ -190,72 +190,77 @@
                                     {{ $project->category }}
                                 </span>
                             </td>
-                            
+
                             <td class="px-6 py-4">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800">
-                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
-                                    {{ $project->status ?? 'N/A' }}
-                                </span>
-                            </td>
-                            
+    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-emerald-800" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word; max-width: 200px;">
+        <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+        {{ $project->status ?? 'N/A' }}
+    </span>
+</td>
+
                             {{-- Actions column --}}
-                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete'))
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center justify-end gap-2">
-                                        {{-- View Button --}}
-                                        @can('projects.view')
-                                            <a href="{{ route('admin.projects.show', $project) }}" 
-                                               class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                               title="View Project Details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        @endcan
-                                        
-                                        {{-- Edit Button --}}
-                                        @can('projects.edit')
-                                            <a href="{{ route('admin.projects.edit', $project) }}" 
-                                               class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                               title="Edit Project">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        @endcan
-                                        
-                                        {{-- Delete Button --}}
-                                        @can('projects.delete')
-                                            <button type="button"
-                                                    onclick="confirmDelete({{ $project->id }}, '{{ addslashes($project->name) }}')" 
-                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                                    title="Delete Project">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        @endcan
-                                    </div>
-                                </td>
+                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                            auth()->user()->can('projects.delete'))
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center justify-end gap-2">
+                                    {{-- View Button --}}
+                                    @can('projects.view')
+                                    <a href="{{ route('admin.projects.show', $project) }}"
+                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                        title="View Project Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @endcan
+
+                                    {{-- Edit Button --}}
+                                    @can('projects.edit')
+                                    <a href="{{ route('admin.projects.edit', $project) }}"
+                                        class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                        title="Edit Project">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @endcan
+
+                                    {{-- Delete Button --}}
+                                    @can('projects.delete')
+                                    <button type="button"
+                                        onclick="confirmDelete({{ $project->id }}, '{{ addslashes($project->name) }}')"
+                                        class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                        title="Delete Project">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
                             @endif
                         </tr>
                         @empty
-                            <tr>
-                                @php
-                                    $colspan = 9; // Base columns (ID, Image, Project Name, Location/Division, Sector, Cost, Category, Status)
-                                    if(auth()->user()->can('projects.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete')) $colspan++; // Add actions column
-                                @endphp
-                                <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
-                                    <i class="fas fa-project-diagram text-4xl mb-2"></i>
-                                    <p class="text-lg mb-1">No projects found</p>
-                                    @if(request('search'))
-                                        <a href="{{ route('admin.projects.index') }}" class="text-emerald-600 hover:underline text-sm">
-                                            Clear search
-                                        </a>
-                                    @else
-                                        @can('projects.create')
-                                            <a href="{{ route('admin.projects.add') }}" class="text-emerald-600 hover:underline text-sm">
-                                                Create your first project →
-                                            </a>
-                                        @endcan
-                                    @endif
-                                </td>
-                            </tr>
+                        <tr>
+                            @php
+                            $colspan = 9; // Base columns (ID, Image, Project Name, Location/Division, Sector, Cost,
+                            Category, Status)
+                            if(auth()->user()->can('projects.delete')) $colspan++; // Add checkbox column
+                            if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                            auth()->user()->can('projects.delete')) $colspan++; // Add actions column
+                            @endphp
+                            <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-project-diagram text-4xl mb-2"></i>
+                                <p class="text-lg mb-1">No projects found</p>
+                                @if(request('search'))
+                                <a href="{{ route('admin.projects.index') }}"
+                                    class="text-emerald-600 hover:underline text-sm">
+                                    Clear search
+                                </a>
+                                @else
+                                @can('projects.create')
+                                <a href="{{ route('admin.projects.add') }}"
+                                    class="text-emerald-600 hover:underline text-sm">
+                                    Create your first project →
+                                </a>
+                                @endcan
+                                @endif
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -264,9 +269,9 @@
     </div>
 
     @if($projects->hasPages())
-        <div class="mt-4">
-            {{ $projects->appends(request()->query())->links() }}
-        </div>
+    <div class="mt-4">
+        {{ $projects->appends(request()->query())->links() }}
+    </div>
     @endif
 </div>
 
@@ -280,20 +285,22 @@
             <h3 class="text-lg font-medium text-gray-900 mt-4">Delete Project</h3>
             <div class="mt-2 px-7 py-3">
                 <p class="text-sm text-gray-500">
-                    Are you sure you want to delete project "<span id="deleteProjectName" class="font-semibold text-gray-700"></span>"?
+                    Are you sure you want to delete project "<span id="deleteProjectName"
+                        class="font-semibold text-gray-700"></span>"?
                 </p>
-                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.</p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.
+                </p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
-                <button id="cancelDeleteBtn" 
-                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                <button id="cancelDeleteBtn"
+                    class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
                     Cancel
                 </button>
                 <form id="deleteForm" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" 
-                            class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                    <button type="submit"
+                        class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
                         Delete
                     </button>
                 </form>
@@ -313,17 +320,18 @@
             <h3 class="text-lg font-medium text-gray-900 mt-4">Bulk Delete Projects</h3>
             <div class="mt-2 px-7 py-3">
                 <p class="text-sm text-gray-500">
-                    Are you sure you want to delete <span id="bulkDeleteCount" class="font-semibold text-gray-700"></span> project(s)?
+                    Are you sure you want to delete <span id="bulkDeleteCount"
+                        class="font-semibold text-gray-700"></span> project(s)?
                 </p>
                 <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
-                <button id="cancelBulkDeleteBtn" 
-                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                <button id="cancelBulkDeleteBtn"
+                    class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
                     Cancel
                 </button>
-                <button id="confirmBulkDeleteBtn" 
-                        class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                <button id="confirmBulkDeleteBtn"
+                    class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
                     Delete
                 </button>
             </div>

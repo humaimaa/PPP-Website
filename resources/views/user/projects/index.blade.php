@@ -150,34 +150,6 @@
     </div>
 </section>
 
-<!-- Statistics Section -->
-<section class="py-10 bg-background-light/50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Impact at a Glance</h2>
-            <div class="w-20 h-1 bg-text-green mx-auto"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Making a difference through strategic partnerships</p>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="text-4xl font-bold text-accent-1 mb-2">{{ $stats['pipeline'] ?? 0 }}</div>
-                <p class="text-text-muted">Pipeline Projects</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-accent-1 mb-2">{{ $stats['ongoing'] ?? 0 }}</div>
-                <p class="text-text-muted">Ongoing Projects</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-accent-1 mb-2">{{ $stats['operational'] ?? 0 }}</div>
-                <p class="text-text-muted">Operational Projects</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-accent-1 mb-2">PKR {{ number_format(($stats['total_investment'] ?? 0) / 100000000, 1) }}B</div>
-                <p class="text-text-muted">Total Investment</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 @endsection

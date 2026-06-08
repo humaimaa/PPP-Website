@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'PPP Department KPK - Resource Center')
-@section('title', 'PPP Department KPK - Resource Center')
 
 @section('content')
 
@@ -36,10 +35,7 @@
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
 </section>
-    </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
-</section>
-
+  
 <!-- Downloads Table Section -->
 <section class="py-12 bg-background-light/90">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -20,7 +20,7 @@ class LeadershipMessage extends Model
     const DESIGNATIONS = [
         'Chief Minister',
         'Chief Secretary',
-        'Chief Secretary Development',
+        'Additional Chief Secretary Development',
         'Secretary P&D',
         'Chief PPP'
     ];

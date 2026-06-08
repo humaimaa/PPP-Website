@@ -133,7 +133,7 @@
                                     <i class="fas fa-image text-gray-400"></i>
                                 </div>
                                 @endif
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
                                 <div>
@@ -144,7 +144,7 @@
                                         Str::limit($project->implementing_authority, 30) : 'N/A' }}
                                     </div>
                                 </div>
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
                                 <div>
@@ -164,7 +164,7 @@
                                     <span class="text-gray-400 text-sm">—</span>
                                     @endif
                                 </div>
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
                                 <span
@@ -172,13 +172,13 @@
                                     <i class="fas fa-chart-line mr-1 text-xs"></i>
                                     {{ $project->sector }}
                                 </span>
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
                                 <div class="text-sm font-semibold text-gray-900">
                                     {{ $project->cost }}
                                 </div>
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
@@ -189,14 +189,29 @@
                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ $project->category }}
                                 </span>
-                            </td>
+                             </td>
 
                             <td class="px-6 py-4">
-    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-emerald-800" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word; max-width: 200px;">
-        <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
-        {{ $project->status ?? 'N/A' }}
-    </span>
-</td>
+                                @if($project->status)
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    @if($project->status == 'Planning') bg-blue-100 text-blue-800
+                                    @elseif($project->status == 'Feasibility Study') bg-purple-100 text-purple-800
+                                    @elseif($project->status == 'Bidding') bg-yellow-100 text-yellow-800
+                                    @elseif($project->status == 'Implementation') bg-orange-100 text-orange-800
+                                    @elseif($project->status == 'Completed') bg-green-100 text-green-800
+                                    @elseif($project->status == 'Operational') bg-emerald-100 text-emerald-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                                    {{ $project->status }}
+                                </span>
+                                @else
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
+                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                                    N/A
+                                </span>
+                                @endif
+                             </td>
 
                             {{-- Actions column --}}
                             @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
@@ -231,14 +246,13 @@
                                     </button>
                                     @endcan
                                 </div>
-                            </td>
+                             </td>
                             @endif
                         </tr>
                         @empty
                         <tr>
                             @php
-                            $colspan = 9; // Base columns (ID, Image, Project Name, Location/Division, Sector, Cost,
-                            Category, Status)
+                            $colspan = 9; // Base columns (ID, Image, Project Name, Location/Division, Sector, Cost, Category, Status)
                             if(auth()->user()->can('projects.delete')) $colspan++; // Add checkbox column
                             if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
                             auth()->user()->can('projects.delete')) $colspan++; // Add actions column
@@ -259,7 +273,7 @@
                                 </a>
                                 @endcan
                                 @endif
-                            </td>
+                             </td>
                         </tr>
                         @endforelse
                     </tbody>

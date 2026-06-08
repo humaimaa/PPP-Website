@@ -62,8 +62,8 @@
                     <div class="relative">
                         <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $chief->name }}"
-                             class="w-full h-80 object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                             class="w-full h-100 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
                             <p class="text-accent-1">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
                         </div>
@@ -108,8 +108,8 @@
                     <div class="relative">
                         <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $assistantChief->name }}"
-                             class="w-full h-80 object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                             class="w-full h-100 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
                             <p class="text-accent-1">{{ $assistantChief->designation->title ?? 'Assistant Chief' }}</p>
                         </div>
@@ -180,7 +180,7 @@
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-sm break-all inline-flex items-center gap-2">
-                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
                             {{ $member->email }}

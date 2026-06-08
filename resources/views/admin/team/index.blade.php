@@ -23,7 +23,7 @@
             
             {{-- Add Team Member Button --}}
             @can('team.create')
-                <a href="{{ route('admin.team.add') }}"
+                <a href="{{ route('admin.team.create') }}"
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                     <i class="fas fa-plus"></i>
                     Add Team Member
@@ -63,7 +63,7 @@
                         <input type="text" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="Search by name or email..." 
+                               placeholder="Search by name, email or phone..." 
                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
                         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search"></i>
@@ -97,7 +97,7 @@
                             <th class="px-6 py-3 text-left">Name</th>
                             <th class="px-6 py-3 text-left">Designation</th>
                             <th class="px-6 py-3 text-left">Email</th>
-                            <th class="px-6 py-3 text-left">Contact Number</th>
+                            <th class="px-6 py-3 text-left">Phone</th>
                             <th class="px-6 py-3 text-left">Created</th>
                             
                             {{-- Actions column - Only show if user has any action permissions --}}
@@ -151,10 +151,8 @@
                                 {{ $member->email }}
                             </td>
                             
-                            <td class="px-6 py-4">
-                                <span class="text-gray-600 line-clamp-2 max-w-xs">
-                                    {{ Str::limit($member->experience, 60) }}
-                                </span>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-600">
+                                {{ $member->phone ?? 'N/A' }}
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-xs">
@@ -211,7 +209,7 @@
                                         </a>
                                     @else
                                         @can('team.create')
-                                            <a href="{{ route('admin.team.add') }}" class="text-emerald-600 hover:underline text-sm">
+                                            <a href="{{ route('admin.team.create') }}" class="text-emerald-600 hover:underline text-sm">
                                                 Add your first team member →
                                             </a>
                                         @endcan

@@ -72,6 +72,17 @@
                     </div>
                 </div>
 
+                {{-- Phone Number --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Phone Number</label>
+                    <div class="text-gray-700">
+                        <i class="fas fa-phone text-gray-400 mr-2"></i>
+                        <a href="tel:{{ $teamMember->phone }}" class="text-emerald-600 hover:text-emerald-800">
+                            {{ $teamMember->phone }}
+                        </a>
+                    </div>
+                </div>
+
                 {{-- Created At --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Member Since</label>
@@ -81,16 +92,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Contact Number --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-500 mb-2">Contact Number</label>
-                <div class="bg-gray-50 rounded-lg p-4 text-gray-700 leading-relaxed">
-                    <i class="fas fa-phone text-gray-400 mr-2"></i>
-                    <div class="">
-                        {{ $teamMember->contact_number }}
-                    </div>
-                </div>            </div>
 
             {{-- Last Updated --}}
             <div class="mt-6 pt-4 border-t border-gray-200">

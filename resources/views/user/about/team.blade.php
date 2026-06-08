@@ -98,7 +98,7 @@
 <section class="py-12 bg-background-primary/5">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-black">Assistant Chief's Office</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-primary">Assistant Chief's Office</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('sector');
             $table->string('implementing_authority');
             $table->string('location')->nullable();
-            $table->decimal('cost', 15, 2);
+            $table->string('cost');
             $table->string('status')->nullable();
             $table->text('overview');
             $table->string('image'); 

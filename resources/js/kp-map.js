@@ -1,85 +1,4 @@
-// kp-map.js - Interactive Map for KPK Projects Distribution
-
-// Division data for all KPK divisions
-const divisionsData = {
-    'Bannu': {
-        name: 'Bannu',
-        projects: { active: 4, completed: 2, planned: 3 },
-        investment: 520.40,
-        projects_list: [
-            { name: 'Bannu Medical College', type: 'active', cost: 280.0, sector: 'Health', description: 'Medical education facility' },
-            { name: 'Bannu Industrial Estate', type: 'planned', cost: 150.0, sector: 'Industrial', description: 'Industrial zone development' },
-            { name: 'Lakki Marwat Road', type: 'completed', cost: 90.4, sector: 'Transport', description: 'Road connectivity project' }
-        ]
-    },
-    'Dera Ismail Khan': {
-        name: 'Dera Ismail Khan',
-        projects: { active: 4, completed: 2, planned: 2 },
-        investment: 440.60,
-        projects_list: [
-            { name: 'DI Khan Airport Upgrade', type: 'active', cost: 210.0, sector: 'Transport', description: 'Airport expansion and upgrade' },
-            { name: 'DI Khan Teaching Hospital', type: 'completed', cost: 180.0, sector: 'Health', description: 'Teaching hospital facility' },
-            { name: 'Daraban Road Project', type: 'planned', cost: 50.6, sector: 'Transport', description: 'Road construction project' }
-        ]
-    },
-    'Hazara': {
-        name: 'Hazara',
-        projects: { active: 10, completed: 6, planned: 4 },
-        investment: 2150.25,
-        projects_list: [
-            { name: 'Abbottabad Cable Car', type: 'active', cost: 320.0, sector: 'Tourism', description: 'Scenic cable car project' },
-            { name: 'Mansehra-Muzaffarabad Road', type: 'completed', cost: 890.0, sector: 'Transport', description: 'Strategic road link' },
-            { name: 'Hazara University Expansion', type: 'active', cost: 185.0, sector: 'Education', description: 'Campus expansion project' },
-            { name: 'Haripur Industrial Zone', type: 'planned', cost: 755.25, sector: 'Industrial', description: 'New industrial estate' }
-        ]
-    },
-    'Kohat': {
-        name: 'Kohat',
-        projects: { active: 5, completed: 3, planned: 2 },
-        investment: 675.80,
-        projects_list: [
-            { name: 'Kohat Tunnel Second Tube', type: 'active', cost: 420.0, sector: 'Transport', description: 'Second tube of Kohat Tunnel' },
-            { name: 'Kohat Water Supply Scheme', type: 'completed', cost: 155.0, sector: 'Water', description: 'Water supply for Kohat city' },
-            { name: 'Kohat University Expansion', type: 'planned', cost: 100.8, sector: 'Education', description: 'University campus expansion' }
-        ]
-    },
-    'Malakand': {
-        name: 'Malakand',
-        projects: { active: 8, completed: 3, planned: 6 },
-        investment: 1875.50,
-        projects_list: [
-            { name: 'Swat Expressway', type: 'active', cost: 1250.0, sector: 'Transport', description: 'High-speed road connecting Malakand division' },
-            { name: 'Malam Jabba Chairlift Upgrade', type: 'active', cost: 180.0, sector: 'Tourism', description: 'Modern chairlift system' },
-            { name: 'Kalam Tourism Development', type: 'planned', cost: 250.0, sector: 'Tourism', description: 'Tourism infrastructure development' },
-            { name: 'Lower Dir Water Supply', type: 'completed', cost: 95.5, sector: 'Water', description: 'Clean water supply project' }
-        ]
-    },
-    'Mardan': {
-        name: 'Mardan',
-        projects: { active: 6, completed: 4, planned: 3 },
-        investment: 985.30,
-        projects_list: [
-            { name: 'Mardan Sports Complex', type: 'active', cost: 125.0, sector: 'Sports', description: 'Multi-purpose sports facility' },
-            { name: 'Mardan Industrial Zone', type: 'completed', cost: 350.0, sector: 'Industrial', description: 'Industrial park for small businesses' },
-            { name: 'Women University Mardan', type: 'active', cost: 210.0, sector: 'Education', description: 'Higher education for women' },
-            { name: 'Mardan Bypass Road', type: 'planned', cost: 300.3, sector: 'Transport', description: 'Ring road project' }
-        ]
-    },
-    'Peshawar': {
-        name: 'Peshawar',
-        projects: { active: 12, completed: 8, planned: 5 },
-        investment: 2450.75,
-        projects_list: [
-            { name: 'Peshawar Bus Rapid Transit', type: 'active', cost: 850.5, sector: 'Transport', description: 'Modern BRT system connecting major areas of Peshawar' },
-            { name: 'Hayatabad Medical Complex Expansion', type: 'active', cost: 320.0, sector: 'Health', description: 'Expansion of tertiary care facility' },
-            { name: 'Regi Model Town Development', type: 'completed', cost: 450.0, sector: 'Urban', description: 'Modern residential and commercial area' },
-            { name: 'Peshawar Sustainable Water Supply', type: 'planned', cost: 280.0, sector: 'Water', description: 'Clean water supply project' }
-        ]
-    }
-};
-
-// Color scale for choropleth (green shades matching the design)
-const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
+// kp-map.js - Interactive Map for KPK Projects Distribution (Dynamic from Database)
 
 // Global variables
 let currentSelectedDivision = null;
@@ -87,15 +6,22 @@ let geoJsonLayer = null;
 let map = null;
 let sectorChart = null;
 
-// Calculate totals
+// Use divisions data passed from PHP
+const divisionsData = typeof divisionsDataFromDB !== 'undefined' ? divisionsDataFromDB : {};
+
+// Color scale for choropleth (green shades matching the design)
+const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
+
+// Calculate totals for coloring
 const divisionProjectCounts = {};
 Object.keys(divisionsData).forEach(div => {
-    const d = divisionsData[div];
-    divisionProjectCounts[div] = d.projects.active + d.projects.completed + d.projects.planned;
+    if (divisionsData[div] && divisionsData[div].projects) {
+        divisionProjectCounts[div] = divisionsData[div].total_projects || 0;
+    }
 });
 
-const maxProjects = Math.max(...Object.values(divisionProjectCounts));
-const minProjects = Math.min(...Object.values(divisionProjectCounts));
+const maxProjects = Math.max(...Object.values(divisionProjectCounts), 1);
+const minProjects = Math.min(...Object.values(divisionProjectCounts), 0);
 
 function getColorForProjectCount(count) {
     if (maxProjects === minProjects) return colors[4];
@@ -107,23 +33,25 @@ function updateTotalStats() {
     let totalProjects = 0;
     let totalInvestment = 0;
     Object.values(divisionsData).forEach(division => {
-        totalProjects += division.projects.active + division.projects.completed + division.projects.planned;
-        totalInvestment += division.investment;
+        if (division && division.projects) {
+            totalProjects += division.total_projects || 0;
+            totalInvestment += division.investment || 0;
+        }
     });
     
     const totalProjectsEl = document.getElementById('total-projects');
     const totalInvestmentEl = document.getElementById('total-investment');
     
     if (totalProjectsEl) totalProjectsEl.textContent = totalProjects;
-    if (totalInvestmentEl) totalInvestmentEl.textContent = totalInvestment.toFixed(1);
+    if (totalInvestmentEl) totalInvestmentEl.textContent = (totalInvestment / 10000000).toFixed(1);
 }
 
-// Initialize Leaflet Map with NO zoom controls
+// Initialize Leaflet Map
 function initMap() {
     map = L.map('kp-choropleth-map', {
         center: [33.5, 71.5],
         zoom: 7,
-        zoomControl: false,  // Disable zoom control
+        zoomControl: false,
         scrollWheelZoom: true,
         doubleClickZoom: true,
         boxZoom: false,
@@ -139,76 +67,133 @@ function loadGeoJSONFromFile() {
         .then(response => response.json())
         .then(data => {
             console.log('GeoJSON loaded successfully');
-            const filteredData = {
-                type: 'FeatureCollection',
-                features: data.features
-            };
-            addGeoJsonToMap(filteredData);
+            addGeoJsonToMap(data);
         })
         .catch(error => {
             console.error('Error loading GeoJSON:', error);
         });
 }
 
+function isFATARegion(feature) {
+    const name2 = feature.properties.NAME_2;
+    const name1 = feature.properties.NAME_1;
+    // Check for FATA in various possible formats
+    return name2 === 'F.A.T.A.' || 
+           name2 === 'FATA' || 
+           name1 === 'FederallyAdministeredTribalAr' ||
+           (name1 && name1.includes('Federally'));
+}
+
 function addGeoJsonToMap(geoJsonData) {
     geoJsonLayer = L.geoJSON(geoJsonData, {
         style: function(feature) {
             let divisionName = feature.properties.NAME_2;
+            // Normalize division names
             if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
-            if (divisionName === 'F.A.T.A.') divisionName = 'FATA';
             
-            const division = divisionsData[divisionName];
-            if (division && divisionName !== 'FATA') {
-                const total = division.projects.active + division.projects.completed + division.projects.planned;
+            const isFATA = isFATARegion(feature);
+            
+            // For non-FATA divisions, check if we have data
+            if (!isFATA) {
+                const division = divisionsData[divisionName];
+                if (division) {
+                    const total = division.total_projects || 0;
+                    return {
+                        fillColor: getColorForProjectCount(total),
+                        weight: 1.5,
+                        color: '#ffffff',
+                        fillOpacity: 0.85
+                    };
+                }
                 return {
-                    fillColor: getColorForProjectCount(total),
-                    weight: 1.5,
-                    color: '#ffffff',
-                    fillOpacity: 0.85
-                };
-            } else if (divisionName === 'FATA') {
-                return {
-                    fillColor: '#9e9e9e',
+                    fillColor: '#888888',
                     weight: 1,
                     color: '#ffffff',
-                    fillOpacity: 0.5,
-                    dashArray: '5, 5'
+                    fillOpacity: 0.5
+                };
+            } else {
+                // FATA/Merged Districts region styling
+                return {
+                    fillColor: '#9e9e9e',
+                    weight: 1.5,
+                    color: '#ffffff',
+                    fillOpacity: 0.7,
+                    dashArray: '3, 3'
                 };
             }
-            return {
-                fillColor: '#888888',
-                weight: 1,
-                color: '#ffffff',
-                fillOpacity: 0.5
-            };
         },
         onEachFeature: function(feature, layer) {
             let divisionName = feature.properties.NAME_2;
             if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
             
-            const division = divisionsData[divisionName];
+            const isFATA = isFATARegion(feature);
             
-            if (division && divisionName !== 'FATA') {
-                layer.on('click', function() {
-                    showDivisionDetail(divisionName);
-                });
-                
-                layer.on('mouseover', function(e) {
-                    const layer = e.target;
-                    layer.setStyle({
-                        fillOpacity: 0.95,
-                        weight: 2.5,
-                        color: '#f59e0b'
-                    });
-                    layer.bringToFront();
-                });
-                
-                layer.on('mouseout', function(e) {
-                    if (geoJsonLayer) {
-                        geoJsonLayer.resetStyle(e.target);
-                    }
-                });
+            // Display name on map - replace F.A.T.A with Merged Districts
+            let displayName = divisionName;
+            if (isFATA) {
+                displayName = 'Merged Districts';
             }
+            
+            const division = divisionsData[divisionName === 'F.A.T.A.' ? 'FATA' : divisionName];
+            
+            // Add tooltip with division name
+            let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName}</strong><br>`;
+            if (!isFATA && division) {
+                tooltipContent += `Projects: ${division.total_projects || 0}<br>Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr</div>`;
+            } else if (isFATA && divisionsData['FATA']) {
+                tooltipContent += `Projects: ${divisionsData['FATA'].total_projects || 0}<br>Investment: PKR ${((divisionsData['FATA'].investment || 0) / 10000000).toFixed(1)} Cr<br><span style="font-size: 9px;">(7 Merged Districts)</span></div>`;
+            } else {
+                tooltipContent += `No projects data available</div>`;
+            }
+            
+            layer.bindTooltip(tooltipContent, {
+                sticky: true,
+                className: 'custom-tooltip'
+            });
+            
+            // Make both regular divisions and FATA clickable
+            layer.on('click', function() {
+                if (isFATA) {
+                    showDivisionDetail('FATA');
+                } else if (division) {
+                    showDivisionDetail(divisionName);
+                }
+            });
+            
+            layer.on('mouseover', function(e) {
+                const layer = e.target;
+                layer.setStyle({
+                    fillOpacity: 0.95,
+                    weight: 2.5,
+                    color: '#f59e0b'
+                });
+                layer.bringToFront();
+            });
+            
+            layer.on('mouseout', function(e) {
+                if (geoJsonLayer) {
+                    geoJsonLayer.resetStyle(e.target);
+                }
+            });
+            
+            // Add labels with division names on the map (ONLY for regular divisions, NOT for Merged Districts)
+            if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionName !== 'FATA') {
+                const bounds = layer.getBounds();
+                if (bounds && bounds.isValid()) {
+                    const center = bounds.getCenter();
+                    
+                    // Create custom label with smaller font
+                    const label = L.divIcon({
+                        className: 'division-label',
+                        html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 9px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${displayName}</div>`,
+                        iconSize: [50, 16],
+                        iconAnchor: [25, 8]
+                    });
+                    
+                    L.marker(center, { icon: label, interactive: false }).addTo(map);
+                }
+            }
+            // DO NOT add a separate label for Merged Districts - only show in tooltip on hover
         }
     }).addTo(map);
     
@@ -234,7 +219,11 @@ function highlightDivision(divisionName) {
         geoJsonLayer.eachLayer(function(layer) {
             let layerDivision = layer.feature.properties.NAME_2;
             if (layerDivision === 'DeraIsmailKhan') layerDivision = 'Dera Ismail Khan';
-            if (layerDivision === divisionName) {
+            
+            // Check for FATA region
+            const isFATA = isFATARegion(layer.feature);
+            
+            if ((layerDivision === divisionName) || (isFATA && divisionName === 'FATA')) {
                 layer.setStyle({
                     fillOpacity: 0.95,
                     weight: 3,
@@ -251,43 +240,33 @@ function displayAllDivisions() {
     const container = document.getElementById('divisions-grid');
     if (!container) return;
     
-    container.innerHTML = '';
-    
-    const sortedDivisions = Object.keys(divisionsData).sort();
-    
-    sortedDivisions.forEach(divisionName => {
-        const division = divisionsData[divisionName];
-        const total = division.projects.active + division.projects.completed + division.projects.planned;
-        
-        const card = document.createElement('div');
-        card.className = 'bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 text-center';
-        card.onclick = () => showDivisionDetail(divisionName);
-        
-        if (total === 0) {
-            card.innerHTML = `
-                <div class="font-semibold text-white text-sm">${division.name}</div>
-                <div class="text-2xl font-bold text-gray-400 mt-1">0</div>
-                <div class="text-xs text-gray-400 mt-1">Projects</div>
-                <div class="text-xs text-gray-500 mt-2">No active projects yet</div>
-            `;
-        } else {
-            card.innerHTML = `
-                <div class="font-semibold text-white text-sm">${division.name}</div>
-                <div class="text-2xl font-bold text-green-400 mt-1">${total}</div>
-                <div class="text-xs text-gray-300">Projects</div>
-                <div class="text-xs text-green-500 mt-1">PKR ${division.investment.toFixed(0)} Cr</div>
-            `;
-        }
-        
-        container.appendChild(card);
-    });
+    // If container already has cards from PHP, just add click handlers
+    const cards = container.querySelectorAll('.division-card');
+    if (cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                const divisionName = this.getAttribute('data-division');
+                showDivisionDetail(divisionName);
+            });
+        });
+    }
 }
 
 // Create Pie Chart for sectors
 function createSectorChart(division) {
+    if (!division || !division.projects_list || division.projects_list.length === 0) {
+        const chartContainer = document.getElementById('sector-chart');
+        if (chartContainer) {
+            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+        }
+        return;
+    }
+    
     const sectorData = {};
     division.projects_list.forEach(project => {
-        sectorData[project.sector] = (sectorData[project.sector] || 0) + 1;
+        if (project.sector) {
+            sectorData[project.sector] = (sectorData[project.sector] || 0) + 1;
+        }
     });
     
     const sectors = Object.keys(sectorData);
@@ -357,64 +336,125 @@ function createSectorChart(division) {
 
 // Show division detail view
 function showDivisionDetail(divisionName) {
-    const division = divisionsData[divisionName];
-    if (!division) return;
+    // Handle FATA name mapping
+    let actualDivisionName = divisionName;
+    if (divisionName === 'F.A.T.A.' || divisionName === 'FATA' || divisionName === 'Merged Districts') {
+        actualDivisionName = 'FATA';
+    }
     
-    currentSelectedDivision = divisionName;
-    highlightDivision(divisionName);
+    const division = divisionsData[actualDivisionName];
+    if (!division) {
+        console.error('Division not found:', actualDivisionName);
+        // Show a message if no data
+        const projectsContainer = document.getElementById('division-projects-list');
+        if (projectsContainer) {
+            projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No project data available for this region</div>';
+        }
+        return;
+    }
+    
+    currentSelectedDivision = actualDivisionName;
+    highlightDivision(actualDivisionName);
     
     // Switch views
-    document.getElementById('default-view').classList.add('hidden');
-    document.getElementById('division-view').classList.remove('hidden');
+    const defaultView = document.getElementById('default-view');
+    const divisionView = document.getElementById('division-view');
     
-    // Make parent div transparent
-    const statsPanel = document.getElementById('stats-panel');
-    statsPanel.classList.remove('bg-gradient-to-br', 'from-[#0D2818]', 'to-[#1a4a2a]');
-    statsPanel.classList.add('bg-black/50', 'backdrop-blur-sm');
+    if (defaultView) defaultView.classList.add('hidden');
+    if (divisionView) divisionView.classList.remove('hidden');
     
     // Update division details
-    const total = division.projects.active + division.projects.completed + division.projects.planned;
-    document.getElementById('division-title').textContent = division.name + ' Division';
-    document.getElementById('division-total-projects').textContent = total;
-    document.getElementById('division-total-investment').textContent = division.investment.toFixed(1);
-    document.getElementById('division-active').textContent = division.projects.active;
-    document.getElementById('division-completed').textContent = division.projects.completed;
-    document.getElementById('division-planned').textContent = division.projects.planned;
+    const total = division.total_projects || 0;
+    const investment = division.investment || 0;
+    const avgCost = total > 0 ? (investment / total) / 10000000 : 0;
+    
+    const displayTitle = division.is_merged ? 'Merged Districts (Former FATA)' : (division.name + ' Division');
+    
+    const titleEl = document.getElementById('division-title');
+    const totalProjectsEl = document.getElementById('division-total-projects');
+    const totalInvestmentEl = document.getElementById('division-total-investment');
+    const avgCostEl = document.getElementById('division-avg-cost');
+    const activeEl = document.getElementById('division-active');
+    const completedEl = document.getElementById('division-completed');
+    const plannedEl = document.getElementById('division-planned');
+    
+    if (titleEl) titleEl.textContent = displayTitle;
+    if (totalProjectsEl) totalProjectsEl.textContent = total;
+    if (totalInvestmentEl) totalInvestmentEl.textContent = (investment / 10000000).toFixed(1);
+    if (avgCostEl) avgCostEl.textContent = avgCost.toFixed(1);
+    if (activeEl) activeEl.textContent = division.projects?.active || 0;
+    if (completedEl) completedEl.textContent = division.projects?.completed || 0;
+    if (plannedEl) plannedEl.textContent = division.projects?.planned || 0;
+    
+    // Show merged districts section for FATA
+    const mergedDistrictsSection = document.getElementById('merged-districts-section');
+    if (division.is_merged && division.merged_districts && mergedDistrictsSection) {
+        mergedDistrictsSection.classList.remove('hidden');
+        const mergedList = document.getElementById('merged-districts-list');
+        if (mergedList) {
+            mergedList.innerHTML = '';
+            division.merged_districts.forEach(district => {
+                const badge = document.createElement('span');
+                badge.className = 'bg-gray-700 text-white text-xs px-2 py-1 rounded';
+                badge.textContent = district;
+                mergedList.appendChild(badge);
+            });
+        }
+    } else if (mergedDistrictsSection) {
+        mergedDistrictsSection.classList.add('hidden');
+    }
     
     createSectorChart(division);
     
     const projectsContainer = document.getElementById('division-projects-list');
-    projectsContainer.innerHTML = '';
-    
-    if (division.projects_list.length === 0) {
-        projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
-    } else {
-        division.projects_list.forEach(project => {
-            let borderColor, textColor;
-            if (project.type === 'active') {
-                borderColor = 'border-green-500';
-                textColor = 'text-green-400';
-            } else if (project.type === 'completed') {
-                borderColor = 'border-blue-500';
-                textColor = 'text-blue-400';
-            } else {
-                borderColor = 'border-orange-500';
-                textColor = 'text-orange-400';
-            }
-            
-            const projectDiv = document.createElement('div');
-            projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColor} relative group`;
-            projectDiv.innerHTML = `
-                <div class="font-medium text-white text-sm">${project.name}</div>
-                <div class="text-xs text-gray-300 mt-1">${project.sector}</div>
-                <div class="text-xs ${textColor}">Cost: PKR ${project.cost} Cr</div>
-                <div class="hidden group-hover:block absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-xs rounded p-2 whitespace-nowrap shadow-lg">
-                    ${project.description}
-                </div>
-            `;
-            projectsContainer.appendChild(projectDiv);
-        });
+    if (projectsContainer) {
+        projectsContainer.innerHTML = '';
+        
+        if (!division.projects_list || division.projects_list.length === 0) {
+            projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
+        } else {
+            division.projects_list.forEach(project => {
+                let borderColor, textColor;
+                const projectType = (project.category || project.type || '').toLowerCase();
+                
+                if (projectType === 'ongoing') {
+                    borderColor = 'border-green-500';
+                    textColor = 'text-green-400';
+                } else if (projectType === 'completed') {
+                    borderColor = 'border-blue-500';
+                    textColor = 'text-blue-400';
+                } else {
+                    borderColor = 'border-orange-500';
+                    textColor = 'text-orange-400';
+                }
+                
+                const projectDiv = document.createElement('div');
+                projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColor} relative group cursor-pointer`;
+                projectDiv.onclick = () => {
+                    if (project.id) {
+                        window.location.href = `/projects/${project.id}`;
+                    }
+                };
+                projectDiv.innerHTML = `
+                    <div class="font-medium text-white text-sm">${escapeHtml(project.name)}</div>
+                    <div class="text-xs text-gray-300 mt-1">${escapeHtml(project.sector || 'N/A')}</div>
+                    <div class="text-xs ${textColor}">Cost: PKR ${((project.cost || 0) / 10000000).toFixed(1)} Cr</div>
+                    <div class="hidden group-hover:block absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-xs rounded p-2 whitespace-normal max-w-xs shadow-lg">
+                        ${escapeHtml(project.description || 'No description available')}
+                    </div>
+                `;
+                projectsContainer.appendChild(projectDiv);
+            });
+        }
     }
+}
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // Reset to default view
@@ -422,19 +462,16 @@ function resetToDefaultView() {
     currentSelectedDivision = null;
     resetDivisionHighlights();
     
-    document.getElementById('default-view').classList.remove('hidden');
-    document.getElementById('division-view').classList.add('hidden');
+    const defaultView = document.getElementById('default-view');
+    const divisionView = document.getElementById('division-view');
     
-    const statsPanel = document.getElementById('stats-panel');
-    statsPanel.classList.remove('bg-black/50', 'backdrop-blur-sm');
+    if (defaultView) defaultView.classList.remove('hidden');
+    if (divisionView) divisionView.classList.add('hidden');
     
     if (sectorChart) {
         sectorChart.destroy();
         sectorChart = null;
     }
-    
-    updateTotalStats();
-    displayAllDivisions();
 }
 
 // Initialize everything

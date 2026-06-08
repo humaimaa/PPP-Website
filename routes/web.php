@@ -32,10 +32,14 @@ Route::prefix('about')->name('about.')->group(function () {
 // Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-// Projects page (with optional status parameter)
+// ==================== PROJECT ROUTES - ORDER MATTERS! ====================
+// Put MORE SPECIFIC routes FIRST
+Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
+
+// Then the dynamic routes
 Route::get('/projects/{status?}', [ProjectController::class, 'index'])->name('projects.index');
 
-// Individual project detail page
+// Individual project detail page - this should come LAST because it's the most dynamic
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Resource Center (Downloads) with optional section parameter

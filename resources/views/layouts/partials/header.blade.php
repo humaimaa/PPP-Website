@@ -74,6 +74,9 @@
                         <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('projects.index', 'complete') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
+                    
                     </div>
                 </div>
 
@@ -237,6 +240,9 @@
         <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
         <div class="h-px bg-white/10 mx-4"></div>
         <a href="{{ route('projects.index', 'operational') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
+        <div class="h-px bg-white/10 mx-4"></div>
+        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
+    
     </div>
 </div>
 

@@ -94,10 +94,10 @@
 
 <!-- Assistant Chief Section - Order 2 -->
 @if($assistantChief)
-<section class="py-12 bg-[var(--color-background-light)]">
+<section class="py-12 bg-[var(--color-background-primary)]">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[var(--color-text-green)]">Assistant Chief's Office</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[var(--color-text-primary]">Assistant Chief's Office</h2>
             <div class="w-20 h-1 bg-[var(--color-accent-1)] mx-auto"></div>
         </div>
 

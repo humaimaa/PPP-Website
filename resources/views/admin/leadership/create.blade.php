@@ -92,9 +92,10 @@
                         <option value="">Select Designation</option>
                         <option value="Chief Minister" {{ old('designation') == 'Chief Minister' ? 'selected' : '' }}>Chief Minister</option>
                         <option value="Chief Secretary" {{ old('designation') == 'Chief Secretary' ? 'selected' : '' }}>Chief Secretary</option>
+                        <option value="Chief Secretary Development" {{ old('designation') == 'Chief Secretary Development' ? 'selected' : '' }}>Chief Secretary Development</option>
                         <option value="Secretary P&D" {{ old('designation') == 'Secretary P&D' ? 'selected' : '' }}>Secretary P&D</option>
                         <option value="Chief PPP" {{ old('designation') == 'Chief PPP' ? 'selected' : '' }}>Chief PPP</option>
-                        <option value="Assistant Chief PPP" {{ old('designation') == 'Assistant Chief PPP' ? 'selected' : '' }}>Assistant Chief PPP</option>
+                        
                     </select>
                     <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                         <i class="fas fa-chevron-down"></i>

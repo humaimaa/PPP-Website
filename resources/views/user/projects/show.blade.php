@@ -149,27 +149,12 @@
                     </div>
                     @endif
 
-                    <!-- Key Achievements -->
-                    @if(isset($achievements) && count($achievements) > 0)
-                    <div class="mb-8">
-                        <h2 class="text-xl md:text-2xl font-bold text-text-green mb-4">Key Achievements</h2>
-                        <ul class="space-y-2">
-                            @foreach($achievements as $achievement)
-                            <li class="flex items-start group">
-                                <svg class="w-5 h-5 text-accent-1 mr-2 mt-0.5 transform transition-transform group-hover:scale-110 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span class="text-text-muted">{{ $achievement }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
+
                     
                     <!-- Contact Section -->
                     <div class="bg-background-light/30 p-6 rounded-lg">
                         <h3 class="text-xl font-bold text-text-green mb-3">For More Information</h3>
-                        <p class="text-text-muted mb-4">For detailed project documents or inquiries, please contact our project management office.</p>
+                        <p class="text-text-muted mb-4">For detailed project documents or inquiries, please contact our office.</p>
                         <a href="{{ route('contact') }}" class="inline-block px-6 py-2 bg-accent-1 text-text-primary rounded-md hover:bg-accent-2 transition duration-300">
                             Contact Project Team
                         </a>

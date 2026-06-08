@@ -84,7 +84,7 @@ class ProjectController extends Controller
                 'sector' => 'required|exists:sectors,name',
                 'implementing_authority' => 'required|string|max:255',
                 'location' => 'nullable|string|max:255',
-                'cost' => 'required|numeric|min:0',
+                'cost' => 'required|string|max:50',
                 'status' => 'nullable|string|max:255',
                 'overview' => 'required|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',

@@ -58,10 +58,7 @@
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-text-black mb-2">{{ $tender->name }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-                                <div class="flex items-center text-sm text-text-muted">
-                                    <i class="fas fa-hashtag text-gray-400 mr-2"></i>
-                                    <span>Tender #: {{ $tender->id }}</span>
-                                </div>
+                                
                                 <div class="flex items-center text-sm text-text-muted">
                                     <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
                                     <span>Opening: {{ $tender->opening_date instanceof \Carbon\Carbon ? $tender->opening_date->format('d M Y') : \Carbon\Carbon::parse($tender->opening_date)->format('d M Y') }}</span>

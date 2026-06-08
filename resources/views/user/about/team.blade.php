@@ -20,33 +20,34 @@
 </section>
 
 @php
-    // Group team members by designation_id and sort by designation order
-    $groupedTeam = $team->groupBy(function($member) {
-        return $member->designation_id;
-    })->sortBy(function($members) {
+    // Separate team members by designation order
+    $chief = null;
+    $assistantChief = null;
+    $otherMembers = collect();
+    
+    foreach ($team as $member) {
+        $order = $member->designation->order ?? 999;
+        
+        if ($order == 1) {
+            $chief = $member;
+        } elseif ($order == 2) {
+            $assistantChief = $member;
+        } else {
+            $otherMembers->push($member);
+        }
+    }
+    
+    // Group other members by designation_id for section display
+    $groupedMembers = $otherMembers->groupBy('designation_id');
+    
+    // Sort groups by the designation order (using the 'order' column from designations table)
+    $groupedMembers = $groupedMembers->sortBy(function($members) {
         return $members->first()->designation->order ?? 999;
-    });
-
-    // Find chief/CEO (designation order 1)
-    $chiefMembers = $groupedTeam->filter(function($members) {
-        return $members->first()->designation->order == 1;
-    })->flatten();
-
-    // Find Assistant Chief (designation order 2) - now styled like chief
-    $assistantChiefMembers = $groupedTeam->filter(function($members) {
-        return $members->first()->designation->order == 2;
-    })->flatten();
-
-    // Get other groups (excluding chief and assistant chief)
-    $otherGroups = $groupedTeam->filter(function($members) {
-        $order = $members->first()->designation->order ?? 999;
-        return $order != 1 && $order != 2;
     });
 @endphp
 
-<!-- Departmental Leadership Section (Chief) - Centered, no message -->
-@if($chiefMembers->isNotEmpty())
-@php $chief = $chiefMembers->first(); @endphp
+<!-- Departmental Leadership Section (Chief) - Order 1 -->
+@if($chief)
 <section class="py-12 bg-gradient-to-br from-[#0D2818] to-[#1a4d2e] text-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -56,7 +57,6 @@
 
         <div class="flex justify-center">
             <div class="w-full max-w-md">
-                <!-- Chief's Card - Centered, No Message -->
                 <div class="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl border border-white/20 transition-transform duration-300 hover:scale-105">
                     <div class="relative">
                         <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
@@ -92,9 +92,8 @@
 </section>
 @endif
 
-<!-- Assistant Chief Section - Same card design as Chief, Centered -->
-@if($assistantChiefMembers->isNotEmpty())
-@php $assistantChief = $assistantChiefMembers->first(); @endphp
+<!-- Assistant Chief Section - Order 2 -->
+@if($assistantChief)
 <section class="py-12 bg-gradient-to-br from-[#1a3a2a] to-[#0D2818] text-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -104,7 +103,6 @@
 
         <div class="flex justify-center">
             <div class="w-full max-w-md">
-                <!-- Assistant Chief's Card - Same style as Chief, Centered -->
                 <div class="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl border border-white/20 transition-transform duration-300 hover:scale-105">
                     <div class="relative">
                         <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
@@ -140,16 +138,17 @@
 </section>
 @endif
 
-<!-- Other Designation Sections -->
-@foreach($otherGroups as $designationId => $members)
+<!-- Other Team Members by Designation (Order 3, 4, 5, etc.) -->
+@foreach($groupedMembers as $designationId => $members)
 @php
     $designation = $members->first()->designation;
     $designationName = $designation->title ?? 'Team Members';
     $designationOrder = $designation->order ?? 999;
     $memberCount = $members->count();
 
-    // Orders 3 → Research Officer card style (tall image, white card, shadow)
-    // Orders 4+   → Research Analyst card style (circular avatar, centered, gray card)
+    // Style based on designation order
+    // Order 3: Officer style (tall images)
+    // Order 4+: Analyst style (circular avatars)
     $isOfficerStyle = ($designationOrder == 3);
     $isAnalystStyle = ($designationOrder >= 4);
     $bgClass = $isOfficerStyle ? 'bg-gray-100' : 'bg-white';
@@ -183,14 +182,15 @@
         <div class="text-center mb-8">
             <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">{{ $designationName }}</h2>
             <div class="w-20 h-1 bg-[#0A612B] mx-auto mt-4"></div>
-            <p class="text-gray-600 mt-4">{{ $designation->description ?? 'Dedicated professionals supporting PPP initiatives' }}</p>
+            @if($designation->description)
+            <p class="text-gray-600 mt-4">{{ $designation->description }}</p>
+            @endif
         </div>
 
         <div class="{{ $gridClasses }}">
             @foreach($members as $member)
-
                 @if($isOfficerStyle)
-                {{-- ── Research Officer Card (tall image, white card with shadow) ── --}}
+                {{-- Officer Style Card (Order 3) --}}
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
                     <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                          alt="{{ $member->name }}"
@@ -214,7 +214,7 @@
                 </div>
 
                 @elseif($isAnalystStyle)
-                {{-- ── Research Analyst Card (circular avatar, centered, gray card) - 4 per row ── --}}
+                {{-- Analyst Style Card (Order 4+) --}}
                 <div class="bg-gray-100 rounded-lg p-6 text-center hover:shadow-md transition duration-300">
                     <div class="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
@@ -232,7 +232,6 @@
                     @endif
                 </div>
                 @endif
-
             @endforeach
         </div>
     </div>

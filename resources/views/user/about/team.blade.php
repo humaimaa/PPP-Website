@@ -48,28 +48,28 @@
 
 <!-- Departmental Leadership Section (Chief) - Order 1 -->
 @if($chief)
-<section class="py-12 bg-gradient-to-br from-[#0D2818] to-[#1a4d2e] text-white">
+<section class="py-12 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Departmental Leadership</h2>
-            <div class="w-20 h-1 bg-[#DAD7CD] mx-auto"></div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[var(--color-text-green)]">Departmental Leadership</h2>
+            <div class="w-20 h-1 bg-[var(--color-accent-1)] mx-auto"></div>
         </div>
 
         <div class="flex justify-center">
             <div class="w-full max-w-md">
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl border border-white/20 transition-transform duration-300 hover:scale-105">
+                <div class="bg-white rounded-lg overflow-hidden shadow-xl border border-gray-200 transition-transform duration-300 hover:scale-105">
                     <div class="relative">
                         <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $chief->name }}"
                              class="w-full h-80 object-cover">
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                            <h3 class="text-2xl font-bold">{{ $chief->name }}</h3>
-                            <p class="text-[#DAD7CD]">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
+                            <h3 class="text-2xl font-bold text-white">{{ $chief->name }}</h3>
+                            <p class="text-[var(--color-accent-1)]">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
                         </div>
                     </div>
                     <div class="p-6">
                         @if($chief->email)
-                        <div class="flex items-center justify-center space-x-2 text-[#DAD7CD]">
+                        <div class="flex items-center justify-center space-x-2 text-[var(--color-text-green)]">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
@@ -77,7 +77,7 @@
                         </div>
                         @endif
                         @if($chief->phone)
-                        <div class="flex items-center justify-center space-x-2 text-[#DAD7CD] mt-2">
+                        <div class="flex items-center justify-center space-x-2 text-[var(--color-text-green)] mt-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                             </svg>
@@ -94,28 +94,28 @@
 
 <!-- Assistant Chief Section - Order 2 -->
 @if($assistantChief)
-<section class="py-12 bg-gradient-to-br from-[#1a3a2a] to-[#0D2818] text-white">
+<section class="py-12 bg-[var(--color-background-light)]">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Assistant Chief's Office</h2>
-            <div class="w-20 h-1 bg-[#DAD7CD] mx-auto"></div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[var(--color-text-green)]">Assistant Chief's Office</h2>
+            <div class="w-20 h-1 bg-[var(--color-accent-1)] mx-auto"></div>
         </div>
 
         <div class="flex justify-center">
             <div class="w-full max-w-md">
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden shadow-2xl border border-white/20 transition-transform duration-300 hover:scale-105">
+                <div class="bg-white rounded-lg overflow-hidden shadow-xl border border-gray-200 transition-transform duration-300 hover:scale-105">
                     <div class="relative">
                         <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $assistantChief->name }}"
                              class="w-full h-80 object-cover">
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                            <h3 class="text-2xl font-bold">{{ $assistantChief->name }}</h3>
-                            <p class="text-[#DAD7CD]">{{ $assistantChief->designation->title ?? 'Assistant Chief' }}</p>
+                            <h3 class="text-2xl font-bold text-white">{{ $assistantChief->name }}</h3>
+                            <p class="text-[var(--color-accent-1)]">{{ $assistantChief->designation->title ?? 'Assistant Chief' }}</p>
                         </div>
                     </div>
                     <div class="p-6">
                         @if($assistantChief->email)
-                        <div class="flex items-center justify-center space-x-2 text-[#DAD7CD]">
+                        <div class="flex items-center justify-center space-x-2 text-[var(--color-text-green)]">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
@@ -123,7 +123,7 @@
                         </div>
                         @endif
                         @if($assistantChief->phone)
-                        <div class="flex items-center justify-center space-x-2 text-[#DAD7CD] mt-2">
+                        <div class="flex items-center justify-center space-x-2 text-[var(--color-text-green)] mt-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                             </svg>
@@ -151,43 +151,20 @@
     // Order 4+: Analyst style (circular avatars)
     $isOfficerStyle = ($designationOrder == 3);
     $isAnalystStyle = ($designationOrder >= 4);
-    $bgClass = $isOfficerStyle ? 'bg-gray-100' : 'bg-white';
-
-    // Grid configuration based on member count and style
-    $gridClasses = 'grid grid-cols-1 md:grid-cols-2 gap-8';
-    
-    if ($isOfficerStyle) {
-        // Research Officer: 3 cards per row on large screens
-        $gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
-        if ($memberCount == 1) {
-            $gridClasses = 'grid grid-cols-1 max-w-md mx-auto gap-8';
-        } elseif ($memberCount == 2) {
-            $gridClasses = 'grid grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto gap-8';
-        }
-    } elseif ($isAnalystStyle) {
-        // Research Analyst: 4 cards per row on large screens
-        $gridClasses = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
-        if ($memberCount == 1) {
-            $gridClasses = 'grid grid-cols-1 max-w-sm mx-auto gap-6';
-        } elseif ($memberCount == 2) {
-            $gridClasses = 'grid grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto gap-6';
-        } elseif ($memberCount == 3) {
-            $gridClasses = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-6';
-        }
-    }
+    $bgClass = $isOfficerStyle ? 'bg-[var(--color-background-light)]' : 'bg-white';
 @endphp
 
 <section class="py-12 {{ $bgClass }}">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#0D2818]">{{ $designationName }}</h2>
-            <div class="w-20 h-1 bg-[#0A612B] mx-auto mt-4"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-text-green)]">{{ $designationName }}</h2>
+            <div class="w-20 h-1 bg-[var(--color-accent-1)] mx-auto mt-4"></div>
             @if($designation->description)
-            <p class="text-gray-600 mt-4">{{ $designation->description }}</p>
+            <p class="text-[var(--color-text-muted)] mt-4">{{ $designation->description }}</p>
             @endif
         </div>
 
-        <div class="{{ $gridClasses }}">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($members as $member)
                 @if($isOfficerStyle)
                 {{-- Officer Style Card (Order 3) --}}
@@ -196,13 +173,13 @@
                          alt="{{ $member->name }}"
                          class="w-full h-64 object-cover">
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-[#0D2818]">{{ $member->name }}</h3>
-                        <p class="text-[#0A612B] font-semibold mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
-                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
+                        <h3 class="text-xl font-bold text-[var(--color-text-green)]">{{ $member->name }}</h3>
+                        <p class="text-[var(--color-accent-1)] font-semibold mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                        <p class="text-[var(--color-text-muted)] text-sm mb-3 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
                         @if($member->email)
                         <div class="mt-3">
                             <a href="mailto:{{ $member->email }}"
-                               class="text-[#0A612B] hover:text-[#0D2818] text-sm break-all inline-flex items-center gap-2">
+                               class="text-[var(--color-accent-1)] hover:text-[var(--color-primary)] text-sm break-all inline-flex items-center gap-2">
                                 <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                                 </svg>
@@ -215,18 +192,18 @@
 
                 @elseif($isAnalystStyle)
                 {{-- Analyst Style Card (Order 4+) --}}
-                <div class="bg-gray-100 rounded-lg p-6 text-center hover:shadow-md transition duration-300">
+                <div class="bg-[var(--color-background-light)] rounded-lg p-6 text-center hover:shadow-md transition duration-300">
                     <div class="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                              alt="{{ $member->name }}"
                              class="w-full h-full object-cover">
                     </div>
-                    <h3 class="text-base font-bold text-[#0D2818]">{{ $member->name }}</h3>
-                    <p class="text-[#0A612B] text-xs font-medium">{{ $member->designation->title ?? 'Team Member' }}</p>
-                    <p class="text-gray-500 text-xs mt-2 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
+                    <h3 class="text-base font-bold text-[var(--color-text-green)]">{{ $member->name }}</h3>
+                    <p class="text-[var(--color-accent-1)] text-xs font-medium">{{ $member->designation->title ?? 'Team Member' }}</p>
+                    <p class="text-[var(--color-text-muted)] text-xs mt-2 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
                     @if($member->email)
                     <a href="mailto:{{ $member->email }}"
-                       class="inline-block mt-3 text-[#0A612B] hover:text-[#0D2818] text-xs break-all">
+                       class="inline-block mt-3 text-[var(--color-accent-1)] hover:text-[var(--color-primary)] text-xs break-all">
                         {{ Str::limit($member->email, 20) }}
                     </a>
                     @endif
@@ -242,11 +219,11 @@
 @if($team->isEmpty())
 <section class="py-20 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <svg class="w-24 h-24 mx-auto text-text-muted mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-24 h-24 mx-auto text-[var(--color-text-muted)] mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
         </svg>
-        <h3 class="text-2xl font-bold text-text-green mb-2">Team Members Coming Soon</h3>
-        <p class="text-text-muted">Information about our dedicated team members will be available shortly.</p>
+        <h3 class="text-2xl font-bold text-[var(--color-text-green)] mb-2">Team Members Coming Soon</h3>
+        <p class="text-[var(--color-text-muted)]">Information about our dedicated team members will be available shortly.</p>
     </div>
 </section>
 @endif

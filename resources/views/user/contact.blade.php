@@ -101,7 +101,7 @@
                         <div>
                             <label for="first-name" class="block text-sm font-medium text-text-green">First Name <span class="text-red-500">*</span></label>
                             <input type="text" id="first-name" name="first-name" required
-                                class="mt-1 block w-full border border-background-light rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-accent-1 focus:border-accent-1 text-text-black">
+                                class="mt-1 block w-full border border-background-light rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-accent-1 focus:border-accent-1 text-text-black" >
                             <p class="mt-1 text-sm text-red-600 hidden" id="first-name-error">First name is required</p>
                         </div>
                         <div>

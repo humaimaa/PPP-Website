@@ -137,19 +137,43 @@
                                 <a href="{{ route('admin.tenders.show', $tender) }}" class="text-emerald-600 hover:underline">
                                     {{ $tender->name }}
                                 </a>
+                                @if($tender->is_extended)
+                                    <span class="ml-2 text-xs text-orange-600">
+                                        <i class="fas fa-calendar-plus"></i> Extended
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-xs rounded-full bg-gray-100">{{ $tender->category }}</span>
                             </td>
-                            <td class="px-6 py-4">{{ $tender->closing_date->format('M d, Y') }}</td>
+                            <td class="px-6 py-4">
+                                @if($tender->is_extended)
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">
+                                            {{ $tender->closing_date->format('M d, Y') }}
+                                        </span>
+                                        <div class="text-orange-600 font-medium">
+                                            <i class="fas fa-arrow-right text-xs"></i>
+                                            {{ $tender->effective_closing_date->format('M d, Y') }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <span>{{ $tender->effective_closing_date->format('M d, Y') }}</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">
                                 @php
-                                    $daysLeft = now()->diffInDays($tender->closing_date, false);
+                                    // Use effective closing date and ensure integer
+                                    $effectiveDate = $tender->is_extended ? $tender->extended_closing_date : $tender->closing_date;
+                                    $daysLeft = $effectiveDate ? (int)floor(now()->diffInDays($effective_date, false)) : 0;
+                                    if ($daysLeft < 0) $daysLeft = 0;
                                 @endphp
-                                @if($daysLeft <= 7)
-                                    <span class="text-red-600 font-semibold">{{ $daysLeft }} days</span>
+                                @if($daysLeft <= 7 && $daysLeft > 0)
+                                    <span class="text-red-600 font-semibold">{{ $daysLeft }} day(s)</span>
+                                @elseif($daysLeft > 0)
+                                    <span class="text-gray-600">{{ $daysLeft }} day(s)</span>
                                 @else
-                                    <span class="text-gray-600">{{ $daysLeft }} days</span>
+                                    <span class="text-gray-400">Closed</span>
                                 @endif
                             </td>
                         </tr>

@@ -18,18 +18,24 @@ class DashboardController extends Controller
     public function index()
     {
         // Stats Cards Data
-        $totalProjects = Project::count();  // Changed from active projects to total projects
-        $openTenders = Tender::where('closing_date', '>=', now())->count();
+        $totalProjects = Project::count();
+        
+        // Get open tenders using effective closing date (extended if exists)
+        $openTenders = Tender::whereRaw('COALESCE(extended_closing_date, closing_date) >= ?', [now()])
+            ->where('opening_date', '<=', now())
+            ->count();
+            
         $newsItems = News::count();
         $publicDocuments = Download::count();
         $totalEvents = Event::count();
         $teamMembers = Team::count();
         $totalUsers = User::count();
         
-        // Get open tenders for recent activity (upcoming closing)
-        $recentTenders = Tender::where('closing_date', '>=', now())
-            ->orderBy('closing_date', 'asc')
-            ->limit(3)
+        // Get upcoming tenders (closing soon using effective closing date)
+        $upcomingTenders = Tender::whereRaw('COALESCE(extended_closing_date, closing_date) >= ?', [now()])
+            ->whereRaw('COALESCE(extended_closing_date, closing_date) <= ?', [now()->addDays(30)])
+            ->orderByRaw('COALESCE(extended_closing_date, closing_date) asc')
+            ->limit(5)
             ->get();
         
         // Get recent events
@@ -98,7 +104,7 @@ class DashboardController extends Controller
                 'time' => $news->created_at,
                 'icon' => 'newspaper',
                 'icon_color' => 'yellow',
-                'link' => '#', // Add route if you have news show page
+                'link' => '#',
                 'type_badge' => $news->type,
             ]);
         }
@@ -156,13 +162,6 @@ class DashboardController extends Controller
             ];
         }
         
-        // Get upcoming tenders (closing soon)
-        $upcomingTenders = Tender::where('closing_date', '>=', now())
-            ->where('closing_date', '<=', now()->addDays(30))
-            ->orderBy('closing_date', 'asc')
-            ->limit(5)
-            ->get();
-        
         // Get category distribution for documents
         $documentCategories = Download::select('category', DB::raw('count(*) as count'))
             ->groupBy('category')
@@ -174,7 +173,7 @@ class DashboardController extends Controller
             ->get();
         
         return view('admin.dashboard', compact(
-            'totalProjects',      // Changed variable name
+            'totalProjects',
             'openTenders',
             'newsItems',
             'publicDocuments',

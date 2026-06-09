@@ -62,7 +62,7 @@
 
         <div class="flex flex-col lg:flex-row gap-6">
             <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" style="height: 500px; width: 100%; background-color: #e8f0e8; border-radius: 8px;"></div>
+                <div id="kp-choropleth-map" style="height: 550px; width: 100%; background-color: #e8f0e8; border-radius: 8px;"></div>
             </div>
 
             <div class="w-full lg:w-1/2">
@@ -91,17 +91,11 @@
                         <h4 class="font-semibold mb-3 text-lg text-white">All Divisions</h4>
                         <div id="divisions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
                             @foreach($divisionsGrid as $division)
-                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card" 
+                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card text-center" 
                                  data-division="{{ $division['name'] }}">
                                 <div class="font-semibold text-white text-sm">{{ $division['name'] }}</div>
                                 <div class="text-2xl font-bold text-green-400 mt-1">{{ $division['total'] }}</div>
                                 <div class="text-xs text-gray-300">Total Projects</div>
-                                <div class="flex justify-center gap-2 mt-2 text-xs">
-                                    <span class="text-yellow-400">P: {{ $division['pipeline'] }}</span>
-                                    <span class="text-green-400">O: {{ $division['ongoing'] }}</span>
-                                    <span class="text-blue-400">C: {{ $division['completed'] }}</span>
-                                </div>
-                                <div class="text-xs text-green-500 mt-1">PKR {{ number_format($division['investment'] / 10000000, 1) }} Cr</div>
                             </div>
                             @endforeach
                         </div>
@@ -183,12 +177,16 @@
     border: none !important;
     border-radius: 4px !important;
     color: white !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     padding: 4px 8px !important;
 }
 .division-label {
     background: transparent !important;
     border: none !important;
+}
+.division-label div {
+    font-size: 9px !important;
+    padding: 1px 4px !important;
 }
 #division-projects-list::-webkit-scrollbar {
     width: 6px;
@@ -215,6 +213,10 @@
 .leaflet-container {
     background-color: #e8f0e8;
 }
+/* Hide chart.js legend labels when there's no data */
+#sector-chart:empty {
+    display: none;
+}
 </style>
 @endpush
 
@@ -227,9 +229,7 @@
 window.divisionsDataFromDB = @json($divisionsDataForMap);
 window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
-  @vite([ 
-        'resources/js/kp-map.js'
-    ])
+<script src="{{ asset('js/kp-map.js') }}"></script>
 @endpush
 
 @endsection

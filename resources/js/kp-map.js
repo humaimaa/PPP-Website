@@ -15,7 +15,7 @@
     
     console.log('Divisions Data from DB:', divisionsData);
 
-    // Color scale for choropleth (green shades matching the design)
+    // Color scale for choropleth (green shades)
     const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
 
     // Calculate totals for coloring
@@ -61,10 +61,10 @@
             return;
         }
         
-        // Initialize map with NO background tiles - just a blank canvas
+        // Initialize map with zoom level 8 for a bit closer view
         map = L.map('kp-choropleth-map', {
             center: [33.5, 71.5],
-            zoom: 7,
+            zoom: 8,
             zoomControl: false,
             scrollWheelZoom: true,
             doubleClickZoom: true,
@@ -75,7 +75,7 @@
             zoomAnimation: true
         });
         
-        // NO background tile layer - just empty map
+        // No background tile layer - clean map
         
         loadGeoJSONFromFile();
     }
@@ -151,11 +151,11 @@
                 let divisionName = feature.properties?.NAME_2;
                 if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 const isFATA = divisionName === 'F.A.T.A.';
-                const displayName = isFATA ? 'FATA (Merged Districts)' : divisionName;
+                const displayName = isFATA ? 'FATA' : divisionName;
                 
                 const division = divisionsData[isFATA ? 'FATA' : divisionName];
                 
-                let tooltipContent = `<div style="font-size: 12px;"><strong>${displayName || 'Unknown'}</strong><br>`;
+                let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName || 'Unknown'}</strong><br>`;
                 
                 if (division) {
                     tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
@@ -197,7 +197,7 @@
                     }
                 });
                 
-                // Add division label
+                // Add division label with smaller font
                 if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionsData[divisionName]) {
                     const bounds = layer.getBounds();
                     if (bounds && bounds.isValid()) {
@@ -205,9 +205,9 @@
                         
                         const label = L.divIcon({
                             className: 'division-label',
-                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${divisionName}</div>`,
-                            iconSize: [50, 16],
-                            iconAnchor: [25, 8]
+                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 1px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${divisionName}</div>`,
+                            iconSize: [40, 14],
+                            iconAnchor: [20, 7]
                         });
                         
                         L.marker(center, { icon: label, interactive: false }).addTo(map);
@@ -216,19 +216,19 @@
             }
         }).addTo(map);
         
-        // Fit map to bounds
+        // Fit map to bounds with some padding
         try {
             const bounds = geoJsonLayer.getBounds();
             if (bounds.isValid()) {
                 map.fitBounds(bounds);
-                // Add some padding
-                map.padBounds(0.1);
+                // Add some padding to zoom in a bit more
+                map.padBounds(0.05);
             } else {
-                map.setView([33.5, 71.5], 7);
+                map.setView([33.5, 71.5], 8);
             }
         } catch(e) {
             console.warn('Error fitting bounds:', e);
-            map.setView([33.5, 71.5], 7);
+            map.setView([33.5, 71.5], 8);
         }
         
         console.log('GeoJSON added to map successfully');
@@ -315,19 +315,7 @@
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: 'white',
-                            font: { size: 10 },
-                            generateLabels: function(chart) {
-                                const original = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                                original.forEach(label => {
-                                    const count = sectorData[label.text];
-                                    label.text = `${label.text} (${count})`;
-                                });
-                                return original;
-                            }
-                        }
+                        display: false  // HIDE THE LEGEND - no labels shown
                     },
                     tooltip: {
                         callbacks: {
@@ -444,9 +432,10 @@
                     
                     const projectDiv = document.createElement('div');
                     projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
+                    // Navigate to project show page on click
                     projectDiv.onclick = () => {
                         if (project.id) {
-                            window.location.href = `/projects/${project.id}`;
+                            window.location.href = `/project/${project.id}`;
                         }
                     };
                     projectDiv.innerHTML = `

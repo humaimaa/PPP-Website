@@ -11,7 +11,6 @@
             <p class="text-sm text-gray-500 mt-1">Create and manage tender advertisements</p>
         </div>
         <div class="flex gap-3">
-            {{-- Bulk Delete Button - Only show if user has delete permission --}}
             @can('tenders.delete')
                 <button type="button" id="bulkDeleteBtn" 
                         class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -58,7 +57,7 @@
                     </p>
                 </div>
                 <div class="flex gap-2">
-                    <form method="GET" action="{{ route('admin.tenders.index') }}" class="flex gap-2">
+                    <form method="GET" action="{{ route('admin.tenders.index') }}" class="flex gap-2" id="filterForm">
                         <select name="category" 
                                 class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
                             <option value="">All Categories</option>
@@ -99,7 +98,6 @@
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                         <tr>
-                            {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('tenders.delete')
                                 <th class="px-6 py-3 text-left w-10">
                                     <input type="checkbox" 
@@ -114,8 +112,7 @@
                             <th class="px-6 py-3 text-left">Opening Date</th>
                             <th class="px-6 py-3 text-left">Closing Date</th>
                             <th class="px-6 py-3 text-left">Status</th>
-                            
-                            {{-- Actions column - Only show if user has any action permissions --}}
+                            <th class="px-6 py-3 text-left">Days Left</th>
                             @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
                                 <th class="px-6 py-3 text-right">Actions</th>
                             @endif
@@ -124,7 +121,6 @@
                     <tbody class="divide-y divide-gray-100 text-gray-700">
                         @forelse($tenders as $tender)
                         <tr class="hover:bg-gray-50 transition" data-tender-id="{{ $tender->id }}">
-                            {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('tenders.delete')
                                 <td class="px-6 py-4">
                                     <input type="checkbox" 
@@ -159,6 +155,12 @@
                                         <i class="fas fa-clock mr-1"></i>
                                         Created: {{ $tender->created_at->format('M d, Y') }}
                                     </div>
+                                    @if($tender->is_extended)
+                                        <div class="text-xs text-orange-600 mt-1">
+                                            <i class="fas fa-calendar-plus mr-1"></i>
+                                            Extended
+                                        </div>
+                                    @endif
                                 </div>
                             </td>
                             
@@ -176,16 +178,21 @@
                             </td>
                             
                             <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">
-                                    {{ $tender->closing_date ? $tender->closing_date->format('M d, Y') : 'N/A' }}
+                                <div class="text-sm">
+                                    @if($tender->is_extended)
+                                        <span class="text-gray-500 line-through">
+                                            {{ $tender->closing_date->format('M d, Y') }}
+                                        </span>
+                                        <div class="text-orange-600 font-medium mt-1">
+                                            <i class="fas fa-arrow-right text-xs"></i>
+                                            {{ $tender->effective_closing_date->format('M d, Y') }}
+                                        </div>
+                                    @else
+                                        <span class="text-gray-900">
+                                            {{ $tender->closing_date->format('M d, Y') }}
+                                        </span>
+                                    @endif
                                 </div>
-                                
-                                @if($tender->closing_date && $tender->closing_date->isFuture())
-                                    <div class="text-xs text-emerald-600 mt-1">
-                                        <i class="fas fa-hourglass-half"></i>
-                                        {{ now()->diffInDays($tender->closing_date) }} days left
-                                    </div>
-                                @endif
                             </td>
                             
                             <td class="px-6 py-4">
@@ -204,11 +211,40 @@
                                 </span>
                             </td>
                             
-                            {{-- Actions column --}}
+                            <td class="px-6 py-4">
+                                @if($tender->isOpen())
+                                    @php
+                                        $daysRemaining = $tender->days_remaining;
+                                    @endphp
+                                    <div class="text-sm">
+                                        @if($daysRemaining <= 7)
+                                            <span class="text-red-600 font-semibold">
+                                                <i class="fas fa-hourglass-end mr-1"></i>
+                                                {{ $tender->days_remaining_text }}
+                                            </span>
+                                        @else
+                                            <span class="text-emerald-600">
+                                                <i class="fas fa-hourglass-half mr-1"></i>
+                                                {{ $tender->days_remaining_text }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @elseif($tender->isClosed())
+                                    <span class="text-red-600 text-sm">
+                                        <i class="fas fa-times-circle mr-1"></i>
+                                        Closed
+                                    </span>
+                                @elseif($tender->isUpcoming())
+                                    <span class="text-yellow-600 text-sm">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        Upcoming
+                                    </span>
+                                @endif
+                            </td>
+                            
                             @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center justify-end gap-2">
-                                        {{-- View Button --}}
                                         @can('tenders.view')
                                             <a href="{{ route('admin.tenders.show', $tender) }}" 
                                                class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
@@ -217,7 +253,6 @@
                                             </a>
                                         @endcan
                                         
-                                        {{-- Edit Button --}}
                                         @can('tenders.edit')
                                             <a href="{{ route('admin.tenders.edit', $tender) }}" 
                                                class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
@@ -226,17 +261,24 @@
                                             </a>
                                         @endcan
                                         
-                                        {{-- Extend Date Button --}}
                                         @can('tenders.edit')
-                                            <button type="button"
-                                                    onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
-                                                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                                    title="Extend Closing Date">
-                                                <i class="fas fa-calendar-plus"></i>
-                                            </button>
+                                            @if($tender->is_extended)
+                                                <button type="button"
+                                                        onclick="confirmRemoveExtension({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
+                                                        class="text-orange-600 hover:text-orange-900 p-2 rounded hover:bg-orange-50 transition-colors"
+                                                        title="Remove Extension">
+                                                    <i class="fas fa-calendar-minus"></i>
+                                                </button>
+                                            @else
+                                                <button type="button"
+                                                        onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
+                                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                                        title="Extend Closing Date">
+                                                    <i class="fas fa-calendar-plus"></i>
+                                                </button>
+                                            @endif
                                         @endcan
                                         
-                                        {{-- Delete Button --}}
                                         @can('tenders.delete')
                                             <button type="button"
                                                     onclick="confirmDelete({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
@@ -252,9 +294,9 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 8; // Base columns (ID, Document, Tender Name, Category, Opening Date, Closing Date, Status)
-                                    if(auth()->user()->can('tenders.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete')) $colspan++; // Add actions column
+                                    $colspan = 9;
+                                    if(auth()->user()->can('tenders.delete')) $colspan++;
+                                    if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete')) $colspan++;
                                 @endphp
                                 <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                     <i class="fas fa-file-alt text-4xl mb-2"></i>
@@ -330,12 +372,16 @@
                 <p class="text-sm text-gray-600 mb-3">
                     Extend closing date for tender: <strong id="extendTenderName" class="text-emerald-600"></strong>
                 </p>
+                <p class="text-xs text-gray-500 mb-3">
+                    Current closing date: <strong id="currentClosingDate"></strong>
+                </p>
                 <form id="extendForm" method="POST" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">New Closing Date</label>
                         <input type="date" id="new_closing_date" name="new_closing_date" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <p class="text-xs text-gray-500 mt-1">Must be after the current closing date</p>
                     </div>
                     <div class="flex justify-center gap-3 mt-6">
                         <button type="button" id="cancelExtendBtn" 
@@ -347,6 +393,38 @@
                             Extend Date
                         </button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Remove Extension Confirmation Modal --}}
+<div id="removeExtensionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-orange-100">
+                <i class="fas fa-calendar-minus text-orange-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Remove Extension</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to remove the extension for tender "<span id="removeExtendTenderName" class="font-semibold text-gray-700"></span>"?
+                </p>
+                <p class="text-xs text-orange-500 mt-2">This will reset the closing date to the original date.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelRemoveExtendBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <form id="removeExtensionForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-md hover:bg-orange-700 transition">
+                        Remove Extension
+                    </button>
                 </form>
             </div>
         </div>
@@ -386,7 +464,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bulk delete functionality - Only initialize if user has delete permission
+        // Bulk delete functionality
         @can('tenders.delete')
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const tenderCheckboxes = document.querySelectorAll('.tender-checkbox');
@@ -398,7 +476,6 @@
             const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
             const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
             
-            // Update selected count and show/hide bulk delete button
             function updateSelectedCount() {
                 const checkedBoxes = document.querySelectorAll('.tender-checkbox:checked');
                 const count = checkedBoxes.length;
@@ -415,7 +492,6 @@
                 }
             }
             
-            // Select/Deselect all checkboxes
             if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function() {
                     tenderCheckboxes.forEach(checkbox => {
@@ -425,12 +501,10 @@
                 });
             }
             
-            // Individual checkbox change
             tenderCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     updateSelectedCount();
                     
-                    // Update select all checkbox state
                     if (selectAllCheckbox) {
                         const allChecked = tenderCheckboxes.length === document.querySelectorAll('.tender-checkbox:checked').length;
                         selectAllCheckbox.checked = allChecked;
@@ -438,7 +512,6 @@
                 });
             });
             
-            // Bulk delete button click - show modal
             if (bulkDeleteBtn) {
                 bulkDeleteBtn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -456,13 +529,11 @@
                 });
             }
             
-            // Confirm bulk delete
             if (confirmBulkDeleteBtn) {
                 confirmBulkDeleteBtn.addEventListener('click', function() {
                     bulkDeleteModal.classList.add('hidden');
                     document.body.style.overflow = '';
                     
-                    // Collect selected IDs and submit
                     const checkedBoxes = document.querySelectorAll('.tender-checkbox:checked');
                     checkedBoxes.forEach(checkbox => {
                         const input = document.createElement('input');
@@ -475,7 +546,6 @@
                 });
             }
             
-            // Cancel bulk delete
             if (cancelBulkDeleteBtn) {
                 cancelBulkDeleteBtn.addEventListener('click', function() {
                     bulkDeleteModal.classList.add('hidden');
@@ -483,7 +553,6 @@
                 });
             }
             
-            // Close modal when clicking outside
             window.addEventListener('click', function(e) {
                 if (e.target === bulkDeleteModal) {
                     bulkDeleteModal.classList.add('hidden');
@@ -495,9 +564,11 @@
                 if (e.target === document.getElementById('extendModal')) {
                     closeExtendModal();
                 }
+                if (e.target === document.getElementById('removeExtensionModal')) {
+                    closeRemoveExtensionModal();
+                }
             });
             
-            // Initialize count on page load
             updateSelectedCount();
         @endcan
         
@@ -514,12 +585,10 @@
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 
-                // Close modal on cancel
                 document.getElementById('cancelDeleteBtn').onclick = function() {
                     closeDeleteModal();
                 };
                 
-                // Close modal when clicking outside
                 modal.onclick = function(e) {
                     if (e.target === modal) {
                         closeDeleteModal();
@@ -529,14 +598,9 @@
             
             function closeDeleteModal() {
                 const modal = document.getElementById('deleteModal');
-                const deleteForm = document.getElementById('deleteForm');
-                
                 if (modal) {
                     modal.classList.add('hidden');
                     document.body.style.overflow = '';
-                    if (deleteForm) {
-                        deleteForm.action = '';
-                    }
                 }
             }
         @endcan
@@ -548,21 +612,32 @@
                 const extendTenderNameSpan = document.getElementById('extendTenderName');
                 const extendForm = document.getElementById('extendForm');
                 const newClosingDateInput = document.getElementById('new_closing_date');
+                const currentClosingDateSpan = document.getElementById('currentClosingDate');
                 
                 extendTenderNameSpan.textContent = tenderName;
                 extendForm.action = `/admin/tenders/${tenderId}/extend`;
                 
-                // Set minimum date to current closing date + 1 day
+                // Format current closing date
                 if (currentClosingDate) {
+                    const date = new Date(currentClosingDate);
+                    currentClosingDateSpan.textContent = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    // Set minimum date to current closing date + 1 day
                     const minDate = new Date(currentClosingDate);
                     minDate.setDate(minDate.getDate() + 1);
-                    newClosingDateInput.min = minDate.toISOString().split('T')[0];
+                    const year = minDate.getFullYear();
+                    const month = String(minDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(minDate.getDate()).padStart(2, '0');
+                    newClosingDateInput.min = `${year}-${month}-${day}`;
                 }
                 
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 
-                // Close modal on cancel
                 document.getElementById('cancelExtendBtn').onclick = function() {
                     closeExtendModal();
                 };
@@ -570,6 +645,37 @@
             
             function closeExtendModal() {
                 const modal = document.getElementById('extendModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            // Remove extension modal functions
+            window.confirmRemoveExtension = function(tenderId, tenderName) {
+                const modal = document.getElementById('removeExtensionModal');
+                const removeExtendTenderNameSpan = document.getElementById('removeExtendTenderName');
+                const removeExtensionForm = document.getElementById('removeExtensionForm');
+                
+                removeExtendTenderNameSpan.textContent = tenderName;
+                removeExtensionForm.action = `/admin/tenders/${tenderId}/remove-extension`;
+                
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                document.getElementById('cancelRemoveExtendBtn').onclick = function() {
+                    closeRemoveExtensionModal();
+                };
+                
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeRemoveExtensionModal();
+                    }
+                };
+            };
+            
+            function closeRemoveExtensionModal() {
+                const modal = document.getElementById('removeExtensionModal');
                 if (modal) {
                     modal.classList.add('hidden');
                     document.body.style.overflow = '';
@@ -594,8 +700,13 @@
                 @endcan
                 @can('tenders.edit')
                     const extendModal = document.getElementById('extendModal');
+                    const removeExtensionModal = document.getElementById('removeExtensionModal');
+                    
                     if (extendModal && !extendModal.classList.contains('hidden')) {
                         closeExtendModal();
+                    }
+                    if (removeExtensionModal && !removeExtensionModal.classList.contains('hidden')) {
+                        closeRemoveExtensionModal();
                     }
                 @endcan
             }

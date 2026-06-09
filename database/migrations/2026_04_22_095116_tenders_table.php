@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('closing_date');
             $table->enum('category', ['General Procurement', 'Transaction Advisory','Private Partner Selection'])->default('General Procurement');
             $table->string('advertisement')->nullable();
+            $table->date('extended_closing_date')->nullable();
             $table->timestamps();
         });
     }

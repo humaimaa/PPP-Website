@@ -349,6 +349,7 @@ function createSectorChart(division) {
                 legend: {
                     position: 'right',
                     labels: {
+                        color: 'white',
                         font: { size: 10, weight: 'normal', family: 'sans-serif' },
                         boxWidth: 12,
                         boxHeight: 12,
@@ -357,22 +358,18 @@ function createSectorChart(division) {
                             const data = chart.data;
                             const datasets = data.datasets;
                             const labels = data.labels;
-                            const total = datasets[0].data.reduce((a, b) => a + b, 0);
                             
+                            // Return ONLY the sector name - no count or percentage
                             return labels.map((label, i) => {
-                                const value = datasets[0].data[i];
-                                const percentage = ((value / total) * 100).toFixed(1);
                                 const displayLabel = label && label !== 'undefined' ? label : 'Other';
                                 
-                                // Create custom label item with white color
                                 return {
-                                    text: `${displayLabel} - ${value} - ${percentage}%`,
+                                    text: displayLabel,  // Only the sector name
                                     fillStyle: datasets[0].backgroundColor[i],
                                     strokeStyle: datasets[0].backgroundColor[i],
                                     lineWidth: 0,
                                     hidden: false,
-                                    index: i,
-                                    fontColor: 'white' // This forces white text
+                                    index: i
                                 };
                             });
                         }
@@ -392,28 +389,7 @@ function createSectorChart(division) {
             }
         }
     });
-    
-    // Manually set legend text color after chart is rendered
-    setTimeout(function() {
-        const legendItems = document.querySelectorAll('#sector-chart + div .legend-label, canvas + div .legend-label, .chartjs-legend li span');
-        legendItems.forEach(item => {
-            item.style.color = 'white';
-        });
-        
-        // Also target any legend containers
-        const legendContainers = document.querySelectorAll('.chartjs-legend, canvas + div');
-        legendContainers.forEach(container => {
-            if (container) {
-                container.style.color = 'white';
-                const spans = container.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.color = 'white';
-                });
-            }
-        });
-    }, 100);
 }
-
     function getStatusColorClass(category) {
         switch(category) {
             case 'Pipeline': return 'text-yellow-400 border-yellow-500';

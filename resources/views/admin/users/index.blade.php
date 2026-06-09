@@ -202,7 +202,7 @@
                         <td class="px-6 py-4 text-sm {{ $user->is_active ? 'text-gray-500' : 'text-gray-400' }}">
                             <div class="flex flex-col">
                                 <span>{{ $user->created_at->format('M d, Y') }}</span>
-                                <span class="text-xs">{{ $user->created_at->format('h:i A') }}</span>
+                               
                             </div>
                         </td>
                         

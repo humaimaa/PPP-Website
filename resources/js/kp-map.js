@@ -277,123 +277,142 @@
         '#E74C3C', '#2ECC71', '#F39C12', '#1ABC9C', '#3498DB',
         '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
     ];
-
-    function createSectorChart(division) {
-        const chartContainer = document.getElementById('sector-chart');
-        if (!chartContainer) return;
+function createSectorChart(division) {
+    const chartContainer = document.getElementById('sector-chart');
+    if (!chartContainer) return;
+    
+    if (!division || !division.projects_list || division.projects_list.length === 0) {
+        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+        return;
+    }
+    
+    const sectorData = {};
+    division.projects_list.forEach(project => {
+        let sectorName = project.sector;
         
-        if (!division || !division.projects_list || division.projects_list.length === 0) {
-            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-            return;
+        if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
+            sectorName = 'Other';
+        } else {
+            sectorName = sectorName.trim();
+            sectorName = sectorName.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
         }
         
-        const sectorData = {};
-        division.projects_list.forEach(project => {
-            let sectorName = project.sector;
-            
-            if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
-                sectorName = 'Other';
-            } else {
-                sectorName = sectorName.trim();
-                sectorName = sectorName.split(' ').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                ).join(' ');
-            }
-            
-            sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
-        });
-        
-        const sectors = Object.keys(sectorData);
-        const counts = Object.values(sectorData);
-        
-        if (sectors.length === 0) {
-            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-            return;
+        sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
+    });
+    
+    const sectors = Object.keys(sectorData);
+    const counts = Object.values(sectorData);
+    
+    if (sectors.length === 0) {
+        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+        return;
+    }
+    
+    const sectorColors = {};
+    sectors.forEach((sector) => {
+        let hash = 0;
+        for (let i = 0; i < sector.length; i++) {
+            hash = ((hash << 5) - hash) + sector.charCodeAt(i);
+            hash |= 0;
         }
-        
-        const sectorColors = {};
-        sectors.forEach((sector) => {
-            let hash = 0;
-            for (let i = 0; i < sector.length; i++) {
-                hash = ((hash << 5) - hash) + sector.charCodeAt(i);
-                hash |= 0;
-            }
-            const colorIndex = Math.abs(hash) % sectorColorPalette.length;
-            sectorColors[sector] = sectorColorPalette[colorIndex];
-        });
-        
-        const chartColors = sectors.map(sector => sectorColors[sector]);
-        
-        chartContainer.innerHTML = '';
-        
-        const canvas = document.createElement('canvas');
-        chartContainer.appendChild(canvas);
-        
-        if (sectorChart) {
-            sectorChart.destroy();
-        }
-        
-        sectorChart = new Chart(canvas, {
-            type: 'pie',
-            data: {
-                labels: sectors,
-                datasets: [{
-                    data: counts,
-                    backgroundColor: chartColors,
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            color: 'white',
-                            font: { size: 10, weight: 'normal', family: 'sans-serif' },
-                            boxWidth: 12,
-                            boxHeight: 12,
-                            padding: 8,
-                            generateLabels: function(chart) {
-                                const data = chart.data;
-                                const datasets = data.datasets;
-                                const labels = data.labels;
-                                const total = datasets[0].data.reduce((a, b) => a + b, 0);
-                                
-                                return labels.map((label, i) => {
-                                    const value = datasets[0].data[i];
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    const displayLabel = label && label !== 'undefined' ? label : 'Other';
-                                    
-                                    // Format: "Sector Name - Count - Percentage%" (no brackets)
-                                    return {
-                                        text: `${displayLabel} - ${value} - ${percentage}%`,
-                                        fillStyle: datasets[0].backgroundColor[i],
-                                        strokeStyle: datasets[0].backgroundColor[i],
-                                        lineWidth: 0,
-                                        hidden: false,
-                                        index: i
-                                    };
-                                });
-                            }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || 'Other';
-                                const value = context.parsed || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+        const colorIndex = Math.abs(hash) % sectorColorPalette.length;
+        sectorColors[sector] = sectorColorPalette[colorIndex];
+    });
+    
+    const chartColors = sectors.map(sector => sectorColors[sector]);
+    
+    chartContainer.innerHTML = '';
+    
+    const canvas = document.createElement('canvas');
+    chartContainer.appendChild(canvas);
+    
+    if (sectorChart) {
+        sectorChart.destroy();
+    }
+    
+    sectorChart = new Chart(canvas, {
+        type: 'pie',
+        data: {
+            labels: sectors,
+            datasets: [{
+                data: counts,
+                backgroundColor: chartColors,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: { size: 10, weight: 'normal', family: 'sans-serif' },
+                        boxWidth: 12,
+                        boxHeight: 12,
+                        padding: 8,
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            const datasets = data.datasets;
+                            const labels = data.labels;
+                            const total = datasets[0].data.reduce((a, b) => a + b, 0);
+                            
+                            return labels.map((label, i) => {
+                                const value = datasets[0].data[i];
                                 const percentage = ((value / total) * 100).toFixed(1);
-                                return `${label}: ${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
-                            }
+                                const displayLabel = label && label !== 'undefined' ? label : 'Other';
+                                
+                                // Create custom label item with white color
+                                return {
+                                    text: `${displayLabel} - ${value} - ${percentage}%`,
+                                    fillStyle: datasets[0].backgroundColor[i],
+                                    strokeStyle: datasets[0].backgroundColor[i],
+                                    lineWidth: 0,
+                                    hidden: false,
+                                    index: i,
+                                    fontColor: 'white' // This forces white text
+                                };
+                            });
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || 'Other';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
                         }
                     }
                 }
             }
+        }
+    });
+    
+    // Manually set legend text color after chart is rendered
+    setTimeout(function() {
+        const legendItems = document.querySelectorAll('#sector-chart + div .legend-label, canvas + div .legend-label, .chartjs-legend li span');
+        legendItems.forEach(item => {
+            item.style.color = 'white';
         });
-    }
+        
+        // Also target any legend containers
+        const legendContainers = document.querySelectorAll('.chartjs-legend, canvas + div');
+        legendContainers.forEach(container => {
+            if (container) {
+                container.style.color = 'white';
+                const spans = container.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.color = 'white';
+                });
+            }
+        });
+    }, 100);
+}
 
     function getStatusColorClass(category) {
         switch(category) {

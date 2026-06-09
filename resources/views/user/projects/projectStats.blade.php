@@ -239,6 +239,40 @@
     height: 12px;
     border-radius: 2px;
 }
+
+/* Force white text for Chart.js legend */
+.chartjs-legend,
+.chartjs-legend li,
+.chartjs-legend li span {
+    color: white !important;
+}
+
+/* Target Chart.js legend text specifically */
+canvas + div {
+    color: white !important;
+}
+
+/* Override any default Chart.js legend styles */
+.legend-label {
+    color: white !important;
+    fill: white !important;
+}
+
+/* Ensure the legend text is white */
+.chartjs-legend ul li span:last-child {
+    color: white !important;
+}
+
+/* Target the canvas legend elements */
+[class*="legend"] {
+    color: white !important;
+}
+
+/* Force white text on the legend container */
+#sector-chart ~ .chartjs-legend,
+canvas ~ .chartjs-legend {
+    color: white !important;
+}
 </style>
 @endpush
 

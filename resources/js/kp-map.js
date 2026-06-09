@@ -77,7 +77,6 @@ function loadGeoJSONFromFile() {
 function isFATARegion(feature) {
     const name2 = feature.properties.NAME_2;
     const name1 = feature.properties.NAME_1;
-    // Check for FATA in various possible formats
     return name2 === 'F.A.T.A.' || 
            name2 === 'FATA' || 
            name1 === 'FederallyAdministeredTribalAr' ||
@@ -88,12 +87,10 @@ function addGeoJsonToMap(geoJsonData) {
     geoJsonLayer = L.geoJSON(geoJsonData, {
         style: function(feature) {
             let divisionName = feature.properties.NAME_2;
-            // Normalize division names
             if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
             
             const isFATA = isFATARegion(feature);
             
-            // For non-FATA divisions, check if we have data
             if (!isFATA) {
                 const division = divisionsData[divisionName];
                 if (division) {
@@ -112,7 +109,6 @@ function addGeoJsonToMap(geoJsonData) {
                     fillOpacity: 0.5
                 };
             } else {
-                // FATA/Merged Districts region styling
                 return {
                     fillColor: '#9e9e9e',
                     weight: 1.5,
@@ -128,7 +124,6 @@ function addGeoJsonToMap(geoJsonData) {
             
             const isFATA = isFATARegion(feature);
             
-            // Display name on map - replace F.A.T.A with Merged Districts
             let displayName = divisionName;
             if (isFATA) {
                 displayName = 'Merged Districts';
@@ -136,7 +131,6 @@ function addGeoJsonToMap(geoJsonData) {
             
             const division = divisionsData[divisionName === 'F.A.T.A.' ? 'FATA' : divisionName];
             
-            // Add tooltip with division name
             let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName}</strong><br>`;
             if (!isFATA && division) {
                 tooltipContent += `Projects: ${division.total_projects || 0}<br>Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr</div>`;
@@ -151,7 +145,6 @@ function addGeoJsonToMap(geoJsonData) {
                 className: 'custom-tooltip'
             });
             
-            // Make both regular divisions and FATA clickable
             layer.on('click', function() {
                 if (isFATA) {
                     showDivisionDetail('FATA');
@@ -176,13 +169,12 @@ function addGeoJsonToMap(geoJsonData) {
                 }
             });
             
-            // Add labels with division names on the map (ONLY for regular divisions, NOT for Merged Districts)
+            // Add labels for regular divisions only (not for Merged Districts)
             if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionName !== 'FATA') {
                 const bounds = layer.getBounds();
                 if (bounds && bounds.isValid()) {
                     const center = bounds.getCenter();
                     
-                    // Create custom label with smaller font
                     const label = L.divIcon({
                         className: 'division-label',
                         html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 9px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${displayName}</div>`,
@@ -193,7 +185,6 @@ function addGeoJsonToMap(geoJsonData) {
                     L.marker(center, { icon: label, interactive: false }).addTo(map);
                 }
             }
-            // DO NOT add a separate label for Merged Districts - only show in tooltip on hover
         }
     }).addTo(map);
     
@@ -220,7 +211,6 @@ function highlightDivision(divisionName) {
             let layerDivision = layer.feature.properties.NAME_2;
             if (layerDivision === 'DeraIsmailKhan') layerDivision = 'Dera Ismail Khan';
             
-            // Check for FATA region
             const isFATA = isFATARegion(layer.feature);
             
             if ((layerDivision === divisionName) || (isFATA && divisionName === 'FATA')) {
@@ -235,12 +225,10 @@ function highlightDivision(divisionName) {
     }
 }
 
-// Display all divisions in grid (Default View)
 function displayAllDivisions() {
     const container = document.getElementById('divisions-grid');
     if (!container) return;
     
-    // If container already has cards from PHP, just add click handlers
     const cards = container.querySelectorAll('.division-card');
     if (cards.length > 0) {
         cards.forEach(card => {
@@ -252,7 +240,7 @@ function displayAllDivisions() {
     }
 }
 
-// Create Pie Chart for sectors
+// Create Pie Chart for sectors - FIXED to show sector names correctly
 function createSectorChart(division) {
     if (!division || !division.projects_list || division.projects_list.length === 0) {
         const chartContainer = document.getElementById('sector-chart');
@@ -264,14 +252,19 @@ function createSectorChart(division) {
     
     const sectorData = {};
     division.projects_list.forEach(project => {
-        if (project.sector) {
-            sectorData[project.sector] = (sectorData[project.sector] || 0) + 1;
+        if (project.sector && project.sector !== '' && project.sector !== 'undefined') {
+            let sectorName = project.sector;
+            // Capitalize first letter of each word for better display
+            sectorName = sectorName.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+            sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
         }
     });
     
     const sectors = Object.keys(sectorData);
     const counts = Object.values(sectorData);
-    const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+    const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#FF6B6B', '#4ECDC4'];
     
     const chartContainer = document.getElementById('sector-chart');
     if (!chartContainer) return;
@@ -312,7 +305,8 @@ function createSectorChart(division) {
                         generateLabels: function(chart) {
                             const original = Chart.defaults.plugins.legend.labels.generateLabels(chart);
                             original.forEach(label => {
-                                label.text = label.text + ' (' + sectorData[label.text] + ')';
+                                const count = sectorData[label.text];
+                                label.text = `${label.text} (${count})`;
                             });
                             return original;
                         }
@@ -325,7 +319,7 @@ function createSectorChart(division) {
                             const value = context.parsed || 0;
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} projects (${percentage}%)`;
+                            return `${label}: ${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
                         }
                     }
                 }
@@ -336,16 +330,14 @@ function createSectorChart(division) {
 
 // Show division detail view
 function showDivisionDetail(divisionName) {
-    // Handle FATA name mapping
     let actualDivisionName = divisionName;
-    if (divisionName === 'F.A.T.A.' || divisionName === 'FATA' || divisionName === 'Merged Districts') {
+    if (divisionName === 'F.A.T.A.' || divisionName === 'FATA' || divisionName === 'Merged Districts' || divisionName === 'FATA (Merged Districts)') {
         actualDivisionName = 'FATA';
     }
     
     const division = divisionsData[actualDivisionName];
     if (!division) {
         console.error('Division not found:', actualDivisionName);
-        // Show a message if no data
         const projectsContainer = document.getElementById('division-projects-list');
         if (projectsContainer) {
             projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No project data available for this region</div>';
@@ -356,14 +348,12 @@ function showDivisionDetail(divisionName) {
     currentSelectedDivision = actualDivisionName;
     highlightDivision(actualDivisionName);
     
-    // Switch views
     const defaultView = document.getElementById('default-view');
     const divisionView = document.getElementById('division-view');
     
     if (defaultView) defaultView.classList.add('hidden');
     if (divisionView) divisionView.classList.remove('hidden');
     
-    // Update division details
     const total = division.total_projects || 0;
     const investment = division.investment || 0;
     const avgCost = total > 0 ? (investment / total) / 10000000 : 0;
@@ -386,7 +376,6 @@ function showDivisionDetail(divisionName) {
     if (completedEl) completedEl.textContent = division.projects?.completed || 0;
     if (plannedEl) plannedEl.textContent = division.projects?.planned || 0;
     
-    // Show merged districts section for FATA
     const mergedDistrictsSection = document.getElementById('merged-districts-section');
     if (division.is_merged && division.merged_districts && mergedDistrictsSection) {
         mergedDistrictsSection.classList.remove('hidden');
@@ -428,6 +417,9 @@ function showDivisionDetail(divisionName) {
                     textColor = 'text-orange-400';
                 }
                 
+                const costInCrores = ((project.cost || 0) / 10000000).toFixed(1);
+                const costDisplay = project.cost_display || `PKR ${costInCrores} Cr`;
+                
                 const projectDiv = document.createElement('div');
                 projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColor} relative group cursor-pointer`;
                 projectDiv.onclick = () => {
@@ -438,7 +430,7 @@ function showDivisionDetail(divisionName) {
                 projectDiv.innerHTML = `
                     <div class="font-medium text-white text-sm">${escapeHtml(project.name)}</div>
                     <div class="text-xs text-gray-300 mt-1">${escapeHtml(project.sector || 'N/A')}</div>
-                    <div class="text-xs ${textColor}">Cost: PKR ${((project.cost || 0) / 10000000).toFixed(1)} Cr</div>
+                    <div class="text-xs ${textColor}">Cost: ${escapeHtml(costDisplay)}</div>
                     <div class="hidden group-hover:block absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-xs rounded p-2 whitespace-normal max-w-xs shadow-lg">
                         ${escapeHtml(project.description || 'No description available')}
                     </div>
@@ -449,7 +441,6 @@ function showDivisionDetail(divisionName) {
     }
 }
 
-// Helper function to escape HTML
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -457,7 +448,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Reset to default view
 function resetToDefaultView() {
     currentSelectedDivision = null;
     resetDivisionHighlights();

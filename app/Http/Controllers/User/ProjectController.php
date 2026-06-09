@@ -13,6 +13,75 @@ use Illuminate\Support\Facades\DB;
 class ProjectController extends Controller
 {  
     /**
+     * Helper function to convert cost string to numeric value in PKR Crores
+     * Handles formats like "34 billion", "34 million", "34 Cr", "3400000000", etc.
+     */
+    private function convertCostToCrores($costString)
+    {
+        if (empty($costString)) return 0;
+        
+        // If it's already numeric, convert to crores (1 Crore = 10,000,000)
+        if (is_numeric($costString)) {
+            return (float)($costString / 10000000);
+        }
+        
+        $costString = strtolower(trim($costString));
+        
+        // Extract numeric value
+        preg_match('/([\d,]+\.?\d*)/', $costString, $matches);
+        $numericValue = isset($matches[1]) ? (float)str_replace(',', '', $matches[1]) : 0;
+        
+        // Check for billion (1 Billion = 100 Crores)
+        if (strpos($costString, 'billion') !== false) {
+            return $numericValue * 100;
+        }
+        // Check for million (1 Million = 0.1 Crores)
+        elseif (strpos($costString, 'million') !== false) {
+            return $numericValue * 0.1;
+        }
+        // Check for crore/cr
+        elseif (strpos($costString, 'crore') !== false || strpos($costString, 'cr') !== false) {
+            return $numericValue;
+        }
+        // Assume it's in lakhs or just number (treat as crores if number is small)
+        else {
+            // If number is less than 1000, assume it's in crores already
+            return $numericValue;
+        }
+    }
+    
+    /**
+     * Helper function to get raw numeric cost in PKR (for calculations)
+     */
+    private function getRawCostValue($costString)
+    {
+        if (empty($costString)) return 0;
+        
+        // If it's already numeric
+        if (is_numeric($costString)) {
+            return (float)$costString;
+        }
+        
+        $costString = strtolower(trim($costString));
+        preg_match('/([\d,]+\.?\d*)/', $costString, $matches);
+        $numericValue = isset($matches[1]) ? (float)str_replace(',', '', $matches[1]) : 0;
+        
+        // Convert to actual PKR amount
+        if (strpos($costString, 'billion') !== false) {
+            return $numericValue * 1000000000;
+        }
+        elseif (strpos($costString, 'million') !== false) {
+            return $numericValue * 1000000;
+        }
+        elseif (strpos($costString, 'crore') !== false || strpos($costString, 'cr') !== false) {
+            return $numericValue * 10000000;
+        }
+        else {
+            return $numericValue;
+        }
+    }
+
+    /**
      * Projects page with optional status parameter
      */
     public function index($status = 'pipeline')
@@ -47,12 +116,19 @@ class ProjectController extends Controller
         // Get projects with pagination
         $projects = $query->orderBy('created_at', 'desc')->paginate(9);
         
-        // Get statistics
+        // Get statistics with proper cost conversion
+        $allProjects = Project::all();
+        $totalInvestmentRaw = 0;
+        
+        foreach ($allProjects as $project) {
+            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
+        }
+        
         $stats = [
             'pipeline' => Project::where('category', 'pipeline')->count(),
             'ongoing' => Project::where('category', 'ongoing')->count(),
             'operational' => Project::where('category', 'completed')->count(),
-            'total_investment' => Project::sum('cost')
+            'total_investment' => $totalInvestmentRaw
         ];
         
         return view('user.projects.index', compact('projects', 'status', 'stats'));
@@ -105,17 +181,38 @@ class ProjectController extends Controller
     {
         // Get all projects
         $totalProjects = Project::count();
-        $totalInvestment = Project::sum('cost');
+        
+        // Calculate total investment properly from cost strings
+        $allProjectsForInvestment = Project::all();
+        $totalInvestmentRaw = 0;
+        foreach ($allProjectsForInvestment as $proj) {
+            $totalInvestmentRaw += $this->getRawCostValue($proj->cost);
+        }
+        $totalInvestment = $totalInvestmentRaw;
         
         // Get counts by category
         $pipelineCount = Project::where('category', 'pipeline')->count();
         $ongoingCount = Project::where('category', 'ongoing')->count();
         $completedCount = Project::where('category', 'completed')->count();
         
-        // Get investment by category
-        $pipelineInvestment = Project::where('category', 'pipeline')->sum('cost');
-        $ongoingInvestment = Project::where('category', 'ongoing')->sum('cost');
-        $completedInvestment = Project::where('category', 'completed')->sum('cost');
+        // Get investment by category with proper conversion
+        $pipelineInvestmentRaw = 0;
+        $ongoingInvestmentRaw = 0;
+        $completedInvestmentRaw = 0;
+        
+        foreach (Project::where('category', 'pipeline')->get() as $proj) {
+            $pipelineInvestmentRaw += $this->getRawCostValue($proj->cost);
+        }
+        foreach (Project::where('category', 'ongoing')->get() as $proj) {
+            $ongoingInvestmentRaw += $this->getRawCostValue($proj->cost);
+        }
+        foreach (Project::where('category', 'completed')->get() as $proj) {
+            $completedInvestmentRaw += $this->getRawCostValue($proj->cost);
+        }
+        
+        $pipelineInvestment = $pipelineInvestmentRaw;
+        $ongoingInvestment = $ongoingInvestmentRaw;
+        $completedInvestment = $completedInvestmentRaw;
         
         // Get projects by division from database
         $validDivisions = ['Peshawar', 'Mardan', 'Kohat', 'Bannu', 'Dera Ismail Khan', 'Malakand', 'Hazara'];
@@ -153,25 +250,54 @@ class ProjectController extends Controller
         foreach ($allProjects as $project) {
             $division = $project->division;
             
-            // Handle FATA projects (if any project has division = 'FATA')
-            if ($division && isset($projectsByDivision[$division])) {
-                $projectsByDivision[$division]['total']++;
-                $projectsByDivision[$division]['investment'] += (float)($project->cost ?? 0);
+            // Handle division name mapping (Dera Ismail Khan vs DeraIsmailKhan)
+            $normalizedDivision = $division;
+            if ($division === 'Dera Ismail Khan') {
+                $normalizedDivision = 'Dera Ismail Khan';
+            }
+            
+            if ($normalizedDivision && isset($projectsByDivision[$normalizedDivision])) {
+                $projectsByDivision[$normalizedDivision]['total']++;
+                $projectsByDivision[$normalizedDivision]['investment'] += $this->getRawCostValue($project->cost);
                 
                 // Categorize by status (using category field)
                 if ($project->category === 'ongoing') {
-                    $projectsByDivision[$division]['active']++;
+                    $projectsByDivision[$normalizedDivision]['active']++;
                 } elseif ($project->category === 'completed') {
-                    $projectsByDivision[$division]['completed']++;
+                    $projectsByDivision[$normalizedDivision]['completed']++;
                 } elseif ($project->category === 'pipeline') {
-                    $projectsByDivision[$division]['planned']++;
+                    $projectsByDivision[$normalizedDivision]['planned']++;
                 }
                 
-                $projectsByDivision[$division]['projects'][] = [
+                $projectsByDivision[$normalizedDivision]['projects'][] = [
                     'id' => $project->id,
                     'name' => $project->name,
                     'category' => $project->category,
-                    'cost' => (float)($project->cost ?? 0),
+                    'cost' => $this->getRawCostValue($project->cost),
+                    'cost_display' => $project->cost,
+                    'sector' => $project->sector,
+                    'description' => $project->overview ?? $project->description ?? null,
+                    'location' => $project->location,
+                    'status' => $project->status
+                ];
+            } elseif ($normalizedDivision === 'FATA' && isset($projectsByDivision['FATA'])) {
+                $projectsByDivision['FATA']['total']++;
+                $projectsByDivision['FATA']['investment'] += $this->getRawCostValue($project->cost);
+                
+                if ($project->category === 'ongoing') {
+                    $projectsByDivision['FATA']['active']++;
+                } elseif ($project->category === 'completed') {
+                    $projectsByDivision['FATA']['completed']++;
+                } elseif ($project->category === 'pipeline') {
+                    $projectsByDivision['FATA']['planned']++;
+                }
+                
+                $projectsByDivision['FATA']['projects'][] = [
+                    'id' => $project->id,
+                    'name' => $project->name,
+                    'category' => $project->category,
+                    'cost' => $this->getRawCostValue($project->cost),
+                    'cost_display' => $project->cost,
                     'sector' => $project->sector,
                     'description' => $project->overview ?? $project->description ?? null,
                     'location' => $project->location,
@@ -185,7 +311,7 @@ class ProjectController extends Controller
         foreach ($projectsByDivision as $divisionName => $data) {
             if ($divisionName !== 'FATA') {
                 $totalProjectsCount = $data['total'];
-                $avgCost = $totalProjectsCount > 0 ? $data['investment'] / $totalProjectsCount : 0;
+                $avgCost = $totalProjectsCount > 0 ? ($data['investment'] / $totalProjectsCount) / 10000000 : 0;
                 
                 $divisionsDataForMap[$divisionName] = [
                     'name' => $divisionName,
@@ -212,21 +338,36 @@ class ProjectController extends Controller
                     ],
                     'investment' => $data['investment'],
                     'total_projects' => $data['total'],
-                    'avg_cost' => $data['total'] > 0 ? $data['investment'] / $data['total'] : 0,
+                    'avg_cost' => $data['total'] > 0 ? ($data['investment'] / $data['total']) / 10000000 : 0,
                     'projects_list' => array_slice($data['projects'], 0, 10)
                 ];
             }
         }
         
-        // Get sector data for charts
-        $sectorData = Project::select('sector', DB::raw('count(*) as count'), DB::raw('sum(cost) as investment'))
+        // Get sector data for charts - FIXED to show sector names correctly
+        $sectorData = Project::select('sector', DB::raw('count(*) as count'), DB::raw('sum(cast(cost as decimal(15,2))) as investment'))
             ->whereNotNull('sector')
+            ->where('sector', '!=', '')
             ->groupBy('sector')
             ->get();
         
-        $sectorChartData = [];
-        foreach ($sectorData as $sector) {
-            $sectorChartData[$sector->sector] = $sector->count;
+        // If the above doesn't work due to cost being text, use manual aggregation
+        if ($sectorData->isEmpty()) {
+            $sectorCounts = [];
+            $allProjs = Project::whereNotNull('sector')->where('sector', '!=', '')->get();
+            foreach ($allProjs as $proj) {
+                $sector = $proj->sector;
+                if (!isset($sectorCounts[$sector])) {
+                    $sectorCounts[$sector] = 0;
+                }
+                $sectorCounts[$sector]++;
+            }
+            $sectorChartData = $sectorCounts;
+        } else {
+            $sectorChartData = [];
+            foreach ($sectorData as $sector) {
+                $sectorChartData[$sector->sector] = $sector->count;
+            }
         }
         
         // Prepare divisions grid data
@@ -295,7 +436,10 @@ class ProjectController extends Controller
             $active = $projects->where('category', 'ongoing')->count();
             $completed = $projects->where('category', 'completed')->count();
             $planned = $projects->where('category', 'pipeline')->count();
-            $investment = $projects->sum('cost');
+            $investment = 0;
+            foreach ($projects as $proj) {
+                $investment += $this->getRawCostValue($proj->cost);
+            }
             
             $divisionsData[$division] = [
                 'name' => $division,
@@ -310,7 +454,8 @@ class ProjectController extends Controller
                     return [
                         'name' => $project->name,
                         'type' => $project->category,
-                        'cost' => (float)$project->cost,
+                        'cost' => $this->getRawCostValue($project->cost),
+                        'cost_display' => $project->cost,
                         'sector' => $project->sector,
                         'description' => $project->overview
                     ];
@@ -320,6 +465,11 @@ class ProjectController extends Controller
         
         // Add FATA data
         $fataProjects = Project::where('division', 'FATA')->get();
+        $fataInvestment = 0;
+        foreach ($fataProjects as $proj) {
+            $fataInvestment += $this->getRawCostValue($proj->cost);
+        }
+        
         $divisionsData['FATA'] = [
             'name' => 'FATA',
             'is_merged' => true,
@@ -329,13 +479,14 @@ class ProjectController extends Controller
                 'completed' => $fataProjects->where('category', 'completed')->count(),
                 'planned' => $fataProjects->where('category', 'pipeline')->count()
             ],
-            'investment' => (float)$fataProjects->sum('cost'),
+            'investment' => (float)$fataInvestment,
             'total_projects' => $fataProjects->count(),
             'projects_list' => $fataProjects->map(function($project) {
                 return [
                     'name' => $project->name,
                     'type' => $project->category,
-                    'cost' => (float)$project->cost,
+                    'cost' => $this->getRawCostValue($project->cost),
+                    'cost_display' => $project->cost,
                     'sector' => $project->sector,
                     'description' => $project->overview
                 ];

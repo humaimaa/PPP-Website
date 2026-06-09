@@ -31,25 +31,21 @@
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-yellow-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-yellow-600 mb-3" data-count="{{ $pipelineCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Pipeline Projects</p>
-                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($pipelineInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3" data-count="{{ $ongoingCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Ongoing Projects</p>
-                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($ongoingInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-blue-600 mb-3" data-count="{{ $completedCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Completed Projects</p>
-                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($completedInvestment ?? 0) / 10000000, 1) }} Cr</p>
-            </div>
+           </div>
             
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-purple-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-purple-600 mb-3" data-count="{{ $totalProjects ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Total Projects</p>
-                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($totalInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
         </div>
     </div>

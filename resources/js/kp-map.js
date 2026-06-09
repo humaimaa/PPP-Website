@@ -16,7 +16,7 @@
     console.log('Divisions Data from DB:', divisionsData);
 
     // Color scale for choropleth (green shades matching the design)
-    const colors = ['#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32'];
+    const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
 
     // Calculate totals for coloring
     const divisionProjectCounts = {};
@@ -61,6 +61,7 @@
             return;
         }
         
+        // Initialize map with NO background tiles - just a blank canvas
         map = L.map('kp-choropleth-map', {
             center: [33.5, 71.5],
             zoom: 7,
@@ -69,8 +70,12 @@
             doubleClickZoom: true,
             boxZoom: false,
             attributionControl: false,
-            touchZoom: true
+            touchZoom: true,
+            fadeAnimation: true,
+            zoomAnimation: true
         });
+        
+        // NO background tile layer - just empty map
         
         loadGeoJSONFromFile();
     }
@@ -119,24 +124,27 @@
                     const total = division.total_projects || 0;
                     return {
                         fillColor: getColorForProjectCount(total),
-                        weight: 1.5,
+                        weight: 2,
                         color: '#ffffff',
-                        fillOpacity: 0.85
+                        fillOpacity: 0.85,
+                        opacity: 1
                     };
                 } else if (divisionName === 'FATA') {
                     return {
                         fillColor: '#9e9e9e',
-                        weight: 1.5,
+                        weight: 2,
                         color: '#ffffff',
                         fillOpacity: 0.7,
-                        dashArray: '5, 5'
+                        dashArray: '5, 5',
+                        opacity: 1
                     };
                 }
                 return {
                     fillColor: '#888888',
-                    weight: 1,
+                    weight: 1.5,
                     color: '#ffffff',
-                    fillOpacity: 0.5
+                    fillOpacity: 0.5,
+                    opacity: 1
                 };
             },
             onEachFeature: function(feature, layer) {
@@ -162,14 +170,14 @@
                 
                 layer.bindTooltip(tooltipContent, { sticky: true, className: 'custom-tooltip' });
                 
-                // Add click handler for non-FATA regions that have data
-                if (division && !isFATA) {
+                // Add click handler for all regions that have data
+                if (division) {
                     layer.on('click', function() {
-                        showDivisionDetail(divisionName);
-                    });
-                } else if (isFATA && divisionsData['FATA']) {
-                    layer.on('click', function() {
-                        showDivisionDetail('FATA');
+                        if (isFATA) {
+                            showDivisionDetail('FATA');
+                        } else {
+                            showDivisionDetail(divisionName);
+                        }
                     });
                 }
                 
@@ -177,7 +185,7 @@
                     const layer = e.target;
                     layer.setStyle({
                         fillOpacity: 0.95,
-                        weight: 2.5,
+                        weight: 3,
                         color: '#f59e0b'
                     });
                     layer.bringToFront();
@@ -188,6 +196,23 @@
                         geoJsonLayer.resetStyle(e.target);
                     }
                 });
+                
+                // Add division label
+                if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionsData[divisionName]) {
+                    const bounds = layer.getBounds();
+                    if (bounds && bounds.isValid()) {
+                        const center = bounds.getCenter();
+                        
+                        const label = L.divIcon({
+                            className: 'division-label',
+                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${divisionName}</div>`,
+                            iconSize: [50, 16],
+                            iconAnchor: [25, 8]
+                        });
+                        
+                        L.marker(center, { icon: label, interactive: false }).addTo(map);
+                    }
+                }
             }
         }).addTo(map);
         
@@ -196,6 +221,8 @@
             const bounds = geoJsonLayer.getBounds();
             if (bounds.isValid()) {
                 map.fitBounds(bounds);
+                // Add some padding
+                map.padBounds(0.1);
             } else {
                 map.setView([33.5, 71.5], 7);
             }

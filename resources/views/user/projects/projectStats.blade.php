@@ -20,7 +20,7 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
 </section>
 
-<!-- Stats Section with 4 Cards: Pipeline, Ongoing, Completed, Total Projects -->
+<!-- Stats Section with 4 Cards -->
 <section class="w-full py-10 px-12 md:px-12 bg-gray-50" id="stats-section">
     <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
@@ -63,28 +63,25 @@
 <section class="bg-background-white" id="map-section">
     <div class="container-fluid px-4 sm:px-6 lg:px-8 bg-background-gray/10 py-10">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-primary animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-primary">Projects Distribution Across Khyber Pakhtunkhwa</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto animate-on-scroll-text">Click on any division to view its projects and details</p>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Click on any division to view its projects and details</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Map Container -->
             <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" class="overflow-hidden h-100 md:h-160"
-                    style="background-color: transparent; cursor: default;"></div>
+                <div id="kp-choropleth-map" class="overflow-hidden" style="height: 500px; background-color: transparent; cursor: default;"></div>
             </div>
 
             <!-- Projects Stats Panel -->
             <div class="w-full lg:w-1/2">
-                <div id="stats-panel"
-                    class="bg-gradient-to-br from-[#0D2818] to-[#1a4a2a] shadow-lg rounded-lg p-6 transition-all duration-300 h-full">
+                <div id="stats-panel" class="bg-gradient-to-br from-[#0D2818] to-[#1a4a2a] shadow-lg rounded-lg p-6 transition-all duration-300 h-full">
                     <!-- Default View (No Division Selected) -->
                     <div id="default-view">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white">Projects Overview</h3>
-                            <button id="reset-view"
-                                class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show All</button>
+                            <button id="reset-view" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show All</button>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -103,9 +100,8 @@
                         </div>
 
                         <h4 class="font-semibold mb-3 text-lg text-white">All Divisions</h4>
-                        <div id="divisions-grid"
-                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-100 overflow-y-auto pr-1">
-                            @foreach($divisionsGrid ?? [] as $division)
+                        <div id="divisions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
+                            @foreach($divisionsGrid as $division)
                             <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card" 
                                  data-division="{{ $division['name'] }}">
                                 <div class="font-semibold text-white text-sm">{{ $division['name'] }}</div>
@@ -126,8 +122,7 @@
                     <div id="division-view" class="hidden">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white" id="division-title"></h3>
-                            <button id="back-to-all"
-                                class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back to All</button>
+                            <button id="back-to-all" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back to All</button>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -170,7 +165,7 @@
                         <div id="sector-chart" class="mb-4" style="height: 200px;"></div>
 
                         <h4 class="font-semibold mb-2 text-sm text-white">Project Details</h4>
-                        <div id="division-projects-list" class="space-y-2 max-h-62.5 overflow-y-auto pr-1"></div>
+                        <div id="division-projects-list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
             </div>
@@ -228,30 +223,13 @@
     background: rgba(255, 255, 255, 0.5);
 }
 
-.custom-tooltip {
-    background: rgba(0, 0, 0, 0.85) !important;
-    border: none !important;
-    border-radius: 3px !important;
-    color: white !important;
-    font-size: 10px !important;
-    padding: 3px 6px !important;
-    font-weight: normal !important;
-}
-
-.division-label {
-    background: transparent !important;
-    border: none !important;
-}
-
-.custom-tooltip small, 
-.custom-tooltip span {
-    font-size: 9px !important;
-}
-
-/* Status badge colors */
 .status-pipeline { background-color: #D97706; }
 .status-ongoing { background-color: #10B981; }
 .status-completed { background-color: #3B82F6; }
+
+.division-card {
+    transition: all 0.2s ease;
+}
 </style>
 @endpush
 
@@ -264,45 +242,11 @@
 
 <script>
 // Pass PHP data to JavaScript
-const divisionsDataFromDB = @json($divisionsDataForMap);
-const sectorChartDataFromDB = @json($sectorChartData);
-
-// Animation for stat numbers
-document.addEventListener('DOMContentLoaded', function() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    const animateNumber = (element) => {
-        const target = parseInt(element.getAttribute('data-count'));
-        if (isNaN(target)) return;
-        
-        let current = 0;
-        const increment = target / 50;
-        const updateNumber = () => {
-            current += increment;
-            if (current < target) {
-                element.textContent = Math.floor(current);
-                requestAnimationFrame(updateNumber);
-            } else {
-                element.textContent = target;
-            }
-        };
-        updateNumber();
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateNumber(entry.target);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    statNumbers.forEach(number => observer.observe(number));
-});
+window.divisionsDataFromDB = @json($divisionsDataForMap);
+window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
 
-@vite(['resources/js/kp-map.js'])
+<script src="{{ asset('js/project-stats.js') }}"></script>
 @endpush
 
 @endsection

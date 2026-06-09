@@ -43,23 +43,7 @@
                         Created: {{ $tender->created_at->format('F d, Y') }}  
                     </p>
                 </div>
-                <div class="flex gap-2">
-                    @can('tenders.edit')
-                        <a href="{{ route('admin.tenders.edit', $tender) }}" 
-                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-edit"></i>
-                            Edit Tender
-                        </a>
-                    @endcan
-                    @can('tenders.delete')
-                        <button type="button"
-                                onclick="confirmDelete({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
-                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </button>
-                    @endcan
-                </div>
+               
             </div>
         </div>
 
@@ -321,42 +305,15 @@
                         <p class="text-sm font-semibold text-gray-600">N/A</p>
                     @endif
                 </div>
-                <div class="bg-gray-50 rounded-lg p-3 text-center">
-                    <p class="text-xs text-gray-500 uppercase mb-1">Tender ID</p>
-                    <p class="text-sm font-semibold text-gray-800 font-mono">#{{ $tender->id }}</p>
-                    <p class="text-xs text-gray-400">Reference Number</p>
-                </div>
+                
             </div>
         </div>
     </div>
 
-    {{-- Action Buttons Footer --}}
-    <div class="flex justify-between items-center">
-        <a href="{{ route('admin.tenders.index') }}" 
-           class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition">
-            <i class="fas fa-arrow-left"></i>
-            Back to Tenders
-        </a>
+    
         
-        <div class="flex gap-2">
-            @can('tenders.edit')
-                @if($tender->is_extended)
-                    <button type="button"
-                            onclick="confirmRemoveExtension({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
-                            class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-calendar-minus"></i>
-                        Remove Extension
-                    </button>
-                @else
-                    <button type="button"
-                            onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
-                            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-calendar-plus"></i>
-                        Extend Date
-                    </button>
-                @endif
-            @endcan
-        </div>
+        
+       
     </div>
 
 </div>

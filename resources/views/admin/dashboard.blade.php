@@ -163,18 +163,34 @@
                             </td>
                             <td class="px-6 py-4">
                                 @php
-                                    // Use effective closing date and ensure integer
+                                    // Get effective closing date
                                     $effectiveDate = $tender->is_extended ? $tender->extended_closing_date : $tender->closing_date;
-                                    $daysLeft = $effectiveDate ? (int)floor(now()->diffInDays($effectiveDate, false)) : 0;
-                                    if ($daysLeft < 0) $daysLeft = 0;
+                                    $now = now();
+                                    
+                                    if ($effectiveDate) {
+                                        // Check if closing date is in the future
+                                        if ($effectiveDate->isFuture()) {
+                                            // Calculate days remaining (integer, round up to show at least 1 day if still open)
+                                            $diffInDays = $now->diffInDays($effectiveDate, false);
+                                            $daysLeft = (int)ceil($diffInDays);
+                                            
+                                            // Ensure we show at least 1 if there's any time left in the current day
+                                            if ($diffInDays > 0 && $diffInDays < 1) {
+                                                $daysLeft = 1;
+                                            }
+                                            
+                                            if ($daysLeft <= 7) {
+                                                echo '<span class="text-red-600 font-semibold">' . $daysLeft . ' day(s)</span>';
+                                            } else {
+                                                echo '<span class="text-gray-600">' . $daysLeft . ' day(s)</span>';
+                                            }
+                                        } else {
+                                            echo '<span class="text-gray-400">Closed</span>';
+                                        }
+                                    } else {
+                                        echo '<span class="text-gray-400">N/A</span>';
+                                    }
                                 @endphp
-                                @if($daysLeft <= 7 && $daysLeft > 0)
-                                    <span class="text-red-600 font-semibold">{{ $daysLeft }} day(s)</span>
-                                @elseif($daysLeft > 0)
-                                    <span class="text-gray-600">{{ $daysLeft }} day(s)</span>
-                                @else
-                                    <span class="text-gray-400">Closed</span>
-                                @endif
                             </td>
                         </tr>
                         @endforeach

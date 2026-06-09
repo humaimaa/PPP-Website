@@ -109,6 +109,27 @@
         L.marker([33.5, 71.5], { icon: msgDiv }).addTo(map);
     }
 
+    // Function to format division name with line break for multi-word names
+    function formatDivisionLabel(divisionName) {
+        // Split multi-word names (e.g., "Dera Ismail Khan" -> "Dera" + "Ismail Khan")
+        const words = divisionName.split(' ');
+        if (words.length > 1) {
+            // For 2 words: put second word on new line
+            if (words.length === 2) {
+                return `${words[0]}<br>${words[1]}`;
+            }
+            // For 3 words: put first word on first line, rest on second line
+            else if (words.length === 3) {
+                return `${words[0]}<br>${words[1]} ${words[2]}`;
+            }
+            // For more words: put first word on first line, rest on second line
+            else {
+                return `${words[0]}<br>${words.slice(1).join(' ')}`;
+            }
+        }
+        return divisionName;
+    }
+
     function addGeoJsonToMap(geoJsonData) {
         console.log('Adding GeoJSON to map');
         
@@ -197,17 +218,19 @@
                     }
                 });
                 
-                // Add division label with smaller font
+                // Add division label with line breaks for multi-word names
                 if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionsData[divisionName]) {
                     const bounds = layer.getBounds();
                     if (bounds && bounds.isValid()) {
                         const center = bounds.getCenter();
                         
+                        const formattedLabel = formatDivisionLabel(divisionName);
+                        
                         const label = L.divIcon({
                             className: 'division-label',
-                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 1px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${divisionName}</div>`,
-                            iconSize: [40, 14],
-                            iconAnchor: [20, 7]
+                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${formattedLabel}</div>`,
+                            iconSize: [45, 20],
+                            iconAnchor: [22, 10]
                         });
                         
                         L.marker(center, { icon: label, interactive: false }).addTo(map);
@@ -262,6 +285,30 @@
         }
     }
 
+    // Vibrant color palette for sectors
+    const sectorColorPalette = [
+        '#FF6B6B', // Red
+        '#4ECDC4', // Teal
+        '#45B7D1', // Blue
+        '#96CEB4', // Green
+        '#FFEAA7', // Yellow
+        '#DDA0DD', // Plum
+        '#98D8C8', // Mint
+        '#F7B731', // Orange
+        '#A569BD', // Purple
+        '#5DADE2', // Light Blue
+        '#E74C3C', // Bright Red
+        '#2ECC71', // Emerald
+        '#F39C12', // Orange
+        '#1ABC9C', // Turquoise
+        '#3498DB', // Royal Blue
+        '#9B59B6', // Violet
+        '#E67E22', // Carrot
+        '#16A085', // Green Sea
+        '#27AE60', // Nephritis
+        '#2980B9'  // Belize Hole
+    ];
+
     function createSectorChart(division) {
         const chartContainer = document.getElementById('sector-chart');
         if (!chartContainer) return;
@@ -284,7 +331,21 @@
         
         const sectors = Object.keys(sectorData);
         const counts = Object.values(sectorData);
-        const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#FF6B6B', '#4ECDC4'];
+        
+        // Assign colors based on sector name (consistent colors for same sectors across divisions)
+        const sectorColors = {};
+        sectors.forEach((sector, index) => {
+            // Use hash of sector name to get consistent color
+            let hash = 0;
+            for (let i = 0; i < sector.length; i++) {
+                hash = ((hash << 5) - hash) + sector.charCodeAt(i);
+                hash |= 0;
+            }
+            const colorIndex = Math.abs(hash) % sectorColorPalette.length;
+            sectorColors[sector] = sectorColorPalette[colorIndex];
+        });
+        
+        const chartColors = sectors.map(sector => sectorColors[sector]);
         
         chartContainer.innerHTML = '';
         
@@ -306,7 +367,7 @@
                 labels: sectors,
                 datasets: [{
                     data: counts,
-                    backgroundColor: chartColors.slice(0, sectors.length),
+                    backgroundColor: chartColors,
                     borderWidth: 0
                 }]
             },
@@ -315,7 +376,25 @@
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        display: false  // HIDE THE LEGEND - no labels shown
+                        position: 'right',
+                        labels: {
+                            color: 'white',
+                            font: { size: 10, weight: 'normal' },
+                            boxWidth: 12,
+                            boxHeight: 12,
+                            padding: 8,
+                            generateLabels: function(chart) {
+                                const original = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                                original.forEach(label => {
+                                    const dataset = chart.data.datasets[0];
+                                    const value = dataset.data[label.index];
+                                    const total = dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    label.text = `${label.text} (${value} - ${percentage}%)`;
+                                });
+                                return original;
+                            }
+                        }
                     },
                     tooltip: {
                         callbacks: {

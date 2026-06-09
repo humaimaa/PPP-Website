@@ -61,7 +61,6 @@
             return;
         }
         
-        // Initialize map with zoom level 8 for a bit closer view
         map = L.map('kp-choropleth-map', {
             center: [33.5, 71.5],
             zoom: 8,
@@ -74,8 +73,6 @@
             fadeAnimation: true,
             zoomAnimation: true
         });
-        
-        // No background tile layer - clean map
         
         loadGeoJSONFromFile();
     }
@@ -109,20 +106,15 @@
         L.marker([33.5, 71.5], { icon: msgDiv }).addTo(map);
     }
 
-    // Function to format division name with line break for multi-word names
     function formatDivisionLabel(divisionName) {
-        // Split multi-word names (e.g., "Dera Ismail Khan" -> "Dera" + "Ismail Khan")
         const words = divisionName.split(' ');
         if (words.length > 1) {
-            // For 2 words: put second word on new line
             if (words.length === 2) {
                 return `${words[0]}<br>${words[1]}`;
             }
-            // For 3 words: put first word on first line, rest on second line
             else if (words.length === 3) {
                 return `${words[0]}<br>${words[1]} ${words[2]}`;
             }
-            // For more words: put first word on first line, rest on second line
             else {
                 return `${words[0]}<br>${words.slice(1).join(' ')}`;
             }
@@ -136,7 +128,6 @@
         geoJsonLayer = L.geoJSON(geoJsonData, {
             style: function(feature) {
                 let divisionName = feature.properties?.NAME_2;
-                // Handle special cases
                 if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 if (divisionName === 'F.A.T.A.') divisionName = 'FATA';
                 
@@ -191,7 +182,6 @@
                 
                 layer.bindTooltip(tooltipContent, { sticky: true, className: 'custom-tooltip' });
                 
-                // Add click handler for all regions that have data
                 if (division) {
                     layer.on('click', function() {
                         if (isFATA) {
@@ -218,12 +208,10 @@
                     }
                 });
                 
-                // Add division label with line breaks for multi-word names
                 if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionsData[divisionName]) {
                     const bounds = layer.getBounds();
                     if (bounds && bounds.isValid()) {
                         const center = bounds.getCenter();
-                        
                         const formattedLabel = formatDivisionLabel(divisionName);
                         
                         const label = L.divIcon({
@@ -239,12 +227,10 @@
             }
         }).addTo(map);
         
-        // Fit map to bounds with some padding
         try {
             const bounds = geoJsonLayer.getBounds();
             if (bounds.isValid()) {
                 map.fitBounds(bounds);
-                // Add some padding to zoom in a bit more
                 map.padBounds(0.05);
             } else {
                 map.setView([33.5, 71.5], 8);
@@ -285,28 +271,11 @@
         }
     }
 
-    // Vibrant color palette for sectors
     const sectorColorPalette = [
-        '#FF6B6B', // Red
-        '#4ECDC4', // Teal
-        '#45B7D1', // Blue
-        '#96CEB4', // Green
-        '#FFEAA7', // Yellow
-        '#DDA0DD', // Plum
-        '#98D8C8', // Mint
-        '#F7B731', // Orange
-        '#A569BD', // Purple
-        '#5DADE2', // Light Blue
-        '#E74C3C', // Bright Red
-        '#2ECC71', // Emerald
-        '#F39C12', // Orange
-        '#1ABC9C', // Turquoise
-        '#3498DB', // Royal Blue
-        '#9B59B6', // Violet
-        '#E67E22', // Carrot
-        '#16A085', // Green Sea
-        '#27AE60', // Nephritis
-        '#2980B9'  // Belize Hole
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+        '#DDA0DD', '#98D8C8', '#F7B731', '#A569BD', '#5DADE2',
+        '#E74C3C', '#2ECC71', '#F39C12', '#1ABC9C', '#3498DB',
+        '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
     ];
 
     function createSectorChart(division) {
@@ -320,22 +289,35 @@
         
         const sectorData = {};
         division.projects_list.forEach(project => {
-            if (project.sector && project.sector !== '' && project.sector !== 'undefined') {
-                let sectorName = project.sector.trim();
+            // FIX: Check for valid sector name
+            let sectorName = project.sector;
+            
+            // Handle various cases where sector might be invalid
+            if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
+                sectorName = 'Other';
+            } else {
+                // Clean up the sector name
+                sectorName = sectorName.trim();
                 sectorName = sectorName.split(' ').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                 ).join(' ');
-                sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
             }
+            
+            sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
         });
         
         const sectors = Object.keys(sectorData);
         const counts = Object.values(sectorData);
         
-        // Assign colors based on sector name (consistent colors for same sectors across divisions)
+        // If still no sectors, show message
+        if (sectors.length === 0) {
+            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+            return;
+        }
+        
+        // Assign consistent colors based on sector name
         const sectorColors = {};
-        sectors.forEach((sector, index) => {
-            // Use hash of sector name to get consistent color
+        sectors.forEach((sector) => {
             let hash = 0;
             for (let i = 0; i < sector.length; i++) {
                 hash = ((hash << 5) - hash) + sector.charCodeAt(i);
@@ -348,11 +330,6 @@
         const chartColors = sectors.map(sector => sectorColors[sector]);
         
         chartContainer.innerHTML = '';
-        
-        if (sectors.length === 0) {
-            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-            return;
-        }
         
         const canvas = document.createElement('canvas');
         chartContainer.appendChild(canvas);
@@ -383,23 +360,36 @@
                             boxWidth: 12,
                             boxHeight: 12,
                             padding: 8,
+                            // FIX: Properly generate labels without undefined
                             generateLabels: function(chart) {
-                                const original = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                                original.forEach(label => {
-                                    const dataset = chart.data.datasets[0];
-                                    const value = dataset.data[label.index];
-                                    const total = dataset.data.reduce((a, b) => a + b, 0);
+                                const data = chart.data;
+                                const datasets = data.datasets;
+                                const labels = data.labels;
+                                
+                                return labels.map((label, i) => {
+                                    const value = datasets[0].data[i];
+                                    const total = datasets[0].data.reduce((a, b) => a + b, 0);
                                     const percentage = ((value / total) * 100).toFixed(1);
-                                    label.text = `${label.text} (${value} - ${percentage}%)`;
+                                    
+                                    // Ensure label is not undefined
+                                    const displayLabel = label && label !== 'undefined' ? label : 'Other';
+                                    
+                                    return {
+                                        text: `${displayLabel} (${value} - ${percentage}%)`,
+                                        fillStyle: datasets[0].backgroundColor[i],
+                                        strokeStyle: datasets[0].backgroundColor[i],
+                                        lineWidth: 0,
+                                        hidden: false,
+                                        index: i
+                                    };
                                 });
-                                return original;
                             }
                         }
                     },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                const label = context.label || '';
+                                const label = context.label || 'Other';
                                 const value = context.parsed || 0;
                                 const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                 const percentage = ((value / total) * 100).toFixed(1);
@@ -511,7 +501,6 @@
                     
                     const projectDiv = document.createElement('div');
                     projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
-                    // Navigate to project show page on click
                     projectDiv.onclick = () => {
                         if (project.id) {
                             window.location.href = `/project/${project.id}`;
@@ -580,7 +569,6 @@
         statNumbers.forEach(number => observer.observe(number));
     }
 
-    // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded, initializing...');
         initStatNumberAnimation();

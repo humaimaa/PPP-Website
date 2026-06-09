@@ -15,9 +15,9 @@
                         <i class="fas fa-project-diagram text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-gray-500 text-sm">Active Projects</p>
-                        <h3 class="text-2xl font-bold">{{ $activeProjects ?? 0 }}</h3>
-                        <a href="{{ route('admin.projects.index') }}?status=active" 
+                        <p class="text-gray-500 text-sm">Total Projects</p>
+                        <h3 class="text-2xl font-bold">{{ $totalProjects ?? 0 }}</h3>
+                        <a href="{{ route('admin.projects.index') }}" 
                            class="text-sm text-emerald-700 hover:underline mt-1 inline-block">View All</a>
                     </div>
                 </div>

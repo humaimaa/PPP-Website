@@ -18,7 +18,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Stats Cards Data
-        $activeProjects = Project::where('status', 'active')->count();
+        $totalProjects = Project::count();  // Changed from active projects to total projects
         $openTenders = Tender::where('closing_date', '>=', now())->count();
         $newsItems = News::count();
         $publicDocuments = Download::count();
@@ -174,7 +174,7 @@ class DashboardController extends Controller
             ->get();
         
         return view('admin.dashboard', compact(
-            'activeProjects',
+            'totalProjects',      // Changed variable name
             'openTenders',
             'newsItems',
             'publicDocuments',

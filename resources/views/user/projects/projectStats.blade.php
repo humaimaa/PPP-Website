@@ -20,7 +20,7 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
 </section>
 
-<!-- Stats Section with 4 Cards: Pipeline, Active, Completed, Total Projects -->
+<!-- Stats Section with 4 Cards: Pipeline, Ongoing, Completed, Total Projects -->
 <section class="w-full py-10 px-12 md:px-12 bg-gray-50" id="stats-section">
     <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
@@ -35,10 +35,10 @@
                 <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($pipelineInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
-            <!-- Active/Ongoing Projects Card -->
+            <!-- Ongoing Projects Card -->
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3" data-count="{{ $ongoingCount ?? 0 }}">0</div>
-                <p class="text-gray-700 text-sm md:text-base font-medium">Active Projects</p>
+                <p class="text-gray-700 text-sm md:text-base font-medium">Ongoing Projects</p>
                 <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($ongoingInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
@@ -106,10 +106,16 @@
                         <div id="divisions-grid"
                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-100 overflow-y-auto pr-1">
                             @foreach($divisionsGrid ?? [] as $division)
-                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 text-center division-card" data-division="{{ $division['name'] }}">
+                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card" 
+                                 data-division="{{ $division['name'] }}">
                                 <div class="font-semibold text-white text-sm">{{ $division['name'] }}</div>
-                                <div class="text-2xl font-bold text-green-400 mt-1">{{ $division['count'] }}</div>
-                                <div class="text-xs text-gray-300">Projects</div>
+                                <div class="text-2xl font-bold text-green-400 mt-1">{{ $division['total'] }}</div>
+                                <div class="text-xs text-gray-300">Total Projects</div>
+                                <div class="flex justify-center gap-2 mt-2 text-xs">
+                                    <span class="text-yellow-400">P: {{ $division['pipeline'] }}</span>
+                                    <span class="text-green-400">O: {{ $division['ongoing'] }}</span>
+                                    <span class="text-blue-400">C: {{ $division['completed'] }}</span>
+                                </div>
                                 <div class="text-xs text-green-500 mt-1">PKR {{ number_format($division['investment'] / 10000000, 1) }} Cr</div>
                             </div>
                             @endforeach
@@ -140,17 +146,17 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-2 text-center text-sm mb-4">
+                            <div class="bg-yellow-500/20 rounded p-2">
+                                <div class="font-bold text-yellow-400 text-lg" id="division-pipeline">0</div>
+                                <div class="text-xs text-gray-300">Pipeline</div>
+                            </div>
                             <div class="bg-green-500/20 rounded p-2">
-                                <div class="font-bold text-green-400 text-lg" id="division-active">0</div>
-                                <div class="text-xs text-gray-300">Active</div>
+                                <div class="font-bold text-green-400 text-lg" id="division-ongoing">0</div>
+                                <div class="text-xs text-gray-300">Ongoing</div>
                             </div>
                             <div class="bg-blue-500/20 rounded p-2">
                                 <div class="font-bold text-blue-400 text-lg" id="division-completed">0</div>
                                 <div class="text-xs text-gray-300">Completed</div>
-                            </div>
-                            <div class="bg-orange-500/20 rounded p-2">
-                                <div class="font-bold text-orange-400 text-lg" id="division-planned">0</div>
-                                <div class="text-xs text-gray-300">Planned</div>
                             </div>
                         </div>
 
@@ -241,6 +247,11 @@
 .custom-tooltip span {
     font-size: 9px !important;
 }
+
+/* Status badge colors */
+.status-pipeline { background-color: #D97706; }
+.status-ongoing { background-color: #10B981; }
+.status-completed { background-color: #3B82F6; }
 </style>
 @endpush
 

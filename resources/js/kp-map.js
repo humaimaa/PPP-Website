@@ -1,4 +1,4 @@
-// kp-map.js - Interactive Map for KPK Projects Distribution (Dynamic from Database)
+// kp-map.js - Interactive Map for KPK Projects Distribution
 
 // Global variables
 let currentSelectedDivision = null;
@@ -9,7 +9,7 @@ let sectorChart = null;
 // Use divisions data passed from PHP
 const divisionsData = typeof divisionsDataFromDB !== 'undefined' ? divisionsDataFromDB : {};
 
-// Color scale for choropleth (green shades matching the design)
+// Color scale for choropleth (green shades)
 const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
 
 // Calculate totals for coloring
@@ -131,11 +131,21 @@ function addGeoJsonToMap(geoJsonData) {
             
             const division = divisionsData[divisionName === 'F.A.T.A.' ? 'FATA' : divisionName];
             
+            // Build tooltip content
             let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName}</strong><br>`;
             if (!isFATA && division) {
-                tooltipContent += `Projects: ${division.total_projects || 0}<br>Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr</div>`;
+                tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
+                tooltipContent += `<span style="color: #F59E0B;">Pipeline: ${division.projects?.pipeline || 0}</span> | `;
+                tooltipContent += `<span style="color: #10B981;">Ongoing: ${division.projects?.ongoing || 0}</span> | `;
+                tooltipContent += `<span style="color: #3B82F6;">Completed: ${division.projects?.completed || 0}</span><br>`;
+                tooltipContent += `Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr</div>`;
             } else if (isFATA && divisionsData['FATA']) {
-                tooltipContent += `Projects: ${divisionsData['FATA'].total_projects || 0}<br>Investment: PKR ${((divisionsData['FATA'].investment || 0) / 10000000).toFixed(1)} Cr<br><span style="font-size: 9px;">(7 Merged Districts)</span></div>`;
+                tooltipContent += `Total Projects: ${divisionsData['FATA'].total_projects || 0}<br>`;
+                tooltipContent += `<span style="color: #F59E0B;">Pipeline: ${divisionsData['FATA'].projects?.pipeline || 0}</span> | `;
+                tooltipContent += `<span style="color: #10B981;">Ongoing: ${divisionsData['FATA'].projects?.ongoing || 0}</span> | `;
+                tooltipContent += `<span style="color: #3B82F6;">Completed: ${divisionsData['FATA'].projects?.completed || 0}</span><br>`;
+                tooltipContent += `Investment: PKR ${((divisionsData['FATA'].investment || 0) / 10000000).toFixed(1)} Cr<br>`;
+                tooltipContent += `<span style="font-size: 9px;">(7 Merged Districts)</span></div>`;
             } else {
                 tooltipContent += `No projects data available</div>`;
             }
@@ -169,7 +179,7 @@ function addGeoJsonToMap(geoJsonData) {
                 }
             });
             
-            // Add labels for regular divisions only (not for Merged Districts)
+            // Add labels for regular divisions only
             if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionName !== 'FATA') {
                 const bounds = layer.getBounds();
                 if (bounds && bounds.isValid()) {
@@ -233,28 +243,32 @@ function displayAllDivisions() {
     if (cards.length > 0) {
         cards.forEach(card => {
             card.addEventListener('click', function() {
-                const divisionName = this.getAttribute('data-division');
+                let divisionName = this.getAttribute('data-division');
+                // Handle FATA name
+                if (divisionName === 'FATA (Merged Districts)') {
+                    divisionName = 'FATA';
+                }
                 showDivisionDetail(divisionName);
             });
         });
     }
 }
 
-// Create Pie Chart for sectors - FIXED to show sector names correctly
+// Create Pie Chart for sectors
 function createSectorChart(division) {
+    const chartContainer = document.getElementById('sector-chart');
+    if (!chartContainer) return;
+    
     if (!division || !division.projects_list || division.projects_list.length === 0) {
-        const chartContainer = document.getElementById('sector-chart');
-        if (chartContainer) {
-            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-        }
+        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
         return;
     }
     
     const sectorData = {};
     division.projects_list.forEach(project => {
         if (project.sector && project.sector !== '' && project.sector !== 'undefined') {
-            let sectorName = project.sector;
-            // Capitalize first letter of each word for better display
+            let sectorName = project.sector.trim();
+            // Capitalize first letter of each word
             sectorName = sectorName.split(' ').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
             ).join(' ');
@@ -265,9 +279,6 @@ function createSectorChart(division) {
     const sectors = Object.keys(sectorData);
     const counts = Object.values(sectorData);
     const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#FF6B6B', '#4ECDC4'];
-    
-    const chartContainer = document.getElementById('sector-chart');
-    if (!chartContainer) return;
     
     chartContainer.innerHTML = '';
     
@@ -328,6 +339,25 @@ function createSectorChart(division) {
     });
 }
 
+// Get color class for status badge
+function getStatusColorClass(category) {
+    switch(category) {
+        case 'pipeline': return 'text-yellow-400 border-yellow-500';
+        case 'ongoing': return 'text-green-400 border-green-500';
+        case 'completed': return 'text-blue-400 border-blue-500';
+        default: return 'text-gray-400 border-gray-500';
+    }
+}
+
+function getStatusBadge(category) {
+    switch(category) {
+        case 'pipeline': return '<span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded">Pipeline</span>';
+        case 'ongoing': return '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">Ongoing</span>';
+        case 'completed': return '<span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Completed</span>';
+        default: return '';
+    }
+}
+
 // Show division detail view
 function showDivisionDetail(divisionName) {
     let actualDivisionName = divisionName;
@@ -364,17 +394,17 @@ function showDivisionDetail(divisionName) {
     const totalProjectsEl = document.getElementById('division-total-projects');
     const totalInvestmentEl = document.getElementById('division-total-investment');
     const avgCostEl = document.getElementById('division-avg-cost');
-    const activeEl = document.getElementById('division-active');
+    const pipelineEl = document.getElementById('division-pipeline');
+    const ongoingEl = document.getElementById('division-ongoing');
     const completedEl = document.getElementById('division-completed');
-    const plannedEl = document.getElementById('division-planned');
     
     if (titleEl) titleEl.textContent = displayTitle;
     if (totalProjectsEl) totalProjectsEl.textContent = total;
     if (totalInvestmentEl) totalInvestmentEl.textContent = (investment / 10000000).toFixed(1);
     if (avgCostEl) avgCostEl.textContent = avgCost.toFixed(1);
-    if (activeEl) activeEl.textContent = division.projects?.active || 0;
+    if (pipelineEl) pipelineEl.textContent = division.projects?.pipeline || 0;
+    if (ongoingEl) ongoingEl.textContent = division.projects?.ongoing || 0;
     if (completedEl) completedEl.textContent = division.projects?.completed || 0;
-    if (plannedEl) plannedEl.textContent = division.projects?.planned || 0;
     
     const mergedDistrictsSection = document.getElementById('merged-districts-section');
     if (division.is_merged && division.merged_districts && mergedDistrictsSection) {
@@ -403,34 +433,26 @@ function showDivisionDetail(divisionName) {
             projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
         } else {
             division.projects_list.forEach(project => {
-                let borderColor, textColor;
-                const projectType = (project.category || project.type || '').toLowerCase();
+                const category = (project.category || '').toLowerCase();
+                const borderColorClass = getStatusColorClass(category);
+                const statusBadge = getStatusBadge(category);
                 
-                if (projectType === 'ongoing') {
-                    borderColor = 'border-green-500';
-                    textColor = 'text-green-400';
-                } else if (projectType === 'completed') {
-                    borderColor = 'border-blue-500';
-                    textColor = 'text-blue-400';
-                } else {
-                    borderColor = 'border-orange-500';
-                    textColor = 'text-orange-400';
-                }
-                
-                const costInCrores = ((project.cost || 0) / 10000000).toFixed(1);
-                const costDisplay = project.cost_display || `PKR ${costInCrores} Cr`;
+                const costDisplay = project.cost_display || `PKR ${((project.cost_raw || 0) / 10000000).toFixed(1)} Cr`;
                 
                 const projectDiv = document.createElement('div');
-                projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColor} relative group cursor-pointer`;
+                projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} relative group cursor-pointer`;
                 projectDiv.onclick = () => {
                     if (project.id) {
                         window.location.href = `/projects/${project.id}`;
                     }
                 };
                 projectDiv.innerHTML = `
-                    <div class="font-medium text-white text-sm">${escapeHtml(project.name)}</div>
+                    <div class="flex justify-between items-start">
+                        <div class="font-medium text-white text-sm flex-1">${escapeHtml(project.name)}</div>
+                        ${statusBadge}
+                    </div>
                     <div class="text-xs text-gray-300 mt-1">${escapeHtml(project.sector || 'N/A')}</div>
-                    <div class="text-xs ${textColor}">Cost: ${escapeHtml(costDisplay)}</div>
+                    <div class="text-xs ${borderColorClass} mt-1">Cost: ${escapeHtml(costDisplay)}</div>
                     <div class="hidden group-hover:block absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-xs rounded p-2 whitespace-normal max-w-xs shadow-lg">
                         ${escapeHtml(project.description || 'No description available')}
                     </div>

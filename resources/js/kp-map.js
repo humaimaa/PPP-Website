@@ -244,6 +244,7 @@ function displayAllDivisions() {
         cards.forEach(card => {
             card.addEventListener('click', function() {
                 let divisionName = this.getAttribute('data-division');
+                // Handle FATA name
                 if (divisionName === 'FATA (Merged Districts)') {
                     divisionName = 'FATA';
                 }
@@ -253,22 +254,21 @@ function displayAllDivisions() {
     }
 }
 
-// Create Pie Chart for sectors - DYNAMIC based on division projects
+// Create Pie Chart for sectors
 function createSectorChart(division) {
     const chartContainer = document.getElementById('sector-chart');
     if (!chartContainer) return;
     
     if (!division || !division.projects_list || division.projects_list.length === 0) {
-        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available for this division</div>';
+        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
         return;
     }
     
-    // Calculate sector counts dynamically from the division's projects
     const sectorData = {};
     division.projects_list.forEach(project => {
-        if (project.sector && project.sector !== '' && project.sector !== 'undefined' && project.sector !== null) {
+        if (project.sector && project.sector !== '' && project.sector !== 'undefined') {
             let sectorName = project.sector.trim();
-            // Capitalize first letter of each word for better display
+            // Capitalize first letter of each word
             sectorName = sectorName.split(' ').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
             ).join(' ');
@@ -278,12 +278,12 @@ function createSectorChart(division) {
     
     const sectors = Object.keys(sectorData);
     const counts = Object.values(sectorData);
-    const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#FF6B6B', '#4ECDC4', '#FFA07A', '#20B2AA'];
+    const chartColors = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#FF6B6B', '#4ECDC4'];
     
     chartContainer.innerHTML = '';
     
     if (sectors.length === 0) {
-        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available for this division</div>';
+        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
         return;
     }
     
@@ -372,10 +372,6 @@ function showDivisionDetail(divisionName) {
         if (projectsContainer) {
             projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No project data available for this region</div>';
         }
-        const chartContainer = document.getElementById('sector-chart');
-        if (chartContainer) {
-            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-        }
         return;
     }
     
@@ -427,7 +423,6 @@ function showDivisionDetail(divisionName) {
         mergedDistrictsSection.classList.add('hidden');
     }
     
-    // Create sector chart dynamically based on this division's projects
     createSectorChart(division);
     
     const projectsContainer = document.getElementById('division-projects-list');

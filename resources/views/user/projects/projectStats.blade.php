@@ -20,30 +20,40 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
 </section>
 
-<!-- Stats Section with 3 Cards: Pipeline, Ongoing, Completed (No Investment) -->
+<!-- Stats Section with 4 Cards: Pipeline, Ongoing, Completed, Total Projects -->
 <section class="w-full py-10 px-12 md:px-12 bg-gray-50" id="stats-section">
-    <div class="container mx-auto max-w-4xl">
+    <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4">Our Impact in Numbers</h2>
             <div class="w-24 h-1 bg-yellow-500 mx-auto rounded"></div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <!-- Pipeline Projects Card -->
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-yellow-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-yellow-600 mb-3" data-count="{{ $pipelineCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Pipeline Projects</p>
+                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($pipelineInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
             <!-- Ongoing Projects Card -->
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3" data-count="{{ $ongoingCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Ongoing Projects</p>
+                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($ongoingInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
             
             <!-- Completed Projects Card -->
             <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
                 <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-blue-600 mb-3" data-count="{{ $completedCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Completed Projects</p>
+                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($completedInvestment ?? 0) / 10000000, 1) }} Cr</p>
+            </div>
+            
+            <!-- Total Projects Card -->
+            <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-purple-500">
+                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-purple-600 mb-3" data-count="{{ $totalProjects ?? 0 }}">0</div>
+                <p class="text-gray-700 text-sm md:text-base font-medium">Total Projects</p>
+                <p class="text-xs text-gray-500 mt-2">Investment: PKR {{ number_format(($totalInvestment ?? 0) / 10000000, 1) }} Cr</p>
             </div>
         </div>
     </div>
@@ -157,7 +167,7 @@
                         </div>
 
                         <h4 class="font-semibold mb-2 text-sm text-white">Projects by Sector</h4>
-                        <div id="sector-chart" class="mb-4" style="height: 220px;"></div>
+                        <div id="sector-chart" class="mb-4" style="height: 200px;"></div>
 
                         <h4 class="font-semibold mb-2 text-sm text-white">Project Details</h4>
                         <div id="division-projects-list" class="space-y-2 max-h-62.5 overflow-y-auto pr-1"></div>
@@ -255,6 +265,7 @@
 <script>
 // Pass PHP data to JavaScript
 const divisionsDataFromDB = @json($divisionsDataForMap);
+const sectorChartDataFromDB = @json($sectorChartData);
 
 // Animation for stat numbers
 document.addEventListener('DOMContentLoaded', function() {

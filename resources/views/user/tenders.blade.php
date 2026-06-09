@@ -11,7 +11,12 @@
                 Tenders & Opportunities
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white mt-4 text-lg">@if($section == 'general-procurement') General Procurement @elseif($section == 'transaction-advisory') Transaction Advisory @else Private Partner Selection @endif</p>
+            <p class="text-white mt-4 text-lg">
+                @if($section == 'general-procurement') General Procurement
+                @elseif($section == 'transaction-advisory') Transaction Advisory
+                @else Private Partner Selection
+                @endif
+            </p>
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Tenders Banner" class="w-full h-full object-cover">
@@ -29,15 +34,44 @@
 
         <div class="space-y-6">
             @forelse($allTenders as $tender)
+            @php
+                // Use start-of-day for both sides so "closing 10 Jun, today is 9 Jun" = 1 day left
+                $today       = now()->startOfDay();
+                $closingDate = $tender->closing_date instanceof \Carbon\Carbon
+                    ? $tender->closing_date->copy()->startOfDay()
+                    : \Carbon\Carbon::parse($tender->closing_date)->startOfDay();
+
+                // Extended logic:
+                // - closing_date          = the ORIGINAL closing date (never changes)
+                // - extended_closing_date = the NEW closing date (nullable column)
+                // The effective deadline for active/days-left is extended_closing_date if present, else closing_date.
+                $isExtended   = !empty($tender->extended_closing_date);
+                $extendedDate = null;
+                $deadlineDate = $closingDate; // what we actually count down to
+
+                if ($isExtended) {
+                    $extendedDate = $tender->extended_closing_date instanceof \Carbon\Carbon
+                        ? $tender->extended_closing_date->copy()->startOfDay()
+                        : \Carbon\Carbon::parse($tender->extended_closing_date)->startOfDay();
+                    $deadlineDate = $extendedDate;
+                }
+
+                $isActive      = $deadlineDate->gte($today);
+                $daysLeft      = $isActive ? (int) $today->diffInDays($deadlineDate) : 0;
+                $isClosingSoon = $isActive && $daysLeft <= 15;
+            @endphp
+
             <div class="bg-background-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 relative">
-                <!-- Status Badge -->
-                <div class="absolute top-4 right-4 z-10">
-                    @php
-                        $currentDate = now();
-                        $isActive = $tender->closing_date >= $currentDate;
-                        $isClosingSoon = $isActive && $tender->closing_date <= $currentDate->copy()->addDays(15);
-                    @endphp
-                    
+
+                {{-- Status badges --}}
+                <div class="absolute top-4 right-4 z-10 flex flex-col items-end gap-1">
+
+                    @if($isExtended)
+                        <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                            <i class="fas fa-history mr-1"></i> Extended
+                        </span>
+                    @endif
+
                     @if($isClosingSoon)
                         <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
                             <i class="fas fa-clock mr-1"></i> Closing Soon!
@@ -51,41 +85,89 @@
                             <i class="fas fa-archive mr-1"></i> Archived
                         </span>
                     @endif
+
                 </div>
-                
+
                 <div class="p-6">
                     <div class="flex flex-wrap justify-between items-start gap-4">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-text-black mb-2">{{ $tender->name }}</h3>
+
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-                                
+
+                                {{-- Opening date --}}
                                 <div class="flex items-center text-sm text-text-muted">
                                     <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
-                                    <span>Opening: {{ $tender->opening_date instanceof \Carbon\Carbon ? $tender->opening_date->format('d M Y') : \Carbon\Carbon::parse($tender->opening_date)->format('d M Y') }}</span>
+                                    <span>Opening:
+                                        {{ ($tender->opening_date instanceof \Carbon\Carbon
+                                            ? $tender->opening_date
+                                            : \Carbon\Carbon::parse($tender->opening_date))->format('d M Y') }}
+                                    </span>
                                 </div>
-                                <div class="flex items-center text-sm">
-                                    <i class="fas fa-calendar-check text-gray-400 mr-2"></i>
-                                    <span class="text-text-muted">Closing: </span>
-                                    <span class="ml-1 font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-text-black' : 'text-text-muted') }}">
-                                        {{ $tender->closing_date instanceof \Carbon\Carbon ? $tender->closing_date->format('d M Y') : \Carbon\Carbon::parse($tender->closing_date)->format('d M Y') }}
-                                    </span>
-                                    @if($isClosingSoon)
-                                    <span class="ml-2 text-red-500 text-xs">
-                                        ({{ now()->diffInDays($tender->closing_date) }} days left)
-                                    </span>
+
+                                {{-- Closing date --}}
+                                <div class="flex flex-col justify-center text-sm">
+                                    @if($isExtended)
+                                        {{-- Show original date with strikethrough, then extended date --}}
+                                        <div class="flex items-center flex-wrap gap-x-1">
+                                            <i class="fas fa-calendar-check text-gray-400 mr-1"></i>
+                                            <span class="text-text-muted">Closing:</span>
+                                            <span class="line-through text-text-muted ml-1">
+                                                {{ $closingDate->format('d M Y') }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center flex-wrap gap-x-1 mt-0.5">
+                                            <i class="fas fa-calendar-plus text-purple-500 mr-1"></i>
+                                            <span class="font-semibold {{ $isClosingSoon ? 'text-red-600' : 'text-purple-600' }}">
+                                                {{ $extendedDate->format('d M Y') }}
+                                            </span>
+                                            <span class="text-xs font-semibold text-purple-500 border border-purple-400 rounded px-1 ml-1">
+                                                Extended
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar-check text-gray-400 mr-2"></i>
+                                            <span class="text-text-muted">Closing:</span>
+                                            <span class="ml-1 font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-text-black' : 'text-text-muted') }}">
+                                                {{ $closingDate->format('d M Y') }}
+                                            </span>
+                                        </div>
                                     @endif
                                 </div>
-                            </div>
+
+                                {{-- Days left --}}
+                                <div class="flex items-center text-sm">
+                                    @if($isActive)
+                                        <i class="fas fa-hourglass-half text-gray-400 mr-2"></i>
+                                        @if($daysLeft === 0)
+                                            <span class="font-semibold text-red-600">Closing today</span>
+                                        @elseif($daysLeft === 1)
+                                            <span class="font-semibold text-red-600">1 day left</span>
+                                        @else
+                                            <span class="font-semibold {{ $isClosingSoon ? 'text-red-600' : 'text-text-black' }}">
+                                                {{ $daysLeft }} days left
+                                            </span>
+                                        @endif
+                                    @else
+                                        <i class="fas fa-ban text-gray-400 mr-2"></i>
+                                        <span class="text-text-muted text-xs italic">Closed</span>
+                                    @endif
+                                </div>
+
+                            </div>{{-- /grid --}}
                         </div>
+
+                        {{-- Document buttons --}}
                         <div class="flex gap-3">
                             @if($tender->document)
-                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" 
+                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank"
                                class="inline-flex items-center px-4 py-2 {{ $isActive ? 'bg-primary hover:bg-primary-hover' : 'bg-gray-600 hover:bg-gray-700' }} text-text-primary rounded-lg transition-colors">
                                 <i class="fas fa-file-pdf mr-2"></i> Tender Doc
                             </a>
                             @endif
                             @if($tender->advertisement)
-                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" 
+                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank"
                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-text-primary rounded-lg hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-image mr-2"></i> Advt
                             </a>
@@ -93,8 +175,8 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Additional Documents -->
+
+                {{-- Additional Documents --}}
                 @if($tender->additionalDocs && $tender->additionalDocs->count() > 0)
                 <div class="bg-background-light border-t border-gray-200 px-6 py-4">
                     <h4 class="text-sm font-semibold text-text-black mb-3 flex items-center">
@@ -108,10 +190,12 @@
                                 <p class="font-medium text-text-black text-sm">{{ $doc->title }}</p>
                                 <p class="text-xs text-text-muted">
                                     <i class="far fa-calendar-alt mr-1"></i>
-                                    Published: {{ $doc->publish_date instanceof \Carbon\Carbon ? $doc->publish_date->format('d M Y') : \Carbon\Carbon::parse($doc->publish_date)->format('d M Y') }}
+                                    Published: {{ ($doc->publish_date instanceof \Carbon\Carbon
+                                        ? $doc->publish_date
+                                        : \Carbon\Carbon::parse($doc->publish_date))->format('d M Y') }}
                                 </p>
                             </div>
-                            <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" 
+                            <a href="{{ asset('storage/' . $doc->document) }}" target="_blank"
                                class="text-primary hover:text-primary-hover text-sm font-medium">
                                 <i class="fas fa-download mr-1"></i> Download
                             </a>
@@ -120,7 +204,9 @@
                     </div>
                 </div>
                 @endif
-            </div>
+
+            </div>{{-- /card --}}
+
             @empty
             <div class="bg-background-white rounded-lg shadow-md p-12 text-center">
                 <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
@@ -131,6 +217,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Tender Submission Guidelines Section -->
 <section class="py-10 bg-background-light">

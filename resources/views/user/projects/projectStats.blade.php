@@ -229,7 +229,9 @@
 window.divisionsDataFromDB = @json($divisionsDataForMap);
 window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
-<script src="{{ asset('js/kp-map.js') }}"></script>
+  @vite([ 
+        'resources/js/kp-map.js'
+    ])
 @endpush
 
 @endsection

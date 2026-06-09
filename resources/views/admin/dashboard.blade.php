@@ -158,14 +158,14 @@
                                         </div>
                                     </div>
                                 @else
-                                    <span>{{ $tender->effective_closing_date->format('M d, Y') }}</span>
+                                    <span>{{ $tender->closing_date->format('M d, Y') }}</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
                                 @php
                                     // Use effective closing date and ensure integer
                                     $effectiveDate = $tender->is_extended ? $tender->extended_closing_date : $tender->closing_date;
-                                    $daysLeft = $effectiveDate ? (int)floor(now()->diffInDays($effective_date, false)) : 0;
+                                    $daysLeft = $effectiveDate ? (int)floor(now()->diffInDays($effectiveDate, false)) : 0;
                                     if ($daysLeft < 0) $daysLeft = 0;
                                 @endphp
                                 @if($daysLeft <= 7 && $daysLeft > 0)

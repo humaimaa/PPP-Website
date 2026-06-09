@@ -1,4 +1,5 @@
-// Project Statistics Map JavaScript
+// kp-map.js - Interactive Map for KPK Projects Distribution
+
 (function() {
     'use strict';
 
@@ -9,24 +10,15 @@
     let map = null;
     let sectorChart = null;
 
-    const divisionsData = typeof window.divisionsDataFromDB !== 'undefined' ? window.divisionsDataFromDB : {};
+    // Get dynamic data from PHP
+    const divisionsData = typeof window.divisionsDataFromDB !== 'undefined' && window.divisionsDataFromDB ? window.divisionsDataFromDB : {};
     
-    console.log('Divisions Data:', divisionsData);
+    console.log('Divisions Data from DB:', divisionsData);
 
-    // Division name mapping for GeoJSON property NAME_2 values
-    const divisionNameMapping = {
-        'DeraIsmailKhan': 'Dera Ismail Khan',
-        'F.A.T.A.': 'FATA'
-    };
-
-    function normalizeDivisionName(name) {
-        if (!name) return name;
-        if (divisionNameMapping[name]) return divisionNameMapping[name];
-        return name;
-    }
-
+    // Color scale for choropleth (green shades matching the design)
     const colors = ['#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32'];
 
+    // Calculate totals for coloring
     const divisionProjectCounts = {};
     Object.keys(divisionsData).forEach(div => {
         if (divisionsData[div]) {
@@ -69,14 +61,16 @@
             return;
         }
         
-        map = L.map('kp-choropleth-map').setView([33.5, 71.5], 7);
-        
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 10,
-            minZoom: 6
-        }).addTo(map);
+        map = L.map('kp-choropleth-map', {
+            center: [33.5, 71.5],
+            zoom: 7,
+            zoomControl: false,
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            boxZoom: false,
+            attributionControl: false,
+            touchZoom: true
+        });
         
         loadGeoJSONFromFile();
     }
@@ -104,7 +98,7 @@
     function showFallbackMessage() {
         const msgDiv = L.divIcon({
             className: 'fallback-msg',
-            html: '<div style="background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px;">Map data loading failed. Check console for details.</div>',
+            html: '<div style="background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px;">Map data loading failed. Please check GeoJSON file.</div>',
             iconSize: [200, 60]
         });
         L.marker([33.5, 71.5], { icon: msgDiv }).addTo(map);
@@ -116,19 +110,30 @@
         geoJsonLayer = L.geoJSON(geoJsonData, {
             style: function(feature) {
                 let divisionName = feature.properties?.NAME_2;
-                const normalizedName = normalizeDivisionName(divisionName);
+                // Handle special cases
+                if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
+                if (divisionName === 'F.A.T.A.') divisionName = 'FATA';
                 
-                if (normalizedName && normalizedName !== 'FATA' && divisionsData[normalizedName]) {
-                    const total = divisionsData[normalizedName].total_projects || 0;
+                const division = divisionsData[divisionName];
+                if (division && divisionName !== 'FATA') {
+                    const total = division.total_projects || 0;
                     return {
                         fillColor: getColorForProjectCount(total),
                         weight: 1.5,
                         color: '#ffffff',
-                        fillOpacity: 0.8
+                        fillOpacity: 0.85
+                    };
+                } else if (divisionName === 'FATA') {
+                    return {
+                        fillColor: '#9e9e9e',
+                        weight: 1.5,
+                        color: '#ffffff',
+                        fillOpacity: 0.7,
+                        dashArray: '5, 5'
                     };
                 }
                 return {
-                    fillColor: '#d3d3d3',
+                    fillColor: '#888888',
                     weight: 1,
                     color: '#ffffff',
                     fillOpacity: 0.5
@@ -136,19 +141,13 @@
             },
             onEachFeature: function(feature, layer) {
                 let divisionName = feature.properties?.NAME_2;
-                const normalizedName = normalizeDivisionName(divisionName);
+                if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 const isFATA = divisionName === 'F.A.T.A.';
+                const displayName = isFATA ? 'FATA (Merged Districts)' : divisionName;
                 
-                let displayName = normalizedName === 'FATA' ? 'FATA (Merged Districts)' : normalizedName;
+                const division = divisionsData[isFATA ? 'FATA' : divisionName];
                 
-                let division = null;
-                if (isFATA) {
-                    division = divisionsData['FATA'];
-                } else if (normalizedName && divisionsData[normalizedName]) {
-                    division = divisionsData[normalizedName];
-                }
-                
-                let tooltipContent = `<div style="font-size: 12px;"><strong>${displayName || divisionName || 'Unknown'}</strong><br>`;
+                let tooltipContent = `<div style="font-size: 12px;"><strong>${displayName || 'Unknown'}</strong><br>`;
                 
                 if (division) {
                     tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
@@ -163,13 +162,16 @@
                 
                 layer.bindTooltip(tooltipContent, { sticky: true, className: 'custom-tooltip' });
                 
-                layer.on('click', function() {
-                    if (isFATA) {
+                // Add click handler for non-FATA regions that have data
+                if (division && !isFATA) {
+                    layer.on('click', function() {
+                        showDivisionDetail(divisionName);
+                    });
+                } else if (isFATA && divisionsData['FATA']) {
+                    layer.on('click', function() {
                         showDivisionDetail('FATA');
-                    } else if (normalizedName && divisionsData[normalizedName]) {
-                        showDivisionDetail(normalizedName);
-                    }
-                });
+                    });
+                }
                 
                 layer.on('mouseover', function(e) {
                     const layer = e.target;
@@ -189,6 +191,7 @@
             }
         }).addTo(map);
         
+        // Fit map to bounds
         try {
             const bounds = geoJsonLayer.getBounds();
             if (bounds.isValid()) {
@@ -217,10 +220,10 @@
         if (geoJsonLayer) {
             geoJsonLayer.eachLayer(function(layer) {
                 let layerDivision = layer.feature?.properties?.NAME_2;
+                if (layerDivision === 'DeraIsmailKhan') layerDivision = 'Dera Ismail Khan';
                 const isFATA = layerDivision === 'F.A.T.A.';
-                const normalizedLayerDiv = normalizeDivisionName(layerDivision);
                 
-                if ((normalizedLayerDiv === divisionName) || (isFATA && divisionName === 'FATA')) {
+                if (layerDivision === divisionName || (isFATA && divisionName === 'FATA')) {
                     layer.setStyle({
                         fillOpacity: 0.95,
                         weight: 3,
@@ -343,20 +346,15 @@
     function showDivisionDetail(divisionName) {
         console.log('Showing division detail for:', divisionName);
         
-        let actualDivisionName = divisionName;
-        if (divisionName === 'FATA' || divisionName === 'Merged Districts') {
-            actualDivisionName = 'FATA';
-        }
-        
-        const division = divisionsData[actualDivisionName];
+        const division = divisionsData[divisionName];
         if (!division) {
-            console.error('Division not found:', actualDivisionName);
+            console.error('Division not found:', divisionName);
             alert('No data available for this division');
             return;
         }
         
-        currentSelectedDivision = actualDivisionName;
-        highlightDivision(actualDivisionName);
+        currentSelectedDivision = divisionName;
+        highlightDivision(divisionName);
         
         const defaultView = document.getElementById('default-view');
         const divisionView = document.getElementById('division-view');
@@ -454,19 +452,6 @@
         }
     }
 
-    function displayAllDivisions() {
-        const container = document.getElementById('divisions-grid');
-        if (!container) return;
-        
-        const cards = container.querySelectorAll('.division-card');
-        cards.forEach(card => {
-            card.addEventListener('click', function() {
-                let divisionName = this.getAttribute('data-division');
-                showDivisionDetail(divisionName);
-            });
-        });
-    }
-
     function initStatNumberAnimation() {
         const statNumbers = document.querySelectorAll('.stat-number');
         
@@ -500,12 +485,12 @@
         statNumbers.forEach(number => observer.observe(number));
     }
 
+    // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded, initializing...');
         initStatNumberAnimation();
         updateTotalStats();
         initMap();
-        displayAllDivisions();
         
         const resetViewBtn = document.getElementById('reset-view');
         if (resetViewBtn) {

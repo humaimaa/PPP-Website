@@ -193,21 +193,14 @@
 
                             <td class="px-6 py-4">
                                 @if($project->status)
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    @if($project->status == 'Planning') bg-blue-100 text-blue-800
-                                    @elseif($project->status == 'Feasibility Study') bg-purple-100 text-purple-800
-                                    @elseif($project->status == 'Bidding') bg-yellow-100 text-yellow-800
-                                    @elseif($project->status == 'Implementation') bg-orange-100 text-orange-800
-                                    @elseif($project->status == 'Completed') bg-green-100 text-green-800
-                                    @elseif($project->status == 'Operational') bg-emerald-100 text-emerald-800
-                                    @else bg-gray-100 text-gray-800
-                                    @endif">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full  text-black
+
                                     <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
                                     {{ $project->status }}
                                 </span>
                                 @else
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
-                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-600 bg-gray-100">
+                                   
                                     N/A
                                 </span>
                                 @endif

@@ -2,6 +2,8 @@
 (function() {
     'use strict';
 
+    console.log('kp-map.js loaded');
+
     // Global variables
     let currentSelectedDivision = null;
     let geoJsonLayer = null;
@@ -10,9 +12,11 @@
 
     // Use divisions data passed from PHP
     const divisionsData = typeof window.divisionsDataFromDB !== 'undefined' ? window.divisionsDataFromDB : {};
+    
+    console.log('Divisions Data:', divisionsData);
 
     // Color scale for choropleth (green shades)
-    const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
+    const colors = ['#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32'];
 
     // Calculate totals for coloring
     const divisionProjectCounts = {};
@@ -50,15 +54,19 @@
 
     // Initialize Leaflet Map
     function initMap() {
-        map = L.map('kp-choropleth-map', {
-            center: [33.5, 71.5],
-            zoom: 7,
-            zoomControl: true,
-            scrollWheelZoom: true,
-            doubleClickZoom: true
-        });
+        console.log('Initializing map...');
         
-        // Add a basic tile layer for context (optional)
+        // Check if map container exists
+        const mapContainer = document.getElementById('kp-choropleth-map');
+        if (!mapContainer) {
+            console.error('Map container not found!');
+            return;
+        }
+        
+        // Initialize map with KP coordinates
+        map = L.map('kp-choropleth-map').setView([33.5, 71.5], 7);
+        
+        // Add base tile layer
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
             subdomains: 'abcd',
@@ -66,24 +74,101 @@
             minZoom: 6
         }).addTo(map);
         
+        // Try to load GeoJSON
         loadGeoJSONFromFile();
     }
 
     function loadGeoJSONFromFile() {
-        fetch('/json/kp_divisions.geojson')
-            .then(response => response.json())
-            .then(data => {
-                console.log('GeoJSON loaded successfully');
-                addGeoJsonToMap(data);
-            })
-            .catch(error => {
-                console.error('Error loading GeoJSON:', error);
-            });
+        console.log('Loading GeoJSON file...');
+        
+        // Try multiple possible paths
+        const geoJsonPaths = [
+            '/json/kp_divisions.geojson',
+            '/storage/json/kp_divisions.geojson',
+            '/kp_divisions.geojson'
+        ];
+        
+        let currentPathIndex = 0;
+        
+        function tryLoadGeoJSON() {
+            if (currentPathIndex >= geoJsonPaths.length) {
+                console.error('All GeoJSON paths failed. Creating fallback map.');
+                createFallbackMap();
+                return;
+            }
+            
+            const path = geoJsonPaths[currentPathIndex];
+            console.log(`Trying to load GeoJSON from: ${path}`);
+            
+            fetch(path)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('GeoJSON loaded successfully from:', path);
+                    addGeoJsonToMap(data);
+                })
+                .catch(error => {
+                    console.warn(`Failed to load from ${path}:`, error);
+                    currentPathIndex++;
+                    tryLoadGeoJSON();
+                });
+        }
+        
+        tryLoadGeoJSON();
+    }
+    
+    function createFallbackMap() {
+        console.log('Creating fallback map with markers');
+        
+        // Show a message on the map
+        const message = L.divIcon({
+            className: 'fallback-message',
+            html: '<div style="background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; text-align: center;">Map data loading failed.<br>Please check GeoJSON file location.</div>',
+            iconSize: [200, 60],
+            iconAnchor: [100, 30]
+        });
+        
+        L.marker([33.5, 71.5], { icon: message }).addTo(map);
+        
+        // Add markers for major divisions
+        const divisionMarkers = {
+            'Peshawar': [34.015, 71.525],
+            'Mardan': [34.198, 72.049],
+            'Kohat': [33.582, 71.449],
+            'Bannu': [32.985, 70.604],
+            'Dera Ismail Khan': [31.832, 70.902],
+            'Malakand': [34.565, 71.930],
+            'Hazara': [34.333, 73.200]
+        };
+        
+        Object.entries(divisionMarkers).forEach(([name, coords]) => {
+            const division = divisionsData[name];
+            if (division && division.total_projects > 0) {
+                const marker = L.marker(coords).addTo(map);
+                marker.bindTooltip(`
+                    <div style="font-size: 12px;">
+                        <strong>${name}</strong><br>
+                        Total Projects: ${division.total_projects}<br>
+                        Pipeline: ${division.projects?.pipeline || 0}<br>
+                        Ongoing: ${division.projects?.ongoing || 0}<br>
+                        Completed: ${division.projects?.completed || 0}
+                    </div>
+                `, { sticky: true });
+                
+                marker.on('click', () => showDivisionDetail(name));
+            }
+        });
+        
+        map.setView([33.5, 71.5], 7);
     }
 
     function isFATARegion(feature) {
-        const name2 = feature.properties.NAME_2;
-        const name1 = feature.properties.NAME_1;
+        const name2 = feature.properties?.NAME_2;
+        const name1 = feature.properties?.NAME_1;
         return name2 === 'F.A.T.A.' || 
                name2 === 'FATA' || 
                name1 === 'FederallyAdministeredTribalAr' ||
@@ -91,74 +176,61 @@
     }
 
     function addGeoJsonToMap(geoJsonData) {
+        console.log('Adding GeoJSON to map');
+        
         geoJsonLayer = L.geoJSON(geoJsonData, {
             style: function(feature) {
-                let divisionName = feature.properties.NAME_2;
+                let divisionName = feature.properties?.NAME_2;
                 if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 
                 const isFATA = isFATARegion(feature);
                 
-                if (!isFATA) {
+                if (!isFATA && divisionName) {
                     const division = divisionsData[divisionName];
-                    if (division) {
-                        const total = division.total_projects || 0;
+                    if (division && division.total_projects > 0) {
                         return {
-                            fillColor: getColorForProjectCount(total),
+                            fillColor: getColorForProjectCount(division.total_projects),
                             weight: 1.5,
                             color: '#ffffff',
-                            fillOpacity: 0.85
+                            fillOpacity: 0.8
                         };
                     }
-                    return {
-                        fillColor: '#888888',
-                        weight: 1,
-                        color: '#ffffff',
-                        fillOpacity: 0.5
-                    };
-                } else {
-                    return {
-                        fillColor: '#9e9e9e',
-                        weight: 1.5,
-                        color: '#ffffff',
-                        fillOpacity: 0.7,
-                        dashArray: '3, 3'
-                    };
                 }
+                return {
+                    fillColor: '#d3d3d3',
+                    weight: 1,
+                    color: '#ffffff',
+                    fillOpacity: 0.5
+                };
             },
             onEachFeature: function(feature, layer) {
-                let divisionName = feature.properties.NAME_2;
+                let divisionName = feature.properties?.NAME_2;
                 if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 
                 const isFATA = isFATARegion(feature);
+                let displayName = isFATA ? 'FATA (Merged Districts)' : divisionName;
                 
-                let displayName = divisionName;
-                if (isFATA) {
-                    displayName = 'Merged Districts (FATA)';
-                }
+                const division = divisionsData[isFATA ? 'FATA' : divisionName];
                 
-                const division = divisionsData[divisionName === 'F.A.T.A.' ? 'FATA' : divisionName];
+                let tooltipContent = `<div style="font-size: 12px;"><strong>${displayName || 'Unknown'}</strong><br>`;
                 
-                // Build tooltip content
-                let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName}</strong><br>`;
                 if (division) {
                     tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
                     tooltipContent += `<span style="color: #F59E0B;">Pipeline: ${division.projects?.pipeline || 0}</span> | `;
                     tooltipContent += `<span style="color: #10B981;">Ongoing: ${division.projects?.ongoing || 0}</span> | `;
                     tooltipContent += `<span style="color: #3B82F6;">Completed: ${division.projects?.completed || 0}</span><br>`;
-                    tooltipContent += `Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr</div>`;
+                    tooltipContent += `Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr`;
                 } else {
-                    tooltipContent += `No projects data available</div>`;
+                    tooltipContent += `No project data available`;
                 }
+                tooltipContent += `</div>`;
                 
-                layer.bindTooltip(tooltipContent, {
-                    sticky: true,
-                    className: 'custom-tooltip'
-                });
+                layer.bindTooltip(tooltipContent, { sticky: true, className: 'custom-tooltip' });
                 
                 layer.on('click', function() {
                     if (isFATA) {
                         showDivisionDetail('FATA');
-                    } else if (division) {
+                    } else if (divisionName && divisionsData[divisionName]) {
                         showDivisionDetail(divisionName);
                     }
                 });
@@ -178,32 +250,23 @@
                         geoJsonLayer.resetStyle(e.target);
                     }
                 });
-                
-                // Add labels for regular divisions only
-                if (!isFATA && divisionName && divisionName !== 'F.A.T.A.' && divisionName !== 'FATA') {
-                    const bounds = layer.getBounds();
-                    if (bounds && bounds.isValid()) {
-                        const center = bounds.getCenter();
-                        
-                        const label = L.divIcon({
-                            className: 'division-label',
-                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 5px; border-radius: 3px; font-size: 9px; font-weight: 500; white-space: nowrap; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${displayName}</div>`,
-                            iconSize: [50, 16],
-                            iconAnchor: [25, 8]
-                        });
-                        
-                        L.marker(center, { icon: label, interactive: false }).addTo(map);
-                    }
-                }
             }
         }).addTo(map);
         
-        const bounds = geoJsonLayer.getBounds();
-        if (bounds.isValid()) {
-            map.fitBounds(bounds);
-        } else {
+        // Fit map to bounds
+        try {
+            const bounds = geoJsonLayer.getBounds();
+            if (bounds.isValid()) {
+                map.fitBounds(bounds);
+            } else {
+                map.setView([33.5, 71.5], 7);
+            }
+        } catch(e) {
+            console.warn('Error fitting bounds:', e);
             map.setView([33.5, 71.5], 7);
         }
+        
+        console.log('GeoJSON added to map successfully');
     }
 
     function resetDivisionHighlights() {
@@ -218,9 +281,8 @@
         resetDivisionHighlights();
         if (geoJsonLayer) {
             geoJsonLayer.eachLayer(function(layer) {
-                let layerDivision = layer.feature.properties.NAME_2;
+                let layerDivision = layer.feature?.properties?.NAME_2;
                 if (layerDivision === 'DeraIsmailKhan') layerDivision = 'Dera Ismail Khan';
-                
                 const isFATA = isFATARegion(layer.feature);
                 
                 if ((layerDivision === divisionName) || (isFATA && divisionName === 'FATA')) {
@@ -346,6 +408,8 @@
 
     // Show division detail view
     function showDivisionDetail(divisionName) {
+        console.log('Showing division detail for:', divisionName);
+        
         let actualDivisionName = divisionName;
         if (divisionName === 'F.A.T.A.' || divisionName === 'FATA' || divisionName === 'Merged Districts' || divisionName === 'Merged Districts (FATA)') {
             actualDivisionName = 'FATA';
@@ -354,6 +418,7 @@
         const division = divisionsData[actualDivisionName];
         if (!division) {
             console.error('Division not found:', actualDivisionName);
+            alert('No data available for this division');
             return;
         }
         
@@ -414,14 +479,13 @@
             if (!division.projects_list || division.projects_list.length === 0) {
                 projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
             } else {
-                division.projects_list.forEach(project => {
+                division.projects_list.slice(0, 10).forEach(project => {
                     const borderColorClass = getStatusColorClass(project.category);
                     const statusBadge = getStatusBadge(project.category);
-                    
                     const costDisplay = project.cost_display || `PKR ${((project.cost || 0) / 10000000).toFixed(1)} Cr`;
                     
                     const projectDiv = document.createElement('div');
-                    projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} relative group cursor-pointer`;
+                    projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
                     projectDiv.onclick = () => {
                         if (project.id) {
                             window.location.href = `/projects/${project.id}`;
@@ -506,6 +570,7 @@
 
     // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing...');
         initStatNumberAnimation();
         updateTotalStats();
         initMap();

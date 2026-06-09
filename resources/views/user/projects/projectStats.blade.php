@@ -71,7 +71,7 @@
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Map Container -->
             <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" class="overflow-hidden" style="height: 500px; background-color: transparent; cursor: default;"></div>
+                <div id="kp-choropleth-map" style="height: 500px; width: 100%; background-color: #f0f0f0; border-radius: 8px;"></div>
             </div>
 
             <!-- Projects Stats Panel -->
@@ -230,6 +230,12 @@
 .division-card {
     transition: all 0.2s ease;
 }
+
+#kp-choropleth-map {
+    background-color: #e8f0e8;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
 </style>
 @endpush
 
@@ -246,7 +252,7 @@ window.divisionsDataFromDB = @json($divisionsDataForMap);
 window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
 
-<script src="{{ asset('js/project-stats.js') }}"></script>
+<script src="{{ asset('js/kp-map.js') }}"></script>
 @endpush
 
 @endsection

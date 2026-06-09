@@ -54,7 +54,7 @@ class ProjectController extends Controller
         }
         $totalInvestment = $totalInvestmentRaw;
         
-        // Get counts by category
+        // Get counts by category (handle case sensitivity)
         $pipelineCount = Project::where('category', 'Pipeline')->count();
         $ongoingCount = Project::where('category', 'Ongoing')->count();
         $completedCount = Project::where('category', 'Completed')->count();

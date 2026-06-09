@@ -216,62 +216,82 @@
 .leaflet-container {
     background-color: #e8f0e8;
 }
-/* Sector chart legend styles */
+
+/* Sector Chart Legend - Make text white */
 #sector-chart {
     position: relative;
 }
-.chart-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-    justify-content: center;
+
+/* Force white text for Chart.js legend - Multiple selectors for full coverage */
+.chartjs-legend,
+.chartjs-legend ul,
+.chartjs-legend li,
+.chartjs-legend li span,
+.chartjs-legend ul li,
+.chartjs-legend ul li span,
+canvas + div,
+canvas + div ul,
+canvas + div li,
+canvas + div li span,
+.legend-label,
+.legend-label span,
+.chart-legend,
+.chart-legend span {
+    color: white !important;
 }
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
+
+/* Target the legend text specifically */
+.chartjs-legend ul li span:last-child,
+canvas + div ul li span:last-child,
+.legend-text {
+    color: white !important;
+}
+
+/* Target any legend elements */
+[class*="legend"] span,
+[class*="legend"] li,
+div[class*="legend"] {
+    color: white !important;
+}
+
+/* Target the legend label text */
+.legend-label-text {
+    color: white !important;
+}
+
+/* Target Chart.js generated legend items */
+.chartjs-legend li span:last-child {
+    color: white !important;
+}
+
+/* Force white text on all legend related elements */
+#sector-chart ~ div span,
+#sector-chart + div span,
+.canvasjs-chart-legend span {
+    color: white !important;
+}
+
+/* Ensure tooltip text is also white */
+.custom-tooltip {
+    color: white !important;
+}
+
+/* Division grid text colors */
+.division-card {
+    color: white !important;
+}
+
+/* Stats panel text colors */
+#stats-panel,
+#stats-panel * {
     color: white;
 }
-.legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-}
 
-/* Force white text for Chart.js legend */
-.chartjs-legend,
-.chartjs-legend li,
-.chartjs-legend li span {
-    color: white !important;
-}
-
-/* Target Chart.js legend text specifically */
-canvas + div {
-    color: white !important;
-}
-
-/* Override any default Chart.js legend styles */
-.legend-label {
+/* Override any black text specifically in legend */
+.legend-item span,
+.chartjs-legend ul li span {
     color: white !important;
     fill: white !important;
-}
-
-/* Ensure the legend text is white */
-.chartjs-legend ul li span:last-child {
-    color: white !important;
-}
-
-/* Target the canvas legend elements */
-[class*="legend"] {
-    color: white !important;
-}
-
-/* Force white text on the legend container */
-#sector-chart ~ .chartjs-legend,
-canvas ~ .chartjs-legend {
-    color: white !important;
 }
 </style>
 @endpush

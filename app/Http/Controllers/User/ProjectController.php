@@ -4,6 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\OngoingProjectDetail;
+use App\Models\CompletedProjectDetail;
+use App\Models\PipelineProjectDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -39,6 +42,99 @@ class ProjectController extends Controller
     }
 
     /**
+     * Projects page with optional status parameter
+     */
+    public function index($status = 'pipeline')
+    {
+        $validStatuses = ['pipeline', 'ongoing', 'operational', 'complete', 'all'];
+
+        if (!in_array($status, $validStatuses)) {
+            $status = 'pipeline';
+        }
+
+        // Build query based on status
+        $query = Project::query();
+        
+        if ($status !== 'all') {
+            // Map status to database values
+            switch ($status) {
+                case 'pipeline':
+                    $query->where('category', 'Pipeline');
+                    break;
+                case 'ongoing':
+                    $query->where('category', 'Ongoing');
+                    break;
+                case 'operational':
+                case 'complete':
+                    $query->where('category', 'Completed');
+                    break;
+                default:
+                    $query->where('category', $status);
+            }
+        }
+        
+        // Get projects with pagination
+        $projects = $query->orderBy('created_at', 'desc')->paginate(9);
+        
+        // Get statistics with proper cost conversion
+        $allProjects = Project::all();
+        $totalInvestmentRaw = 0;
+        
+        foreach ($allProjects as $project) {
+            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
+        }
+        
+        $stats = [
+            'pipeline' => Project::where('category', 'Pipeline')->count(),
+            'ongoing' => Project::where('category', 'Ongoing')->count(),
+            'operational' => Project::where('category', 'Completed')->count(),
+            'total_investment' => $totalInvestmentRaw
+        ];
+        
+        return view('user.projects.index', compact('projects', 'status', 'stats'));
+    }
+
+    /**
+     * Project show page
+     */
+    public function show($id)
+    {
+        // Fetch the project with its details based on category
+        $project = Project::findOrFail($id);
+        
+        $pipelineDetails = null;
+        $ongoingDetails = null;
+        $completedDetails = null;
+        $achievements = [];
+        
+        // Fetch category-specific details
+        if ($project->category === 'Pipeline') {
+            $pipelineDetails = $project->pipelineDetail;
+        }
+        elseif ($project->category === 'Ongoing') {
+            $ongoingDetails = OngoingProjectDetail::where('project_id', $project->id)->first();
+        }
+        elseif ($project->category === 'Completed') {
+            $completedDetails = CompletedProjectDetail::where('project_id', $project->id)->first();
+            
+            $achievements = [
+                'Successfully completed within budget',
+                'Created 500+ local jobs',
+                'Served 100,000+ beneficiaries',
+                'Received international recognition for best practices'
+            ];
+        }
+        
+        return view('user.projects.show', compact(
+            'project', 
+            'pipelineDetails', 
+            'ongoingDetails', 
+            'completedDetails',
+            'achievements'
+        ));
+    }
+
+    /**
      * Show project statistics page
      */
     public function projectStats()
@@ -54,7 +150,7 @@ class ProjectController extends Controller
         }
         $totalInvestment = $totalInvestmentRaw;
         
-        // Get counts by category (handle case sensitivity)
+        // Get counts by category
         $pipelineCount = Project::where('category', 'Pipeline')->count();
         $ongoingCount = Project::where('category', 'Ongoing')->count();
         $completedCount = Project::where('category', 'Completed')->count();
@@ -217,5 +313,82 @@ class ProjectController extends Controller
             'divisionsGrid',
             'divisionsDataForMap'
         ));
+    }
+    
+    /**
+     * API endpoint to get divisions data for the map
+     */
+    public function getDivisionsData()
+    {
+        $validDivisions = ['Peshawar', 'Mardan', 'Kohat', 'Bannu', 'Dera Ismail Khan', 'Malakand', 'Hazara'];
+        
+        $divisionsData = [];
+        
+        foreach ($validDivisions as $division) {
+            $projects = Project::where('division', $division)->get();
+            
+            $active = $projects->where('category', 'Ongoing')->count();
+            $completed = $projects->where('category', 'Completed')->count();
+            $planned = $projects->where('category', 'Pipeline')->count();
+            $investment = 0;
+            foreach ($projects as $proj) {
+                $investment += $this->getRawCostValue($proj->cost);
+            }
+            
+            $divisionsData[$division] = [
+                'name' => $division,
+                'projects' => [
+                    'active' => $active,
+                    'completed' => $completed,
+                    'planned' => $planned
+                ],
+                'investment' => (float)$investment,
+                'total_projects' => $projects->count(),
+                'projects_list' => $projects->map(function($project) {
+                    return [
+                        'id' => $project->id,
+                        'name' => $project->name,
+                        'type' => $project->category,
+                        'cost' => $this->getRawCostValue($project->cost),
+                        'cost_display' => $project->cost,
+                        'sector' => $project->sector,
+                        'description' => $project->overview
+                    ];
+                })->toArray()
+            ];
+        }
+        
+        // Add FATA data
+        $fataProjects = Project::where('division', 'FATA')->get();
+        $fataInvestment = 0;
+        foreach ($fataProjects as $proj) {
+            $fataInvestment += $this->getRawCostValue($proj->cost);
+        }
+        
+        $divisionsData['FATA'] = [
+            'name' => 'FATA',
+            'is_merged' => true,
+            'merged_districts' => ['Bajaur', 'Khyber', 'Kurram', 'Mohmand', 'Orakzai', 'North Waziristan', 'South Waziristan'],
+            'projects' => [
+                'active' => $fataProjects->where('category', 'Ongoing')->count(),
+                'completed' => $fataProjects->where('category', 'Completed')->count(),
+                'planned' => $fataProjects->where('category', 'Pipeline')->count()
+            ],
+            'investment' => (float)$fataInvestment,
+            'total_projects' => $fataProjects->count(),
+            'projects_list' => $fataProjects->map(function($project) {
+                return [
+                    'id' => $project->id,
+                    'name' => $project->name,
+                    'type' => $project->category,
+                    'cost' => $this->getRawCostValue($project->cost),
+                    'cost_display' => $project->cost,
+                    'sector' => $project->sector,
+                    'description' => $project->overview
+                ];
+            })->toArray()
+        ];
+        
+        return response()->json($divisionsData);
     }
 }

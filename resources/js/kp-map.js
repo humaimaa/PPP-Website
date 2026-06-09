@@ -289,14 +289,11 @@
         
         const sectorData = {};
         division.projects_list.forEach(project => {
-            // FIX: Check for valid sector name
             let sectorName = project.sector;
             
-            // Handle various cases where sector might be invalid
             if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
                 sectorName = 'Other';
             } else {
-                // Clean up the sector name
                 sectorName = sectorName.trim();
                 sectorName = sectorName.split(' ').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
@@ -309,13 +306,11 @@
         const sectors = Object.keys(sectorData);
         const counts = Object.values(sectorData);
         
-        // If still no sectors, show message
         if (sectors.length === 0) {
             chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
             return;
         }
         
-        // Assign consistent colors based on sector name
         const sectorColors = {};
         sectors.forEach((sector) => {
             let hash = 0;
@@ -356,26 +351,24 @@
                         position: 'right',
                         labels: {
                             color: 'white',
-                            font: { size: 10, weight: 'normal' },
+                            font: { size: 10, weight: 'normal', family: 'sans-serif' },
                             boxWidth: 12,
                             boxHeight: 12,
                             padding: 8,
-                            // FIX: Properly generate labels without undefined
                             generateLabels: function(chart) {
                                 const data = chart.data;
                                 const datasets = data.datasets;
                                 const labels = data.labels;
+                                const total = datasets[0].data.reduce((a, b) => a + b, 0);
                                 
                                 return labels.map((label, i) => {
                                     const value = datasets[0].data[i];
-                                    const total = datasets[0].data.reduce((a, b) => a + b, 0);
                                     const percentage = ((value / total) * 100).toFixed(1);
-                                    
-                                    // Ensure label is not undefined
                                     const displayLabel = label && label !== 'undefined' ? label : 'Other';
                                     
+                                    // Format: "Sector Name - Count - Percentage%" (no brackets)
                                     return {
-                                        text: `${displayLabel} (${value} - ${percentage}%)`,
+                                        text: `${displayLabel} - ${value} - ${percentage}%`,
                                         fillStyle: datasets[0].backgroundColor[i],
                                         strokeStyle: datasets[0].backgroundColor[i],
                                         lineWidth: 0,

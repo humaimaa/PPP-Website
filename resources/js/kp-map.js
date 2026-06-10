@@ -359,11 +359,12 @@ function createSectorChart(division) {
                             const datasets = data.datasets;
                             const labels = data.labels;
                             
+                            // Return ONLY the sector name - no count or percentage
                             return labels.map((label, i) => {
                                 const displayLabel = label && label !== 'undefined' ? label : 'Other';
                                 
                                 return {
-                                    text: displayLabel,
+                                    text: displayLabel,  // Only the sector name
                                     fillStyle: datasets[0].backgroundColor[i],
                                     strokeStyle: datasets[0].backgroundColor[i],
                                     lineWidth: 0,
@@ -388,42 +389,6 @@ function createSectorChart(division) {
             }
         }
     });
-    
-    // FORCE LEGEND TEXT TO WHITE - Direct DOM manipulation
-    setTimeout(function() {
-        // Find all legend containers
-        const legendContainer = document.querySelector('#sector-chart + div, canvas + div');
-        if (legendContainer) {
-            // Find all span elements inside legend and force white color
-            const allSpans = legendContainer.querySelectorAll('span');
-            allSpans.forEach(span => {
-                span.style.color = 'white';
-                span.style.setProperty('color', 'white', 'important');
-            });
-            
-            // Also target list items
-            const listItems = legendContainer.querySelectorAll('li');
-            listItems.forEach(li => {
-                li.style.color = 'white';
-                const liSpans = li.querySelectorAll('span');
-                liSpans.forEach(span => {
-                    span.style.color = 'white';
-                });
-            });
-        }
-        
-        // Also add a style tag to force all chart legend text to white
-        const styleTag = document.createElement('style');
-        styleTag.textContent = `
-            .chartjs-legend li span,
-            canvas + div li span,
-            .chartjs-legend ul li span,
-            canvas + div ul li span {
-                color: white !important;
-            }
-        `;
-        document.head.appendChild(styleTag);
-    }, 50);
 }
     function getStatusColorClass(category) {
         switch(category) {

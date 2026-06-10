@@ -6,22 +6,28 @@ use App\Models\Project;
 use App\Models\CompletedProjectDetail;
 use App\Models\OngoingProjectDetail;
 
-
 class PageController extends Controller
 {
-    /**
-     * Pitchbook page
-     */
     public function pitchbook()
     {
-        return view('user.pitchbook');
+        $data = [
+            'title' => 'PPP KP - Digital Pitchbook ' . date('Y'),
+            'totalPages' => 80,
+            'slideCount' => 80,
+            'currentYear' => date('Y'),
+            'companyName' => 'PPP KP',
+            'email' => 'info@ppkp.com',
+            'phone' => '+92 XXX XXXXXXX'
+        ];
+        
+        return view('user.pitchbook', $data);
     }
+
     /**
      * API endpoint for downloading files
      */
     public function apiDownloadFile($id)
     {
-        // Implement file download logic
         return response()->json(['success' => true]);
     }
 
@@ -30,7 +36,6 @@ class PageController extends Controller
      */
     public function apiPreviewFile($id)
     {
-        // Implement file preview logic
         return response()->json(['success' => true]);
     }
 

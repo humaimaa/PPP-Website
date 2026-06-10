@@ -16,6 +16,7 @@ use App\Http\Controllers\User\ProjectController;
 // Homepage
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
+
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 

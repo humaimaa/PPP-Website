@@ -98,23 +98,23 @@
                                         $extension = pathinfo($download->document_path, PATHINFO_EXTENSION);
                                     @endphp
                                     @if($extension == 'pdf')
-                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
                                             <i class="fas fa-file-pdf text-red-600 text-xl"></i>
                                         </div>
                                     @elseif($extension == 'doc' || $extension == 'docx')
-                                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
                                             <i class="fas fa-file-word text-blue-600 text-xl"></i>
                                         </div>
                                     @elseif($extension == 'xls' || $extension == 'xlsx')
-                                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
                                             <i class="fas fa-file-excel text-green-600 text-xl"></i>
                                         </div>
                                     @elseif($extension == 'ppt' || $extension == 'pptx')
-                                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
                                             <i class="fas fa-file-powerpoint text-orange-600 text-xl"></i>
                                         </div>
                                     @else
-                                        <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
                                             <i class="fas fa-file text-gray-600 text-xl"></i>
                                         </div>
                                     @endif

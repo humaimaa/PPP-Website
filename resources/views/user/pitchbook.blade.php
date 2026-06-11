@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'PPP KP - Digital Pitchbook' }}</title>
 
@@ -19,6 +20,11 @@
 
 {{-- No Tailwind bg class here — pitchbook.css handles the light gray bg --}}
 <body>
+
+    <!-- Flip sound -->
+    <audio id="flipSound" preload="auto">
+        <source src="{{ asset('videos/flip_sound.mp3') }}" type="audio/mpeg">
+    </audio>
 
     <!-- Loading -->
     <div id="loading">
@@ -101,6 +107,10 @@
             (new Image()).src = '/images/Pitchbook/Slide' + i + '.PNG';
         }
     }
+    function playFlipSound() {
+        var snd = document.getElementById('flipSound');
+        if (snd) { snd.currentTime = 0; snd.play().catch(function () {}); }
+    }
 
     function loadApp() {
         var flipbook = $('#flipbook');
@@ -137,6 +147,7 @@
                             e.preventDefault(); return;
                         }
                     }
+                    playFlipSound();
                 },
                 turned: function (e, page) {
                     updatePageCounter(page);

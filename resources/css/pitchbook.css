@@ -10,7 +10,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #f0f0f0; /* light gray background */
+    background: #f0f0f0;
 }
 
 /* ── Loading overlay ───────────────────────────────────────── */
@@ -62,32 +62,51 @@ html, body {
     position: relative;
     flex-shrink: 0;
     border-radius: 4px;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+    /* box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18); */
+
 }
 
 /* ── Flipbook element ──────────────────────────────────────── */
 #flipbook {
     position: relative;
+    background: transparent;
+}
+
+/* ── Kill ALL white backgrounds turn.js injects ────────────── */
+#flipbook,
+#flipbook .turn-page,
+#flipbook .turn-page-wrapper,
+#flipbook .page-wrapper,
+#flipbook .p1,
+#flipbook .p2,
+#flipbook .hard,
+#flipbook .gradient {
+    background: transparent !important;
+}
+
+/* Remove box-shadow on blank shells */
+#flipbook .p1,
+#flipbook .p2 {
+    box-shadow: none !important;
 }
 
 /* ── Individual pages ──────────────────────────────────────── */
 #flipbook .page {
-    background: #fff;
+    background: transparent;
     overflow: hidden;
 }
 
 #flipbook .page img {
     width: 100%;
     height: 100%;
-    object-fit: contain;  /* preserve ratio, no stretch */
+    object-fit: fill;         /* slides are exactly 16:9 — fill = no bars */
     display: block;
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
-    background: #fff;
 }
 
-/* Page shadow */
+/* Page shadow on real pages only */
 #flipbook .page-wrapper {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
 }

@@ -280,36 +280,47 @@
 function createSectorChart(division) {
     const chartContainer = document.getElementById('sector-chart');
     if (!chartContainer) return;
-    
+
+    // Destroy previous chart instance immediately to avoid flicker
+    if (sectorChart) {
+        sectorChart.destroy();
+        sectorChart = null;
+    }
+
+    // Pre-set container to exact height to prevent layout jump
+    chartContainer.style.height = '200px';
+    chartContainer.style.position = 'relative';
+    chartContainer.innerHTML = '';
+
     if (!division || !division.projects_list || division.projects_list.length === 0) {
         chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
         return;
     }
-    
+
     const sectorData = {};
     division.projects_list.forEach(project => {
         let sectorName = project.sector;
-        
+
         if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
             sectorName = 'Other';
         } else {
             sectorName = sectorName.trim();
-            sectorName = sectorName.split(' ').map(word => 
+            sectorName = sectorName.split(' ').map(word =>
                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
             ).join(' ');
         }
-        
+
         sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
     });
-    
+
     const sectors = Object.keys(sectorData);
     const counts = Object.values(sectorData);
-    
+
     if (sectors.length === 0) {
         chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
         return;
     }
-    
+
     const sectorColors = {};
     sectors.forEach((sector) => {
         let hash = 0;
@@ -320,18 +331,14 @@ function createSectorChart(division) {
         const colorIndex = Math.abs(hash) % sectorColorPalette.length;
         sectorColors[sector] = sectorColorPalette[colorIndex];
     });
-    
+
     const chartColors = sectors.map(sector => sectorColors[sector]);
-    
-    chartContainer.innerHTML = '';
-    
+
+    // Create canvas with explicit dimensions to prevent resize flash
     const canvas = document.createElement('canvas');
+    canvas.style.display = 'block';
     chartContainer.appendChild(canvas);
-    
-    if (sectorChart) {
-        sectorChart.destroy();
-    }
-    
+
     sectorChart = new Chart(canvas, {
         type: 'pie',
         data: {
@@ -344,12 +351,15 @@ function createSectorChart(division) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,  // false so the container height (200px) is respected without resize jump
+            animation: {
+                duration: 300  // Short animation so it feels instant but still smooth
+            },
             plugins: {
                 legend: {
                     position: 'right',
                     labels: {
-                        color: 'white',
+                        color: '#ffffff',       // Primary legend text color
                         font: { size: 10, weight: 'normal', family: 'sans-serif' },
                         boxWidth: 12,
                         boxHeight: 12,
@@ -358,15 +368,15 @@ function createSectorChart(division) {
                             const data = chart.data;
                             const datasets = data.datasets;
                             const labels = data.labels;
-                            
-                            // Return ONLY the sector name - no count or percentage
+
                             return labels.map((label, i) => {
                                 const displayLabel = label && label !== 'undefined' ? label : 'Other';
-                                
+
                                 return {
-                                    text: displayLabel,  // Only the sector name
+                                    text: displayLabel,
                                     fillStyle: datasets[0].backgroundColor[i],
                                     strokeStyle: datasets[0].backgroundColor[i],
+                                    fontColor: '#ffffff',   // Explicit per-item color (Chart.js v3/v4)
                                     lineWidth: 0,
                                     hidden: false,
                                     index: i

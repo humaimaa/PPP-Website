@@ -53,8 +53,6 @@ class Download extends Model
                 return 'green';
             case 'Knowledge Hub':
                 return 'yellow';
-            case 'Pitchbook':
-                return 'orange';
             default:
                 return 'gray';
         }

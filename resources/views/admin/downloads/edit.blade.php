@@ -140,7 +140,7 @@
                             <p class="text-sm text-gray-700">{{ basename($download->document_path) }}</p>
                             <p class="text-xs text-gray-500">Current PDF document</p>
                         </div>
-                        <a href="{{ asset('storage/' . $download->document_path) }}" 
+                        <a href="{{ Storage::url($download->document_path) }}" 
                            target="_blank"
                            class="text-emerald-600 hover:text-emerald-700 transition">
                             <i class="fas fa-download"></i> Download

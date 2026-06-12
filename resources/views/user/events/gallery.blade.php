@@ -5,27 +5,37 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
+    <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
+        <div class="text-center px-4">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $event->title }}</h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
+            <div class="w-20 h-1 bg-orange-500 mx-auto"></div>
             <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
                 {{ Str::limit($event->description ?? 'View moments from this memorable event', 150) }}
             </p>
         </div>
     </div>
     @php
-        $bannerImage = $event->thumbnail_url ?? 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop';
+        $bannerImage = null;
+        $thumbnail = $event->galleries->firstWhere('is_thumbnail', true);
+        if ($thumbnail) {
+            $bannerImage = asset('storage/' . $thumbnail->image);
+        } else {
+            $firstImage = $event->galleries->first();
+            if ($firstImage) {
+                $bannerImage = asset('storage/' . $firstImage->image);
+            }
+        }
+        $bannerImage = $bannerImage ?? 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop';
     @endphp
     <img src="{{ $bannerImage }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
 </section>
 
-<section class="py-10 bg-background-white">
+<section class="py-10 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('media.room.events.index') }}" class="text-accent-1 hover:text-accent-2 inline-flex items-center transition-colors duration-300">
+            <a href="{{ route('media.room.events.index') }}" class="text-orange-600 hover:text-orange-700 inline-flex items-center transition-colors duration-300">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Events
             </a>
@@ -33,22 +43,22 @@
         
         <!-- Event Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-text-green mb-4">{{ $event->title }}</h1>
-            <div class="flex flex-wrap gap-4 text-text-muted mb-6 pb-6 border-b border-background-light">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{ $event->title }}</h1>
+            <div class="flex flex-wrap gap-4 text-gray-600 mb-6 pb-6 border-b border-gray-200">
                 <div class="flex items-center">
-                    <i class="fas fa-calendar-alt text-accent-1 mr-2"></i>
+                    <i class="fas fa-calendar-alt text-orange-500 mr-2"></i>
                     <span>{{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-map-marker-alt text-accent-1 mr-2"></i>
+                    <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
                     <span>{{ $event->location ?? 'Location TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-images text-accent-1 mr-2"></i>
+                    <i class="fas fa-images text-orange-500 mr-2"></i>
                     <span>{{ $event->galleries->count() }} {{ Str::plural('Photo', $event->galleries->count()) }}</span>
                 </div>
             </div>
-            <p class="text-text-muted text-lg leading-relaxed">{{ $event->description }}</p>
+            <p class="text-gray-700 text-lg leading-relaxed">{{ $event->description }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->
@@ -86,16 +96,16 @@
             @endforeach
         </div>
         
-        <!-- Download All Button (only if images exist) -->
+        <!-- Download All Button -->
         <div class="text-center mt-12">
             <button id="downloadAllBtn" 
-                    class="inline-flex items-center px-6 py-3 bg-accent-1 text-white rounded-lg font-semibold hover:bg-accent-2 transition-colors duration-300 shadow-md">
+                    class="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors duration-300 shadow-md">
                 <i class="fas fa-download mr-2"></i>
                 Download All Photos (ZIP)
             </button>
         </div>
         @else
-        <div class="text-center py-12 bg-gray-50 rounded-lg">
+        <div class="text-center py-12 bg-white rounded-lg">
             <i class="fas fa-camera text-6xl text-gray-400 mb-4"></i>
             <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Photos Available</h3>
             <p class="text-gray-500">No photos have been added to this gallery yet.</p>
@@ -107,7 +117,7 @@
 <!-- Toast Notification Container -->
 <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
-<!-- Enhanced Lightbox Modal with Zoom Controls -->
+<!-- Lightbox Modal -->
 <div id="lightboxModal" 
      class="fixed inset-0 bg-black/95 z-50 hidden justify-center items-center overflow-hidden"
      role="dialog"
@@ -116,36 +126,28 @@
      aria-hidden="true">
     <div class="relative w-full h-full flex justify-center items-center overflow-hidden">
         
-        <!-- Top Right Controls Group -->
+        <!-- Top Right Controls -->
         <div class="absolute top-5 right-5 flex gap-2.5 z-10">
             <button id="downloadCurrentBtn" 
-                    class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-lg cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110"
-                    aria-label="Download current image">
+                    class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-lg cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110">
                 <i class="fas fa-download"></i>
             </button>
             <button id="closeLightbox" 
-                    class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-3xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110"
-                    aria-label="Close lightbox">
+                    class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-3xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110">
                 &times;
             </button>
         </div>
         
-        <!-- Bottom Left Zoom Controls -->
+        <!-- Zoom Controls -->
         <div class="absolute bottom-5 left-5 flex gap-2.5 bg-black/60 px-4 py-2 rounded-full z-10">
-            <button id="zoomOutBtn" 
-                    class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
-                    aria-label="Zoom out">
+            <button id="zoomOutBtn" class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full hover:bg-black/80 hover:scale-110">
                 <i class="fas fa-search-minus"></i>
             </button>
             <span id="zoomLevel" class="text-white text-sm min-w-[45px] text-center leading-10">100%</span>
-            <button id="zoomInBtn" 
-                    class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
-                    aria-label="Zoom in">
+            <button id="zoomInBtn" class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full hover:bg-black/80 hover:scale-110">
                 <i class="fas fa-search-plus"></i>
             </button>
-            <button id="resetZoomBtn" 
-                    class="bg-transparent text-white border-none w-10 h-10 text-sm cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
-                    aria-label="Reset zoom">
+            <button id="resetZoomBtn" class="bg-transparent text-white border-none w-10 h-10 text-sm cursor-pointer flex items-center justify-center rounded-full hover:bg-black/80 hover:scale-110">
                 <i class="fas fa-sync-alt"></i>
             </button>
         </div>
@@ -166,21 +168,16 @@
         </div>
         
         <!-- Navigation Buttons -->
-        <button id="prevImage" 
-                class="absolute left-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-10"
-                aria-label="Previous image">
+        <button id="prevImage" class="absolute left-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center hover:bg-black/80 hover:scale-110 z-10">
             &lt;
         </button>
-        <button id="nextImage" 
-                class="absolute right-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110 z-10"
-                aria-label="Next image">
+        <button id="nextImage" class="absolute right-5 top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-12 h-12 rounded-full text-3xl font-bold cursor-pointer flex items-center justify-center hover:bg-black/80 hover:scale-110 z-10">
             &gt;
         </button>
     </div>
 </div>
 
 <style>
-    /* Hide scrollbars */
     #lightboxModal, #imageContainer {
         -ms-overflow-style: none;
         scrollbar-width: none;
@@ -190,7 +187,6 @@
         display: none;
     }
     
-    /* Toast animations */
     .toast {
         animation: slideIn 0.3s ease-out forwards;
     }
@@ -221,56 +217,6 @@
         }
     }
     
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        #closeLightbox, #prevImage, #nextImage, #downloadCurrentBtn {
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
-        }
-        
-        #prevImage, #nextImage {
-            font-size: 28px;
-            font-weight: bold;
-        }
-        
-        #zoomInBtn, #zoomOutBtn, #resetZoomBtn {
-            width: 35px;
-            height: 35px;
-            font-size: 16px;
-        }
-        
-        #prevImage {
-            left: 10px;
-        }
-        
-        #nextImage {
-            right: 10px;
-        }
-        
-        #lightboxCounter {
-            top: 10px;
-            left: 10px;
-            font-size: 12px;
-        }
-        
-        #lightboxCaption {
-            bottom: 60px;
-            font-size: 11px;
-            padding: 8px 16px;
-            max-width: 85%;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        #lightboxCaption {
-            bottom: 50px;
-            font-size: 10px;
-            padding: 6px 12px;
-        }
-    }
-    
-    /* Prevent body scroll when lightbox is open */
     body.lightbox-open {
         overflow: hidden;
     }
@@ -282,7 +228,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 (function() {
-    // ==================== CONSTANTS ====================
     const ZOOM_CONFIG = {
         MIN: 0.5,
         MAX: 3,
@@ -290,13 +235,6 @@
         DEFAULT: 1
     };
     
-    const ANIMATION_DURATIONS = {
-        ZOOM: 200,
-        TOAST: 3000,
-        BUTTON_RESET: 1500
-    };
-    
-    // ==================== DOM ELEMENTS ====================
     const elements = {
         galleryItems: null,
         lightbox: document.getElementById('lightboxModal'),
@@ -316,7 +254,6 @@
         toastContainer: document.getElementById('toastContainer')
     };
     
-    // ==================== STATE ====================
     let state = {
         currentIndex: 0,
         imagesArray: [],
@@ -331,53 +268,32 @@
         isLightboxOpen: false
     };
     
-    // ==================== UTILITY FUNCTIONS ====================
     function showToast(message, type = 'info') {
         if (!elements.toastContainer) return;
         
         const toast = document.createElement('div');
-        let bgColor = '';
-        let icon = '';
-        
-        if (type === 'success') {
-            bgColor = '#10B981';
-            icon = '<i class="fas fa-check-circle"></i>';
-        } else if (type === 'error') {
-            bgColor = '#EF4444';
-            icon = '<i class="fas fa-exclamation-circle"></i>';
-        } else {
-            bgColor = '#3B82F6';
-            icon = '<i class="fas fa-info-circle"></i>';
-        }
+        let bgColor = type === 'success' ? '#10B981' : (type === 'error' ? '#EF4444' : '#3B82F6');
+        let icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : (type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : '<i class="fas fa-info-circle"></i>');
         
         toast.className = 'toast text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[250px]';
         toast.style.backgroundColor = bgColor;
-        toast.setAttribute('role', 'alert');
-        toast.setAttribute('aria-live', 'polite');
-        
         toast.innerHTML = `${icon}<span>${message}</span>`;
         elements.toastContainer.appendChild(toast);
         
         setTimeout(() => {
             toast.classList.add('fade-out');
-            setTimeout(() => {
-                if (toast.parentNode) toast.remove();
-            }, 300);
-        }, ANIMATION_DURATIONS.TOAST);
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
     
     function sanitizeFilename(title) {
         return title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
     }
     
-    function updateCursor() {
-        if (!elements.imageContainer) return;
-        elements.imageContainer.style.cursor = state.currentZoom > 1 ? 'grab' : 'default';
-    }
-    
     function applyTransform() {
-        if (!elements.lightboxImage) return;
-        elements.lightboxImage.style.transform = `scale(${state.currentZoom}) translate(${state.translateX}px, ${state.translateY}px)`;
+        if (elements.lightboxImage) {
+            elements.lightboxImage.style.transform = `scale(${state.currentZoom}) translate(${state.translateX}px, ${state.translateY}px)`;
+        }
     }
     
     function resetZoomAndPan() {
@@ -388,34 +304,29 @@
         state.lastTranslateY = 0;
         applyTransform();
         if (elements.zoomLevelSpan) elements.zoomLevelSpan.textContent = '100%';
-        updateCursor();
     }
     
-    // ==================== LIGHTBOX FUNCTIONS ====================
     function openLightbox(index) {
         if (!state.imagesArray.length) return;
-        
         state.currentIndex = index;
         resetZoomAndPan();
         updateLightboxContent();
         elements.lightbox.style.display = 'flex';
         document.body.classList.add('lightbox-open');
-        elements.lightbox.setAttribute('aria-hidden', 'false');
         state.isLightboxOpen = true;
     }
     
     function closeLightbox() {
         elements.lightbox.style.display = 'none';
         document.body.classList.remove('lightbox-open');
-        elements.lightbox.setAttribute('aria-hidden', 'true');
         state.isLightboxOpen = false;
         resetZoomAndPan();
     }
     
     function updateLightboxContent() {
-        if (!state.imagesArray[state.currentIndex]) return;
-        
         const image = state.imagesArray[state.currentIndex];
+        if (!image) return;
+        
         elements.lightboxImage.src = image.src;
         elements.lightboxImage.alt = image.title;
         elements.lightboxCaption.textContent = image.description || image.title;
@@ -423,21 +334,18 @@
         resetZoomAndPan();
     }
     
-    // ==================== ZOOM FUNCTIONS ====================
     function zoomIn() {
         if (state.currentZoom < ZOOM_CONFIG.MAX) {
             state.currentZoom = Math.min(ZOOM_CONFIG.MAX, state.currentZoom + ZOOM_CONFIG.STEP);
-            if (elements.zoomLevelSpan) elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
+            elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
             applyTransform();
-            updateCursor();
         }
     }
     
     function zoomOut() {
         if (state.currentZoom > ZOOM_CONFIG.MIN) {
             state.currentZoom = Math.max(ZOOM_CONFIG.MIN, state.currentZoom - ZOOM_CONFIG.STEP);
-            if (elements.zoomLevelSpan) elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
-            
+            elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
             if (state.currentZoom <= 1) {
                 state.translateX = 0;
                 state.translateY = 0;
@@ -445,50 +353,20 @@
                 state.lastTranslateY = 0;
             }
             applyTransform();
-            updateCursor();
         }
     }
     
-    function resetZoom() {
-        resetZoomAndPan();
+    function prevImage() {
+        state.currentIndex = (state.currentIndex > 0) ? state.currentIndex - 1 : state.imagesArray.length - 1;
+        updateLightboxContent();
     }
     
-    // ==================== PANNING FUNCTIONS ====================
-    function startPan(e) {
-        if (state.currentZoom <= 1) return;
-        e.preventDefault();
-        state.isPanning = true;
-        if (elements.imageContainer) elements.imageContainer.style.cursor = 'grabbing';
-        const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-        const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        state.startX = clientX - state.lastTranslateX;
-        state.startY = clientY - state.lastTranslateY;
+    function nextImage() {
+        state.currentIndex = (state.currentIndex < state.imagesArray.length - 1) ? state.currentIndex + 1 : 0;
+        updateLightboxContent();
     }
     
-    function pan(e) {
-        if (!state.isPanning || state.currentZoom <= 1) return;
-        e.preventDefault();
-        const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-        const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        state.translateX = clientX - state.startX;
-        state.translateY = clientY - state.startY;
-        
-        applyTransform();
-    }
-    
-    function endPan() {
-        if (state.isPanning) {
-            state.isPanning = false;
-            state.lastTranslateX = state.translateX;
-            state.lastTranslateY = state.translateY;
-            updateCursor();
-        }
-    }
-    
-    // ==================== DOWNLOAD FUNCTIONS ====================
     async function downloadCurrentImage() {
-        if (!state.imagesArray[state.currentIndex]) return;
-        
         const image = state.imagesArray[state.currentIndex];
         const btn = elements.downloadCurrentBtn;
         const originalIcon = btn.innerHTML;
@@ -498,8 +376,6 @@
             btn.disabled = true;
             
             const response = await fetch(image.src);
-            if (!response.ok) throw new Error('Failed to fetch image');
-            
             const blob = await response.blob();
             const extension = blob.type.split('/')[1] || 'jpg';
             const filename = `${sanitizeFilename(image.title)}.${extension}`;
@@ -518,15 +394,14 @@
             setTimeout(() => {
                 btn.innerHTML = originalIcon;
                 btn.disabled = false;
-            }, ANIMATION_DURATIONS.BUTTON_RESET);
+            }, 1500);
         } catch (error) {
-            console.error('Error downloading image:', error);
             btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            showToast(`Failed to download: ${image.title}`, 'error');
+            showToast(`Failed to download`, 'error');
             setTimeout(() => {
                 btn.innerHTML = originalIcon;
                 btn.disabled = false;
-            }, ANIMATION_DURATIONS.BUTTON_RESET);
+            }, 1500);
         }
     }
     
@@ -540,40 +415,28 @@
         if (!btn) return;
         
         const originalHtml = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing download...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing...';
         btn.disabled = true;
         
         try {
-            const images = state.imagesArray;
             const zip = new JSZip();
-            const eventTitle = "{{ $event->title }}";
-            const folderName = sanitizeFilename(eventTitle);
+            const folderName = sanitizeFilename("{{ $event->title }}");
             const folder = zip.folder(folderName);
             
             let downloaded = 0;
-            const total = images.length;
-            
-            for (let i = 0; i < images.length; i++) {
-                const image = images[i];
+            for (let i = 0; i < state.imagesArray.length; i++) {
+                const image = state.imagesArray[i];
                 try {
-                    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Downloading ${i+1}/${total}...`;
-                    
+                    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${i+1}/${state.imagesArray.length}`;
                     const response = await fetch(image.src);
-                    if (!response.ok) throw new Error(`Failed to fetch ${image.title}`);
-                    
                     const blob = await response.blob();
                     const extension = blob.type.split('/')[1] || 'jpg';
-                    const filename = `${(i + 1).toString().padStart(2, '0')}_${sanitizeFilename(image.title)}.${extension}`;
+                    const filename = `${(i+1).toString().padStart(2, '0')}_${sanitizeFilename(image.title)}.${extension}`;
                     folder.file(filename, blob);
                     downloaded++;
                 } catch (error) {
-                    console.error(`Error downloading ${image.title}:`, error);
-                    showToast(`Failed to download: ${image.title}`, 'error');
+                    console.error('Error downloading:', error);
                 }
-            }
-            
-            if (downloaded === 0) {
-                throw new Error('No images were downloaded');
             }
             
             const content = await zip.generateAsync({ type: "blob" });
@@ -586,35 +449,22 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Download Complete!';
-            showToast(`Successfully downloaded ${downloaded} of ${total} images`, 'success');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Complete!';
+            showToast(`Downloaded ${downloaded} of ${state.imagesArray.length} images`, 'success');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
-            }, ANIMATION_DURATIONS.BUTTON_RESET);
+            }, 1500);
         } catch (error) {
-            console.error('Error creating ZIP:', error);
-            btn.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Error! Try Again';
-            showToast('Failed to create ZIP archive. Please try again.', 'error');
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Error!';
+            showToast('Failed to create ZIP', 'error');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
-            }, ANIMATION_DURATIONS.BUTTON_RESET);
+            }, 1500);
         }
     }
     
-    // ==================== NAVIGATION ====================
-    function prevImage() {
-        state.currentIndex = (state.currentIndex > 0) ? state.currentIndex - 1 : state.imagesArray.length - 1;
-        updateLightboxContent();
-    }
-    
-    function nextImage() {
-        state.currentIndex = (state.currentIndex < state.imagesArray.length - 1) ? state.currentIndex + 1 : 0;
-        updateLightboxContent();
-    }
-    
-    // ==================== EVENT LISTENERS ====================
     function initEventListeners() {
         if (elements.closeBtn) elements.closeBtn.addEventListener('click', closeLightbox);
         if (elements.prevBtn) elements.prevBtn.addEventListener('click', prevImage);
@@ -622,60 +472,20 @@
         if (elements.downloadCurrentBtn) elements.downloadCurrentBtn.addEventListener('click', downloadCurrentImage);
         if (elements.zoomInBtn) elements.zoomInBtn.addEventListener('click', zoomIn);
         if (elements.zoomOutBtn) elements.zoomOutBtn.addEventListener('click', zoomOut);
-        if (elements.resetZoomBtn) elements.resetZoomBtn.addEventListener('click', resetZoom);
+        if (elements.resetZoomBtn) elements.resetZoomBtn.addEventListener('click', resetZoomAndPan);
         if (elements.downloadAllBtn) elements.downloadAllBtn.addEventListener('click', downloadAllImages);
         
-        // Panning events
-        if (elements.imageContainer) {
-            elements.imageContainer.addEventListener('mousedown', startPan);
-            elements.imageContainer.addEventListener('touchstart', startPan);
-            window.addEventListener('mousemove', pan);
-            window.addEventListener('touchmove', pan);
-            window.addEventListener('mouseup', endPan);
-            window.addEventListener('touchend', endPan);
-        }
-        
-        // Close on background click
-        if (elements.lightbox) {
-            elements.lightbox.addEventListener('click', function(e) {
-                if (e.target === elements.lightbox) closeLightbox();
-            });
-        }
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', (e) => {
             if (!state.isLightboxOpen) return;
-            
-            switch(e.key) {
-                case 'ArrowLeft': prevImage(); break;
-                case 'ArrowRight': nextImage(); break;
-                case 'Escape': closeLightbox(); break;
-                case '+': case '=': zoomIn(); e.preventDefault(); break;
-                case '-': zoomOut(); e.preventDefault(); break;
-                case '0': resetZoom(); e.preventDefault(); break;
-            }
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'Escape') closeLightbox();
         });
-        
-        // Mouse wheel zoom with Ctrl key
-        if (elements.lightbox) {
-            elements.lightbox.addEventListener('wheel', function(e) {
-                if (state.isLightboxOpen && e.ctrlKey) {
-                    e.preventDefault();
-                    e.deltaY < 0 ? zoomIn() : zoomOut();
-                }
-            });
-        }
     }
     
-    // ==================== INITIALIZATION ====================
     function init() {
-        // Build images array from gallery items
         elements.galleryItems = document.querySelectorAll('.gallery-item');
-        
-        if (elements.galleryItems.length === 0) {
-            console.log('No gallery items found');
-            return;
-        }
+        if (elements.galleryItems.length === 0) return;
         
         elements.galleryItems.forEach((item, index) => {
             state.imagesArray.push({
@@ -684,25 +494,15 @@
                 description: item.getAttribute('data-description')
             });
             
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                openLightbox(parseInt(this.getAttribute('data-index')));
-            });
-            
-            // Keyboard accessibility for gallery items
-            item.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openLightbox(parseInt(this.getAttribute('data-index')));
-                }
+            item.addEventListener('click', () => openLightbox(index));
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') openLightbox(index);
             });
         });
         
         initEventListeners();
-        console.log(`Gallery initialized with ${state.imagesArray.length} images`);
     }
     
-    // Start initialization
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $album['title'] ?? 'Gallery Album - PPP Department KPK')
+@section('title', $album['title'] ?? 'Gallery Album - PPP Unit KPK')
 
 @section('content')
 
@@ -25,7 +25,7 @@
             'images' => [
                 ['url' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop', 'title' => 'Inaugural Session', 'description' => 'Chief Minister KPK delivering the keynote address'],
                 ['url' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&h=800&fit=crop', 'title' => 'Panel Discussion', 'description' => 'Experts discussing infrastructure investment opportunities'],
-                ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Signing Ceremony', 'description' => 'MoU signing between PPP Department and international investors'],
+                ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Signing Ceremony', 'description' => 'MoU signing between PPP Unit and international investors'],
                 ['url' => 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1200&h=800&fit=crop', 'title' => 'Networking Session', 'description' => 'Investors networking during the summit'],
                 ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Project Showcase', 'description' => 'Showcasing upcoming PPP projects'],
                 ['url' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop', 'title' => 'Award Ceremony', 'description' => 'Best PPP Project awards ceremony'],

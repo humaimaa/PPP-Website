@@ -7,7 +7,7 @@
             <!-- Left: Logo with Continuous 3D Rotation -->
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center py-2 group outline-none">
-                    <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" 
+                    <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KPK Logo" 
                          class="navbar-logo h-12 md:h-18 w-auto mr-2 md:mr-3 animate-continuous-rotation">
                     <div class="hidden lg:block">
                         <span class="text-text-primary font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>

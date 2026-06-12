@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Sector - PPP Department KPK')
+@section('title', 'Edit Sector - PPP Unit KPK')
 @section('header-title', 'Edit Sector')
 
 @section('content')

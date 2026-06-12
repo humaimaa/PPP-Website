@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Organizational Structure')
+@section('title', 'PPP Unit KPK - Organizational Structure')
 
 @section('content')
 
@@ -29,7 +29,7 @@
         </div>
         <div class="bg-background-light/30 p-6 rounded-lg shadow-inner">
             <div class="flex justify-center">
-                <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Department Organogram" class="max-w-full h-auto rounded-lg shadow-md">
+                <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Unit Organogram" class="max-w-full h-auto rounded-lg shadow-md">
             </div>
             <div class="text-center mt-6">
                 <a href="{{ asset('images/organogram.jpg') }}" download="PPP-Department-Organogram.jpg" 

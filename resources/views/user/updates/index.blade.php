@@ -38,7 +38,7 @@
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     @elseif($news->pdf_path)
                         <!-- PDF icon fallback -->
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                             <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5.414 5.414c.391.391.586.903.586 1.414V7c0-2.21-1.79-4-4-4H7z"></path>
@@ -46,7 +46,7 @@
                         </div>
                     @else
                         <!-- Final fallback: gradient with type text -->
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                             <div class="text-center">
                                 <svg class="w-12 h-12 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>

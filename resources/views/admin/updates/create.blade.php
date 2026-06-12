@@ -35,10 +35,10 @@
                         <i class="fas fa-exclamation-triangle text-red-500"></i>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors: </h3>
+                        <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
                         <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
                             @foreach($errors->all() as $error)
-                                <li>{{ $error }} </li>
+                                <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
@@ -72,7 +72,7 @@
                             >
                         </div>
                         @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -101,30 +101,33 @@
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the type/category of this update</p>
                         @error('type')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Event Date (only for Event type - but note your table doesn't have Event type) --}}
-                    <div id="eventDateField" class="mb-4" style="{{ old('type') == 'Event' ? 'display: block;' : 'display: none;' }}">
-                        <label for="event_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            Event Date
+                    {{-- News Date --}}
+                    <div class="mb-4">
+                        <label for="news_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            News Date
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-calendar-alt"></i>
                             </span>
                             <input
-                                type="date"
-                                id="event_date"
-                                name="event_date"
-                                value="{{ old('event_date') }}"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('event_date') border-red-500 @enderror"
+                                type="datetime-local"
+                                id="news_date"
+                                name="news_date"
+                                value="{{ old('news_date', date('Y-m-d\TH:i')) }}"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('news_date') border-red-500 @enderror"
                             >
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Optional: Date of the event (if applicable) </p>
-                        @error('event_date')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Leave empty to use current date and time
+                        </p>
+                        @error('news_date')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -187,7 +190,7 @@
                             </div>
                         </div>
                         @error('image')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -237,7 +240,7 @@
                     <p class="text-xs text-gray-400">Tip: Use proper formatting for better readability</p>
                 </div>
                 @error('content')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }} </p>
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -279,8 +282,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const typeSelect = document.getElementById('type');
-    const eventDateField = document.getElementById('eventDateField');
-    const eventDateInput = document.getElementById('event_date');
     const contentTextarea = document.getElementById('content');
     const charCount = document.getElementById('charCount');
     const titleInput = document.getElementById('title');
@@ -292,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const imageInput = document.getElementById('image');
     const previewImageContainer = document.getElementById('previewImageContainer');
     const previewImage = document.getElementById('previewImage');
+    const newsDateInput = document.getElementById('news_date');
 
     const typeColors = {
         'Update':        'bg-green-100 text-green-800',
@@ -301,27 +303,19 @@ document.addEventListener('DOMContentLoaded', function () {
         'Other':         'bg-gray-100 text-gray-800',
     };
 
-    function toggleEventDate() {
-        // Note: 'Event' type is not in your migration but keeping for flexibility
-        if (typeSelect.value === 'Event') {
-            eventDateField.style.display = 'block';
-            if (eventDateInput) eventDateInput.required = true;
-        } else {
-            eventDateField.style.display = 'none';
-            if (eventDateInput) {
-                eventDateInput.required = false;
-                eventDateInput.value = '';
-            }
-        }
-        updatePreview();
-    }
-
     function updatePreview() {
         const type = typeSelect.value || 'Update';
         previewType.textContent = type;
         previewType.className = `inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[type] || 'bg-gray-100 text-gray-800'}`;
-        previewTitle.textContent = titleInput.value.trim() || 'Title will appear here';
-        previewContent.textContent = contentTextarea.value.trim() || 'Content preview will appear here...';
+        
+        const title = titleInput.value.trim();
+        previewTitle.textContent = title || 'Title will appear here';
+        
+        let content = contentTextarea.value.trim();
+        if (content.length > 150) {
+            content = content.substring(0, 150) + '...';
+        }
+        previewContent.textContent = content || 'Content preview will appear here...';
         
         if (featuredChk && featuredChk.checked) {
             previewFeatured.classList.remove('hidden');
@@ -347,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (typeSelect) {
-        typeSelect.addEventListener('change', toggleEventDate);
+        typeSelect.addEventListener('change', updatePreview);
     }
     
     if (titleInput) {
@@ -356,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if (contentTextarea) {
         contentTextarea.addEventListener('input', () => {
-            charCount.textContent = contentTextarea.value.length;
+            if (charCount) charCount.textContent = contentTextarea.value.length;
             updatePreview();
         });
     }
@@ -364,24 +358,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (featuredChk) {
         featuredChk.addEventListener('change', updatePreview);
     }
-    
-    if (eventDateInput) {
-        eventDateInput.addEventListener('change', updatePreview);
+
+    if (newsDateInput) {
+        newsDateInput.addEventListener('change', updatePreview);
     }
 
     if (imageInput) {
         imageInput.addEventListener('change', function() {
             updateImagePreview();
-            // Also update any existing image validation preview (optional)
         });
     }
 
-    // Initialize
+    // Initialize character count and preview
     if (charCount && contentTextarea) {
         charCount.textContent = contentTextarea.value.length;
     }
-    toggleEventDate();
     updatePreview();
+    updateImagePreview();
 });
 
 // Image validation function (also updates live preview)

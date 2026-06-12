@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class NewsController extends Controller
 {
@@ -58,6 +59,7 @@ class NewsController extends Controller
             'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
             'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
             'is_featured' => 'nullable|boolean',
+            'news_date'   => 'nullable|date',
         ]);
 
         $imagePath = null;
@@ -65,12 +67,18 @@ class NewsController extends Controller
             $imagePath = $request->file('image')->store('news/images', 'public');
         }
 
+        // Set news_date: use user input if provided, otherwise use current timestamp
+        $newsDate = $request->filled('news_date') 
+            ? Carbon::parse($request->news_date) 
+            : Carbon::now();
+
         News::create([
             'title'       => $validated['title'],
             'content'     => $validated['content'],
             'type'        => $validated['type'],
             'img_path'    => $imagePath,
             'is_featured' => $request->boolean('is_featured'),
+            'news_date'   => $newsDate,
         ]);
 
         return redirect()
@@ -105,6 +113,7 @@ class NewsController extends Controller
             'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
             'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
             'is_featured' => 'nullable|boolean',
+            'news_date'   => 'nullable|date',
         ]);
 
         $imagePath = $news->img_path;
@@ -117,12 +126,20 @@ class NewsController extends Controller
             $imagePath = $request->file('image')->store('news/images', 'public');
         }
 
+        // Set news_date: use user input if provided, otherwise keep existing or use current
+        if ($request->filled('news_date')) {
+            $newsDate = Carbon::parse($request->news_date);
+        } else {
+            $newsDate = $news->news_date ?? Carbon::now();
+        }
+
         $news->update([
             'title'       => $validated['title'],
             'content'     => $validated['content'],
             'type'        => $validated['type'],
             'img_path'    => $imagePath,
             'is_featured' => $request->boolean('is_featured'),
+            'news_date'   => $newsDate,
         ]);
 
         return redirect()

@@ -115,31 +115,31 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy')->middleware('can:news.delete');
     });
 
-  // ==================== TENDERS MANAGEMENT ====================
-Route::prefix('tenders')->name('tenders.')->middleware('can:tenders.view')->group(function () {
-    Route::get('/', [TenderController::class, 'index'])->name('index');
-    Route::get('/create', [TenderController::class, 'create'])->name('create')->middleware('can:tenders.create');
-    Route::post('/', [TenderController::class, 'store'])->name('store')->middleware('can:tenders.create');
-    Route::post('/bulk-delete', [TenderController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:tenders.delete');
+    // ==================== TENDERS MANAGEMENT ====================
+    Route::prefix('tenders')->name('tenders.')->middleware('can:tenders.view')->group(function () {
+        Route::get('/', [TenderController::class, 'index'])->name('index');
+        Route::get('/create', [TenderController::class, 'create'])->name('create')->middleware('can:tenders.create');
+        Route::post('/', [TenderController::class, 'store'])->name('store')->middleware('can:tenders.create');
+        Route::post('/bulk-delete', [TenderController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:tenders.delete');
 
-    // Archive / Unarchive routes
-    Route::post('/{tender}/archive', [TenderController::class, 'archive'])->name('archive')->middleware('can:tenders.edit');
-    Route::post('/{tender}/unarchive', [TenderController::class, 'unarchive'])->name('unarchive')->middleware('can:tenders.edit');
+        // Archive / Unarchive routes
+        Route::post('/{tender}/archive', [TenderController::class, 'archive'])->name('archive')->middleware('can:tenders.edit');
+        Route::post('/{tender}/unarchive', [TenderController::class, 'unarchive'])->name('unarchive')->middleware('can:tenders.edit');
 
-    // Extend functionality routes
-    Route::post('/{tender}/extend', [TenderController::class, 'extend'])->name('extend')->middleware('can:tenders.edit');
-    Route::delete('/{tender}/remove-extension', [TenderController::class, 'removeExtension'])->name('remove-extension')->middleware('can:tenders.edit');
+        // Extend functionality routes
+        Route::post('/{tender}/extend', [TenderController::class, 'extend'])->name('extend')->middleware('can:tenders.edit');
+        Route::delete('/{tender}/remove-extension', [TenderController::class, 'removeExtension'])->name('remove-extension')->middleware('can:tenders.edit');
 
-    Route::get('/{tender}', [TenderController::class, 'show'])->name('show');
-    Route::get('/{tender}/edit', [TenderController::class, 'edit'])->name('edit')->middleware('can:tenders.edit');
-    Route::put('/{tender}', [TenderController::class, 'update'])->name('update')->middleware('can:tenders.edit');
-    Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy')->middleware('can:tenders.delete');
+        Route::get('/{tender}', [TenderController::class, 'show'])->name('show');
+        Route::get('/{tender}/edit', [TenderController::class, 'edit'])->name('edit')->middleware('can:tenders.edit');
+        Route::put('/{tender}', [TenderController::class, 'update'])->name('update')->middleware('can:tenders.edit');
+        Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy')->middleware('can:tenders.delete');
 
-    // Additional document delete
-    Route::delete('/additional-docs/{doc}', [TenderController::class, 'deleteAdditionalDoc'])
-        ->name('delete-additional-doc')
-        ->middleware('can:tenders.edit');
-});
+        // Additional document delete
+        Route::delete('/additional-docs/{doc}', [TenderController::class, 'deleteAdditionalDoc'])
+            ->name('delete-additional-doc')
+            ->middleware('can:tenders.edit');
+    });
 
     // ==================== DOWNLOADS/DOCUMENTS MANAGEMENT ====================
     Route::prefix('downloads')->name('downloads.')->middleware('can:downloads.view')->group(function () {

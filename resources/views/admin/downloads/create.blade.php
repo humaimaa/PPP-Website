@@ -92,7 +92,7 @@
                             <option value="">Select Category</option>
                             <option value="Legal Framework" {{ old('category') == 'Legal Framework' ? 'selected' : '' }}>Legal Framework</option>
                             <option value="Prequalified Transaction Advisory" {{ old('category') == 'Prequalified Transaction Advisory' ? 'selected' : '' }}>Prequalified Transaction Advisory</option>
-                            <option value="Policies ,Regulations and Guidelines" {{ old('category') == 'Policies ,Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
+                            <option value="Policies, Regulations and Guidelines" {{ old('category') == 'Policies, Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
                             <option value="Knowledge Hub" {{ old('category') == 'Knowledge Hub' ? 'selected' : '' }}>Knowledge Hub</option>
                         </select>
                     </div>

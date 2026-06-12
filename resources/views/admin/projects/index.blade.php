@@ -91,7 +91,7 @@
                                     class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </th>
                             @endcan
-                            <th class="px-6 py-3 text-left">ID</th>
+                           
                             <th class="px-6 py-3 text-left">Image</th>
                             <th class="px-6 py-3 text-left">Project Name</th>
                             <th class="px-6 py-3 text-left">Location/Division</th>
@@ -118,9 +118,7 @@
                             </td>
                             @endcan
 
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
-                                #{{ $project->id }}
-                            </td>
+                           
 
                             <td class="px-6 py-4">
                                 @if($project->image && Storage::disk('public')->exists($project->image))

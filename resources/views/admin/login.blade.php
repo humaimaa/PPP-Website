@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
-    <title>Admin Login - PPP Department KPK</title>
+    <title>Admin Login - PPP Unit KPK</title>
 
     {{-- Tailwind CSS only (remove Vite for login page to avoid conflicts) --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +41,7 @@
         <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-4 border-2 border-emerald-200">
             <img src="{{ asset('images/logo.png') }}" alt="PPP Logo" class="h-12 w-12 object-contain">
         </div>
-        <h1 class="text-2xl font-bold text-gray-800 mb-1">PPP Department KPK</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mb-1">PPP Unit KPK</h1>
         <p class="text-gray-500 text-sm font-medium">Public Private Partnership</p>
     </div>
 
@@ -167,7 +167,7 @@
                     <span class="flex items-center"><i class="fas fa-clock mr-1.5 text-emerald-700"></i>Session: 120 min</span>
                 </div>
                 <p class="text-center text-xs text-gray-400 mt-5">
-                    &copy; {{ date('Y') }} PPP Department KPK. All rights reserved.
+                    &copy; {{ date('Y') }} PPP Unit KPK. All rights reserved.
                 </p>
             </div>
         </div>

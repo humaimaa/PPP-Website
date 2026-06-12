@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Tenders & Opportunities')
+@section('title', 'PPP Unit KPK - Tenders & Opportunities')
 
 @section('content')
 
@@ -316,7 +316,7 @@
                         <h4 class="font-semibold mb-2 text-text-black flex items-center">
                             <i class="fas fa-map-marker-alt text-primary mr-2"></i> Office Visit
                         </h4>
-                        <p class="text-sm text-text-muted">PPP Department, Civil Secretariat, Peshawar</p>
+                        <p class="text-sm text-text-muted">PPP Unit,P & D Department, Civil Secretariat, Peshawar</p>
                         <p class="text-xs mt-1 text-text-muted">By appointment only</p>
                     </div>
                 </div>

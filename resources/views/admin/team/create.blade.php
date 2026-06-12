@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Add Team Member - PPP Department KPK')
+@section('title', 'Add Team Member - PPP Unit KPK')
 
 @section('content')
 <div class="max-w-4xl mx-auto p-6">
@@ -22,7 +22,7 @@
                     <i class="fas fa-user-plus mr-2 text-emerald-600"></i>
                     Add New Team Member
                 </h3>
-                <p class="text-sm text-gray-500 mt-1">Add a new team member to the PPP Department</p>
+                <p class="text-sm text-gray-500 mt-1">Add a new team member to the PPP Unit</p>
             </div>
         </div>
 

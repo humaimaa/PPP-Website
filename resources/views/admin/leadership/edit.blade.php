@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Leadership Message - PPP Department KPK')
+@section('title', 'Edit Leadership Message - PPP Unit KPK')
 @section('header-title', 'Edit Leadership Message')
 
 @section('content')
@@ -123,7 +123,7 @@
                         rows="6" 
                         required
                         class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('message') border-red-500 @enderror"
-                        placeholder="Write the leadership message here... (e.g., It is my privilege to lead the PPP Department...)"
+                        placeholder="Write the leadership message here... (e.g., It is my privilege to lead the PPP Unit...)"
                     >{{ old('message', $message->message) }}</textarea>
                 </div>
                 <p class="mt-1 text-xs text-gray-500">Write a meaningful message that will inspire and connect with the audience</p>

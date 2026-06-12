@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Contact Us')
+@section('title', 'PPP Unit KPK - Contact Us')
 
 @section('content')
 <!-- Page Header -->
@@ -35,7 +35,8 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Address</h3>
                             <p class="mt-1 text-text-muted">
-                                PPP Department,<br>
+                                PPP Unit,<br>
+                                P & D Department,<br>
                                 Civil Secretariat,<br>
                                 Peshawar, Khyber Pakhtunkhwa,<br>
                                 Pakistan

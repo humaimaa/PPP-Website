@@ -61,12 +61,14 @@
                         <div class="flex items-center mb-2 flex-wrap gap-2">
                             {{-- Date Logic: Show news_date if available, otherwise show created_at --}}
                             @php
-                                $displayDate = $news->news_date ?? $news->created_at;
-                            @endphp
-                            <span class="text-sm text-accent-1 font-medium">
-                                <i class="fas fa-calendar-alt mr-1"></i>
-                                {{ $displayDate->format('F d, Y') }}
-                            </span>
+    $displayDate = isset($news->news_date) && $news->news_date 
+        ? \Carbon\Carbon::parse($news->news_date) 
+        : ($news->created_at instanceof \Carbon\Carbon ? $news->created_at : \Carbon\Carbon::parse($news->created_at));
+@endphp
+<span class="text-sm text-accent-1 font-medium">
+    <i class="fas fa-calendar-alt mr-1"></i>
+    {{ $displayDate->format('F d, Y') }}
+</span>
                             <span class="mx-2 text-text-muted hidden sm:inline">|</span>
                             <span class="text-sm text-text-muted">
                                 <i class="fas fa-tag mr-1"></i>

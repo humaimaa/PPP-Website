@@ -12,11 +12,12 @@ class News extends Model
         'type',
         'img_path',
         'is_featured',
-    'news_date', // Add this
+        'news_date', // Add this
     ];
 
     protected $casts = [
         'is_featured' => 'boolean',
+        'news_date' => 'datetime', // Add this line to cast news_date as datetime
     ];
 
     // Scopes

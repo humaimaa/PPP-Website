@@ -179,16 +179,15 @@
                              </td>
                             
                             <td class="px-6 py-4">
+                                @php
+                                    $displayDate = $item->news_date ? \Carbon\Carbon::parse($item->news_date) : $item->created_at;
+                                @endphp
                                 <div class="flex flex-col">
-                                    {{-- Show news_date if available, otherwise show created_at --}}
-                                    @php
-                                        $displayDate = $item->news_date ?? $item->created_at;
-                                    @endphp
                                     <span class="text-sm text-gray-600">
-                                        <i class="far fa-calendar-alt mr-1 text-gray-400"></i>
+                                        <i class="far fa-calendar-alt mr-1 text-emerald-600"></i>
                                         {{ $displayDate->format('M d, Y') }}
                                     </span>
-                                    @if($item->news_date && $item->created_at)
+                                    @if($item->news_date)
                                         <span class="text-xs text-gray-400 mt-1">
                                             <i class="far fa-clock mr-1"></i>
                                             Created: {{ $item->created_at->format('M d, Y') }}

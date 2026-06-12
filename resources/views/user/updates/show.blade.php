@@ -19,9 +19,13 @@
                 {{ $news->title }}
             </h1>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <!-- Date -->
+            <!-- Date - Show news_date if available, otherwise created_at -->
             <p class="text-white/80 text-sm md:text-base mt-4">
-                {{ $news->created_at->format('F d, Y') }}
+                @php
+                    $displayDate = $news->news_date ?? $news->created_at;
+                    $displayDate = $displayDate instanceof \Carbon\Carbon ? $displayDate : \Carbon\Carbon::parse($displayDate);
+                @endphp
+                {{ $displayDate->format('F d, Y') }}
             </p>
         </div>
     </div>
@@ -63,8 +67,11 @@
                         <svg class="w-5 h-5 mr-2 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        {{ $news->created_at->format('F d, Y') }}
-
+                        @php
+                            $displayDate = $news->news_date ?? $news->created_at;
+                            $displayDate = $displayDate instanceof \Carbon\Carbon ? $displayDate : \Carbon\Carbon::parse($displayDate);
+                        @endphp
+                        {{ $displayDate->format('F d, Y') }}
                     </div>
                     <div class="flex items-center text-text-muted">
                         <svg class="w-5 h-5 mr-2 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +83,11 @@
                         <svg class="w-5 h-5 mr-2 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
-                        {{ $news->created_at->diffForHumans() }}
+                        @php
+                            $dateForHumans = $news->news_date ?? $news->created_at;
+                            $dateForHumans = $dateForHumans instanceof \Carbon\Carbon ? $dateForHumans : \Carbon\Carbon::parse($dateForHumans);
+                        @endphp
+                        {{ $dateForHumans->diffForHumans() }}
                     </div>
                 </div>
             </div>

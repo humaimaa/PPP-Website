@@ -16,6 +16,7 @@ use App\Http\Controllers\User\ProjectController;
 // Homepage
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
+
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 
@@ -45,15 +46,12 @@ Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.
 // Resource Center (Downloads) with optional section parameter
 Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');
 
-// Media Room Routes - CORRECTED ORDER
+// Media Room Routes
 Route::prefix('media-room')->name('media.room.')->group(function () {
-    // Events routes - put more specific ones first
-    Route::get('/events', [MediaroomController::class, 'eventsIndex'])->name('events.index');
-    Route::get('/events/gallery/{id}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
-    
-    // Updates routes
-    Route::get('/updates', [MediaroomController::class, 'updatesIndex'])->name('updates.index');
+    Route::get('/events', [MediaroomController::class, 'eventsIndex'])->name('events');
+    Route::get('/updates', [MediaroomController::class, 'updatesIndex'])->name('updates');
     Route::get('/updates/{id}', [MediaroomController::class, 'updatesShow'])->name('updates.show');
+    Route::get('/events/gallery/{id}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
 });
 
 // API endpoint for downloading files

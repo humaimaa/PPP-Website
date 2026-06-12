@@ -7,21 +7,19 @@
 <!-- Page Header -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
-        <div class="text-center px-4">
+        <div class="text-center px-4 pt-26">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $event->title }}</h1>
             <div class="w-20 h-1 bg-orange-500 mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
-                {{ Str::limit($event->description ?? 'View moments from this memorable event', 150) }}
-            </p>
+
         </div>
     </div>
     @php
         $bannerImage = null;
-        $thumbnail = $event->galleries->firstWhere('is_thumbnail', true);
+        $thumbnail = $event->gallery->firstWhere('is_thumbnail', true);
         if ($thumbnail) {
             $bannerImage = asset('storage/' . $thumbnail->image);
         } else {
-            $firstImage = $event->galleries->first();
+            $firstImage = $event->gallery->first();
             if ($firstImage) {
                 $bannerImage = asset('storage/' . $firstImage->image);
             }
@@ -35,7 +33,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('media.room.events.index') }}" class="text-orange-600 hover:text-orange-700 inline-flex items-center transition-colors duration-300">
+            <a href="{{ route('media.room.events') }}" class="text-orange-600 hover:text-orange-700 inline-flex items-center transition-colors duration-300">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Events
             </a>
@@ -55,19 +53,19 @@
                 </div>
                 <div class="flex items-center">
                     <i class="fas fa-images text-orange-500 mr-2"></i>
-                    <span>{{ $event->galleries->count() }} {{ Str::plural('Photo', $event->galleries->count()) }}</span>
+                    <span>{{ $event->gallery->count() }} {{ Str::plural('Photo', $event->gallery->count()) }}</span>
                 </div>
             </div>
             <p class="text-gray-700 text-lg leading-relaxed">{{ $event->description }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->
-        @if($event->galleries->count() > 0)
+        @if($event->gallery->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="galleryGrid">
-            @foreach($event->galleries as $index => $gallery)
+            @foreach($event->gallery as $index => $galleryItem)
             <div class="group cursor-pointer gallery-item" 
                  data-index="{{ $index }}" 
-                 data-src="{{ asset('storage/' . $gallery->image) }}" 
+                 data-src="{{ asset('storage/' . $galleryItem->image) }}" 
                  data-title="{{ $event->title }} - Photo {{ $loop->iteration }}" 
                  data-description="Photo from {{ $event->title }} event at {{ $event->location }}"
                  role="button"
@@ -75,7 +73,7 @@
                  aria-label="View image: {{ $event->title }} - Photo {{ $loop->iteration }}">
                 <div class="block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
                     <div class="relative overflow-hidden aspect-square">
-                        <img src="{{ asset('storage/' . $gallery->image) }}" 
+                        <img src="{{ asset('storage/' . $galleryItem->image) }}" 
                              alt="{{ $event->title }} - Photo {{ $loop->iteration }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                              loading="lazy">
@@ -85,7 +83,7 @@
                                 <p class="text-xs">Click to view</p>
                             </div>
                         </div>
-                        @if($gallery->is_thumbnail)
+                        @if($galleryItem->is_thumbnail)
                         <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs">
                             <i class="fas fa-star mr-1"></i> Featured
                         </div>

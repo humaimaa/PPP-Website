@@ -29,13 +29,15 @@
                     <div class="relative overflow-hidden h-64">
                         @php
                             $thumbnailUrl = null;
+                            // Load gallery relationship for this event
+                            $eventGallery = $event->gallery;
                             // Try to find thumbnail marked image
-                            $thumbnail = $event->galleries->firstWhere('is_thumbnail', true);
+                            $thumbnail = $eventGallery->firstWhere('is_thumbnail', true);
                             if ($thumbnail) {
                                 $thumbnailUrl = asset('storage/' . $thumbnail->image);
                             } else {
                                 // If no thumbnail marked, get the first image
-                                $firstImage = $event->galleries->first();
+                                $firstImage = $eventGallery->first();
                                 if ($firstImage) {
                                     $thumbnailUrl = asset('storage/' . $firstImage->image);
                                 }
@@ -57,7 +59,7 @@
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <div class="bg-orange-500 text-white px-4 py-2 rounded-full flex items-center">
                                 <i class="fas fa-images mr-2"></i>
-                                {{ $event->galleries_count }} {{ Str::plural('Photo', $event->galleries_count) }}
+                                {{ $event->gallery_count }} {{ Str::plural('Photo', $event->gallery_count) }}
                             </div>
                         </div>
                         
@@ -68,7 +70,7 @@
                         </div>
                         
                         <!-- Featured Badge -->
-                        @if($event->galleries->firstWhere('is_thumbnail', true))
+                        @if($thumbnail && $thumbnail->is_thumbnail)
                         <div class="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs">
                             <i class="fas fa-star mr-1"></i> Featured
                         </div>
@@ -90,7 +92,7 @@
                             </div>
                             <div class="flex items-center text-gray-500 text-sm">
                                 <i class="fas fa-images text-orange-500 mr-1"></i>
-                                {{ $event->galleries_count }} {{ Str::plural('photo', $event->galleries_count) }}
+                                {{ $event->gallery_count }} {{ Str::plural('photo', $event->gallery_count) }}
                             </div>
                         </div>
                     </div>

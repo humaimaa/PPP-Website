@@ -8,25 +8,13 @@
 <section class="relative h-[50vh] md:h-[60vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-26 max-w-4xl">
-            <!-- Type Badge -->
-            <div class="inline-block mb-4">
-                <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-accent-1 text-text-primary">
-                    {{ $news->type ?? 'News' }}
-                </span>
-            </div>
+            
             <!-- Title with word wrap and line clamp for long titles -->
             <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 break-words hyphens-auto">
                 {{ $news->title }}
             </h1>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <!-- Date - Show news_date if available, otherwise created_at -->
-            <p class="text-white/80 text-sm md:text-base mt-4">
-                @php
-                    $displayDate = $news->news_date ?? $news->created_at;
-                    $displayDate = $displayDate instanceof \Carbon\Carbon ? $displayDate : \Carbon\Carbon::parse($displayDate);
-                @endphp
-                {{ $displayDate->format('F d, Y') }}
-            </p>
+           
         </div>
     </div>
     

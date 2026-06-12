@@ -183,7 +183,8 @@
                                         
                                         {{-- Delete Button --}}
                                         @can('team.delete')
-                                            <button onclick="confirmDelete({{ $member->id }}, '{{ addslashes($member->name) }}')" 
+                                            <button type="button" 
+                                                    onclick="confirmDelete({{ $member->id }}, '{{ addslashes($member->name) }}')" 
                                                     class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
                                                     title="Delete Member">
                                                 <i class="fas fa-trash"></i>

@@ -10,39 +10,28 @@ use Illuminate\Validation\Rule;
 
 class LeadershipMessageController extends Controller
 {
-    /**
-     * Display a listing of messages with search functionality.
-     */
     public function index(Request $request)
     {
         $query = LeadershipMessage::query();
         
-        // Search functionality
-        if ($request->has('search') && $request->search) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('designation', 'like', '%' . $search . '%')
-                  ->orWhere('message', 'like', '%' . $search . '%');
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('designation', 'like', "%{$search}%")
+                  ->orWhere('message', 'like', "%{$search}%");
             });
         }
         
         $messages = $query->latest()->paginate(10);
-        
         return view('admin.leadership.index', compact('messages'));
     }
 
-    /**
-     * Show the form for creating a new message.
-     */
     public function create()
     {
         return view('admin.leadership.create');
     }
 
-    /**
-     * Store a newly created message.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -53,7 +42,6 @@ class LeadershipMessageController extends Controller
         ]);
 
         $data = $request->only(['name', 'designation', 'message']);
-
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('leadership', 'public');
         }
@@ -64,27 +52,18 @@ class LeadershipMessageController extends Controller
                          ->with('success', 'Leadership message added successfully.');
     }
 
-    /**
-     * Display the specified message.
-     */
     public function show($id)
     {
         $message = LeadershipMessage::findOrFail($id);
         return view('admin.leadership.show', compact('message'));
     }
 
-    /**
-     * Show the form for editing the specified message.
-     */
     public function edit($id)
     {
         $message = LeadershipMessage::findOrFail($id);
         return view('admin.leadership.edit', compact('message'));
     }
 
-    /**
-     * Update the specified message.
-     */
     public function update(Request $request, $id)
     {
         $message = LeadershipMessage::findOrFail($id);
@@ -97,9 +76,7 @@ class LeadershipMessageController extends Controller
         ]);
 
         $data = $request->only(['name', 'designation', 'message']);
-
         if ($request->hasFile('image')) {
-            // Delete old image
             if ($message->image) {
                 Storage::disk('public')->delete($message->image);
             }
@@ -112,60 +89,51 @@ class LeadershipMessageController extends Controller
                          ->with('success', 'Leadership message updated successfully.');
     }
 
-    /**
-     * Remove the specified message.
-     */
     public function destroy($id)
     {
         $message = LeadershipMessage::findOrFail($id);
-
         if ($message->image) {
             Storage::disk('public')->delete($message->image);
         }
-
         $message->delete();
 
         return redirect()->route('admin.leadership.index')
                          ->with('success', 'Leadership message deleted successfully.');
     }
 
-    /**
-     * Bulk delete messages.
-     */
     public function bulkDelete(Request $request)
     {
         $request->validate([
-            'message_ids' => ['required', 'array'],
-            'message_ids.*' => ['exists:leadership_messages,id'],
+            'message_ids'   => 'required|array',
+            'message_ids.*' => 'exists:leadership_messages,id',
         ]);
 
-        $messageIds = $request->message_ids;
+        $ids = $request->message_ids;
         $deletedCount = 0;
-        $deletedMessages = [];
+        $deletedNames = [];
 
-        foreach ($messageIds as $id) {
+        foreach ($ids as $id) {
             $message = LeadershipMessage::find($id);
             if ($message) {
-                // Delete associated image
                 if ($message->image) {
                     Storage::disk('public')->delete($message->image);
                 }
-                $deletedMessages[] = $message->name;
+                $deletedNames[] = $message->name;
                 $message->delete();
                 $deletedCount++;
             }
         }
 
         if ($deletedCount > 0) {
-            $messageText = $deletedCount . " message(s) deleted successfully";
-            if (count($deletedMessages) <= 5) {
-                $messageText .= ": " . implode(', ', $deletedMessages);
+            $messageText = $deletedCount . " message(s) deleted successfully.";
+            if (count($deletedNames) <= 5) {
+                $messageText .= " (" . implode(', ', $deletedNames) . ")";
             }
             return redirect()->route('admin.leadership.index')
-                ->with('success', $messageText);
+                             ->with('success', $messageText);
         }
 
         return redirect()->route('admin.leadership.index')
-            ->with('error', 'No messages were deleted.');
+                         ->with('error', 'No messages were deleted.');
     }
 }

@@ -12,7 +12,6 @@
             <p class="text-sm text-gray-500 mt-1">Manage leadership and staff messages</p>
         </div>
         <div class="flex gap-3">
-            {{-- Bulk Delete Button - Only show if user has delete permission --}}
             @can('leadership.delete')
                 <button type="button" id="bulkDeleteBtn" 
                         class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
@@ -22,7 +21,6 @@
                 </button>
             @endcan
             
-            {{-- Add New Message Button --}}
             @can('leadership.create')
                 <a href="{{ route('admin.leadership.add') }}" 
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition">
@@ -33,7 +31,7 @@
         </div>
     </div>
 
-    {{-- Success/Error Messages --}}
+    {{-- Flash Messages --}}
     @if(session('success'))
         <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
             <div class="flex items-center">
@@ -91,12 +89,9 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('leadership.delete')
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">
-                                    <input type="checkbox" 
-                                           id="selectAllCheckbox" 
-                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                    <input type="checkbox" id="selectAllCheckbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </th>
                             @endcan
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
@@ -104,8 +99,6 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            
-                            {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('leadership.view') || auth()->user()->can('leadership.edit') || auth()->user()->can('leadership.delete'))
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             @endif
@@ -113,8 +106,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($messages as $msg)
-                            <tr class="hover:bg-gray-50 transition" data-message-id="{{ $msg->id }}">
-                                {{-- Checkbox column - Only show if user has delete permission --}}
+                            <tr data-message-id="{{ $msg->id }}">
                                 @can('leadership.delete')
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="checkbox" 
@@ -123,7 +115,6 @@
                                                class="message-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                     </td>
                                 @endcan
-                                
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($msg->image)
                                         <img src="{{ asset('storage/' . $msg->image) }}"
@@ -135,33 +126,24 @@
                                         </div>
                                     @endif
                                 </td>
-                                
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col">
-                                        <span class="font-medium text-gray-900">{{ $msg->name }}</span>
-                                    </div>
+                                    <span class="font-medium text-gray-900">{{ $msg->name }}</span>
                                 </td>
-                                
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ $msg->designation }}
                                 </td>
-                                
                                 <td class="px-6 py-4">
                                     <div class="text-sm text-gray-500 max-w-xs">
                                         {{ Str::limit($msg->message, 80) }}
                                     </div>
                                 </td>
-                                
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <i class="far fa-calendar-alt text-gray-400 mr-1"></i>
                                     {{ $msg->created_at->format('d M, Y') }}
                                 </td>
-                                
-                                {{-- Actions column - Only show if user has any action permissions --}}
                                 @if(auth()->user()->can('leadership.view') || auth()->user()->can('leadership.edit') || auth()->user()->can('leadership.delete'))
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex items-center justify-end gap-2">
-                                            {{-- View Button --}}
                                             @can('leadership.view')
                                                 <a href="{{ route('admin.leadership.show', $msg->id) }}"
                                                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
@@ -169,8 +151,6 @@
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             @endcan
-
-                                            {{-- Edit Button --}}
                                             @can('leadership.edit')
                                                 <a href="{{ route('admin.leadership.edit', $msg->id) }}"
                                                    class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
@@ -178,10 +158,9 @@
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             @endcan
-
-                                            {{-- Delete Button --}}
                                             @can('leadership.delete')
-                                                <button onclick="confirmDelete({{ $msg->id }}, '{{ addslashes($msg->name) }}')" 
+                                                <button type="button" 
+                                                        onclick="confirmDelete({{ $msg->id }}, '{{ addslashes($msg->name) }}')" 
                                                         class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
                                                         title="Delete Message">
                                                     <i class="fas fa-trash"></i>
@@ -194,9 +173,9 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 6; // Base columns (Image, Name, Designation, Message, Created)
-                                    if(auth()->user()->can('leadership.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('leadership.view') || auth()->user()->can('leadership.edit') || auth()->user()->can('leadership.delete')) $colspan++; // Add actions column
+                                    $colspan = 6;
+                                    if(auth()->user()->can('leadership.delete')) $colspan++;
+                                    if(auth()->user()->can('leadership.view') || auth()->user()->can('leadership.edit') || auth()->user()->can('leadership.delete')) $colspan++;
                                 @endphp
                                 <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-500">
                                     <i class="fas fa-comment-dots text-4xl mb-3 opacity-50"></i>
@@ -210,7 +189,7 @@
                                             <p class="text-sm mt-1">Click "Add New Message" to create your first message</p>
                                         @endcan
                                     @endif
-                                 </td>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -218,7 +197,6 @@
             </div>
         </form>
 
-        {{-- Pagination --}}
         @if($messages->hasPages())
             <div class="px-6 py-4 border-t border-gray-200">
                 {{ $messages->appends(request()->query())->links() }}
@@ -227,7 +205,7 @@
     </div>
 </div>
 
-{{-- Delete Confirmation Modal --}}
+{{-- Single Delete Modal --}}
 <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -242,11 +220,11 @@
                 <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
-                <button id="cancelDeleteBtn" 
+                <button type="button" id="cancelDeleteBtn" 
                         class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
                     Cancel
                 </button>
-                <form id="deleteForm" method="POST" class="inline">
+                <form id="deleteForm" method="POST" action="">
                     @csrf
                     @method('DELETE')
                     <button type="submit" 
@@ -259,7 +237,7 @@
     </div>
 </div>
 
-{{-- Bulk Delete Confirmation Modal - Only show if user has delete permission --}}
+{{-- Bulk Delete Modal --}}
 @can('leadership.delete')
 <div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -275,11 +253,11 @@
                 <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
-                <button id="cancelBulkDeleteBtn" 
+                <button type="button" id="cancelBulkDeleteBtn" 
                         class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
                     Cancel
                 </button>
-                <button id="confirmBulkDeleteBtn" 
+                <button type="button" id="confirmBulkDeleteBtn" 
                         class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
                     Delete
                 </button>
@@ -292,7 +270,43 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bulk delete functionality - Only initialize if user has delete permission
+        // ---------- Single Delete ----------
+        window.closeDeleteModal = function() {
+            const modal = document.getElementById('deleteModal');
+            if (modal) modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        };
+
+       window.confirmDelete = function(messageId, messageName) {
+    const modal = document.getElementById('deleteModal');
+    const nameSpan = document.getElementById('deleteMessageName');
+    const deleteForm = document.getElementById('deleteForm');
+    if (!modal || !nameSpan || !deleteForm) return;
+
+    nameSpan.textContent = messageName;
+    // Generate the route with a placeholder and replace it with the actual ID
+    const urlTemplate = '{{ route("admin.leadership.destroy", "PLACEHOLDER") }}';
+    deleteForm.action = urlTemplate.replace('PLACEHOLDER', messageId);
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+};
+
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const deleteModal = document.getElementById('deleteModal');
+        if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        if (deleteModal) {
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) closeDeleteModal();
+            });
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            if (modal) modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // ---------- Bulk Delete ----------
         @can('leadership.delete')
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const messageCheckboxes = document.querySelectorAll('.message-checkbox');
@@ -303,161 +317,77 @@
             const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
             const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
             const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
-            
-            // Update selected count and show/hide bulk delete button
-            function updateSelectedCount() {
-                const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-                const count = checkedBoxes.length;
-                if (selectedCountSpan) {
-                    selectedCountSpan.textContent = count;
-                }
-                
-                if (bulkDeleteBtn) {
-                    if (count > 0) {
-                        bulkDeleteBtn.style.display = 'inline-flex';
-                    } else {
-                        bulkDeleteBtn.style.display = 'none';
-                    }
-                }
+
+            function closeBulkModal() {
+                if (bulkDeleteModal) bulkDeleteModal.classList.add('hidden');
+                document.body.style.overflow = '';
             }
-            
-            // Select/Deselect all checkboxes
+
+            function updateSelectedCount() {
+                const count = document.querySelectorAll('.message-checkbox:checked').length;
+                if (selectedCountSpan) selectedCountSpan.textContent = count;
+                if (bulkDeleteBtn) bulkDeleteBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+
             if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function() {
-                    messageCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
-                    });
+                    messageCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
                     updateSelectedCount();
                 });
             }
-            
-            // Individual checkbox change
-            messageCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+
+            messageCheckboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
                     updateSelectedCount();
-                    
-                    // Update select all checkbox state
                     if (selectAllCheckbox) {
-                        const allChecked = messageCheckboxes.length === document.querySelectorAll('.message-checkbox:checked').length;
-                        selectAllCheckbox.checked = allChecked;
+                        selectAllCheckbox.checked = messageCheckboxes.length === document.querySelectorAll('.message-checkbox:checked').length;
                     }
                 });
             });
-            
-            // Bulk delete button click - show modal
+
             if (bulkDeleteBtn) {
                 bulkDeleteBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-                    const count = checkedBoxes.length;
-                    
+                    const count = document.querySelectorAll('.message-checkbox:checked').length;
                     if (count === 0) {
                         alert('Please select at least one message to delete.');
                         return;
                     }
-                    
-                    bulkDeleteCountSpan.textContent = count;
-                    bulkDeleteModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
+                    if (bulkDeleteCountSpan) bulkDeleteCountSpan.textContent = count;
+                    if (bulkDeleteModal) {
+                        bulkDeleteModal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    }
                 });
             }
-            
-            // Confirm bulk delete
+
             if (confirmBulkDeleteBtn) {
                 confirmBulkDeleteBtn.addEventListener('click', function() {
-                    bulkDeleteModal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                    bulkDeleteForm.submit();
+                    closeBulkModal();
+                    if (bulkDeleteForm) bulkDeleteForm.submit();
                 });
             }
-            
-            // Cancel bulk delete
-            if (cancelBulkDeleteBtn) {
-                cancelBulkDeleteBtn.addEventListener('click', function() {
-                    bulkDeleteModal.classList.add('hidden');
-                    document.body.style.overflow = '';
+
+            if (cancelBulkDeleteBtn) cancelBulkDeleteBtn.addEventListener('click', closeBulkModal);
+            if (bulkDeleteModal) {
+                bulkDeleteModal.addEventListener('click', function(e) {
+                    if (e.target === bulkDeleteModal) closeBulkModal();
                 });
             }
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target === bulkDeleteModal) {
-                    bulkDeleteModal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }
-                if (e.target === document.getElementById('deleteModal')) {
-                    closeDeleteModal();
-                }
-            });
-            
-            // Initialize count on page load
+
             updateSelectedCount();
         @endcan
-        
-        // Delete confirmation function - Only define if user has delete permission
-        @can('leadership.delete')
-            window.confirmDelete = function(messageId, messageName) {
-                const modal = document.getElementById('deleteModal');
-                const deleteMessageNameSpan = document.getElementById('deleteMessageName');
-                const deleteForm = document.getElementById('deleteForm');
-                
-                deleteMessageNameSpan.textContent = messageName;
-                deleteForm.action = `/admin/leadership/${messageId}`;
-                
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                
-                // Close modal on cancel
-                document.getElementById('cancelDeleteBtn').onclick = function() {
-                    closeDeleteModal();
-                };
-                
-                // Close modal when clicking outside
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        closeDeleteModal();
-                    }
-                };
-            };
-            
-            function closeDeleteModal() {
-                const modal = document.getElementById('deleteModal');
-                const deleteForm = document.getElementById('deleteForm');
-                
-                if (modal) {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                    if (deleteForm) {
-                        deleteForm.action = '';
-                    }
-                }
-            }
-        @endcan
-        
-        // Close modal on escape key
+
+        // Escape key closes modals
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                @can('leadership.delete')
-                    const deleteModal = document.getElementById('deleteModal');
-                    const bulkDeleteModal = document.getElementById('bulkDeleteModal');
-                    
-                    if (deleteModal && !deleteModal.classList.contains('hidden')) {
-                        closeDeleteModal();
-                    }
-                    if (bulkDeleteModal && !bulkDeleteModal.classList.contains('hidden')) {
-                        bulkDeleteModal.classList.add('hidden');
-                        document.body.style.overflow = '';
-                    }
-                @endcan
-            }
+            if (e.key !== 'Escape') return;
+            closeDeleteModal();
+            @can('leadership.delete') closeBulkModal(); @endcan
         });
-        
-        // Auto-hide messages after 5 seconds
+
+        // Auto-hide flash messages
         setTimeout(function() {
-            const successMsg = document.querySelector('.bg-green-100');
-            const errorMsg = document.querySelector('.bg-red-100');
-            if (successMsg) successMsg.style.display = 'none';
-            if (errorMsg) errorMsg.style.display = 'none';
+            document.querySelectorAll('.bg-green-100, .bg-red-100').forEach(el => el.style.display = 'none');
         }, 5000);
     });
 </script>

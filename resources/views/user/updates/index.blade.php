@@ -59,9 +59,25 @@
                 <div class="p-6 md:p-8 md:w-2/3 flex flex-col">
                     <div>
                         <div class="flex items-center mb-2 flex-wrap gap-2">
-                            <span class="text-sm text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
+                            {{-- Date Logic: Show news_date if available, otherwise show created_at --}}
+                            @php
+                                $displayDate = $news->news_date ?? $news->created_at;
+                            @endphp
+                            <span class="text-sm text-accent-1 font-medium">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                {{ $displayDate->format('F d, Y') }}
+                            </span>
                             <span class="mx-2 text-text-muted hidden sm:inline">|</span>
-                            <span class="text-sm text-text-muted">{{ $news->type ?? 'News' }}</span>
+                            <span class="text-sm text-text-muted">
+                                <i class="fas fa-tag mr-1"></i>
+                                {{ $news->type ?? 'News' }}
+                            </span>
+                            @if($news->is_featured)
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
+                                    <i class="fas fa-star mr-1 text-xs"></i>
+                                    Featured
+                                </span>
+                            @endif
                         </div>
                         <h3 class="text-xl font-bold text-text-black mb-3 hover:text-accent-1 transition-colors duration-300">
                             <a href="{{ route('media.room.updates.show', $news->id) }}">{{ $news->title }}</a>

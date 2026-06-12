@@ -1,200 +1,106 @@
 @extends('layouts.app')
 
-@section('title', $album['title'] ?? 'Gallery Album - PPP Unit KPK')
+@section('title', $event->title . ' - Photo Gallery - PPP Unit KPK')
 
 @section('content')
-
-@php
-    // Helper function to sanitize filenames
-    if (!function_exists('sanitize_filename')) {
-        function sanitize_filename($string) {
-            return preg_replace('/[^a-zA-Z0-9]/', '_', $string);
-        }
-    }
-    
-    // Album data with internet images (Unsplash placeholders)
-    $albumData = [
-        1 => [
-            'id' => 1,
-            'title' => 'PPP Investment Summit 2024',
-            'description' => 'The annual PPP Investment Summit brought together over 500 investors, government officials, and industry leaders from 15 countries. The event showcased major infrastructure projects worth $2.5 billion and facilitated over 200 B2B meetings.',
-            'cover_image' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop',
-            'date' => 'June 22, 2024',
-            'event_location' => 'Peshawar',
-            'photographer' => 'Media Team',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop', 'title' => 'Inaugural Session', 'description' => 'Chief Minister KPK delivering the keynote address'],
-                ['url' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&h=800&fit=crop', 'title' => 'Panel Discussion', 'description' => 'Experts discussing infrastructure investment opportunities'],
-                ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Signing Ceremony', 'description' => 'MoU signing between PPP Unit and international investors'],
-                ['url' => 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1200&h=800&fit=crop', 'title' => 'Networking Session', 'description' => 'Investors networking during the summit'],
-                ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Project Showcase', 'description' => 'Showcasing upcoming PPP projects'],
-                ['url' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop', 'title' => 'Award Ceremony', 'description' => 'Best PPP Project awards ceremony'],
-            ]
-        ],
-        2 => [
-            'id' => 2,
-            'title' => 'Mardan Medical Complex Inauguration',
-            'description' => 'The 500-bed Mardan Medical Complex was officially inaugurated, marking a milestone in healthcare delivery for northern KPK.',
-            'cover_image' => 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&h=400&fit=crop',
-            'date' => 'May 15, 2024',
-            'event_location' => 'Mardan',
-            'photographer' => 'Health Department',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&h=800&fit=crop', 'title' => 'Ribbon Cutting', 'description' => 'Official inauguration ceremony with dignitaries'],
-                ['url' => 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=1200&h=800&fit=crop', 'title' => 'Facility Tour', 'description' => 'Tour of the new hospital facilities'],
-                ['url' => 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=800&fit=crop', 'title' => 'ICU Ward', 'description' => 'State-of-the-art ICU facility'],
-                ['url' => 'https://images.unsplash.com/photo-1538108149393-6b2a64bcb5a9?w=1200&h=800&fit=crop', 'title' => 'Staff Training', 'description' => 'Medical staff training on new equipment'],
-            ]
-        ],
-        3 => [
-            'id' => 3,
-            'title' => 'Peshawar Rapid Transit - Construction Progress',
-            'description' => 'Documenting the progress of the transformative mass transit project connecting major city centers.',
-            'cover_image' => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=400&fit=crop',
-            'date' => 'April 28, 2024',
-            'event_location' => 'Peshawar',
-            'photographer' => 'Engineering Team',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&h=800&fit=crop', 'title' => 'Station Construction', 'description' => 'Construction of main transit station'],
-                ['url' => 'https://images.unsplash.com/photo-1551798010-9f6efc0d0ceb?w=1200&h=800&fit=crop', 'title' => 'Bus Testing', 'description' => 'Testing of new electric buses'],
-                ['url' => 'https://images.unsplash.com/photo-1447958272669-9c2b25452060?w=1200&h=800&fit=crop', 'title' => 'Track Laying', 'description' => 'Dedicated bus lane construction'],
-                ['url' => 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1200&h=800&fit=crop', 'title' => 'Control Room', 'description' => 'Central control room setup'],
-            ]
-        ],
-        4 => [
-            'id' => 4,
-            'title' => 'KPK Agri-Tech Expo 2024',
-            'description' => 'Showcasing modern agricultural technologies and innovations for farmers across the province.',
-            'cover_image' => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=400&fit=crop',
-            'date' => 'March 10, 2024',
-            'event_location' => 'Abbottabad',
-            'photographer' => 'Agriculture Department',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=800&fit=crop', 'title' => 'Exhibition Hall', 'description' => 'Agricultural technology exhibition area'],
-                ['url' => 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7d9c?w=1200&h=800&fit=crop', 'title' => 'Drone Technology', 'description' => 'Drone technology demonstration'],
-                ['url' => 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1200&h=800&fit=crop', 'title' => 'Smart Farming', 'description' => 'Smart farming solutions showcase'],
-                ['url' => 'https://images.unsplash.com/photo-1592417817098-8fd3d4c9f0b8?w=1200&h=800&fit=crop', 'title' => 'Farmer Training', 'description' => 'Training session for local farmers'],
-            ]
-        ],
-        5 => [
-            'id' => 5,
-            'title' => 'Swat Hydropower Project Completion',
-            'description' => 'Celebrating the completion of the 150MW clean energy project benefiting 200,000 households.',
-            'cover_image' => 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=400&fit=crop',
-            'date' => 'February 20, 2024',
-            'event_location' => 'Swat',
-            'photographer' => 'Energy Department',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1200&h=800&fit=crop', 'title' => 'Dam Inauguration', 'description' => 'Official inauguration of the hydropower project'],
-                ['url' => 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&h=800&fit=crop', 'title' => 'Turbine Hall', 'description' => 'Turbine hall and power generation equipment'],
-                ['url' => 'https://images.unsplash.com/photo-1566584507154-4054b0eafd32?w=1200&h=800&fit=crop', 'title' => 'Control Room', 'description' => 'Central control room operations'],
-            ]
-        ],
-        6 => [
-            'id' => 6,
-            'title' => 'International PPP Conference 2024',
-            'description' => 'Knowledge sharing and collaboration with international PPP experts and practitioners from 12 countries.',
-            'cover_image' => 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=400&fit=crop',
-            'date' => 'January 25, 2024',
-            'event_location' => 'Islamabad',
-            'photographer' => 'Conference Team',
-            'images' => [
-                ['url' => 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1200&h=800&fit=crop', 'title' => 'Opening Ceremony', 'description' => 'Conference opening ceremony'],
-                ['url' => 'https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=1200&h=800&fit=crop', 'title' => 'Keynote Speech', 'description' => 'International expert delivering keynote'],
-                ['url' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop', 'title' => 'Panel Discussion', 'description' => 'Panel discussion on PPP best practices'],
-                ['url' => 'https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=1200&h=800&fit=crop', 'title' => 'Networking', 'description' => 'International networking session'],
-            ]
-        ],
-    ];
-    
-    $album = $albumData[$id] ?? $albumData[1];
-    $images = $album['images'];
-    $sanitizedTitle = sanitize_filename($album['title']);
-@endphp
 
 <!-- Page Header -->
 <section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-26">
-            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">{{ $album['title'] }}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $event->title }}</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
+            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
+                {{ Str::limit($event->description ?? 'View moments from this memorable event', 150) }}
+            </p>
         </div>
     </div>
-    <img src="{{ $album['cover_image'] }}" alt="{{ $album['title'] }}" class="w-full h-full object-cover">
+    @php
+        $bannerImage = $event->thumbnail_url ?? 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop';
+    @endphp
+    <img src="{{ $bannerImage }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
 </section>
 
 <section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('events.index') }}" class="text-accent-1 hover:text-accent-2 inline-flex items-center transition-colors duration-300" aria-label="Back to gallery">
-                <i class="fas fa-arrow-left mr-2" aria-hidden="true"></i>
-                Back to Gallery
+            <a href="{{ route('media.room.events.index') }}" class="text-accent-1 hover:text-accent-2 inline-flex items-center transition-colors duration-300">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Events
             </a>
         </div>
         
-        <!-- Album Info -->
+        <!-- Event Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-text-green mb-4">{{ $album['title'] }}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-text-green mb-4">{{ $event->title }}</h1>
             <div class="flex flex-wrap gap-4 text-text-muted mb-6 pb-6 border-b border-background-light">
                 <div class="flex items-center">
-                    <i class="fas fa-calendar-alt text-accent-1 mr-2" aria-hidden="true"></i>
-                    <span>{{ $album['date'] }}</span>
+                    <i class="fas fa-calendar-alt text-accent-1 mr-2"></i>
+                    <span>{{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-map-marker-alt text-accent-1 mr-2" aria-hidden="true"></i>
-                    <span>{{ $album['event_location'] }}</span>
+                    <i class="fas fa-map-marker-alt text-accent-1 mr-2"></i>
+                    <span>{{ $event->location ?? 'Location TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-images text-accent-1 mr-2" aria-hidden="true"></i>
-                    <span>{{ count($images) }} Photos</span>
-                </div>
-                <div class="flex items-center">
-                    <i class="fas fa-camera text-accent-1 mr-2" aria-hidden="true"></i>
-                    <span>{{ $album['photographer'] }}</span>
+                    <i class="fas fa-images text-accent-1 mr-2"></i>
+                    <span>{{ $event->galleries->count() }} {{ Str::plural('Photo', $event->galleries->count()) }}</span>
                 </div>
             </div>
-            <p class="text-text-muted text-lg leading-relaxed">{{ $album['description'] }}</p>
+            <p class="text-text-muted text-lg leading-relaxed">{{ $event->description }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->
+        @if($event->galleries->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="galleryGrid">
-            @foreach($images as $index => $image)
+            @foreach($event->galleries as $index => $gallery)
             <div class="group cursor-pointer gallery-item" 
                  data-index="{{ $index }}" 
-                 data-src="{{ $image['url'] }}" 
-                 data-title="{{ $image['title'] }}" 
-                 data-description="{{ $image['description'] }}"
+                 data-src="{{ asset('storage/' . $gallery->image) }}" 
+                 data-title="{{ $event->title }} - Photo {{ $loop->iteration }}" 
+                 data-description="Photo from {{ $event->title }} event at {{ $event->location }}"
                  role="button"
                  tabindex="0"
-                 aria-label="View image: {{ $image['title'] }}">
+                 aria-label="View image: {{ $event->title }} - Photo {{ $loop->iteration }}">
                 <div class="block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
                     <div class="relative overflow-hidden aspect-square">
-                        <img src="{{ $image['url'] }}" 
-                             alt="{{ $image['title'] }}"
+                        <img src="{{ asset('storage/' . $gallery->image) }}" 
+                             alt="{{ $event->title }} - Photo {{ $loop->iteration }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                              loading="lazy">
                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <div class="text-text-primary text-center">
-                                <i class="fas fa-search-plus text-2xl mb-1" aria-hidden="true"></i>
+                            <div class="text-white text-center">
+                                <i class="fas fa-search-plus text-2xl mb-1"></i>
                                 <p class="text-xs">Click to view</p>
                             </div>
                         </div>
+                        @if($gallery->is_thumbnail)
+                        <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs">
+                            <i class="fas fa-star mr-1"></i> Featured
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
             @endforeach
         </div>
         
-        <!-- Download All Button -->
+        <!-- Download All Button (only if images exist) -->
         <div class="text-center mt-12">
             <button id="downloadAllBtn" 
-                    class="inline-flex items-center px-6 py-3 bg-accent-1 text-text-primary rounded-lg font-semibold hover:bg-accent-2 transition-colors duration-300 shadow-md"
-                    aria-label="Download all photos as ZIP archive">
-                <i class="fas fa-download mr-2" aria-hidden="true"></i>
+                    class="inline-flex items-center px-6 py-3 bg-accent-1 text-white rounded-lg font-semibold hover:bg-accent-2 transition-colors duration-300 shadow-md">
+                <i class="fas fa-download mr-2"></i>
                 Download All Photos (ZIP)
             </button>
         </div>
+        @else
+        <div class="text-center py-12 bg-gray-50 rounded-lg">
+            <i class="fas fa-camera text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Photos Available</h3>
+            <p class="text-gray-500">No photos have been added to this gallery yet.</p>
+        </div>
+        @endif
     </div>
 </section>
 
@@ -215,7 +121,7 @@
             <button id="downloadCurrentBtn" 
                     class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-lg cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Download current image">
-                <i class="fas fa-download" aria-hidden="true"></i>
+                <i class="fas fa-download"></i>
             </button>
             <button id="closeLightbox" 
                     class="bg-black/60 text-white border-none w-11 h-11 rounded-full text-3xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:bg-black/80 hover:scale-110"
@@ -229,23 +135,23 @@
             <button id="zoomOutBtn" 
                     class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Zoom out">
-                <i class="fas fa-search-minus" aria-hidden="true"></i>
+                <i class="fas fa-search-minus"></i>
             </button>
-            <span id="zoomLevel" class="text-white text-sm min-w-11.25 text-center leading-10" aria-live="polite">100%</span>
+            <span id="zoomLevel" class="text-white text-sm min-w-[45px] text-center leading-10">100%</span>
             <button id="zoomInBtn" 
                     class="bg-transparent text-white border-none w-10 h-10 text-xl cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Zoom in">
-                <i class="fas fa-search-plus" aria-hidden="true"></i>
+                <i class="fas fa-search-plus"></i>
             </button>
             <button id="resetZoomBtn" 
                     class="bg-transparent text-white border-none w-10 h-10 text-sm cursor-pointer flex items-center justify-center rounded-full transition-all duration-300 hover:bg-black/80 hover:scale-110"
                     aria-label="Reset zoom">
-                <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                <i class="fas fa-sync-alt"></i>
             </button>
         </div>
         
         <!-- Image Counter -->
-        <div id="lightboxCounter" class="absolute top-5 left-5 bg-black/60 text-white px-4 py-2 rounded-full text-sm z-10" aria-live="polite"></div>
+        <div id="lightboxCounter" class="absolute top-5 left-5 bg-black/60 text-white px-4 py-2 rounded-full text-sm z-10"></div>
         
         <!-- Image Container -->
         <div id="imageContainer" class="relative flex justify-center items-center w-full h-full overflow-hidden cursor-default">
@@ -254,7 +160,7 @@
                 alt="">
         </div>
         
-        <!-- Caption - positioned slightly above bottom -->
+        <!-- Caption -->
         <div id="lightboxCaption" class="absolute bg-black/70 text-white px-5 py-3 rounded-md text-center text-sm z-10 max-w-[80%] md:max-w-[60%] backdrop-blur-sm"
              style="bottom: 80px; left: 50%; transform: translateX(-50%);">
         </div>
@@ -363,6 +269,11 @@
             padding: 6px 12px;
         }
     }
+    
+    /* Prevent body scroll when lightbox is open */
+    body.lightbox-open {
+        overflow: hidden;
+    }
 </style>
 
 @endsection
@@ -456,7 +367,7 @@
     }
     
     function sanitizeFilename(title) {
-        return title.replace(/[^a-zA-Z0-9]/g, '_');
+        return title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
     }
     
     function updateCursor() {
@@ -516,7 +427,7 @@
     function zoomIn() {
         if (state.currentZoom < ZOOM_CONFIG.MAX) {
             state.currentZoom = Math.min(ZOOM_CONFIG.MAX, state.currentZoom + ZOOM_CONFIG.STEP);
-            elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
+            if (elements.zoomLevelSpan) elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
             applyTransform();
             updateCursor();
         }
@@ -525,7 +436,7 @@
     function zoomOut() {
         if (state.currentZoom > ZOOM_CONFIG.MIN) {
             state.currentZoom = Math.max(ZOOM_CONFIG.MIN, state.currentZoom - ZOOM_CONFIG.STEP);
-            elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
+            if (elements.zoomLevelSpan) elements.zoomLevelSpan.textContent = Math.round(state.currentZoom * 100) + '%';
             
             if (state.currentZoom <= 1) {
                 state.translateX = 0;
@@ -547,7 +458,7 @@
         if (state.currentZoom <= 1) return;
         e.preventDefault();
         state.isPanning = true;
-        elements.imageContainer.style.cursor = 'grabbing';
+        if (elements.imageContainer) elements.imageContainer.style.cursor = 'grabbing';
         const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         state.startX = clientX - state.lastTranslateX;
@@ -561,15 +472,6 @@
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         state.translateX = clientX - state.startX;
         state.translateY = clientY - state.startY;
-        
-        // Limit panning
-        const imgRect = elements.lightboxImage.getBoundingClientRect();
-        const containerRect = elements.imageContainer.getBoundingClientRect();
-        const maxPanX = Math.max(0, (imgRect.width * state.currentZoom - containerRect.width) / 2);
-        const maxPanY = Math.max(0, (imgRect.height * state.currentZoom - containerRect.height) / 2);
-        
-        state.translateX = Math.min(maxPanX, Math.max(-maxPanX, state.translateX));
-        state.translateY = Math.min(maxPanY, Math.max(-maxPanY, state.translateY));
         
         applyTransform();
     }
@@ -635,14 +537,18 @@
         }
         
         const btn = elements.downloadAllBtn;
+        if (!btn) return;
+        
         const originalHtml = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing download...';
         btn.disabled = true;
         
         try {
-            const images = @json($images);
+            const images = state.imagesArray;
             const zip = new JSZip();
-            const folder = zip.folder("{{ $sanitizedTitle }}");
+            const eventTitle = "{{ $event->title }}";
+            const folderName = sanitizeFilename(eventTitle);
+            const folder = zip.folder(folderName);
             
             let downloaded = 0;
             const total = images.length;
@@ -652,7 +558,7 @@
                 try {
                     btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Downloading ${i+1}/${total}...`;
                     
-                    const response = await fetch(image.url);
+                    const response = await fetch(image.src);
                     if (!response.ok) throw new Error(`Failed to fetch ${image.title}`);
                     
                     const blob = await response.blob();
@@ -674,7 +580,7 @@
             const link = document.createElement('a');
             const url = URL.createObjectURL(content);
             link.href = url;
-            link.download = "{{ $sanitizedTitle }}.zip";
+            link.download = `${folderName}.zip`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -763,10 +669,14 @@
     
     // ==================== INITIALIZATION ====================
     function init() {
-        console.log('Initializing gallery...');
-        
         // Build images array from gallery items
         elements.galleryItems = document.querySelectorAll('.gallery-item');
+        
+        if (elements.galleryItems.length === 0) {
+            console.log('No gallery items found');
+            return;
+        }
+        
         elements.galleryItems.forEach((item, index) => {
             state.imagesArray.push({
                 src: item.getAttribute('data-src'),
@@ -788,9 +698,8 @@
             });
         });
         
-        console.log(`Found ${state.imagesArray.length} images`);
         initEventListeners();
-        console.log('Gallery initialized successfully!');
+        console.log(`Gallery initialized with ${state.imagesArray.length} images`);
     }
     
     // Start initialization

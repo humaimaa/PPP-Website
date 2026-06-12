@@ -93,7 +93,7 @@
                                        id="selectAllCheckbox" 
                                        class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </th>
-                            <th class="px-6 py-3 text-left">ID</th>
+                          
                             <th class="px-6 py-3 text-left">Title</th>
                             <th class="px-6 py-3 text-left">Category</th>
                             <th class="px-6 py-3 text-left">Document Date</th>
@@ -111,8 +111,8 @@
                                        value="{{ $download->id }}"
                                        class="download-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </td>
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
-                                #{{ $download->id }}
+                           
+                               
                             </td>
                             <td class="px-6 py-4">
                                 <div>

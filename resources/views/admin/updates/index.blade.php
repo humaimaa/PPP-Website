@@ -112,7 +112,7 @@
                             <th class="px-6 py-3 text-left">Type</th>
                             <th class="px-6 py-3 text-left">Featured</th>
                             <th class="px-6 py-3 text-left">Image</th>
-                            <th class="px-6 py-3 text-left">Created</th>
+                            <th class="px-6 py-3 text-left">Date</th>
                             {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
                                 <th class="px-6 py-3 text-right">Actions</th>
@@ -139,7 +139,7 @@
                                         {{ Str::limit($item->content, 80) }}
                                     </div>
                                 </div>
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @php
@@ -156,7 +156,7 @@
                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ $item->type }}
                                 </span>
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @if($item->is_featured)
@@ -167,7 +167,7 @@
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @if($item->img_path)
@@ -176,14 +176,26 @@
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
                                 <div class="flex flex-col">
-                                    <span class="text-sm text-gray-600">{{ $item->created_at->format('M d, Y') }}</span>
-                                    
+                                    {{-- Show news_date if available, otherwise show created_at --}}
+                                    @php
+                                        $displayDate = $item->news_date ?? $item->created_at;
+                                    @endphp
+                                    <span class="text-sm text-gray-600">
+                                        <i class="far fa-calendar-alt mr-1 text-gray-400"></i>
+                                        {{ $displayDate->format('M d, Y') }}
+                                    </span>
+                                    @if($item->news_date && $item->created_at)
+                                        <span class="text-xs text-gray-400 mt-1">
+                                            <i class="far fa-clock mr-1"></i>
+                                            Created: {{ $item->created_at->format('M d, Y') }}
+                                        </span>
+                                    @endif
                                 </div>
-                            </td>
+                             </td>
                             
                             {{-- Actions column --}}
                             @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
@@ -227,14 +239,14 @@
                                             </button>
                                         @endcan
                                     </div>
-                                </td>
+                                 </td>
                             @endif
                         </tr>
                         @empty
                             <tr>
                                 @php
-                                    // Count columns: checkbox (if delete), title, type, featured, image, created, actions
-                                    $colspan = 6; // title, type, featured, image, created
+                                    // Count columns: checkbox (if delete), title, type, featured, image, date, actions
+                                    $colspan = 6; // title, type, featured, image, date
                                     if(auth()->user()->can('updates.delete')) $colspan++; // checkbox column
                                     if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // actions column
                                 @endphp

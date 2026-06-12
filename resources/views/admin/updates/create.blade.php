@@ -118,7 +118,7 @@
                                 type="datetime-local"
                                 id="news_date"
                                 name="news_date"
-                                value="{{ old('news_date', date('Y-m-d\TH:i')) }}"
+                                value="{{ old('news_date', date('Y-m-d)) }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors @error('news_date') border-red-500 @enderror"
                             >
                         </div>

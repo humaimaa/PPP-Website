@@ -43,9 +43,7 @@
                             </span>
                         @endif
                     </div>
-                    
                 </div>
-                
             </div>
         </div>
 
@@ -62,7 +60,7 @@
             </div>
         </div>
 
-        {{-- Basic Information (ID removed) --}}
+        {{-- Basic Information --}}
         <div class="p-6 border-b border-gray-200">
             <h4 class="text-md font-semibold text-gray-800 mb-4">
                 <i class="fas fa-info-circle mr-2 text-emerald-600"></i>
@@ -76,18 +74,30 @@
                         {{ $news->type }}
                     </p>
                 </div>
-                @if($news->event_date)
+                
+                {{-- News Date Field --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Event Date</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">News Date</label>
+                    @php
+                        $displayDate = $news->news_date ?? $news->created_at;
+                    @endphp
                     <p class="text-gray-900">
                         <i class="fas fa-calendar-alt text-emerald-600 mr-1"></i>
-                        {{ $news->event_date->format('F d, Y') }}
-                        <span class="text-gray-500 text-sm ml-2">
-                            ({{ $news->event_date->format('l') }})
-                        </span>
+                        {{ $displayDate->format('F d, Y') }}
+                        @if($displayDate->format('H:i:s') != '00:00:00')
+                            <span class="text-gray-500 text-sm ml-1">
+                                at {{ $displayDate->format('h:i A') }}
+                            </span>
+                        @endif
                     </p>
+                    @if($news->news_date && $news->created_at)
+                        <p class="text-xs text-gray-400 mt-1">
+                            <i class="far fa-clock mr-1"></i>
+                            Created: {{ $news->created_at->format('F d, Y') }}
+                        </p>
+                    @endif
                 </div>
-                @endif
+
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Featured Status</label>
                     @if($news->is_featured)
@@ -106,7 +116,7 @@
             </div>
         </div>
 
-        {{-- Image Attachment Section (fixed property name) --}}
+        {{-- Image Attachment Section --}}
         @if($news->img_path)
         <div class="p-6 border-b border-gray-200">
             <h4 class="text-md font-semibold text-gray-800 mb-4">
@@ -139,7 +149,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->created_at->format('F d, Y') }}</p>
-                            
+                            <p class="text-xs text-gray-400">{{ $news->created_at->format('h:i A') }}</p>
                         </div>
                     </div>
                 </div>
@@ -151,7 +161,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->updated_at->format('F d, Y') }}</p>
-                            
+                            <p class="text-xs text-gray-400">{{ $news->updated_at->format('h:i A') }}</p>
                             @if($news->created_at != $news->updated_at)
                                 <p class="text-xs text-gray-400 mt-1">(Updated {{ $news->updated_at->diffForHumans() }})</p>
                             @endif
@@ -159,10 +169,36 @@
                     </div>
                 </div>
             </div>
+            
+            {{-- Additional Info: Time difference between News Date and Created Date --}}
+            @if($news->news_date && $news->created_at)
+                @php
+                    $newsDate = \Carbon\Carbon::parse($news->news_date);
+                    $diffDays = $newsDate->diffInDays($news->created_at);
+                @endphp
+                @if($diffDays > 0)
+                    <div class="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-clock text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase mb-1">Date Information</p>
+                                <p class="text-sm text-gray-700">
+                                    <i class="fas fa-calendar-week mr-1 text-blue-600"></i>
+                                    @if($diffDays == 1)
+                                        News date is 1 day apart from creation date
+                                    @else
+                                        News date is {{ $diffDays }} days apart from creation date
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endif
         </div>
     </div>
-
-    {{-- QUICK ACTIONS CARD REMOVED --}}
 </div>
 
 {{-- Delete Confirmation Modal --}}
@@ -243,7 +279,7 @@
         }
     }
     
-    // Toggle featured function (still needed if any button exists, but since quick actions removed, may not be used. Keeping for safety.)
+    // Toggle featured function
     window.toggleFeatured = function(updateId, isCurrentlyFeatured) {
         const action = isCurrentlyFeatured ? 'unfeature' : 'feature';
         const form = document.getElementById('toggleFeaturedForm');

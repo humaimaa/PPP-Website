@@ -51,8 +51,8 @@
 @if($chief)
 <section class="py-12 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-black">{{ $chief->designation->title ?? 'Chief PPP' }}</h2>
+        <div class="text-center mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">{{ $chief->designation->title ?? 'Chief PPP' }}</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 
@@ -65,7 +65,6 @@
                              class="w-full h-80 object-cover">
                         <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
-                            <p class="text-accent-1">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
                         </div>
                     </div>
                     <div class="p-6">
@@ -97,8 +96,8 @@
 @if($assistantChief)
 <section class="py-12 bg-background-primary/5">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-primary">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</h2>
+        <div class="text-center mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-primary">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 

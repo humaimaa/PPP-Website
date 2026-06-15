@@ -26,13 +26,13 @@
 <section class="py-6 bg-background-light border-b border-gray-200 sticky top-0 z-20 shadow-sm">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('tenders', ['section' => $section, 'status' => 'active']) }}" 
-               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300 
+            <a href="{{ route('tenders', ['section' => $section, 'status' => 'active']) }}"
+               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300
                {{ $status == 'active' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
                 <i class="fas fa-play-circle mr-2"></i>Active Tenders
             </a>
-            <a href="{{ route('tenders', ['section' => $section, 'status' => 'archived']) }}" 
-               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300 
+            <a href="{{ route('tenders', ['section' => $section, 'status' => 'archived']) }}"
+               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300
                {{ $status == 'archived' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
                 <i class="fas fa-archive mr-2"></i>Archived Tenders
             </a>
@@ -108,7 +108,6 @@
 
             <div class="border-b border-gray-200 last:border-b-0 {{ $rowBg }} hover:bg-amber-50/40 transition-colors duration-150">
 
-                {{-- ── Main Row ── --}}
                 <div class="grid grid-cols-12 gap-4 px-6 py-4 items-start">
 
                     {{-- # --}}
@@ -116,10 +115,9 @@
                         {{ $index + 1 }}
                     </div>
 
-                    {{-- Tender Name + status badges --}}
+                    {{-- Tender Name + status badges + additional doc titles only --}}
                     <div class="col-span-6">
                         <div class="flex items-start gap-2">
-                            {{-- active/closed dot --}}
                             <span class="mt-1.5 shrink-0">
                                 @if($isActive)
                                     <span class="block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -151,36 +149,13 @@
                             </div>
                         </div>
 
-                        {{-- ── Additional Documents (sub-rows, indented under the tender name) ── --}}
+                        {{-- Additional doc titles only (no dates, no icons) --}}
                         @if($hasAdditionalDocs)
-                            <ul class="mt-3 ml-4 space-y-1.5 border-l-2 border-accent-1/40 pl-3">
+                            <ul class="mt-3 ml-4 space-y-2 border-l-2 border-accent-1/40 pl-3">
                                 @foreach($tender->additionalDocs as $doc)
-                                @php
-                                    $docDate = $doc->publish_date instanceof \Carbon\Carbon
-                                        ? $doc->publish_date
-                                        : \Carbon\Carbon::parse($doc->publish_date);
-                                @endphp
-                                <li class="flex items-center justify-between gap-3 group/doc">
-                                    <div class="flex items-center gap-2 min-w-0">
-                                        <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
-                                        <span class="text-sm text-text-black truncate">{{ $doc->title }}</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 shrink-0">
-                                        <span class="text-xs text-text-muted whitespace-nowrap">
-                                            {{ $docDate->format('d, M Y') }}
-                                        </span>
-                                        <a href="{{ asset('storage/' . $doc->document) }}" target="_blank"
-                                           title="{{ $doc->title }}"
-                                           class="text-red-500 hover:text-red-700 transition-colors">
-                                            {{-- PDF icon mimicking the screenshot --}}
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
-                                                <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
-                                                <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
-                                                <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
-                                                <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
-                                            </svg>
-                                        </a>
-                                    </div>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
+                                    <span class="text-sm text-text-black">{{ $doc->title }}</span>
                                 </li>
                                 @endforeach
                             </ul>
@@ -217,11 +192,11 @@
                         @endif
                     </div>
 
-                    {{-- Main Documents (Tender PDF + Advertisement) --}}
+                    {{-- Docs column: main tender doc + advertisement + all additional docs stacked --}}
                     <div class="col-span-1 flex flex-col items-center gap-2">
+                        {{-- Main tender PDF --}}
                         @if($tender->document)
-                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank"
-                               title="Tender Document"
+                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" title="Tender Document"
                                class="text-red-500 hover:text-red-700 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
                                     <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
@@ -231,9 +206,10 @@
                                 </svg>
                             </a>
                         @endif
+
+                        {{-- Advertisement --}}
                         @if($tender->advertisement)
-                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank"
-                               title="Advertisement"
+                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" title="Advertisement"
                                class="text-blue-500 hover:text-blue-700 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
                                     <rect width="48" height="48" rx="6" fill="#1565C0" opacity=".12"/>
@@ -243,11 +219,24 @@
                                 </svg>
                             </a>
                         @endif
+
+                        {{-- Additional doc icons, vertically aligned under the main ones --}}
+                        @if($hasAdditionalDocs)
+                            @foreach($tender->additionalDocs as $doc)
+                                <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" title="{{ $doc->title }}"
+                                   class="text-red-500 hover:text-red-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                        <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
+                                        <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
+                                        <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
+                                        <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
+                                    </svg>
+                                </a>
+                            @endforeach
+                        @endif
                     </div>
 
                 </div>
-                {{-- ── End Main Row ── --}}
-
             </div>
 
             @empty

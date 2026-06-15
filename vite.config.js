@@ -11,7 +11,7 @@ export default defineConfig({
                 'resources/js/kp-map.js',
                 'resources/js/admin.js',
                 'resources/js/home-animate.js',
-                'resources/js/home-animations.css',
+                'resources/css/home-animate.css',
             ],
             refresh: true,
         }),

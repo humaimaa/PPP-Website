@@ -27,13 +27,14 @@
     </div>
 
     <!-- Scroll Down Arrow -->
-    <div id="scroll-down-arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
-        <div class="w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group animate-bounce-slow">
-            <svg class="w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-accent-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
+         <!-- Scroll Down Arrow - Sidcup Style (White, Left Side) -->
+         <div id="arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
+            <div class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group">
+                 <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-[#0A612B] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                  </svg>
+            </div>
         </div>
-    </div>
 </section>
 
 <!-- About Section -->

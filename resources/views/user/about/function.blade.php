@@ -24,15 +24,50 @@
             <div class="w-20 h-1 bg-text-muted mx-auto"></div>
         </div>
         <div class="space-y-6">
-            @php
-                $functions = [
-                    ['title' => 'Policy Formulation', 'desc' => 'Develop PPP policies, guidelines, and frameworks for the province'],
-                    ['title' => 'Project Identification', 'desc' => 'Identify and prioritize potential PPP projects across sectors'],
-                    ['title' => 'Transaction Advisory', 'desc' => 'Provide technical and financial advisory services for PPP projects'],
-                    ['title' => 'Capacity Building', 'desc' => 'Conduct training programs for government officials on PPP processes'],
-                    ['title' => 'Monitoring & Evaluation', 'desc' => 'Monitor implementation and performance of PPP projects']
-                ];
-            @endphp
+@php
+    $functions = [
+        [
+            'title' => 'Advisory Support',
+            'desc' => 'Advise the PPP Committee, PPP Unit, and departmental PPP Nodes on different aspects of PPP projects.'
+        ],
+        [
+            'title' => 'Sector Development',
+            'desc' => 'Explore, recommend, and develop new sectors for PPP projects.'
+        ],
+        [
+            'title' => 'Project Evaluation',
+            'desc' => 'Evaluate proposals, feasibility studies, and project designs related to PPP projects.'
+        ],
+        [
+            'title' => 'Government Interest Protection',
+            'desc' => 'Ensure protection of the rights and interests of the provincial government in PPP projects.'
+        ],
+        [
+            'title' => 'PPP Act Compliance',
+            'desc' => 'Ensure all PPP projects are undertaken in conformity with the PPP Act.'
+        ],
+        [
+            'title' => 'Procurement Compliance',
+            'desc' => 'Ensure procurement for PPP projects is carried out in line with KPPRA Rules.'
+        ],
+        [
+            'title' => 'Feasibility Assessment',
+            'desc' => 'Ensure that PPP projects are legally, technically, and financially feasible.'
+        ],
+        [
+            'title' => 'Legislative Improvement',
+            'desc' => 'Recommend improvements to the PPP Act on an ongoing basis.'
+        ],
+        [
+            'title' => 'Capacity Building for PPP Nodes',
+            'desc' => 'Build the capacity of departmental PPP Nodes on PPP projects.'
+        ],
+        [
+            'title' => 'Stakeholder Training',
+            'desc' => 'Build the capacity of relevant stakeholders on the PPP Act.'
+        ]
+    ];
+@endphp
             
             @foreach($functions as $function)
             <div class="flex items-start group hover:transform hover:translate-x-2 transition-all duration-300">

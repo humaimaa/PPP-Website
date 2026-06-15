@@ -16,29 +16,46 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="About Us Banner" class="w-full h-full object-cover">
 </section>
 
+
 <!-- Overview Section -->
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row items-center gap-8">
-            <div class="lg:w-1/2 overflow-hidden">
-                <div class="space-y-6">
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-6">Overview</h2>
+            
+            <div class="lg:w-1/2">
+                <div class="space-y-6 text-justify leading-relaxed">
+                    
+                    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-6">
+                        Overview
+                    </h2>
+
                     <p class="text-lg text-text-muted">
-                        The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa serves as the nodal agency for planning, 
-                        facilitating, and implementing PPP projects across the province. Established under the Khyber Pakhtunkhwa 
-                        Public-Private Partnership Act, we bridge the gap between public needs and private sector expertise.
-                    </p>
-                    <p class="text-lg text-text-muted">
-                        Our department works across various sectors including infrastructure, health, education, transportation, 
-                        and urban development, ensuring sustainable growth and improved public services for the citizens of KPK.
-                    </p>
+    The Public Private Partnership (PPP) Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
+</p>
+
+<p class="text-lg text-text-muted">
+    The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes. It assists in identifying, evaluating, and developing viable PPP opportunities while promoting private sector participation in public infrastructure and service delivery.
+</p>
+
+<p class="text-lg text-text-muted">
+    The PPP Support Unit ensures that projects are legally, technically, and financially feasible, comply with the PPP Act and procurement regulations, and safeguard the interests of the Government of Khyber Pakhtunkhwa.
+</p>
+
+<p class="text-lg text-text-muted">
+    Through specialized expertise and capacity-building initiatives, the Unit supports the development of sustainable and bankable PPP projects that contribute to the province's economic growth and development objectives.
+</p>
+
                 </div>
             </div>
-            <div class="lg:w-1/2 overflow-hidden">
+
+            <div class="lg:w-1/2">
                 <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-100">
-                    <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Department Overview" class="w-full h-full object-cover">
+                    <img src="{{ asset('images/project-2.jpg') }}" 
+                         alt="PPP Department Overview" 
+                         class="w-full h-full object-cover">
                 </div>
             </div>
+
         </div>
     </div>
 </section>
@@ -51,21 +68,17 @@
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
         <div class="space-y-6 text-text-muted text-justify">
-            <p class="text-lg">
-                The PPP Department was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private 
-                Partnership Act, which provided the legal framework for private sector participation in public infrastructure 
-                projects.
-            </p>
-            <p class="text-lg">
-                Our first major project, the Peshawar Rapid Transit System, was launched in 2015 and set the standard for 
-                future PPP initiatives in the province. Since then, we have successfully facilitated over 50 projects 
-                across various sectors with a total investment exceeding $2 billion.
-            </p>
-            <p class="text-lg">
-                In 2020, the department underwent significant restructuring to enhance its capacity for project development 
-                and implementation, establishing specialized units for different sectors and introducing digital platforms 
-                for greater transparency.
-            </p>
+                <p class="text-lg">
+        The Public Private Partnership (PPP) framework in Khyber Pakhtunkhwa was introduced to encourage private sector participation in the development of public infrastructure and services. The enactment of the PPP Act provided the legal and institutional foundation for implementing PPP projects in the province.
+    </p>
+
+    <p class="text-lg">
+        To strengthen the provincial government's capacity for planning, evaluating, and managing PPP initiatives, the PPP Support Unit was established under the Planning & Development Department. The Unit was created to provide specialized technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes.
+    </p>
+
+    <p class="text-lg">
+        Since its establishment, the PPP Support Unit has played a key role in promoting viable PPP opportunities, enhancing institutional capacity, and supporting the development of sustainable and bankable projects that contribute to the socio-economic development of Khyber Pakhtunkhwa.
+    </p>
         </div>
     </div>
 </section>

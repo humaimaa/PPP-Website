@@ -7,7 +7,7 @@
 <!-- Page Header -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ $event->title }}</h1>
             <div class="w-20 h-1 bg-orange-500 mx-auto"></div>
 

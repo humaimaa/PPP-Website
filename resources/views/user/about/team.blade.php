@@ -47,103 +47,9 @@
     });
 @endphp
 
-{{-- <!-- Chief PPP Section - Order 1 -->
-@if($chief)
-<section class="py-12 bg-background-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">Chief PPP</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-muted mt-4">Leadership and Strategic Direction</p>
-        </div>
-
-        <div class="flex justify-center">
-            <div class="w-full max-w-md">
-                <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="relative">
-                        <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
-                             alt="{{ $chief->name }}"
-                             class="w-full h-96 object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
-                            <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
-                            <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->designation->title ?? 'Chief PPP' }}</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        @if($chief->email)
-                        <div class="flex items-center justify-center space-x-2 text-text-black">
-                            <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                            <span class="break-all">{{ $chief->email }}</span>
-                        </div>
-                        @endif
-                        @if($chief->phone)
-                        <div class="flex items-center justify-center space-x-2 text-text-black mt-2">
-                            <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-                            </svg>
-                            <span>{{ $chief->phone }}</span>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@endif
-
-<!-- Assistant Chief PPP Section - Order 2 -->
-@if($assistantChief)
-<section class="py-12 bg-background-primary/5">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-primary">Assistant Chief PPP</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-muted mt-4">Supporting Leadership and Operations</p>
-        </div>
-
-        <div class="flex justify-center">
-            <div class="w-full max-w-md">
-                <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="relative">
-                        <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
-                             alt="{{ $assistantChief->name }}"
-                             class="w-full h-96 object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
-                            <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
-                            <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        @if($assistantChief->email)
-                        <div class="flex items-center justify-center space-x-2 text-text-black">
-                            <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                            <span class="break-all">{{ $assistantChief->email }}</span>
-                        </div>
-                        @endif
-                        @if($assistantChief->phone)
-                        <div class="flex items-center justify-center space-x-2 text-text-black mt-2">
-                            <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
-                            </svg>
-                            <span>{{ $assistantChief->phone }}</span>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@endif --}}
-
 <!-- If both chief and assistant chief exist, show them in one row -->
 @if($chief && $assistantChief)
-<section class="py-12 bg-background-white -mt-8">
+<section class="py-12 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">Leadership</h2>
@@ -160,7 +66,7 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
-                        <p class="text-accent-1 text-lg text-bold font-semibold mt-1">{{ $chief->designation->title ?? 'Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->designation->title ?? 'Chief PPP' }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -191,10 +97,10 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
-                        <p class="text-accent-1 text-md font-semibold mt-1">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</p>
                     </div>
                 </div>
-                <div class="p-6">
+                <div class="p-4">
                     @if($assistantChief->email)
                     <div class="flex items-center justify-center space-x-2 text-text-black">
                         <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
@@ -204,7 +110,7 @@
                     </div>
                     @endif
                     @if($assistantChief->phone)
-                    <div class="flex items-center justify-center space-x-2 text-text-black mt-2">
+                    <div class="flex items-center justify-center space-x-2 text-text-black mt-1">
                         <svg class="w-5 h-5 text-accent-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                         </svg>
@@ -226,10 +132,14 @@
     $designationOrder = $designation->order ?? 999;
     $memberCount = $members->count();
 
-    // Style based on designation order
-    $isOfficerStyle = ($designationOrder == 3);
-    $isAnalystStyle = ($designationOrder >= 4);
-    $bgClass = $isOfficerStyle ? 'bg-background-light' : 'bg-background-white';
+    // Set background based on designation order
+    // Order 3 (Research Officers) - Light background for the SECTION
+    // Order 4+ (Analysts/Associates) - White background for the SECTION
+    $bgClass = ($designationOrder == 3) ? 'bg-background-light' : 'bg-background-white';
+    
+    // Card styling based on designation
+    $isOfficerStyle = ($designationOrder == 3);  // Research Officers
+    $isAnalystStyle = ($designationOrder >= 4);  // Analysts and above
 @endphp
 
 <section class="py-12 {{ $bgClass }}">
@@ -242,11 +152,11 @@
             @endif
         </div>
 
-        <!-- Updated grid to show 4 cards in one row -->
+        <!-- Grid to show 4 cards in one row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($members as $member)
                 @if($isOfficerStyle)
-                {{-- Officer Style Card (Order 3) - Updated for 4 column layout --}}
+                {{-- Research Officer Style Card (Order 3) - Light card background --}}
                 <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div class="h-56 overflow-hidden">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
@@ -270,9 +180,9 @@
                 </div>
 
                 @elseif($isAnalystStyle)
-                {{-- Analyst Style Card (Order 4+) - Updated for 4 column layout --}}
-                <div class="bg-background-light rounded-lg p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    <div class="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-gray-200">
+                {{-- Analyst/Associate Style Card (Order 4+) - White card background with subtle styling --}}
+                <div class="bg-background-white rounded-lg shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                    <div class="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                              alt="{{ $member->name }}"
                              class="w-full h-full object-cover">

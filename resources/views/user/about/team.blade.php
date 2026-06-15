@@ -146,7 +146,7 @@
 <section class="py-12 bg-background-white -mt-8">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">Chief & Assistant Chief PPP</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">Leadership</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
             <p class="text-text-muted mt-2">Strategic Leadership Team</p>
         </div>

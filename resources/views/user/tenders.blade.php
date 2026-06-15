@@ -140,25 +140,23 @@
                                             <i class="fas fa-clock mr-1 text-[10px]"></i> Closing Soon
                                         </span>
                                     @endif
-                                    @if(!$isActive)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
-                                            <i class="fas fa-archive mr-1 text-[10px]"></i> Closed
-                                        </span>
-                                    @endif
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Additional doc titles only (no dates, no icons) --}}
+                        {{-- Additional doc titles with label --}}
                         @if($hasAdditionalDocs)
-                            <ul class="mt-3 ml-4 space-y-2 border-l-2 border-accent-1/40 pl-3">
-                                @foreach($tender->additionalDocs as $doc)
-                                <li class="flex items-center gap-2">
-                                    <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
-                                    <span class="text-sm text-text-black">{{ $doc->title }}</span>
-                                </li>
-                                @endforeach
-                            </ul>
+                            <div class="mt-3 ml-4">
+                                <p class="text-xs font-semibold text-text-muted uppercase tracking-wide mb-1.5">Additional Documents</p>
+                                <ul class="space-y-2 border-l-2 border-accent-1/40 pl-3">
+                                    @foreach($tender->additionalDocs as $doc)
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
+                                        <span class="text-sm text-text-black">{{ $doc->title }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endif
                     </div>
 

@@ -8,27 +8,27 @@
 <section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-26">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
                 @if($section == 'legal-framework')
                     Legal Framework
                 @elseif($section == 'pre-qualified-advisors')
                     Prequalified Transaction Advisors
                 @elseif($section == 'policies-regulations')
-                    Policies & Regulations
+                    Policies, Regulations and Guidelines
                 @else
                     Knowledge Hub
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
+            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
                 @if($section == 'legal-framework')
-                Access legal frameworks, acts, and regulations governing PPP projects in Khyber Pakhtunkhwa
+                    Access legal frameworks, acts, and regulations governing PPP projects in Khyber Pakhtunkhwa
                 @elseif($section == 'pre-qualified-advisors')
-                Browse our panel of prequalified transaction advisory firms for PPP projects
+                    Browse our panel of prequalified transaction advisory firms for PPP projects
                 @elseif($section == 'policies-regulations')
-                Explore policies, guidelines, and regulatory documents for PPP implementation
+                    Explore policies, guidelines, and regulatory documents for PPP implementation
                 @else
-                Access knowledge resources, case studies, and best practices for PPP projects
+                    Access knowledge resources, case studies, and best practices for PPP projects
                 @endif
             </p>
         </div>
@@ -37,43 +37,46 @@
 </section>
   
 <!-- Downloads Table Section -->
-<section class="py-12 bg-background-light/90">
+<section class="py-12 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header with Search and Sort -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-            <!-- Removed the table heading div -->
+            <div>
+                <p class="text-gray-500 text-sm">
+                    Showing <span id="resultsCount">{{ $downloads->total() }}</span> documents
+                </p>
+            </div>
             
-            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto ml-auto">
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                 <!-- Search Input -->
                 <div class="relative">
                     <input type="text" 
                            id="searchInput" 
                            placeholder="Search documents..." 
-                           class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-accent-1 focus:ring-2 focus:ring-accent-1/20 w-full md:w-64 bg-background-white text-text-black">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted"></i>
+                           class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 w-full md:w-64 bg-white text-gray-900">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
                 
                 <!-- Sort Dropdown -->
                 <div class="relative">
-                    <select id="sortSelect" class="pl-10 pr-8 py-2 rounded-lg border border-gray-300 focus:border-accent-1 focus:ring-2 focus:ring-accent-1/20 appearance-none bg-background-white text-text-black cursor-pointer">
+                    <select id="sortSelect" class="pl-10 pr-8 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 appearance-none bg-white text-gray-900 cursor-pointer">
                         <option value="date_desc">Latest First</option>
                         <option value="date_asc">Oldest First</option>
                         <option value="title_asc">Title (A-Z)</option>
                         <option value="title_desc">Title (Z-A)</option>
                     </select>
-                    <i class="fas fa-sort-amount-down-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted"></i>
-                    <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-text-muted pointer-events-none"></i>
+                    <i class="fas fa-sort-amount-down-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                 </div>
-
             </div>
         </div>
         
         <!-- Downloads Table -->
-        <div class="bg-background-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-primary text-text-primary">
+                    <thead class="bg-green-700 text-white">
                         <tr>
                             <th class="px-6 py-4 text-left font-semibold">
                                 <i class="fas fa-file-alt mr-2"></i> Document Title
@@ -88,7 +91,7 @@
                     </thead>
                     <tbody id="downloadsTableBody">
                         @forelse($downloads as $download)
-                        <tr class="border-b border-gray-200 hover:bg-background-light/30 transition-colors duration-200 download-row"
+                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200 download-row"
                             data-title="{{ strtolower($download->title) }}"
                             data-date="{{ $download->date ? $download->date->format('Y-m-d') : '' }}"
                             data-formatted-date="{{ $download->formatted_date }}">
@@ -119,30 +122,30 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <h3 class="font-semibold text-text-black">{{ $download->title }}</h3>
-                                        <span class="text-xs text-text-muted uppercase">{{ $extension }}</span>
+                                        <h3 class="font-semibold text-gray-900">{{ $download->title }}</h3>
+                                        <span class="text-xs text-gray-500 uppercase">{{ $extension }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-text-muted">
-                                <i class="far fa-calendar-alt mr-1 text-accent-1"></i>
+                            <td class="px-6 py-4 text-gray-500">
+                                <i class="far fa-calendar-alt mr-1 text-green-600"></i>
                                 {{ $download->formatted_date }}
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if($download->document_url)
                                     @if($extension == 'pdf')
                                     <a href="{{ $download->document_url }}" target="_blank" 
-                                       class="inline-flex items-center px-3 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-text-primary transition-all duration-300 text-sm font-medium">
+                                       class="inline-flex items-center px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-700 hover:text-white transition-all duration-300 text-sm font-medium">
                                         <i class="fas fa-eye mr-1"></i> View
                                     </a>
                                     @else
                                     <a href="{{ $download->document_url }}" download 
-                                       class="inline-flex items-center px-3 py-2 bg-accent-1/10 text-accent-1 rounded-lg hover:bg-accent-1 hover:text-text-primary transition-all duration-300 text-sm font-medium">
+                                       class="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-700 hover:text-white transition-all duration-300 text-sm font-medium">
                                         <i class="fas fa-download mr-1"></i> Download
                                     </a>
                                     @endif
                                 @else
-                                    <span class="text-text-muted text-sm">File missing</span>
+                                    <span class="text-gray-400 text-sm">File missing</span>
                                 @endif
                             </td>
                         </tr>
@@ -151,8 +154,8 @@
                             <td colspan="3" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
-                                    <p class="text-text-muted text-lg">No documents found in this category.</p>
-                                    <p class="text-text-secondary text-sm mt-1">Please check back later for new resources.</p>
+                                    <p class="text-gray-500 text-lg">No documents found in this category.</p>
+                                    <p class="text-gray-400 text-sm mt-1">Please check back later for new resources.</p>
                                 </div>
                             </td>
                         </tr>
@@ -163,7 +166,7 @@
             
             <!-- Pagination -->
             @if($downloads->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200 bg-background-light/30">
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 {{ $downloads->appends(request()->query())->links() }}
             </div>
             @endif
@@ -176,7 +179,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
-        const sortSelect = document.getElementById('sortSelect');
+        const sortSelect = document document.getElementById('sortSelect');
         const tableBody = document.getElementById('downloadsTableBody');
         const resultsCountSpan = document.getElementById('resultsCount');
         
@@ -197,7 +200,9 @@
         // Update results count
         function updateResultsCount() {
             const visibleRows = currentRows.filter(row => row.element.style.display !== 'none');
-            resultsCountSpan.textContent = visibleRows.length;
+            if (resultsCountSpan) {
+                resultsCountSpan.textContent = visibleRows.length;
+            }
         }
         
         // Filter rows based on search input
@@ -243,8 +248,12 @@
         }
         
         // Event listeners
-        searchInput.addEventListener('input', filterRows);
-        sortSelect.addEventListener('change', sortRows);
+        if (searchInput) {
+            searchInput.addEventListener('input', filterRows);
+        }
+        if (sortSelect) {
+            sortSelect.addEventListener('change', sortRows);
+        }
         
         // Initialize
         initRows();

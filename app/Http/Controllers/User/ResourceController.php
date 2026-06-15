@@ -1,9 +1,7 @@
 <?php
 
-// Change this line
-namespace App\Http\Controllers\User;  // Add 'User' to namespace
+namespace App\Http\Controllers\User;
 
-// Keep these
 use App\Http\Controllers\Controller;
 use App\Models\Download;
 
@@ -25,11 +23,11 @@ class ResourceController extends Controller
             $section = 'legal-framework';
         }
 
-        // Map URL sections to database category values
+        // Map URL sections to database category values (EXACT MATCH)
         $categoryMapping = [
             'legal-framework' => 'Legal Framework',
             'pre-qualified-advisors' => 'Prequalified Transaction Advisory',
-            'policies-regulations' => 'Policies ,Regulations and Guidelines',
+            'policies-regulations' => 'Policies, Regulations and Guidelines', // Fixed: removed extra space
             'knowledge-hub' => 'Knowledge Hub'
         ];
 

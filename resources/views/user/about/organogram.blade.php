@@ -18,16 +18,9 @@
 
 <!-- Organogram Section -->
 <section class="py-10 bg-background-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green">Organizational Structure</h2>
-            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
-            <p class="text-lg text-text-muted mt-4 max-w-3xl mx-auto">
-                Our organizational structure is designed to ensure efficient decision-making and effective implementation 
-                of PPP projects across Khyber Pakhtunkhwa.
-            </p>
-        </div>
-        <div class="bg-background-light/30 p-6 rounded-lg shadow-inner">
+    
+        
+        <div ">
             <div class="flex justify-center">
                 <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Unit Organogram" class="max-w-full h-auto rounded-lg shadow-md">
             </div>
@@ -38,7 +31,6 @@
                 </a>
             </div>
         </div>
-    </div>
 </section>
 
 @endsection

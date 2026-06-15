@@ -11,9 +11,7 @@
                 Leadership Messages
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
-                Insights and guidance from our distinguished leadership
-            </p>
+            
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Leadership Messages Banner" class="w-full h-full object-cover">

@@ -22,7 +22,8 @@ class TeamController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('phone', 'like', '%' . $search . '%');
             });
         }
         
@@ -50,7 +51,7 @@ class TeamController extends Controller
             'designation_id' => 'required|exists:designations,id',
             'email' => 'required|email|unique:team,email',
             'img' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'experience' => 'required|string',
+            'phone' => 'required|string|max:20',
         ]);
 
         $imagePath = $request->file('img')->store('team', 'public');
@@ -60,7 +61,7 @@ class TeamController extends Controller
             'designation_id' => $request->designation_id,
             'email' => $request->email,
             'img' => $imagePath,
-            'experience' => $request->experience,
+            'phone' => $request->phone,
         ]);
 
         return redirect()->route('admin.team.index')
@@ -70,30 +71,21 @@ class TeamController extends Controller
     /**
      * Display the specified team member.
      */
-    // public function show(Team $teamMember)
-    // {
-    //     $teamMember->load('designation');
-    //     return view('admin.team.show', compact('teamMember'));
-    // }
-     
     public function show(Team $team)
-{
-    $team->load('designation');
-    return view('admin.team.show', ['teamMember' => $team]);
-}
+    {
+        $team->load('designation');
+        return view('admin.team.show', ['teamMember' => $team]);
+    }
+    
     /**
      * Show the form for editing the specified team member.
      */
-    // public function edit(Team $teamMember)
-    // {
-    //     $designations = Designation::orderBy('title')->get();
-    //     return view('admin.team.edit', compact('teamMember', 'designations'));
-    // }
     public function edit(Team $team)
-{
-    $designations = Designation::orderBy('title')->get();
-    return view('admin.team.edit', ['teamMember' => $team, 'designations' => $designations]);
-}
+    {
+        $designations = Designation::orderBy('title')->get();
+        return view('admin.team.edit', ['teamMember' => $team, 'designations' => $designations]);
+    }
+    
     /**
      * Update the specified team member.
      */
@@ -104,14 +96,14 @@ class TeamController extends Controller
             'designation_id' => 'required|exists:designations,id',
             'email' => 'required|email|unique:team,email,' . $team->id,
             'img' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'experience' => 'required|string',
+            'phone' => 'required|string|max:20',
         ]);
 
         $data = [
             'name' => $request->name,
             'designation_id' => $request->designation_id,
             'email' => $request->email,
-            'experience' => $request->experience,
+            'phone' => $request->phone,
         ];
 
         if ($request->hasFile('img')) {

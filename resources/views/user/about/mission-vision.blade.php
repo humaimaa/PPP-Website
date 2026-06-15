@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Mission & Vision')
+@section('title', 'PPP Unit KP - Mission & Vision')
 
 @section('content')
 
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Mission & Vision
             </h1>
@@ -25,7 +25,7 @@
                     <img src="{{ asset('images/project-6.jpg') }}" alt="Vision and Mission" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-primary/20 flex items-end p-6">
                         <div class="bg-white/90 backdrop-blur-sm p-4 rounded">
-                            <h3 class="text-lg font-semibold text-text-green">Building a Better KPK Together</h3>
+                            <h3 class="text-lg font-semibold text-text-green">Building a Better KP Together</h3>
                         </div>
                     </div>
                 </div>

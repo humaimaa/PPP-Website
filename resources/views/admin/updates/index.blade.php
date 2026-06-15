@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Updates - PPP Department KPK')
+@section('title', 'Updates - PPP Unit KPK')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -108,14 +108,11 @@
                                            class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </th>
                             @endcan
-                            <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Title & Content</th>
                             <th class="px-6 py-3 text-left">Type</th>
-                            
                             <th class="px-6 py-3 text-left">Featured</th>
-                            <th class="px-6 py-3 text-left">PDF</th>
-                            <th class="px-6 py-3 text-left">Created</th>
-                            
+                            <th class="px-6 py-3 text-left">Image</th>
+                            <th class="px-6 py-3 text-left">Date</th>
                             {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
                                 <th class="px-6 py-3 text-right">Actions</th>
@@ -135,10 +132,6 @@
                                 </td>
                             @endcan
                             
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
-                                #{{ $item->id }}
-                            </td>
-                            
                             <td class="px-6 py-4">
                                 <div>
                                     <span class="font-medium text-gray-900">{{ $item->title }}</span>
@@ -146,7 +139,7 @@
                                         {{ Str::limit($item->content, 80) }}
                                     </div>
                                 </div>
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @php
@@ -163,9 +156,7 @@
                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ $item->type }}
                                 </span>
-                            </td>
-                            
-                          
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @if($item->is_featured)
@@ -176,26 +167,34 @@
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
-                                @if($item->pdf_path)
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" 
-                                       class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700">
-                                        <i class="fas fa-file-pdf text-lg"></i>
-                                        <span class="text-xs">View</span>
-                                    </a>
+                                @if($item->img_path)
+                                    <img src="{{ Storage::url($item->img_path) }}" alt="{{ $item->title }}"
+                                         class="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm">
                                 @else
                                     <span class="text-gray-400 text-sm">—</span>
                                 @endif
-                            </td>
+                             </td>
                             
                             <td class="px-6 py-4">
+                                @php
+                                    $displayDate = $item->news_date ? \Carbon\Carbon::parse($item->news_date) : $item->created_at;
+                                @endphp
                                 <div class="flex flex-col">
-                                    <span class="text-sm text-gray-600">{{ $item->created_at->format('M d, Y') }}</span>
-                                    <span class="text-xs text-gray-400">{{ $item->created_at->format('h:i A') }}</span>
+                                    <span class="text-sm text-gray-600">
+                                        <i class="far fa-calendar-alt mr-1 text-emerald-600"></i>
+                                        {{ $displayDate->format('M d, Y') }}
+                                    </span>
+                                    @if($item->news_date)
+                                        <span class="text-xs text-gray-400 mt-1">
+                                            <i class="far fa-clock mr-1"></i>
+                                            Created: {{ $item->created_at->format('M d, Y') }}
+                                        </span>
+                                    @endif
                                 </div>
-                            </td>
+                             </td>
                             
                             {{-- Actions column --}}
                             @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
@@ -239,15 +238,16 @@
                                             </button>
                                         @endcan
                                     </div>
-                                </td>
+                                 </td>
                             @endif
                         </tr>
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 8; // Base columns
-                                    if(auth()->user()->can('updates.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // Add actions column
+                                    // Count columns: checkbox (if delete), title, type, featured, image, date, actions
+                                    $colspan = 6; // title, type, featured, image, date
+                                    if(auth()->user()->can('updates.delete')) $colspan++; // checkbox column
+                                    if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // actions column
                                 @endphp
                                 <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                     <i class="fas fa-bullhorn text-4xl mb-2"></i>

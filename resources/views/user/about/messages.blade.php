@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Leadership Messages')
+@section('title', 'PPP Unit KP - Leadership Messages')
 
 @section('content')
 
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Leadership Messages
             </h1>
@@ -24,18 +24,23 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         @php
-            // Define hierarchy order
+            // Define hierarchy order based on enum values (excluding Chief Minister)
             $hierarchyOrder = [
-                'Chief Minister',
                 'Chief Secretary',
+                'Additional Chief Secretary Development',
                 'Secretary P&D',
-                'Chief PPP',
-                'Assistant Chief PPP'
+                'Chief PPP'
             ];
             
+            // Filter out Chief Minister and sort messages by hierarchy
+            $filteredMessages = $messages->filter(function($message) {
+                return $message->designation !== 'Chief Minister';
+            });
+            
             // Sort messages by hierarchy
-            $sortedMessages = $messages->sortBy(function($message) use ($hierarchyOrder) {
-                return array_search($message->dsignation, $hierarchyOrder);
+            $sortedMessages = $filteredMessages->sortBy(function($message) use ($hierarchyOrder) {
+                $position = array_search($message->designation, $hierarchyOrder);
+                return $position === false ? 999 : $position;
             });
         @endphp
         
@@ -52,7 +57,7 @@
                                      alt="{{ $message->name }}" 
                                      class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-background-primary to-background-secondary flex items-center justify-center">
+                                <div class="w-full h-full bg-linear-to-br from-background-primary to-background-secondary flex items-center justify-center">
                                     <div class="text-center">
                                         <svg class="w-20 h-20 text-accent-1 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -69,12 +74,13 @@
                         <!-- Designation Badge -->
                         <div class="inline-block mb-4">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold 
-                                @if($message->dsignation == 'Chief Minister') bg-accent-1 text-text-primary
-                                @elseif($message->dsignation == 'Chief Secretary') bg-primary text-text-primary
-                                @elseif($message->dsignation == 'Secretary P&D') bg-primary-light text-text-primary
+                                @if($message->designation == 'Chief Secretary') bg-primary text-text-primary
+                                @elseif($message->designation == 'Additional Chief Secretary Development') bg-primary-light text-text-primary
+                                @elseif($message->designation == 'Secretary P&D') bg-green-700 text-text-primary
+                                @elseif($message->designation == 'Chief PPP') bg-accent-1 text-text-primary
                                 @else bg-background-primary/80 text-text-primary
                                 @endif">
-                                {{ $message->dsignation }}
+                                {{ $message->designation }}
                             </span>
                         </div>
                         
@@ -108,6 +114,7 @@
             <p class="text-text-muted">Leadership messages will be displayed here soon.</p>
         </div>
         @endforelse
+
     </div>
 </section>
 

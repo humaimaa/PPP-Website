@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Team Member Details - PPP Department KPK')
+@section('title', 'Team Member Details - PPP Unit KP')
 @section('header-title', 'Team Member Details')
 
 @section('content')
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="p-6">
             {{-- Profile Image --}}
             <div class="flex justify-center mb-8">
@@ -72,23 +72,23 @@
                     </div>
                 </div>
 
+                {{-- Phone Number --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Phone Number</label>
+                    <div class="text-gray-700">
+                        <i class="fas fa-phone text-gray-400 mr-2"></i>
+                        <a href="tel:{{ $teamMember->phone }}" class="text-emerald-600 hover:text-emerald-800">
+                            {{ $teamMember->phone }}
+                        </a>
+                    </div>
+                </div>
+
                 {{-- Created At --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Member Since</label>
                     <div class="text-gray-700">
                         <i class="far fa-calendar-alt text-gray-400 mr-2"></i>
                         {{ $teamMember->created_at->format('F d, Y') }}
-                    </div>
-                </div>
-            </div>
-
-            {{-- Experience --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-500 mb-2">Experience / Bio</label>
-                <div class="bg-gray-50 rounded-lg p-4 text-gray-700 leading-relaxed">
-                    <i class="fas fa-quote-left text-gray-400 mr-2"></i>
-                    <div class="whitespace-pre-line mt-2">
-                        {{ $teamMember->experience }}
                     </div>
                 </div>
             </div>

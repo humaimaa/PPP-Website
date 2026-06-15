@@ -118,15 +118,17 @@ Route::middleware(['auth'])->group(function () {
     // ==================== TENDERS MANAGEMENT ====================
     Route::prefix('tenders')->name('tenders.')->middleware('can:tenders.view')->group(function () {
         Route::get('/', [TenderController::class, 'index'])->name('index');
-
-        // FIX: was name('add'), blade views expect name('create')
         Route::get('/create', [TenderController::class, 'create'])->name('create')->middleware('can:tenders.create');
         Route::post('/', [TenderController::class, 'store'])->name('store')->middleware('can:tenders.create');
         Route::post('/bulk-delete', [TenderController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:tenders.delete');
 
-        // Archive / Unarchive routes (used in show.blade.php)
+        // Archive / Unarchive routes
         Route::post('/{tender}/archive', [TenderController::class, 'archive'])->name('archive')->middleware('can:tenders.edit');
         Route::post('/{tender}/unarchive', [TenderController::class, 'unarchive'])->name('unarchive')->middleware('can:tenders.edit');
+
+        // Extend functionality routes
+        Route::post('/{tender}/extend', [TenderController::class, 'extend'])->name('extend')->middleware('can:tenders.edit');
+        Route::delete('/{tender}/remove-extension', [TenderController::class, 'removeExtension'])->name('remove-extension')->middleware('can:tenders.edit');
 
         Route::get('/{tender}', [TenderController::class, 'show'])->name('show');
         Route::get('/{tender}/edit', [TenderController::class, 'edit'])->name('edit')->middleware('can:tenders.edit');

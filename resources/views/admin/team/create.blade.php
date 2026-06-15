@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Add Team Member - PPP Department KPK')
+@section('title', 'Add Team Member - PPP Unit KP')
 
 @section('content')
 <div class="max-w-4xl mx-auto p-6">
@@ -22,7 +22,7 @@
                     <i class="fas fa-user-plus mr-2 text-emerald-600"></i>
                     Add New Team Member
                 </h3>
-                <p class="text-sm text-gray-500 mt-1">Add a new team member to the PPP Department</p>
+                <p class="text-sm text-gray-500 mt-1">Add a new team member to the PPP Unit</p>
             </div>
         </div>
 
@@ -147,26 +147,27 @@
                         @enderror
                     </div>
 
-                    {{-- Experience --}}
+                    {{-- Phone Number --}}
                     <div>
-                        <label for="experience" class="block text-sm font-medium text-gray-700 mb-2">
-                            Experience <span class="text-red-500">*</span>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-chart-line"></i>
+                                <i class="fas fa-phone"></i>
                             </span>
-                            <textarea 
-                                id="experience" 
-                                name="experience" 
+                            <input 
+                                type="text" 
+                                id="phone" 
+                                name="phone" 
+                                value="{{ old('phone') }}"
                                 required
-                                rows="3"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('experience') border-red-500 @enderror"
-                                placeholder="Describe professional experience, qualifications, and achievements..."
-                            >{{ old('experience') }}</textarea>
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('phone') border-red-500 @enderror"
+                                placeholder="Enter phone number"
+                            >
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Brief overview of experience, qualifications, and expertise</p>
-                        @error('experience')
+                        <p class="mt-1 text-xs text-gray-500">Enter the team member's phone number</p>
+                        @error('phone')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -230,7 +231,7 @@
                         <h4 class="text-sm font-medium text-blue-900">About Team Members</h4>
                         <p class="text-xs text-blue-700 mt-1">
                             Team members will be displayed on the frontend team page with their photo, name, designation, 
-                            email, and experience. This helps showcase the department's expertise and leadership.
+                            email, and phone number. This helps showcase the department's expertise and leadership.
                             <br><br>
                             <strong>Note:</strong> Designations are managed separately in the Designations section. 
                             You can create new designations before adding team members.

@@ -1,0 +1,204 @@
+/* ============================================================
+   pitchbook.css — Turn.js Landscape Flipbook for PPP KP
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+/* ── Loading overlay ───────────────────────────────────────── */
+#loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(240, 240, 240, 0.97);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+#loading-spinner {
+    width: 52px;
+    height: 52px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #B39339;
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+}
+
+#loading-text {
+    color: #444;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    margin-top: 18px;
+    letter-spacing: 0.05em;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Canvas ────────────────────────────────────────────────── */
+#canvas {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 16px 80px;
+    background: #f0f0f0;
+}
+
+/* ── Book zoom wrapper ─────────────────────────────────────── */
+#book-zoom {
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 4px;
+    /* box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18); */
+
+}
+
+/* ── Flipbook element ──────────────────────────────────────── */
+#flipbook {
+    position: relative;
+    background: transparent;
+}
+
+/* ── Kill ALL white backgrounds turn.js injects ────────────── */
+#flipbook,
+#flipbook .turn-page,
+#flipbook .turn-page-wrapper,
+#flipbook .page-wrapper,
+#flipbook .p1,
+#flipbook .p2,
+#flipbook .hard,
+#flipbook .gradient {
+    background: transparent !important;
+}
+
+/* Remove box-shadow on blank shells */
+#flipbook .p1,
+#flipbook .p2 {
+    box-shadow: none !important;
+}
+
+/* ── Individual pages ──────────────────────────────────────── */
+#flipbook .page {
+    background: transparent;
+    overflow: hidden;
+}
+
+#flipbook .page img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;         /* slides are exactly 16:9 — fill = no bars */
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Page shadow on real pages only */
+#flipbook .page-wrapper {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* Page-turn glow */
+@keyframes pageGlow {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(179,147,57,0)); }
+    50%       { filter: drop-shadow(0 0 14px rgba(179,147,57,0.5)); }
+}
+#flipbook .page-wrapper.turning {
+    animation: pageGlow 0.4s ease;
+}
+
+/* ── Progress slider ───────────────────────────────────────── */
+#slider-bar {
+    flex-shrink: 0;
+    padding: 2px 8px;
+}
+
+#slider.ui-slider {
+    height: 5px;
+    background: rgba(0, 0, 0, 0.12);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#slider .ui-slider-handle {
+    width: 16px;
+    height: 16px;
+    top: -6px;
+    background: #B39339;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.1s;
+}
+
+#slider .ui-slider-handle:hover { transform: scale(1.2); }
+
+#slider .ui-slider-range {
+    background: #B39339;
+    border-radius: 3px;
+}
+
+/* ── Navigation bar ────────────────────────────────────────── */
+#nav-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 1000;
+    background: #fff;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    white-space: nowrap;
+}
+
+#nav-bar button {
+    background: #0D2617;
+    color: #fff;
+    border: none;
+    padding: 0.4rem 1.1rem;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+#nav-bar button:hover  { background: #B39339; transform: scale(1.05); }
+#nav-bar button:active { transform: scale(0.97); }
+
+#page-counter {
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    min-width: 110px;
+    text-align: center;
+}
+
+/* ── Mobile ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    #nav-bar { gap: 0.4rem; padding: 0.4rem 0.8rem; }
+    #nav-bar button { padding: 0.3rem 0.7rem; font-size: 11px; }
+    #page-counter   { min-width: 80px; font-size: 11px; }
+}

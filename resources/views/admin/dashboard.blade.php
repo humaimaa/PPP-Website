@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard - PPP Department KPK')
+@section('title', 'Dashboard - PPP Unit KP')
 @section('header-title', 'Dashboard Overview')
 
 @section('content')
@@ -15,9 +15,9 @@
                         <i class="fas fa-project-diagram text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-gray-500 text-sm">Active Projects</p>
-                        <h3 class="text-2xl font-bold">{{ $activeProjects ?? 0 }}</h3>
-                        <a href="{{ route('admin.projects.index') }}?status=active" 
+                        <p class="text-gray-500 text-sm">Total Projects</p>
+                        <h3 class="text-2xl font-bold">{{ $totalProjects ?? 0 }}</h3>
+                        <a href="{{ route('admin.projects.index') }}" 
                            class="text-sm text-emerald-700 hover:underline mt-1 inline-block">View All</a>
                     </div>
                 </div>
@@ -137,20 +137,60 @@
                                 <a href="{{ route('admin.tenders.show', $tender) }}" class="text-emerald-600 hover:underline">
                                     {{ $tender->name }}
                                 </a>
+                                @if($tender->is_extended)
+                                    <span class="ml-2 text-xs text-orange-600">
+                                        <i class="fas fa-calendar-plus"></i> Extended
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-xs rounded-full bg-gray-100">{{ $tender->category }}</span>
                             </td>
-                            <td class="px-6 py-4">{{ $tender->closing_date->format('M d, Y') }}</td>
+                            <td class="px-6 py-4">
+                                @if($tender->is_extended)
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">
+                                            {{ $tender->closing_date->format('M d, Y') }}
+                                        </span>
+                                        <div class="text-orange-600 font-medium">
+                                            <i class="fas fa-arrow-right text-xs"></i>
+                                            {{ $tender->effective_closing_date->format('M d, Y') }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <span>{{ $tender->closing_date->format('M d, Y') }}</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">
                                 @php
-                                    $daysLeft = now()->diffInDays($tender->closing_date, false);
+                                    // Get effective closing date
+                                    $effectiveDate = $tender->is_extended ? $tender->extended_closing_date : $tender->closing_date;
+                                    $now = now();
+                                    
+                                    if ($effectiveDate) {
+                                        // Check if closing date is in the future
+                                        if ($effectiveDate->isFuture()) {
+                                            // Calculate days remaining (integer, round up to show at least 1 day if still open)
+                                            $diffInDays = $now->diffInDays($effectiveDate, false);
+                                            $daysLeft = (int)ceil($diffInDays);
+                                            
+                                            // Ensure we show at least 1 if there's any time left in the current day
+                                            if ($diffInDays > 0 && $diffInDays < 1) {
+                                                $daysLeft = 1;
+                                            }
+                                            
+                                            if ($daysLeft <= 7) {
+                                                echo '<span class="text-red-600 font-semibold">' . $daysLeft . ' day(s)</span>';
+                                            } else {
+                                                echo '<span class="text-gray-600">' . $daysLeft . ' day(s)</span>';
+                                            }
+                                        } else {
+                                            echo '<span class="text-gray-400">Closed</span>';
+                                        }
+                                    } else {
+                                        echo '<span class="text-gray-400">N/A</span>';
+                                    }
                                 @endphp
-                                @if($daysLeft <= 7)
-                                    <span class="text-red-600 font-semibold">{{ $daysLeft }} days</span>
-                                @else
-                                    <span class="text-gray-600">{{ $daysLeft }} days</span>
-                                @endif
                             </td>
                         </tr>
                         @endforeach

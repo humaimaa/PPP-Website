@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Roles - PPP Department KPK')
+@section('title', 'Roles - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">

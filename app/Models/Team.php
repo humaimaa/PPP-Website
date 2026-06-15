@@ -16,7 +16,7 @@ class Team extends Model
         'designation_id',
         'img',
         'email',
-        'experience',
+        'phone',
     ];
     
     /**

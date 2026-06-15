@@ -5,24 +5,48 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class MediaroomController extends Controller
 {
-    /**
+      /**
      * Events page
      */
     public function eventsIndex()
     {
-        $events = Event::orderBy('event_date', 'desc')->paginate(12);
+        $events = Event::with('gallery')->withCount('gallery')->orderBy('event_date', 'desc')->paginate(12);
+        
+        // Debug: Check if images exist
+        foreach($events as $event) {
+            foreach($event->gallery as $gallery) {
+                $fullPath = storage_path('app/public/' . $gallery->image);
+                if (!file_exists($fullPath)) {
+                    \Log::warning('Image not found: ' . $fullPath);
+                }
+            }
+        }
+        
         return view('user.events.index', compact('events'));
     }
 
     /**
-     * Updates page
+     * Gallery album page
      */
-    public function updatesIndex()
+    public function eventGallery($id)
     {
-        $updates = News::orderBy('created_at', 'desc')->paginate(9);
+        $event = Event::with('gallery')->findOrFail($id);
+        return view('user.events.gallery', compact('event'));
+    }
+
+
+    /**
+     * Updates page with pagination
+     */
+    public function updatesIndex(Request $request)
+    {
+        $perPage = 6; // Number of items per page
+        $updates = News::orderBy('created_at', 'desc')->paginate($perPage);
+        
         return view('user.updates.index', compact('updates'));
     }
 
@@ -32,15 +56,18 @@ class MediaroomController extends Controller
     public function updatesShow($id)
     {
         $news = News::findOrFail($id);
-        return view('user.updates.show', compact('news'));
+        
+        // Get previous and next news for navigation
+        $previousNews = News::where('created_at', '<', $news->created_at)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        $nextNews = News::where('created_at', '>', $news->created_at)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        
+        return view('user.updates.show', compact('news', 'previousNews', 'nextNews'));
     }
 
-    /**
-     * Gallery album page
-     */
-    public function eventGallery($id)
-    {
-        $event = Event::findOrFail($id);
-        return view('user.events.gallery', compact('event'));
-    }
+
 }

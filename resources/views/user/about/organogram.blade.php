@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Organizational Structure')
+@section('title', 'PPP Unit KP - Organizational Structure')
 
 @section('content')
 
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Organizational Structure
             </h1>
@@ -29,7 +29,7 @@
         </div>
         <div class="bg-background-light/30 p-6 rounded-lg shadow-inner">
             <div class="flex justify-center">
-                <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Department Organogram" class="max-w-full h-auto rounded-lg shadow-md">
+                <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Unit Organogram" class="max-w-full h-auto rounded-lg shadow-md">
             </div>
             <div class="text-center mt-6">
                 <a href="{{ asset('images/organogram.jpg') }}" download="PPP-Department-Organogram.jpg" 

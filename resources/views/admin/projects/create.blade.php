@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Add Project - PPP Department KPK')
+@section('title', 'Add Project - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -119,7 +119,7 @@
                         @enderror
                     </div>
 
-                    {{-- Location --}}
+                    {{-- Location (NOT REQUIRED) --}}
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                             Location
@@ -130,8 +130,9 @@
                             </span>
                             <input type="text" id="location" name="location" value="{{ old('location') }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('location') border-red-500 @enderror"
-                                placeholder="Enter project location">
+                                placeholder="Enter project location (optional)">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
                         @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -140,7 +141,7 @@
                     {{-- Division --}}
                     <div>
                         <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
-                            Division
+                            Division <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -170,7 +171,7 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-rupee-sign"></i>
                             </span>
-                            <input type="number" id="cost" name="cost" step="0.01" min="0" value="{{ old('cost') }}"
+                            <input type="text" id="cost" name="cost"  value="{{ old('cost') }}"
                                 required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('cost') border-red-500 @enderror"
                                 placeholder="0.00">
@@ -180,7 +181,7 @@
                         @enderror
                     </div>
 
-                    {{-- Status --}}
+                    {{-- Status (NOT REQUIRED) --}}
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Status
@@ -191,8 +192,9 @@
                             </span>
                             <input type="text" id="status" name="status" value="{{ old('status') }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
-                                placeholder="e.g., Planning, Implementation, Completed">
+                                placeholder="e.g., Planning, Implementation, Completed (optional)">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
                         @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

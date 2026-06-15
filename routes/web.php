@@ -9,11 +9,13 @@ use App\Http\Controllers\User\AboutController;
 use App\Http\Controllers\User\TenderController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\MediaroomController;
+use App\Http\Controllers\User\ProjectController;
 
 // ==================== PUBLIC ROUTES ====================
 
 // Homepage
 Route::get('/', [HomeController::class, 'home'])->name('home');
+
 
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
@@ -31,11 +33,15 @@ Route::prefix('about')->name('about.')->group(function () {
 // Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-// Projects page (with optional status parameter)
-Route::get('/projects/{status?}', [PageController::class, 'projectsIndex'])->name('projects.index');
+// ==================== PROJECT ROUTES - ORDER MATTERS! ====================
+// Put MORE SPECIFIC routes FIRST
+Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
 
-// Individual project detail page
-Route::get('/project/{id}', [PageController::class, 'projectShow'])->name('projects.show');
+// Then the dynamic routes
+Route::get('/projects/{status?}', [ProjectController::class, 'index'])->name('projects.index');
+
+// Individual project detail page - this should come LAST because it's the most dynamic
+Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Resource Center (Downloads) with optional section parameter
 Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');

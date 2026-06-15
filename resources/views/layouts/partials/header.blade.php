@@ -7,7 +7,7 @@
             <!-- Left: Logo with Continuous 3D Rotation -->
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center py-2 group outline-none">
-                    <img src="{{ asset('images/logo.png') }}" alt="PPP Department KPK Logo" 
+                    <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KPK Logo" 
                          class="navbar-logo h-12 md:h-18 w-auto mr-2 md:mr-3 animate-continuous-rotation">
                     <div class="hidden lg:block">
                         <span class="text-text-primary font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>
@@ -74,6 +74,9 @@
                         <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('projects.index', 'complete') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
+                    
                     </div>
                 </div>
 
@@ -237,6 +240,9 @@
         <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
         <div class="h-px bg-white/10 mx-4"></div>
         <a href="{{ route('projects.index', 'operational') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
+        <div class="h-px bg-white/10 mx-4"></div>
+        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
+    
     </div>
 </div>
 

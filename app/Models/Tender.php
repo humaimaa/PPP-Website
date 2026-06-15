@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Tender extends Model
 {
-    use HasFactory;  // REMOVED SoftDeletes from here
+    use HasFactory;
     
     protected $fillable = [
         'name',
         'document',
         'opening_date',
         'closing_date',
+        'extended_closing_date',
         'category',
         'advertisement',
     ];
@@ -21,44 +23,99 @@ class Tender extends Model
     protected $casts = [
         'opening_date' => 'date',
         'closing_date' => 'date',
+        'extended_closing_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
     
     /**
-     * Get the additional documents for the tender.
+     * Get the effective closing date (extended if exists, otherwise original)
      */
-    public function additionalDocs()
+    public function getEffectiveClosingDateAttribute()
     {
-        return $this->hasMany(TenderAdditionalDoc::class, 'tender_id');
+        return $this->extended_closing_date ?? $this->closing_date;
     }
     
     /**
-     * Get the additional documents (alias for additionalDocs).
+     * Get the original closing date
      */
-    public function additionalDocuments()
+    public function getOriginalClosingDateAttribute()
     {
-        return $this->hasMany(TenderAdditionalDoc::class, 'tender_id');
+        return $this->closing_date;
     }
     
     /**
-     * Check if tender is still open (closing date is in the future).
+     * Check if closing date has been extended
+     */
+    public function getIsExtendedAttribute()
+    {
+        return !is_null($this->extended_closing_date) && 
+               $this->extended_closing_date->gt($this->closing_date);
+    }
+    
+    /**
+     * Get days remaining for tender (using effective closing date)
+     */
+    public function getDaysRemainingAttribute()
+    {
+        $effectiveDate = $this->effective_closing_date;
+        
+        if (!$effectiveDate) {
+            return null;
+        }
+        
+        $now = now()->startOfDay();
+        
+        if ($effectiveDate->isPast()) {
+            return 0;
+        }
+        
+        // Return integer days (floor the difference)
+        return floor($now->diffInDays($effectiveDate, false));
+    }
+    
+    /**
+     * Get days remaining text
+     */
+    public function getDaysRemainingTextAttribute()
+    {
+        $days = $this->days_remaining;
+        
+        if ($days === null) {
+            return 'No closing date';
+        }
+        
+        if ($days <= 0) {
+            return 'Closed';
+        }
+        
+        if ($days == 1) {
+            return '1 day left';
+        }
+        
+        return $days . ' days left';
+    }
+    
+    /**
+     * Check if tender is still open (effective closing date is in the future)
      */
     public function isOpen()
     {
-        return $this->closing_date->isFuture();
+        $effectiveDate = $this->effective_closing_date;
+        return $effectiveDate && $effectiveDate->isFuture();
     }
     
     /**
-     * Check if tender is closed (closing date has passed).
+     * Check if tender is closed (effective closing date has passed)
      */
     public function isClosed()
     {
-        return $this->closing_date->isPast();
+        $effectiveDate = $this->effective_closing_date;
+        return $effectiveDate && $effectiveDate->isPast();
     }
     
     /**
-     * Check if tender is opening soon (opening date is in the future).
+     * Check if tender is opening soon (opening date is in the future)
      */
     public function isUpcoming()
     {
@@ -66,7 +123,7 @@ class Tender extends Model
     }
     
     /**
-     * Get the status of the tender.
+     * Get the status of the tender (using effective closing date)
      */
     public function getStatusAttribute()
     {
@@ -80,7 +137,7 @@ class Tender extends Model
     }
     
     /**
-     * Get status badge color.
+     * Get status badge color
      */
     public function getStatusColorAttribute()
     {
@@ -94,29 +151,29 @@ class Tender extends Model
     }
     
     /**
-     * Get document URL.
+     * Get document URL
      */
     public function getDocumentUrlAttribute()
     {
-        if ($this->document && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->document)) {
-            return \Illuminate\Support\Facades\Storage::url($this->document);
+        if ($this->document && Storage::disk('public')->exists($this->document)) {
+            return Storage::url($this->document);
         }
         return null;
     }
     
     /**
-     * Get advertisement URL.
+     * Get advertisement URL
      */
     public function getAdvertisementUrlAttribute()
     {
-        if ($this->advertisement && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->advertisement)) {
-            return \Illuminate\Support\Facades\Storage::url($this->advertisement);
+        if ($this->advertisement && Storage::disk('public')->exists($this->advertisement)) {
+            return Storage::url($this->advertisement);
         }
         return null;
     }
     
     /**
-     * Get formatted opening date.
+     * Get formatted opening date
      */
     public function getFormattedOpeningDateAttribute()
     {
@@ -124,10 +181,54 @@ class Tender extends Model
     }
     
     /**
-     * Get formatted closing date.
+     * Get formatted closing date (original)
      */
     public function getFormattedClosingDateAttribute()
     {
         return $this->closing_date->format('F d, Y');
     }
+    
+    /**
+     * Get formatted effective closing date
+     */
+    public function getFormattedEffectiveClosingDateAttribute()
+    {
+        if ($this->effective_closing_date) {
+            return $this->effective_closing_date->format('F d, Y');
+        }
+        return 'N/A';
+    }
+    
+    /**
+     * Get the additional documents for the tender
+     */
+    public function additionalDocs()
+    {
+        return $this->hasMany(TenderAdditionalDoc::class, 'tender_id');
+    }
+    
+    /**
+     * Get the additional documents (alias for additionalDocs)
+     */
+    public function additionalDocuments()
+    {
+        return $this->hasMany(TenderAdditionalDoc::class, 'tender_id');
+    }
+
+    /**
+ * Get effective closing date for comparison
+ */
+public function getEffectiveClosingDateForComparisonAttribute()
+{
+    return $this->extended_closing_date ?? $this->closing_date;
+}
+
+/**
+ * Check if tender is active (using effective closing date)
+ */
+public function getIsActiveAttribute()
+{
+    $effectiveDate = $this->effective_closing_date_for_comparison;
+    return $effectiveDate && $effectiveDate->gte(now()->startOfDay());
+}
 }

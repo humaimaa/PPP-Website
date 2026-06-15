@@ -1,141 +1,255 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Tenders & Opportunities')
+@section('title', 'PPP Unit KP - Tenders & Opportunities')
 
 @section('content')
 
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+        <div class="text-center px-4 pt-30">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
                 Tenders & Opportunities
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white mt-4 text-lg">@if($section == 'general-procurement') General Procurement @elseif($section == 'transaction-advisory') Transaction Advisory @else Private Partner Selection @endif</p>
+            <p class="text-white mt-4 text-lg">
+                @if($section == 'general-procurement') General Procurement
+                @elseif($section == 'transaction-advisory') Transaction Advisory
+                @else Private Partner Selection
+                @endif
+            </p>
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Tenders Banner" class="w-full h-full object-cover">
 </section>
 
-
-<!-- ==================== ALL TENDERS SECTION ==================== -->
-<section class="py-10 bg-background-light/90">
+<!-- ==================== TABS NAVIGATION ==================== -->
+<section class="py-6 bg-background-light border-b border-gray-200 sticky top-0 z-20 shadow-sm">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">All Tenders</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-muted mt-4">Browse all tenders and bidding opportunities</p>
-        </div>
-
-        <div class="space-y-6">
-            @forelse($allTenders as $tender)
-            <div class="bg-background-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 relative">
-                <!-- Status Badge -->
-                <div class="absolute top-4 right-4 z-10">
-                    @php
-                        $currentDate = now();
-                        $isActive = $tender->closing_date >= $currentDate;
-                        $isClosingSoon = $isActive && $tender->closing_date <= $currentDate->copy()->addDays(15);
-                    @endphp
-                    
-                    @if($isClosingSoon)
-                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
-                            <i class="fas fa-clock mr-1"></i> Closing Soon!
-                        </span>
-                    @elseif($isActive)
-                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                            <i class="fas fa-check-circle mr-1"></i> Active
-                        </span>
-                    @else
-                        <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                            <i class="fas fa-archive mr-1"></i> Archived
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="p-6">
-                    <div class="flex flex-wrap justify-between items-start gap-4">
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-text-black mb-2">{{ $tender->name }}</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-                                <div class="flex items-center text-sm text-text-muted">
-                                    <i class="fas fa-hashtag text-gray-400 mr-2"></i>
-                                    <span>Tender #: {{ $tender->id }}</span>
-                                </div>
-                                <div class="flex items-center text-sm text-text-muted">
-                                    <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
-                                    <span>Opening: {{ $tender->opening_date instanceof \Carbon\Carbon ? $tender->opening_date->format('d M Y') : \Carbon\Carbon::parse($tender->opening_date)->format('d M Y') }}</span>
-                                </div>
-                                <div class="flex items-center text-sm">
-                                    <i class="fas fa-calendar-check text-gray-400 mr-2"></i>
-                                    <span class="text-text-muted">Closing: </span>
-                                    <span class="ml-1 font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-text-black' : 'text-text-muted') }}">
-                                        {{ $tender->closing_date instanceof \Carbon\Carbon ? $tender->closing_date->format('d M Y') : \Carbon\Carbon::parse($tender->closing_date)->format('d M Y') }}
-                                    </span>
-                                    @if($isClosingSoon)
-                                    <span class="ml-2 text-red-500 text-xs">
-                                        ({{ now()->diffInDays($tender->closing_date) }} days left)
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            @if($tender->document)
-                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" 
-                               class="inline-flex items-center px-4 py-2 {{ $isActive ? 'bg-primary hover:bg-primary-hover' : 'bg-gray-600 hover:bg-gray-700' }} text-text-primary rounded-lg transition-colors">
-                                <i class="fas fa-file-pdf mr-2"></i> Tender Doc
-                            </a>
-                            @endif
-                            @if($tender->advertisement)
-                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" 
-                               class="inline-flex items-center px-4 py-2 bg-blue-600 text-text-primary rounded-lg hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-image mr-2"></i> Advt
-                            </a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Additional Documents -->
-                @if($tender->additionalDocs && $tender->additionalDocs->count() > 0)
-                <div class="bg-background-light border-t border-gray-200 px-6 py-4">
-                    <h4 class="text-sm font-semibold text-text-black mb-3 flex items-center">
-                        <i class="fas fa-paperclip mr-2 text-text-muted"></i>
-                        Additional Documents ({{ $tender->additionalDocs->count() }})
-                    </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        @foreach($tender->additionalDocs as $doc)
-                        <div class="flex justify-between items-center p-3 bg-background-white rounded border border-gray-200 hover:border-accent-1/30 transition-colors">
-                            <div>
-                                <p class="font-medium text-text-black text-sm">{{ $doc->title }}</p>
-                                <p class="text-xs text-text-muted">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    Published: {{ $doc->publish_date instanceof \Carbon\Carbon ? $doc->publish_date->format('d M Y') : \Carbon\Carbon::parse($doc->publish_date)->format('d M Y') }}
-                                </p>
-                            </div>
-                            <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" 
-                               class="text-primary hover:text-primary-hover text-sm font-medium">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </a>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-            </div>
-            @empty
-            <div class="bg-background-white rounded-lg shadow-md p-12 text-center">
-                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
-                <p class="text-text-muted text-lg">No tenders available in this category.</p>
-                <p class="text-text-secondary mt-2">Please check back later for new opportunities.</p>
-            </div>
-            @endforelse
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="{{ route('tenders', ['section' => $section, 'status' => 'active']) }}"
+               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300
+               {{ $status == 'active' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
+                <i class="fas fa-play-circle mr-2"></i>Active Tenders
+            </a>
+            <a href="{{ route('tenders', ['section' => $section, 'status' => 'archived']) }}"
+               class="px-6 py-3 rounded-lg font-semibold transition-all duration-300
+               {{ $status == 'archived' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
+                <i class="fas fa-archive mr-2"></i>Archived Tenders
+            </a>
         </div>
     </div>
 </section>
 
-<!-- Tender Submission Guidelines Section -->
+<!-- ==================== TENDERS TABLE SECTION ==================== -->
+<section class="py-10 bg-background-light/90">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        {{-- Status banner --}}
+        @if($status == 'active')
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-green-500 mr-3 text-lg"></i>
+                    <div>
+                        <p class="text-green-700 font-medium">Active Tenders</p>
+                        <p class="text-green-600 text-sm">These tenders are currently open for submission. Please review the deadlines carefully.</p>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="bg-gray-50 border-l-4 border-gray-500 p-4 mb-6 rounded-r-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-gray-500 mr-3 text-lg"></i>
+                    <div>
+                        <p class="text-gray-700 font-medium">Archived Tenders</p>
+                        <p class="text-gray-600 text-sm">These tenders have closed. Documents are available for reference only.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- ===== TABLE ===== --}}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+
+            {{-- Table Header --}}
+            <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-primary text-white text-xs font-semibold uppercase tracking-wider">
+                <div class="col-span-1">#</div>
+                <div class="col-span-6">Tender Name</div>
+                <div class="col-span-2">Opening Date</div>
+                <div class="col-span-2">Closing Date</div>
+                <div class="col-span-1 text-center">Docs</div>
+            </div>
+
+            {{-- Table Rows --}}
+            @forelse($tenders as $index => $tender)
+            @php
+                $today        = now()->startOfDay();
+                $closingDate  = $tender->closing_date instanceof \Carbon\Carbon
+                                    ? $tender->closing_date->copy()->startOfDay()
+                                    : \Carbon\Carbon::parse($tender->closing_date)->startOfDay();
+
+                $isExtended   = !empty($tender->extended_closing_date);
+                $extendedDate = null;
+                $deadlineDate = $closingDate;
+
+                if ($isExtended) {
+                    $extendedDate = $tender->extended_closing_date instanceof \Carbon\Carbon
+                                       ? $tender->extended_closing_date->copy()->startOfDay()
+                                       : \Carbon\Carbon::parse($tender->extended_closing_date)->startOfDay();
+                    $deadlineDate = $extendedDate;
+                }
+
+                $isActive      = $deadlineDate->gte($today);
+                $daysLeft      = $isActive ? (int) $today->diffInDays($deadlineDate) : 0;
+                $isClosingSoon = $isActive && $daysLeft <= 15 && $daysLeft > 0;
+
+                $hasAdditionalDocs = $tender->additionalDocs && $tender->additionalDocs->count() > 0;
+                $rowBg = $index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+            @endphp
+
+            <div class="border-b border-gray-200 last:border-b-0 {{ $rowBg }} hover:bg-amber-50/40 transition-colors duration-150">
+
+                <div class="grid grid-cols-12 gap-4 px-6 py-4 items-start">
+
+                    {{-- # --}}
+                    <div class="col-span-1 text-sm font-semibold text-text-muted pt-0.5">
+                        {{ $index + 1 }}
+                    </div>
+
+                    {{-- Tender Name + status badges + additional doc titles only --}}
+                    <div class="col-span-6">
+                        <div class="flex items-start gap-2">
+                            <span class="mt-1.5 shrink-0">
+                                @if($isActive)
+                                    <span class="block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                @else
+                                    <span class="block w-2 h-2 rounded-full bg-gray-400"></span>
+                                @endif
+                            </span>
+                            <div>
+                                <p class="font-semibold text-text-black leading-snug {{ !$isActive ? 'text-gray-500' : '' }}">
+                                    {{ $tender->name }}
+                                </p>
+                                <div class="flex flex-wrap gap-1.5 mt-1.5">
+                                    @if($isExtended)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                                            <i class="fas fa-history mr-1 text-[10px]"></i> Extended
+                                        </span>
+                                    @endif
+                                    @if($isClosingSoon && $isActive)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                                            <i class="fas fa-clock mr-1 text-[10px]"></i> Closing Soon
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Additional doc titles with label --}}
+                        @if($hasAdditionalDocs)
+                            <div class="mt-3 ml-4">
+                                <p class="text-xs font-semibold text-text-muted uppercase tracking-wide mb-1.5">Additional Documents</p>
+                                <ul class="space-y-2 border-l-2 border-accent-1/40 pl-3">
+                                    @foreach($tender->additionalDocs as $doc)
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
+                                        <span class="text-sm text-text-black">{{ $doc->title }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Opening Date --}}
+                    <div class="col-span-2 text-sm {{ !$isActive ? 'text-gray-400' : 'text-text-black' }}">
+                        {{ ($tender->opening_date instanceof \Carbon\Carbon
+                            ? $tender->opening_date
+                            : \Carbon\Carbon::parse($tender->opening_date))->format('d, M Y') }}
+                    </div>
+
+                    {{-- Closing Date --}}
+                    <div class="col-span-2 text-sm">
+                        @if($isExtended)
+                            <span class="line-through text-text-muted text-xs block">{{ $closingDate->format('d, M Y') }}</span>
+                            <span class="font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-purple-600' : 'text-gray-400') }}">
+                                {{ $extendedDate->format('d, M Y') }}
+                            </span>
+                        @else
+                            <span class="{{ $isClosingSoon ? 'text-red-600 font-bold' : ($isActive ? 'text-text-black' : 'text-gray-400') }}">
+                                {{ $closingDate->format('d, M Y') }}
+                            </span>
+                        @endif
+
+                        @if($isActive)
+                            <span class="block text-xs mt-0.5 {{ $isClosingSoon ? 'text-red-500 font-semibold' : 'text-text-muted' }}">
+                                @if($daysLeft === 0) Closing today
+                                @elseif($daysLeft === 1) 1 day left
+                                @else {{ $daysLeft }} days left
+                                @endif
+                            </span>
+                        @endif
+                    </div>
+
+                    {{-- Docs column: main tender doc + advertisement + all additional docs stacked --}}
+                    <div class="col-span-1 flex flex-col items-center gap-2">
+                        {{-- Main tender PDF --}}
+                        @if($tender->document)
+                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" title="Tender Document"
+                               class="text-red-500 hover:text-red-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
+                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
+                                    <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
+                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
+                                </svg>
+                            </a>
+                        @endif
+
+                        {{-- Advertisement --}}
+                        @if($tender->advertisement)
+                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" title="Advertisement"
+                               class="text-blue-500 hover:text-blue-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="6" fill="#1565C0" opacity=".12"/>
+                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#1565C0"/>
+                                    <path d="M28 8l10 10H28V8z" fill="#0D47A1"/>
+                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">DOC</text>
+                                </svg>
+                            </a>
+                        @endif
+
+                        {{-- Additional doc icons, vertically aligned under the main ones --}}
+                        @if($hasAdditionalDocs)
+                            @foreach($tender->additionalDocs as $doc)
+                                <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" title="{{ $doc->title }}"
+                                   class="text-red-500 hover:text-red-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                        <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
+                                        <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
+                                        <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
+                                        <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
+                                    </svg>
+                                </a>
+                            @endforeach
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+
+            @empty
+            <div class="text-center py-16">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4 block"></i>
+                <p class="text-text-muted text-lg">No {{ $status }} tenders available in this category.</p>
+                <p class="text-text-secondary mt-2 text-sm">Please check back later for new opportunities.</p>
+            </div>
+            @endforelse
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== TENDER SUBMISSION GUIDELINES ==================== -->
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
@@ -148,7 +262,7 @@
             <!-- Card 1 -->
             <div class="bg-background-white p-8 rounded-xl border border-gray-200 hover:border-accent-1/50 transition-all duration-300 hover:shadow-lg group relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
-                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-text-primary group-hover:bg-primary-hover transition-colors duration-300">
+                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-file-signature"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-4 text-text-black">Submission Requirements</h3>
@@ -171,13 +285,13 @@
             <!-- Card 2 -->
             <div class="bg-background-white p-8 rounded-xl border border-gray-200 hover:border-accent-1/50 transition-all duration-300 hover:shadow-lg group relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
-                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-text-primary group-hover:bg-primary-hover transition-colors duration-300">
+                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-clock"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-4 text-text-black">Deadlines & Process</h3>
                 <div class="space-y-4">
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-white rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-calendar-day"></i>
                         </div>
                         <div>
@@ -186,7 +300,7 @@
                         </div>
                     </div>
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-white rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-hourglass-half"></i>
                         </div>
                         <div>
@@ -195,7 +309,7 @@
                         </div>
                     </div>
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
-                        <div class="bg-primary text-text-primary rounded-lg w-10 h-10 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="bg-primary text-white rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
                             <i class="fas fa-award"></i>
                         </div>
                         <div>
@@ -209,7 +323,7 @@
             <!-- Card 3 -->
             <div class="bg-background-white p-8 rounded-xl border border-gray-200 hover:border-accent-1/50 transition-all duration-300 hover:shadow-lg group relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
-                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-text-primary group-hover:bg-primary-hover transition-colors duration-300">
+                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-question-circle"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-4 text-text-black">Support & Assistance</h3>
@@ -232,17 +346,17 @@
                         <h4 class="font-semibold mb-2 text-text-black flex items-center">
                             <i class="fas fa-map-marker-alt text-primary mr-2"></i> Office Visit
                         </h4>
-                        <p class="text-sm text-text-muted">PPP Department, Civil Secretariat, Peshawar</p>
+                        <p class="text-sm text-text-muted">PPP Unit, P&D Department, Civil Secretariat, Peshawar</p>
                         <p class="text-xs mt-1 text-text-muted">By appointment only</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Additional CTA -->
+        <!-- CTA -->
         <div class="mt-16 text-center">
             <h3 class="text-xl font-medium mb-6 text-text-black">Need personalized assistance with your tender application?</h3>
-            <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 bg-primary text-text-primary rounded-lg font-semibold hover:bg-primary-hover transition-colors duration-300 shadow-md hover:shadow-lg">
+            <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors duration-300 shadow-md hover:shadow-lg">
                 <i class="fas fa-calendar-check mr-2"></i> Contact Us
             </a>
             <p class="text-sm text-text-muted mt-3">Our experts are available Monday-Friday, 9AM to 5PM</p>

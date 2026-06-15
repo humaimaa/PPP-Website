@@ -13,11 +13,46 @@ class TenderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $tenders = Tender::latest()->paginate(10);
-        return view('admin.tenders.index', compact('tenders'));
+/**
+ * Display a listing of the resource.
+ */
+public function index(Request $request)
+{
+    $query = Tender::query();
+    
+    // Search by name
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%');
     }
+    
+    // Filter by category
+    if ($request->filled('category')) {
+        $query->where('category', $request->category);
+    }
+    
+    // Filter by status (using effective closing date)
+    if ($request->filled('status')) {
+        $now = now();
+        switch ($request->status) {
+            case 'open':
+                $query->where(function($q) use ($now) {
+                    $q->whereRaw('COALESCE(extended_closing_date, closing_date) > ?', [$now])
+                      ->where('opening_date', '<=', $now);
+                });
+                break;
+            case 'closed':
+                $query->whereRaw('COALESCE(extended_closing_date, closing_date) < ?', [$now]);
+                break;
+            case 'upcoming':
+                $query->where('opening_date', '>', $now);
+                break;
+        }
+    }
+    
+    $tenders = $query->latest()->paginate(10);
+    
+    return view('admin.tenders.index', compact('tenders'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -279,4 +314,45 @@ class TenderController extends Controller
         return redirect()->route('admin.tenders.index')
             ->with('success', count($request->ids) . ' tender(s) deleted successfully.');
     }
+
+
+
+    /**
+ * Extend the closing date of a tender
+ */
+public function extend(Request $request, Tender $tender)
+{
+    $request->validate([
+        'new_closing_date' => 'required|date|after:' . $tender->closing_date->format('Y-m-d'),
+    ]);
+    
+    $tender->update([
+        'extended_closing_date' => $request->new_closing_date
+    ]);
+    
+    return redirect()->route('admin.tenders.index')
+        ->with('success', sprintf(
+            'Closing date extended from %s to %s for tender: %s',
+            $tender->closing_date->format('M d, Y'),
+            $tender->effective_closing_date->format('M d, Y'),
+            $tender->name
+        ));
+}
+
+/**
+ * Remove extension (reset to original closing date)
+ */
+public function removeExtension(Tender $tender)
+{
+    $tender->update([
+        'extended_closing_date' => null
+    ]);
+    
+    return redirect()->route('admin.tenders.index')
+        ->with('success', sprintf(
+            'Extension removed for tender: %s. Closing date reset to %s',
+            $tender->name,
+            $tender->closing_date->format('M d, Y')
+        ));
+}
 }

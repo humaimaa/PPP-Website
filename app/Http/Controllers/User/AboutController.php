@@ -1,17 +1,14 @@
 <?php
 
-// Change this line
-namespace App\Http\Controllers\User;  // Add 'User' to namespace
+namespace App\Http\Controllers\User;
 
-// Keep these
 use App\Http\Controllers\Controller;
-
 use App\Models\Team;
 use App\Models\LeadershipMessage;
 
 class AboutController extends Controller
 {
-        /**
+    /**
      * About page - main overview
      */
     public function about()
@@ -32,11 +29,21 @@ class AboutController extends Controller
      */
     public function message()
     {
-        // Fetch all leadership messages
-        $messages = LeadershipMessage::all();
+        // Define the order based on enum values (excluding Chief Minister)
+        $order = [
+            'Chief Secretary',
+            'Additional Chief Secretary Development',
+            'Secretary P&D',
+            'Chief PPP'
+        ];
+        
+        // Fetch all leadership messages EXCEPT Chief Minister and order by the custom order
+        $messages = LeadershipMessage::where('designation', '!=', 'Chief Minister')
+            ->orderByRaw("FIELD(designation, '" . implode("','", $order) . "')")
+            ->get();
         
         // Return view with messages data
-        return view('user.about.message', compact('messages'));
+        return view('user.about.messages', compact('messages'));
     }
 
     /**
@@ -50,19 +57,19 @@ class AboutController extends Controller
     /**
      * Team page
      */
-   public function team()
-{
-    // Load team members with their designations, ordered by designation.order
-    $team = \App\Models\Team::with(['designation' => function($query) {
-        $query->orderBy('order', 'asc');
-    }])
-    ->get()
-    ->sortBy(function($member) {
-        return $member->designation->order ?? 999; // Fallback for members without designation
-    });
-    
-    return view('user.about.team', compact('team'));
-}
+    public function team()
+    {
+        // Load team members with their designations, ordered by designation.order
+        $team = Team::with(['designation' => function($query) {
+            $query->orderBy('order', 'asc');
+        }])
+        ->get()
+        ->sortBy(function($member) {
+            return $member->designation->order ?? 999;
+        });
+        
+        return view('user.about.team', compact('team'));
+    }
 
     /**
      * Mission & Vision page

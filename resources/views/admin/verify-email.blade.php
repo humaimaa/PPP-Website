@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email - PPP Department KPK</title>
+    <title>Verify Email - PPP Unit KPK</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -19,12 +19,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>PPP Department KPK</h2>
+            <h2>PPP Unit KPK</h2>
             <p>Email Verification Required</p>
         </div>
         <div class="content">
             <h3>Hello {{ $name }}!</h3>
-            <p>Thank you for registering with PPP Department KPK. Please verify your email address to access your account.</p>
+            <p>Thank you for registering with PPP Unit KPK. Please verify your email address to access your account.</p>
             
             <div style="text-align: center;">
                 <a href="{{ $verificationUrl }}" class="button">Verify Email Address</a>
@@ -46,7 +46,7 @@
             <p style="margin-top: 20px;">If you did not create an account, no further action is required.</p>
         </div>
         <div class="footer">
-            <p>&copy; {{ date('Y') }} PPP Department KPK. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} PPP Unit KPK. All rights reserved.</p>
             <p>This is an automated message, please do not reply.</p>
             <p>If you have any questions, please contact support.</p>
         </div>

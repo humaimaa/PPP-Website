@@ -153,38 +153,89 @@
     cursor: default;
 }
 
-/* Logo scrolling animation - continuous smooth */
+/* Partner logos - GSAP powered continuous smooth scrolling */
 .logo-scroll-container {
     width: 100%;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
 }
 
 .logo-track {
     display: flex;
-    animation: scrollLogos 30s linear infinite;
+    align-items: center;
+    gap: 3rem;
     width: fit-content;
-}
-
-@keyframes scrollLogos {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Pause animation on hover */
-.logo-scroll-container:hover .logo-track {
-    animation-play-state: paused;
+    will-change: transform;
 }
 
 .partner-logo {
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.partner-logo img {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+/* Optional: Add a subtle shadow effect on hover */
+.partner-logo:hover img {
+    filter: drop-shadow(0 4px 12px rgba(179, 147, 57, 0.3));
+    transform: scale(1.05);
 }
 
 /* Sector card styles - no click cursor */
 .sector-card {
     cursor: default;
+}
+
+/* Sector card hover effects */
+.sector-card .absolute.inset-0.bg-gradient-to-t {
+    background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));
+    transition: opacity 0.5s ease;
+}
+
+.sector-card:hover .absolute.inset-0.bg-gradient-to-t {
+    background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));
+}
+
+.sector-card:hover img {
+    filter: brightness(0.7);
+}
+
+.sector-card:hover h3 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sector-card:hover p {
+    color: #d1d5db !important;
+}
+
+/* Responsive adjustments for partner logos */
+@media (max-width: 768px) {
+    .logo-track {
+        gap: 2rem;
+    }
+    
+    .partner-logo img {
+        max-height: 48px;
+    }
+}
+
+@media (max-width: 640px) {
+    .logo-track {
+        gap: 1.5rem;
+    }
+    
+    .partner-logo img {
+        max-height: 40px;
+    }
 }

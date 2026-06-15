@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Leadership Message - PPP Department KPK')
+@section('title', 'Edit Leadership Message - PPP Unit KP')
 @section('header-title', 'Edit Leadership Message')
 
 @section('content')
@@ -93,9 +93,10 @@
             <option value="">Select Designation</option>
             <option value="Chief Minister" {{ old('designation', $message->designation) == 'Chief Minister' ? 'selected' : '' }}>Chief Minister</option>
             <option value="Chief Secretary" {{ old('designation', $message->designation) == 'Chief Secretary' ? 'selected' : '' }}>Chief Secretary</option>
+            <option value="Additional Chief Secretary Development" {{ old('designation', $message->designation) == 'Additional Chief Secretary Development' ? 'selected' : '' }}>Additional Chief Secretary Development</option>
             <option value="Secretary P&D" {{ old('designation', $message->designation) == 'Secretary P&D' ? 'selected' : '' }}>Secretary P&D</option>
             <option value="Chief PPP" {{ old('designation', $message->designation) == 'Chief PPP' ? 'selected' : '' }}>Chief PPP</option>
-            <option value="Assistant Chief PPP" {{ old('designation', $message->designation) == 'Assistant Chief PPP' ? 'selected' : '' }}>Assistant Chief PPP</option>
+          
         </select>
         <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
             <i class="fas fa-chevron-down"></i>
@@ -122,7 +123,7 @@
                         rows="6" 
                         required
                         class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('message') border-red-500 @enderror"
-                        placeholder="Write the leadership message here... (e.g., It is my privilege to lead the PPP Department...)"
+                        placeholder="Write the leadership message here... (e.g., It is my privilege to lead the PPP Unit...)"
                     >{{ old('message', $message->message) }}</textarea>
                 </div>
                 <p class="mt-1 text-xs text-gray-500">Write a meaningful message that will inspire and connect with the audience</p>

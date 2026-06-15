@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Team Members - PPP Department KPK')
+@section('title', 'Team Members - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -63,7 +63,7 @@
                         <input type="text" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="Search by name or email..." 
+                               placeholder="Search by name, email or phone..." 
                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
                         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search"></i>
@@ -97,7 +97,7 @@
                             <th class="px-6 py-3 text-left">Name</th>
                             <th class="px-6 py-3 text-left">Designation</th>
                             <th class="px-6 py-3 text-left">Email</th>
-                            <th class="px-6 py-3 text-left">Experience</th>
+                            <th class="px-6 py-3 text-left">Phone</th>
                             <th class="px-6 py-3 text-left">Created</th>
                             
                             {{-- Actions column - Only show if user has any action permissions --}}
@@ -151,10 +151,8 @@
                                 {{ $member->email }}
                             </td>
                             
-                            <td class="px-6 py-4">
-                                <span class="text-gray-600 line-clamp-2 max-w-xs">
-                                    {{ Str::limit($member->experience, 60) }}
-                                </span>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-600">
+                                {{ $member->phone ?? 'N/A' }}
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-xs">
@@ -185,7 +183,8 @@
                                         
                                         {{-- Delete Button --}}
                                         @can('team.delete')
-                                            <button onclick="confirmDelete({{ $member->id }}, '{{ addslashes($member->name) }}')" 
+                                            <button type="button" 
+                                                    onclick="confirmDelete({{ $member->id }}, '{{ addslashes($member->name) }}')" 
                                                     class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
                                                     title="Delete Member">
                                                 <i class="fas fa-trash"></i>
@@ -211,7 +210,7 @@
                                         </a>
                                     @else
                                         @can('team.create')
-                                            <a href="{{ route('admin.team.add') }}" class="text-emerald-600 hover:underline text-sm">
+                                            <a href="{{ route('admin.team.create') }}" class="text-emerald-600 hover:underline text-sm">
                                                 Add your first team member →
                                             </a>
                                         @endcan

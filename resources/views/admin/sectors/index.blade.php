@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Sectors - PPP Department KPK')
+@section('title', 'Sectors - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -11,7 +11,6 @@
             <p class="text-sm text-gray-500 mt-1">Create and manage investment sectors</p>
         </div>
         <div class="flex gap-3">
-            {{-- Bulk Delete Button - Only show if user has delete permission --}}
             @can('sectors.delete')
                 <button type="button" id="bulkDeleteBtn" 
                         class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -21,7 +20,6 @@
                 </button>
             @endcan
             
-            {{-- Add Sector Button --}}
             @can('sectors.create')
                 <a href="{{ route('admin.sectors.add') }}"
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
@@ -84,7 +82,6 @@
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                         <tr>
-                            {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('sectors.delete')
                                 <th class="px-6 py-3 text-left w-10">
                                     <input type="checkbox" 
@@ -98,7 +95,6 @@
                             <th class="px-6 py-3 text-left">Tagline</th>
                             <th class="px-6 py-3 text-left">Created At</th>
                             
-                            {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('sectors.view') || auth()->user()->can('sectors.edit') || auth()->user()->can('sectors.delete'))
                                 <th class="px-6 py-3 text-right">Actions</th>
                             @endif
@@ -107,7 +103,6 @@
                     <tbody class="divide-y divide-gray-100 text-gray-700">
                         @forelse($sectors as $sector)
                         <tr class="hover:bg-gray-50 transition" data-sector-id="{{ $sector->id }}">
-                            {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('sectors.delete')
                                 <td class="px-6 py-4">
                                     <input type="checkbox" 
@@ -151,11 +146,9 @@
                                 {{ $sector->created_at->format('M d, Y') }}
                             </td>
                             
-                            {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('sectors.view') || auth()->user()->can('sectors.edit') || auth()->user()->can('sectors.delete'))
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center justify-end gap-2">
-                                        {{-- View Button --}}
                                         @can('sectors.view')
                                             <a href="{{ route('admin.sectors.show', $sector) }}" 
                                                class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
@@ -164,7 +157,6 @@
                                             </a>
                                         @endcan
                                         
-                                        {{-- Edit Button --}}
                                         @can('sectors.edit')
                                             <a href="{{ route('admin.sectors.edit', $sector) }}" 
                                                class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
@@ -173,9 +165,10 @@
                                             </a>
                                         @endcan
                                         
-                                        {{-- Delete Button --}}
                                         @can('sectors.delete')
-                                            <button onclick="confirmDelete({{ $sector->id }}, '{{ addslashes($sector->name) }}')" 
+                                            <button type="button"
+                                                    onclick="confirmDelete({{ $sector->id }}, '{{ addslashes($sector->name) }}', this)"
+                                                    data-delete-url="{{ route('admin.sectors.destroy', $sector->id) }}"
                                                     class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
                                                     title="Delete Sector">
                                                 <i class="fas fa-trash"></i>
@@ -188,9 +181,9 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 6; // Base columns (ID, Image, Sector Name, Tagline, Created At)
-                                    if(auth()->user()->can('sectors.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('sectors.view') || auth()->user()->can('sectors.edit') || auth()->user()->can('sectors.delete')) $colspan++; // Add actions column
+                                    $colspan = 6;
+                                    if(auth()->user()->can('sectors.delete')) $colspan++;
+                                    if(auth()->user()->can('sectors.view') || auth()->user()->can('sectors.edit') || auth()->user()->can('sectors.delete')) $colspan++;
                                 @endphp
                                 <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                     <i class="fas fa-chart-line text-4xl mb-2"></i>
@@ -254,7 +247,7 @@
     </div>
 </div>
 
-{{-- Bulk Delete Confirmation Modal - Only show if user has delete permission --}}
+{{-- Bulk Delete Confirmation Modal --}}
 @can('sectors.delete')
 <div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -287,139 +280,129 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bulk delete functionality - Only initialize if user has delete permission
-        @can('sectors.delete')
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            const sectorCheckboxes = document.querySelectorAll('.sector-checkbox');
-            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-            const selectedCountSpan = document.getElementById('selectedCount');
-            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
-            const bulkDeleteModal = document.getElementById('bulkDeleteModal');
-            const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
-            const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
-            const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
-            
-            // Update selected count and show/hide bulk delete button
-            function updateSelectedCount() {
-                const checkedBoxes = document.querySelectorAll('.sector-checkbox:checked');
-                const count = checkedBoxes.length;
-                if (selectedCountSpan) {
-                    selectedCountSpan.textContent = count;
-                }
-                
-                if (bulkDeleteBtn) {
-                    if (count > 0) {
-                        bulkDeleteBtn.style.display = 'inline-flex';
-                    } else {
-                        bulkDeleteBtn.style.display = 'none';
-                    }
-                }
+        // ---------- Single Delete Modal ----------
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteSectorNameSpan = document.getElementById('deleteSectorName');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        window.confirmDelete = function(sectorId, sectorName, btnElement) {
+            const deleteUrl = btnElement.getAttribute('data-delete-url');
+            if (!deleteUrl) {
+                console.error('Delete URL not found for sector:', sectorId);
+                return;
             }
-            
-            // Select/Deselect all checkboxes
-            if (selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', function() {
-                    sectorCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
-                    });
-                    updateSelectedCount();
-                });
+            deleteSectorNameSpan.textContent = sectorName;
+            deleteForm.action = deleteUrl;
+            deleteModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+
+        function closeDeleteModal() {
+            if (deleteModal) {
+                deleteModal.classList.add('hidden');
+                document.body.style.overflow = '';
             }
-            
-            // Individual checkbox change
-            sectorCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    updateSelectedCount();
-                    
-                    // Update select all checkbox state
-                    if (selectAllCheckbox) {
-                        const allChecked = sectorCheckboxes.length === document.querySelectorAll('.sector-checkbox:checked').length;
-                        selectAllCheckbox.checked = allChecked;
-                    }
-                });
+        }
+
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        }
+
+        if (deleteModal) {
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) closeDeleteModal();
             });
-            
-            // Bulk delete button click - show modal
-            if (bulkDeleteBtn) {
-                bulkDeleteBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const checkedBoxes = document.querySelectorAll('.sector-checkbox:checked');
-                    const count = checkedBoxes.length;
-                    
-                    if (count === 0) {
-                        alert('Please select at least one sector to delete.');
-                        return;
-                    }
-                    
-                    bulkDeleteCountSpan.textContent = count;
-                    bulkDeleteModal.classList.remove('hidden');
-                });
-            }
-            
-            // Confirm bulk delete
-            if (confirmBulkDeleteBtn) {
-                confirmBulkDeleteBtn.addEventListener('click', function() {
-                    bulkDeleteModal.classList.add('hidden');
-                    bulkDeleteForm.submit();
-                });
-            }
-            
-            // Cancel bulk delete
-            if (cancelBulkDeleteBtn) {
-                cancelBulkDeleteBtn.addEventListener('click', function() {
-                    bulkDeleteModal.classList.add('hidden');
-                });
-            }
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target === bulkDeleteModal) {
-                    bulkDeleteModal.classList.add('hidden');
-                }
-                if (e.target === document.getElementById('deleteModal')) {
-                    document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        // ---------- Bulk Delete Functionality ----------
+        @can('sectors.delete')
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const sectorCheckboxes = document.querySelectorAll('.sector-checkbox');
+        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+        const selectedCountSpan = document.getElementById('selectedCount');
+        const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+        const bulkDeleteModal = document.getElementById('bulkDeleteModal');
+        const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+        const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
+        const confirmBulkDeleteBtn = document.getElementById('confirmBulkDeleteBtn');
+
+        function updateSelectedCount() {
+            const checkedBoxes = document.querySelectorAll('.sector-checkbox:checked');
+            const count = checkedBoxes.length;
+            if (selectedCountSpan) selectedCountSpan.textContent = count;
+            if (bulkDeleteBtn) bulkDeleteBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+        }
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function() {
+                sectorCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+                updateSelectedCount();
+            });
+        }
+
+        sectorCheckboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                updateSelectedCount();
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = sectorCheckboxes.length === document.querySelectorAll('.sector-checkbox:checked').length;
                 }
             });
-            
-            // Initialize count on page load
-            updateSelectedCount();
+        });
+
+        if (bulkDeleteBtn) {
+            bulkDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const checkedCount = document.querySelectorAll('.sector-checkbox:checked').length;
+                if (checkedCount === 0) {
+                    alert('Please select at least one sector to delete.');
+                    return;
+                }
+                if (bulkDeleteCountSpan) bulkDeleteCountSpan.textContent = checkedCount;
+                if (bulkDeleteModal) bulkDeleteModal.classList.remove('hidden');
+            });
+        }
+
+        function closeBulkModal() {
+            if (bulkDeleteModal) bulkDeleteModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        if (confirmBulkDeleteBtn) {
+            confirmBulkDeleteBtn.addEventListener('click', function() {
+                closeBulkModal();
+                bulkDeleteForm.submit();
+            });
+        }
+
+        if (cancelBulkDeleteBtn) {
+            cancelBulkDeleteBtn.addEventListener('click', closeBulkModal);
+        }
+
+        if (bulkDeleteModal) {
+            bulkDeleteModal.addEventListener('click', function(e) {
+                if (e.target === bulkDeleteModal) closeBulkModal();
+            });
+        }
+
+        updateSelectedCount();
         @endcan
-        
-        // Delete confirmation function - Only define if user has delete permission
-        @can('sectors.delete')
-            window.confirmDelete = function(sectorId, sectorName) {
-                const modal = document.getElementById('deleteModal');
-                const deleteSectorNameSpan = document.getElementById('deleteSectorName');
-                const deleteForm = document.getElementById('deleteForm');
-                
-                deleteSectorNameSpan.textContent = sectorName;
-                deleteForm.action = `/admin/sectors/${sectorId}`;
-                
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                
-                // Close modal on cancel
-                document.getElementById('cancelDeleteBtn').onclick = function() {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                };
-                
-                // Close modal when clicking outside
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        modal.classList.add('hidden');
-                        document.body.style.overflow = '';
-                    }
-                };
-            };
-        @endcan
-        
-        // Auto-hide messages after 5 seconds
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+                @can('sectors.delete')
+                    if (typeof closeBulkModal === 'function') closeBulkModal();
+                @endcan
+            }
+        });
+
+        // Auto-hide flash messages after 5 seconds
         setTimeout(function() {
-            const successMsg = document.querySelector('.bg-green-50');
-            const errorMsg = document.querySelector('.bg-red-50');
-            if (successMsg) successMsg.style.display = 'none';
-            if (errorMsg) errorMsg.style.display = 'none';
+            document.querySelectorAll('.bg-green-50, .bg-red-50').forEach(el => {
+                el.style.display = 'none';
+            });
         }, 5000);
     });
 </script>

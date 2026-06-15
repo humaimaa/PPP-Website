@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Event Details - PPP Department KPK')
+@section('title', 'Event Details - PPP Unit KP')
 @section('header-title', 'Event Details')
 
 @section('content')
@@ -158,19 +158,8 @@
             </div>
         </div>
 
-        {{-- Form Actions --}}
-        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <a href="{{ route('admin.events.index') }}" 
-               class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                <i class="fas fa-times mr-2"></i>
-                Close
-            </a>
-            <a href="{{ route('admin.events.edit', $event) }}" 
-               class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
-                <i class="fas fa-edit mr-2"></i>
-                Edit Event
-            </a>
-        </div>
+        
+       
     </div>
 </div>
 

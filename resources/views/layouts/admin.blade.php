@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
-    <title>@yield('title', 'PPP Department KPK - Admin')</title>
+    <title>@yield('title', 'PPP Unit KP - Admin')</title>
     @vite(['resources/css/admin.css', 'resources/js/admin.js'])
     @stack('styles')
 </head>

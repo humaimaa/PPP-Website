@@ -22,9 +22,7 @@ class Project extends Model
         'category',
     ];
     
-    protected $casts = [
-        'cost' => 'decimal:2',
-    ];
+
     
     public function ongoingDetail()
     {

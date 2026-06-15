@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Project - PPP Department KPK')
+@section('title', 'Edit Project - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -88,8 +88,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('sector') border-red-500 @enderror">
                                 <option value="">Select Sector</option>
                                 @foreach($sectors as $sector)
-                                <option value="{{ $sector->name }}" {{ old('sector', $project->sector) == $sector->name
-                                    ? 'selected' : '' }}>
+                                <option value="{{ $sector->name }}" {{ old('sector', $project->sector) == $sector->name ? 'selected' : '' }}>
                                     {{ $sector->name }}
                                 </option>
                                 @endforeach
@@ -120,7 +119,7 @@
                         @enderror
                     </div>
 
-                    {{-- Location --}}
+                    {{-- Location (NOT REQUIRED) --}}
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                             Location
@@ -132,8 +131,9 @@
                             <input type="text" id="location" name="location"
                                 value="{{ old('location', $project->location) }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('location') border-red-500 @enderror"
-                                placeholder="Enter project location">
+                                placeholder="Enter project location (optional)">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
                         @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -142,7 +142,7 @@
                     {{-- Division --}}
                     <div>
                         <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
-                            Division
+                            Division <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -152,8 +152,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('division') border-red-500 @enderror">
                                 <option value="">Select Division</option>
                                 @foreach($divisions as $division)
-                                <option value="{{ $division }}" {{ old('division', $project->division) == $division ?
-                                    'selected' : '' }}>
+                                <option value="{{ $division }}" {{ old('division', $project->division) == $division ? 'selected' : '' }}>
                                     {{ $division }}
                                 </option>
                                 @endforeach
@@ -173,7 +172,7 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-dollar-sign"></i>
                             </span>
-                            <input type="number" id="cost" name="cost" step="0.01" min="0"
+                            <input type="text" id="cost" name="cost"
                                 value="{{ old('cost', $project->cost) }}" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('cost') border-red-500 @enderror"
                                 placeholder="0.00">
@@ -183,7 +182,7 @@
                         @enderror
                     </div>
 
-                    {{-- Status --}}
+                    {{-- Status (NOT REQUIRED) --}}
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Status
@@ -194,8 +193,9 @@
                             </span>
                             <input type="text" id="status" name="status" value="{{ old('status', $project->status) }}"
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
-                                placeholder="e.g., Planning, Implementation, Completed">
+                                placeholder="e.g., Planning, Implementation, Completed (optional)">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
                         @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -214,12 +214,9 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
                                 onchange="toggleProjectDetails()">
                                 <option value="">Select Category</option>
-                                <option value="Pipeline" {{ old('category', $project->category) == 'Pipeline' ?
-                                    'selected' : '' }}>Pipeline</option>
-                                <option value="Ongoing" {{ old('category', $project->category) == 'Ongoing' ? 'selected'
-                                    : '' }}>Ongoing</option>
-                                <option value="Completed" {{ old('category', $project->category) == 'Completed' ?
-                                    'selected' : '' }}>Completed</option>
+                                <option value="Pipeline" {{ old('category', $project->category) == 'Pipeline' ? 'selected' : '' }}>Pipeline</option>
+                                <option value="Ongoing" {{ old('category', $project->category) == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                <option value="Completed" {{ old('category', $project->category) == 'Completed' ? 'selected' : '' }}>Completed</option>
                             </select>
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
@@ -249,8 +246,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('image') border-red-500 @enderror file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
                                 onchange="previewImage(event)">
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image. Allowed formats: JPEG,
-                            PNG, JPG, GIF. Max size: 5MB</p>
+                        <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image. Allowed formats: JPEG, PNG, JPG, GIF. Max size: 5MB</p>
                         @error('image')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -515,56 +511,45 @@
         ongoingSection.style.display = 'none';
         completedSection.style.display = 'none';
         
-        // Disable all conditional fields
-        disableConditionalFields(true);
+        // Remove required attributes from all conditional fields first
+        removeRequiredAttributes();
         
         // Show and enable appropriate section
         if (category === 'Pipeline') {
             pipelineSection.style.display = 'block';
-            disableConditionalFields(true);
         } else if (category === 'Ongoing') {
             ongoingSection.style.display = 'block';
-            disableConditionalFields(false, 'ongoing');
+            addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
         } else if (category === 'Completed') {
             completedSection.style.display = 'block';
-            disableConditionalFields(false, 'completed');
+            addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
         }
     }
     
-    function disableConditionalFields(disable, type = null) {
-        const ongoingFields = ['implementing_modality', 'government_contribution', 'government_return', 'private_party_return'];
-        const completedFields = ['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government'];
+    function removeRequiredAttributes() {
+        const allConditionalFields = [
+            'implementing_modality', 'government_contribution', 'government_return', 
+            'private_party_return', 'scope', 'cost_financing_mix', 
+            'project_timeline', 'expected_financial_benefits_to_government'
+        ];
         
-        if (disable) {
-            // Disable all conditional fields
-            [...ongoingFields, ...completedFields].forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.disabled = true;
-                    field.required = false;
-                }
-            });
-        } else {
-            // Enable only relevant fields
-            const fieldsToEnable = type === 'ongoing' ? ongoingFields : completedFields;
-            const fieldsToDisable = type === 'ongoing' ? completedFields : ongoingFields;
-            
-            fieldsToEnable.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.disabled = false;
-                    field.required = true;
-                }
-            });
-            
-            fieldsToDisable.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.disabled = true;
-                    field.required = false;
-                }
-            });
-        }
+        allConditionalFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.removeAttribute('required');
+                field.disabled = false;
+            }
+        });
+    }
+    
+    function addRequiredAttributes(fieldIds) {
+        fieldIds.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.setAttribute('required', 'required');
+                field.disabled = false;
+            }
+        });
     }
     
     // Initialize on page load

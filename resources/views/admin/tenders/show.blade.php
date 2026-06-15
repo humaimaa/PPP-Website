@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', $tender->name . ' - Tender Details - PPP Department KPK')
+@section('title', $tender->name . ' - Tender Details - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -19,7 +19,7 @@
         <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
             <div class="flex justify-between items-start">
                 <div>
-                    <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-3 mb-2 flex-wrap">
                         <i class="fas fa-file-alt text-emerald-600 text-xl"></i>
                         <h3 class="text-xl font-semibold text-gray-800">{{ $tender->name }}</h3>
                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -31,29 +31,19 @@
                             <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
                             {{ $tender->status }}
                         </span>
+                        @if($tender->is_extended)
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
+                                <i class="fas fa-calendar-plus mr-1 text-xs"></i>
+                                Extended
+                            </span>
+                        @endif
                     </div>
                     <p class="text-sm text-gray-500 mt-1">
                         <i class="fas fa-calendar-alt mr-1"></i>
-                        Created: {{ $tender->created_at->format('F d, Y') }} at {{ $tender->created_at->format('h:i A') }}
+                        Created: {{ $tender->created_at->format('F d, Y') }}  
                     </p>
                 </div>
-                <div class="flex gap-2">
-                    @can('tenders.edit')
-                        <a href="{{ route('admin.tenders.edit', $tender) }}" 
-                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-edit"></i>
-                            Edit Tender
-                        </a>
-                    @endcan
-                    @can('tenders.delete')
-                        <button type="button"
-                                onclick="confirmDelete({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
-                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-trash"></i>
-                            Delete Tender
-                        </button>
-                    @endcan
-                </div>
+               
             </div>
         </div>
 
@@ -89,30 +79,70 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Closing Date</label>
-                    <p class="text-gray-900">
-                        <i class="fas fa-calendar-times text-red-600 mr-1"></i>
-                        {{ $tender->closing_date ? $tender->closing_date->format('F d, Y') : 'N/A' }}
-                        @if($tender->closing_date)
-                            <span class="text-gray-500 text-sm ml-2">
-                                ({{ $tender->closing_date->format('l') }})
-                            </span>
+                    <div>
+                        @if($tender->is_extended)
+                            <p class="text-gray-500 line-through">
+                                <i class="fas fa-calendar-times text-gray-400 mr-1"></i>
+                                {{ $tender->closing_date ? $tender->closing_date->format('F d, Y') : 'N/A' }}
+                                @if($tender->closing_date)
+                                    <span class="text-gray-400 text-sm ml-2">
+                                        ({{ $tender->closing_date->format('l') }})
+                                    </span>
+                                @endif
+                            </p>
+                            <p class="text-orange-600 font-medium mt-1">
+                                <i class="fas fa-calendar-plus text-orange-600 mr-1"></i>
+                                {{ $tender->effective_closing_date ? $tender->effective_closing_date->format('F d, Y') : 'N/A' }}
+                                @if($tender->effective_closing_date)
+                                    <span class="text-orange-400 text-sm ml-2">
+                                        ({{ $tender->effective_closing_date->format('l') }})
+                                    </span>
+                                @endif
+                                <span class="text-xs text-orange-500 ml-2">
+                                    (Extended)
+                                </span>
+                            </p>
+                        @else
+                            <p class="text-gray-900">
+                                <i class="fas fa-calendar-times text-red-600 mr-1"></i>
+                                {{ $tender->closing_date ? $tender->closing_date->format('F d, Y') : 'N/A' }}
+                                @if($tender->closing_date)
+                                    <span class="text-gray-500 text-sm ml-2">
+                                        ({{ $tender->closing_date->format('l') }})
+                                    </span>
+                                @endif
+                            </p>
                         @endif
-                    </p>
-                    @if($tender->closing_date && $tender->closing_date->isFuture())
-                        <div class="mt-1 text-sm text-emerald-600">
-                            <i class="fas fa-hourglass-half mr-1"></i>
-                            {{ now()->diffInDays($tender->closing_date) }} days remaining
-                        </div>
-                    @elseif($tender->closing_date && $tender->closing_date->isPast())
-                        <div class="mt-1 text-sm text-red-600">
-                            <i class="fas fa-clock mr-1"></i>
-                            Closed
-                        </div>
-                    @endif
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Tender ID / Reference</label>
-                    <p class="text-gray-900 font-mono text-sm">#{{ $tender->id }}</p>
+                        
+                        @if($tender->isOpen())
+                            <div class="mt-2">
+                                @php
+                                    $daysRemaining = $tender->days_remaining;
+                                @endphp
+                                @if($daysRemaining <= 7)
+                                    <div class="text-sm text-red-600 font-semibold">
+                                        <i class="fas fa-hourglass-end mr-1"></i>
+                                        {{ $tender->days_remaining_text }}
+                                    </div>
+                                @else
+                                    <div class="text-sm text-emerald-600">
+                                        <i class="fas fa-hourglass-half mr-1"></i>
+                                        {{ $tender->days_remaining_text }}
+                                    </div>
+                                @endif
+                            </div>
+                        @elseif($tender->isClosed())
+                            <div class="mt-1 text-sm text-red-600">
+                                <i class="fas fa-clock mr-1"></i>
+                                Closed on {{ $tender->effective_closing_date->format('F d, Y') }}
+                            </div>
+                        @elseif($tender->isUpcoming())
+                            <div class="mt-1 text-sm text-yellow-600">
+                                <i class="fas fa-calendar-week mr-1"></i>
+                                Opening on {{ $tender->opening_date->format('F d, Y') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -247,72 +277,45 @@
                 <i class="fas fa-history mr-2 text-emerald-600"></i>
                 Timeline Information
             </h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
                     <p class="text-sm font-semibold text-gray-800">{{ $tender->created_at->format('M d, Y') }}</p>
-                    <p class="text-xs text-gray-500">{{ $tender->created_at->format('h:i A') }}</p>
+                    <p class="text-xs text-gray-400">{{ $tender->created_at->format('h:i A') }}</p>
                 </div>
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
                     <p class="text-sm font-semibold text-gray-800">{{ $tender->updated_at->format('M d, Y') }}</p>
-                    <p class="text-xs text-gray-500">{{ $tender->updated_at->format('h:i A') }}</p>
+                    <p class="text-xs text-gray-400">{{ $tender->updated_at->format('h:i A') }}</p>
                 </div>
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Time Remaining</p>
-                    @if($tender->closing_date && $tender->closing_date->isFuture())
+                    @if($tender->isOpen())
                         <p class="text-sm font-semibold text-emerald-600">
-                            {{ now()->diffInDays($tender->closing_date) }} days
+                            {{ $tender->days_remaining }} days
                         </p>
                         <p class="text-xs text-gray-500">until closing</p>
-                    @elseif($tender->closing_date && $tender->closing_date->isPast())
+                    @elseif($tender->isClosed())
                         <p class="text-sm font-semibold text-red-600">Closed</p>
-                        <p class="text-xs text-gray-500">on {{ $tender->closing_date->format('M d, Y') }}</p>
+                        <p class="text-xs text-gray-500">on {{ $tender->effective_closing_date->format('M d, Y') }}</p>
+                    @elseif($tender->isUpcoming())
+                        <p class="text-sm font-semibold text-yellow-600">Upcoming</p>
+                        <p class="text-xs text-gray-500">opens on {{ $tender->opening_date->format('M d, Y') }}</p>
                     @else
                         <p class="text-sm font-semibold text-gray-600">N/A</p>
                     @endif
                 </div>
+                
             </div>
         </div>
     </div>
 
-    {{-- Actions Card --}}
-    @can('tenders.edit')
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-4">
-            <h4 class="text-md font-semibold text-gray-800">
-                <i class="fas fa-cogs mr-2 text-emerald-600"></i>
-                Quick Actions
-            </h4>
-        </div>
-        <div class="p-6">
-            <div class="flex flex-wrap gap-3">
-                <button type="button"
-                        onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
-                        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                    <i class="fas fa-calendar-plus"></i>
-                    Extend Closing Date
-                </button>
-                
-                @if($tender->closing_date && $tender->closing_date->isFuture())
-                    <button type="button"
-                            onclick="archiveTender({{ $tender->id }})" 
-                            class="inline-flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-archive"></i>
-                        Archive Tender
-                    </button>
-                @else
-                    <button type="button"
-                            onclick="unarchiveTender({{ $tender->id }})" 
-                            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-undo"></i>
-                        Restore from Archive
-                    </button>
-                @endif
-            </div>
-        </div>
+    
+        
+        
+       
     </div>
-    @endcan
+
 </div>
 
 {{-- Delete Confirmation Modal --}}
@@ -359,6 +362,9 @@
                 <p class="text-sm text-gray-600 mb-3">
                     Extend closing date for tender: <strong id="extendTenderName" class="text-emerald-600"></strong>
                 </p>
+                <p class="text-xs text-gray-500 mb-3">
+                    Current closing date: <strong id="currentClosingDate"></strong>
+                </p>
                 <form id="extendForm" method="POST" class="space-y-4">
                     @csrf
                     <div>
@@ -383,14 +389,37 @@
     </div>
 </div>
 
-{{-- Archive Forms --}}
-<form id="archiveForm" method="POST" action="{{ route('admin.tenders.archive', $tender) }}" style="display: none;">
-    @csrf
-</form>
-
-<form id="unarchiveForm" method="POST" action="{{ route('admin.tenders.unarchive', $tender) }}" style="display: none;">
-    @csrf
-</form>
+{{-- Remove Extension Modal --}}
+<div id="removeExtensionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-orange-100">
+                <i class="fas fa-calendar-minus text-orange-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Remove Extension</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to remove the extension for tender "<span id="removeExtendTenderName" class="font-semibold text-gray-700"></span>"?
+                </p>
+                <p class="text-xs text-orange-500 mt-2">This will reset the closing date to the original date.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelRemoveExtendBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <form id="removeExtensionForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-md hover:bg-orange-700 transition">
+                        Remove Extension
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @push('scripts')
 <script>
@@ -421,14 +450,9 @@
     
     function closeDeleteModal() {
         const modal = document.getElementById('deleteModal');
-        const deleteForm = document.getElementById('deleteForm');
-        
         if (modal) {
             modal.classList.add('hidden');
             document.body.style.overflow = '';
-            if (deleteForm) {
-                deleteForm.action = '';
-            }
         }
     }
     
@@ -438,12 +462,21 @@
         const extendTenderNameSpan = document.getElementById('extendTenderName');
         const extendForm = document.getElementById('extendForm');
         const newClosingDateInput = document.getElementById('new_closing_date');
+        const currentClosingDateSpan = document.getElementById('currentClosingDate');
         
         extendTenderNameSpan.textContent = tenderName;
         extendForm.action = `/admin/tenders/${tenderId}/extend`;
         
-        // Set minimum date to current closing date + 1 day
+        // Format current closing date
         if (currentClosingDate) {
+            const date = new Date(currentClosingDate);
+            currentClosingDateSpan.textContent = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Set minimum date to current closing date + 1 day
             const minDate = new Date(currentClosingDate);
             minDate.setDate(minDate.getDate() + 1);
             const year = minDate.getFullYear();
@@ -469,24 +502,45 @@
         }
     }
     
-    // Archive functions
-    window.archiveTender = function(tenderId) {
-        if (confirm('Are you sure you want to archive this tender? Archived tenders will not appear in public listings.')) {
-            document.getElementById('archiveForm').submit();
-        }
+    // Remove extension modal
+    window.confirmRemoveExtension = function(tenderId, tenderName) {
+        const modal = document.getElementById('removeExtensionModal');
+        const removeExtendTenderNameSpan = document.getElementById('removeExtendTenderName');
+        const removeExtensionForm = document.getElementById('removeExtensionForm');
+        
+        removeExtendTenderNameSpan.textContent = tenderName;
+        removeExtensionForm.action = `/admin/tenders/${tenderId}/remove-extension`;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Close modal on cancel
+        document.getElementById('cancelRemoveExtendBtn').onclick = function() {
+            closeRemoveExtensionModal();
+        };
+        
+        // Close modal when clicking outside
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                closeRemoveExtensionModal();
+            }
+        };
     };
     
-    window.unarchiveTender = function(tenderId) {
-        if (confirm('Are you sure you want to restore this tender from archive?')) {
-            document.getElementById('unarchiveForm').submit();
+    function closeRemoveExtensionModal() {
+        const modal = document.getElementById('removeExtensionModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
-    };
+    }
     
-    // Close modal on escape key
+    // Close modals on escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();
             closeExtendModal();
+            closeRemoveExtensionModal();
         }
     });
     
@@ -494,12 +548,16 @@
     window.addEventListener('click', function(e) {
         const deleteModal = document.getElementById('deleteModal');
         const extendModal = document.getElementById('extendModal');
+        const removeExtensionModal = document.getElementById('removeExtensionModal');
         
         if (e.target === deleteModal) {
             closeDeleteModal();
         }
         if (e.target === extendModal) {
             closeExtendModal();
+        }
+        if (e.target === removeExtensionModal) {
+            closeRemoveExtensionModal();
         }
     });
 </script>

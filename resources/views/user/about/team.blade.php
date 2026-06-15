@@ -151,7 +151,7 @@
             <p class="text-text-muted mt-2">Strategic Leadership Team</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 max-w-4xl mx-auto">
             <!-- Chief Card -->
             <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="relative">

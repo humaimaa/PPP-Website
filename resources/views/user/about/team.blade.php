@@ -131,18 +131,19 @@
     $designationName = $designation->title ?? 'Team Members';
     $designationOrder = $designation->order ?? 999;
     $memberCount = $members->count();
+    $loopIndex = $loop->index; // Get the current loop index for strip effect
 
-    // Set background based on designation order
-    // Order 3 (Research Officers) - Light background for the SECTION
-    // Order 4+ (Analysts/Associates) - White background for the SECTION
-    $bgClass = ($designationOrder == 3) ? 'bg-background-light' : 'bg-background-white';
+    // Create strip effect - alternate between gray and white
+    // Even index (0,2,4...) - Gray background (same as Research Officer)
+    // Odd index (1,3,5...) - White background
+    $bgClass = ($loopIndex % 2 == 0) ? 'bg-background-light' : 'bg-background-white';
     
     // Card styling based on designation
     $isOfficerStyle = ($designationOrder == 3);  // Research Officers
     $isAnalystStyle = ($designationOrder >= 4);  // Analysts and above
 @endphp
 
-<section class="py-12 {{ $bgClass }}">
+<section class="py-12 {{ $bgClass }} transition-all duration-300">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black">{{ $designationName }}</h2>
@@ -156,7 +157,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($members as $member)
                 @if($isOfficerStyle)
-                {{-- Research Officer Style Card (Order 3) - Light card background --}}
+                {{-- Research Officer Style Card (Order 3) --}}
                 <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div class="h-56 overflow-hidden">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
@@ -180,7 +181,7 @@
                 </div>
 
                 @elseif($isAnalystStyle)
-                {{-- Analyst/Associate Style Card (Order 4+) - White card background with subtle styling --}}
+                {{-- Analyst/Associate Style Card (Order 4+) --}}
                 <div class="bg-background-white rounded-lg shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                     <div class="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
@@ -203,7 +204,6 @@
     </div>
 </section>
 @endforeach
-
 <!-- Empty state -->
 @if($team->isEmpty())
 <section class="py-20 bg-background-white">

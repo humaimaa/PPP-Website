@@ -47,7 +47,7 @@
     });
 @endphp
 
-<!-- Chief PPP Section - Order 1 -->
+{{-- <!-- Chief PPP Section - Order 1 -->
 @if($chief)
 <section class="py-12 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,7 +139,7 @@
         </div>
     </div>
 </section>
-@endif
+@endif --}}
 
 <!-- If both chief and assistant chief exist, show them in one row -->
 @if($chief && $assistantChief)
@@ -148,10 +148,10 @@
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-bold mb-2 text-text-black">Chief & Assistant Chief PPP</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-muted mt-4">Strategic Leadership Team</p>
+            <p class="text-text-muted mt-2">Strategic Leadership Team</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
             <!-- Chief Card -->
             <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="relative">

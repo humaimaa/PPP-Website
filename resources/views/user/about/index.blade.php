@@ -16,13 +16,19 @@
     <img src="{{ asset('images/project-1.jpg') }}" alt="About Us Banner" class="w-full h-full object-cover">
 </section>
 
+
 <!-- Overview Section -->
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row items-center gap-8">
-            <div class="lg:w-1/2 overflow-hidden">
-                <div class="space-y-6">
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-6">Overview</h2>
+            
+            <div class="lg:w-1/2">
+                <div class="space-y-6 text-justify leading-relaxed">
+                    
+                    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-6">
+                        Overview
+                    </h2>
+
                     <p class="text-lg text-text-muted">
                         The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa serves as the nodal agency for planning, 
                         facilitating, and implementing PPP projects across the province. Established under the Khyber Pakhtunkhwa 
@@ -34,11 +40,13 @@
                     </p>
                 </div>
             </div>
-            <div class="lg:w-1/2 overflow-hidden">
+
+            <div class="lg:w-1/2">
                 <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-100">
                     <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Unit Overview" class="w-full h-full object-cover">
                 </div>
             </div>
+
         </div>
     </div>
 </section>

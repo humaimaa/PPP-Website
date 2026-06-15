@@ -50,7 +50,7 @@ class DownloadController extends Controller
             'title' => 'required|string|max:255',
             'category' => 'required|in:Legal Framework,Prequalified Transaction Advisory,Policies, Regulations and Guidelines,Knowledge Hub',
             'date' => 'required|date|before_or_equal:today',
-            'document_path' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
+            'document_path' => 'required|file|mimes:pdf|max:10240',
         ]);
 
         // Handle file upload

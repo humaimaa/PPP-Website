@@ -49,7 +49,7 @@ class Download extends Model
                 return 'purple';
             case 'Prequalified Transaction Advisory':
                 return 'blue';
-            case 'Policies ,Regulations and Guidelines':
+            case 'Policies, Regulations and Guidelines':
                 return 'green';
             case 'Knowledge Hub':
                 return 'yellow';

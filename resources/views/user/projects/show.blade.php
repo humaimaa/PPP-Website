@@ -5,9 +5,9 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[50vh] md:h-[60vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-4">{{ $project->name ?? 'Project Details' }}</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-text-primary text-md md:text-lg mt-4">Comprehensive information about our PPP initiatives</p>

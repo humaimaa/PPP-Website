@@ -5,9 +5,9 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[50vh] md:h-[60vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26 max-w-4xl">
+        <div class="text-center px-4 pt-30 max-w-4xl">
             
             <!-- Title with word wrap and line clamp for long titles -->
             <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 break-words hyphens-auto">

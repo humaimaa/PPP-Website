@@ -8,10 +8,10 @@
 @section('content')
 
 <!-- Page Header -->
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+        <div class="text-center px-4 pt-30">
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-1">
                 @if(($status ?? 'all') === 'operational')
                 Operational Projects
                 @elseif(($status ?? 'all') === 'ongoing')
@@ -22,8 +22,8 @@
                 All Projects
                 @endif
             </h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
+            <div class="w-20 h-1 bg-white mx-auto "></div>
+            <p class="text-text-primary text-lg mt-2 max-w-2xl mx-auto">
                 @if(($status ?? 'all') === 'operational')
                 Successfully completed and operational PPP projects transforming KP
                 @elseif(($status ?? 'all') === 'ongoing')

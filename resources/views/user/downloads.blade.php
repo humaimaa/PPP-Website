@@ -20,17 +20,7 @@
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
-                @if($section == 'legal-framework')
-                    Access legal frameworks, acts, and regulations governing PPP projects in Khyber Pakhtunkhwa
-                @elseif($section == 'pre-qualified-advisors')
-                    Browse our panel of prequalified transaction advisory firms for PPP projects
-                @elseif($section == 'policies-regulations')
-                    Explore policies, guidelines, and regulatory documents for PPP implementation
-                @else
-                    Access knowledge resources, case studies, and best practices for PPP projects
-                @endif
-            </p>
+            
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">

@@ -12,9 +12,7 @@
                 Our Leadership Team
             </h1>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
-                Meet the dedicated professionals driving public-private partnerships in Khyber Pakhtunkhwa
-            </p>
+            
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Team Banner" class="w-full h-full object-cover">

@@ -10,9 +10,7 @@
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Events & Photo Gallery</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
-                Explore moments from our PPP projects, events, and initiatives across Khyber Pakhtunkhwa
-            </p>
+         
         </div>
     </div>
     <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop" alt="Gallery Banner" class="w-full h-full object-cover">

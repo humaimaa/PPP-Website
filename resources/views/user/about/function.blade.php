@@ -19,11 +19,7 @@
 <!-- Functions Section -->
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Functions</h2>
-            <div class="w-20 h-1 bg-text-muted mx-auto"></div>
-        </div>
-        <div class="space-y-6">
+       
 @php
     $functions = [
         [
@@ -70,14 +66,14 @@
 @endphp
             
             @foreach($functions as $function)
-            <div class="flex items-start group hover:transform hover:translate-x-2 transition-all duration-300">
+            <div class="flex items-start group hover:transform hover:translate-x-2 transition-all duration-300 mb-2">
                 <div class="bg-accent-1 text-text-primary rounded-full p-2 mr-4 mt-1 group-hover:bg-accent-2 transition-colors duration-300">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold text-text-green mb-2">{{ $function['title'] }}</h3>
+                    <h3 class="text-xl font-semibold text-text-green">{{ $function['title'] }}</h3>
                     <p class="text-text-muted">{{ $function['desc'] }}</p>
                 </div>
             </div>

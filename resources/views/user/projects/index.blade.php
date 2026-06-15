@@ -11,7 +11,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-1">
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 @if(($status ?? 'all') === 'operational')
                 Operational Projects
                 @elseif(($status ?? 'all') === 'ongoing')
@@ -23,17 +23,7 @@
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto "></div>
-            <p class="text-text-primary text-lg mt-2 max-w-2xl mx-auto">
-                @if(($status ?? 'all') === 'operational')
-                Successfully completed and operational PPP projects transforming KP
-                @elseif(($status ?? 'all') === 'ongoing')
-                Currently active projects shaping the future of Khyber Pakhtunkhwa
-                @elseif(($status ?? 'all') === 'pipeline')
-                Future initiatives in planning and development phase
-                @else
-                Explore all our public-private partnership initiatives across Khyber Pakhtunkhwa
-                @endif
-            </p>
+           
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">

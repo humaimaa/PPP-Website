@@ -10,9 +10,7 @@
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Updates</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
-                Stay informed about the latest developments in our public-private partnership initiatives
-            </p>
+           
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="News Banner" class="w-full h-full object-cover">

@@ -25,7 +25,7 @@ Route::prefix('about')->name('about.')->group(function () {
     Route::get('/', [AboutController::class, 'about'])->name('index');
     Route::get('/functions', [AboutController::class, 'function'])->name('functions');
     Route::get('/message', [AboutController::class, 'message'])->name('message');
-    Route::get('/mission-vision', [AboutController::class, 'missionVision'])->name('mission-vision');
+    Route::get('/vision-mission', [AboutController::class, 'missionVision'])->name('mission-vision');
     Route::get('/team', [AboutController::class, 'team'])->name('team');
     Route::get('/organogram', [AboutController::class, 'organogram'])->name('organogram');
 });

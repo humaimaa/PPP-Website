@@ -7,7 +7,7 @@
             <!-- Left: Logo with Continuous 3D Rotation -->
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center py-2 group outline-none">
-                    <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KPK Logo" 
+                    <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KP Logo" 
                          class="navbar-logo h-12 md:h-18 w-auto mr-2 md:mr-3 animate-continuous-rotation">
                     <div class="hidden lg:block">
                         <span class="text-text-primary font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>
@@ -39,7 +39,7 @@
                          style="display: none;">
                         <a href="{{ route('about.index') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">About PPP</a>
                         <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('about.mission-vision') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Mission & Vision</a>
+                        <a href="{{ route('about.mission-vision') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Vision & Mission</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('about.functions') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Functions</a>
                         <div class="h-px bg-white/10 mx-4"></div>
@@ -209,7 +209,7 @@
                             x-transition:enter-end="opacity-100 transform translate-y-0"
                             class="mt-2 space-y-1 pl-6">
                             <li><a href="{{ route('about.index') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">About PPP</a></li>
-                            <li><a href="{{ route('about.mission-vision') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Mission & Vision</a></li>
+                            <li><a href="{{ route('about.mission-vision') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Vision & Mission</a></li>
                             <li><a href="{{ route('about.functions') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Functions</a></li>
                             <li><a href="{{ route('about.message') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Messages</a></li>
                             <li><a href="{{ route('about.team') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Team</a></li>

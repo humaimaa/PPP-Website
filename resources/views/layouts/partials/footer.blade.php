@@ -4,7 +4,7 @@
       <!-- Logo and About -->
       <div class="lg:col-span-1 mr-8">
         <div class="flex items-center mb-4">
-          <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KPK Logo" class="h-12 mr-3">
+          <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KP Logo" class="h-12 mr-3">
           <span class="text-2xl font-bold text-text-primary">PPP Unit</span>
         </div>
         <p class="mb-4 text-sm md:text-base text-text-secondary text-justify">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
@@ -77,7 +77,7 @@
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">info@pppdepartmentkpk.gov.pk</span>
+            <span class="text-sm md:text-base text-text-secondary">info@pppunitkpk.gov.pk</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-clock text-accent-1 mr-3 text-sm"></i>

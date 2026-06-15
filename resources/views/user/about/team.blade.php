@@ -167,7 +167,6 @@
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
                         <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
-                        <p class="text-text-muted text-xs mb-3 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
@@ -190,8 +189,7 @@
                     </div>
                     <h3 class="text-base font-bold text-text-black mb-1">{{ $member->name }}</h3>
                     <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
-                    <p class="text-text-muted text-xs mb-2 line-clamp-2">{!! nl2br(e($member->experience)) !!}</p>
-                    @if($member->email)
+                   @if($member->email)
                     <a href="mailto:{{ $member->email }}"
                        class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
                         {{ Str::limit($member->email, 18) }}

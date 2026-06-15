@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Leadership Message Details - PPP Unit KPK')
+@section('title', 'Leadership Message Details - PPP Unit KP')
 @section('header-title', 'Leadership Message Details')
 
 @section('content')

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', $tender->name . ' - Tender Details - PPP Unit KPK')
+@section('title', $tender->name . ' - Tender Details - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">

@@ -57,12 +57,12 @@
         </div>
 
         <div class="flex justify-center">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-sm">
                 <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div class="relative">
                         <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $chief->name }}"
-                             class="w-full h-100 object-cover">
+                             class="w-full h-80 object-cover">
                         <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
                             <p class="text-accent-1">{{ $chief->designation->title ?? 'Chief Executive Officer' }}</p>
@@ -103,12 +103,12 @@
         </div>
 
         <div class="flex justify-center">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-sm">
                 <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div class="relative">
                         <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
                              alt="{{ $assistantChief->name }}"
-                             class="w-full h-100 object-cover">
+                             class="w-full h-80 object-cover">
                         <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                             <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
                             <p class="text-accent-1">{{ $assistantChief->designation->title ?? 'Assistant Chief' }}</p>

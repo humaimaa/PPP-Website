@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Unit KPK - Leadership Messages')
+@section('title', 'PPP Unit KP - Leadership Messages')
 
 @section('content')
 
@@ -57,7 +57,7 @@
                                      alt="{{ $message->name }}" 
                                      class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-background-primary to-background-secondary flex items-center justify-center">
+                                <div class="w-full h-full bg-linear-to-br from-background-primary to-background-secondary flex items-center justify-center">
                                     <div class="text-center">
                                         <svg class="w-20 h-20 text-accent-1 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>

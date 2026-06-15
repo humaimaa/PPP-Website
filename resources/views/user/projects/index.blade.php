@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 
-    ($status ?? 'all') === 'operational' ? 'PPP Department KPK - Operational Projects' :
-    (($status ?? 'all') === 'ongoing' ? 'PPP Department KPK - Ongoing Projects' :
-    (($status ?? 'all') === 'pipeline' ? 'PPP Department KPK - Pipeline Projects' : 'PPP Department KPK - All Projects')))
+    ($status ?? 'all') === 'operational' ? 'PPP Department KP - Operational Projects' :
+    (($status ?? 'all') === 'ongoing' ? 'PPP Department KP - Ongoing Projects' :
+    (($status ?? 'all') === 'pipeline' ? 'PPP Department KP - Pipeline Projects' : 'PPP Department KP - All Projects')))
 
 @section('content')
 
@@ -25,7 +25,7 @@
             <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-text-primary text-lg mt-4 max-w-2xl mx-auto">
                 @if(($status ?? 'all') === 'operational')
-                Successfully completed and operational PPP projects transforming KPK
+                Successfully completed and operational PPP projects transforming KP
                 @elseif(($status ?? 'all') === 'ongoing')
                 Currently active projects shaping the future of Khyber Pakhtunkhwa
                 @elseif(($status ?? 'all') === 'pipeline')

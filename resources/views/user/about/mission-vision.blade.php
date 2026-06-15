@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Unit KPK - Mission & Vision')
+@section('title', 'PPP Unit KP - Mission & Vision')
 
 @section('content')
 
@@ -25,7 +25,7 @@
                     <img src="{{ asset('images/project-6.jpg') }}" alt="Vision and Mission" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-primary/20 flex items-end p-6">
                         <div class="bg-white/90 backdrop-blur-sm p-4 rounded">
-                            <h3 class="text-lg font-semibold text-text-green">Building a Better KPK Together</h3>
+                            <h3 class="text-lg font-semibold text-text-green">Building a Better KP Together</h3>
                         </div>
                     </div>
                 </div>

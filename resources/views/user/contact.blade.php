@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Unit KPK - Contact Us')
+@section('title', 'PPP Unit KP - Contact Us')
 
 @section('content')
 <!-- Page Header -->

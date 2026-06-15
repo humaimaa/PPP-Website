@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Unit KPK - About Us')
+@section('title', 'PPP Unit KP - About Us')
 
 @section('content')
 
@@ -30,7 +30,7 @@
                     </p>
                     <p class="text-lg text-text-muted">
                         Our department works across various sectors including infrastructure, health, education, transportation, 
-                        and urban development, ensuring sustainable growth and improved public services for the citizens of KPK.
+                        and urban development, ensuring sustainable growth and improved public services for the citizens of KP.
                     </p>
                 </div>
             </div>

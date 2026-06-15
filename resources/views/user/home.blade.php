@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Unit KPK - Home')
+@section('title', 'PPP Unit KP - Home')
 
 @section('content')
 <!-- Hero Video Section -->
@@ -41,7 +41,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="py-10 px-12 md:px-12 flex justify-center items-center w-full bg-background-gray/20">
             <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
-                <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Unit KPK Headquarters"
+                <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Unit KP Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
@@ -55,10 +55,10 @@
         <div class="order-first md:order-last py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
             <div class="w-full about-content">
                 <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
-                <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KPK</h2>
+                <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
                 <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
                     The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa is a pioneering initiative by
-                    the Government of KPK to foster collaboration between the public and private sectors for sustainable
+                    the Government of KP to foster collaboration between the public and private sectors for sustainable
                     development.
                 </p>
                 <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
@@ -83,7 +83,7 @@
                         <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        <span class="text-sm md:text-base">Facilitating infrastructure development across KPK</span>
+                        <span class="text-sm md:text-base">Facilitating infrastructure development across KP</span>
                     </li>
                 </ul>
                 <button class="btn-position-aware relative inline-block font-medium text-sm uppercase tracking-wider py-3 px-8 overflow-hidden z-10 border-2 border-accent-1 text-accent-1 rounded-lg hover:text-text-primary transition-colors duration-400">

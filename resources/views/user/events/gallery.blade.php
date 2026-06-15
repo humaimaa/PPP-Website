@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $event->title . ' - Photo Gallery - PPP Unit KPK')
+@section('title', $event->title . ' - Photo Gallery - PPP Unit KP')
 
 @section('content')
 

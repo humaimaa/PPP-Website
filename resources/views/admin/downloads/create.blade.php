@@ -75,32 +75,33 @@
                 </div>
 
                 {{-- Document Category --}}
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                        Document Category <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fas fa-folder"></i>
-                        </span>
-                        <select 
-                            id="category" 
-                            name="category" 
-                            required
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
-                        >
-                            <option value="">Select Category</option>
-                            <option value="Legal Framework" {{ old('category') == 'Legal Framework' ? 'selected' : '' }}>Legal Framework</option>
-                            <option value="Prequalified Transaction Advisory" {{ old('category') == 'Prequalified Transaction Advisory' ? 'selected' : '' }}>Prequalified Transaction Advisory</option>
-                            <option value="Policies, Regulations and Guidelines" {{ old('category') == 'Policies, Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
-                            <option value="Knowledge Hub" {{ old('category') == 'Knowledge Hub' ? 'selected' : '' }}>Knowledge Hub</option>
-                        </select>
-                    </div>
-                    <p class="mt-1 text-xs text-gray-500">Select the category for this document</p>
-                    @error('category')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+{{-- Document Category --}}
+<div>
+    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+        Document Category <span class="text-red-500">*</span>
+    </label>
+    <div class="relative">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="fas fa-folder"></i>
+        </span>
+        <select 
+            id="category" 
+            name="category" 
+            required
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
+        >
+            <option value="">Select Category</option>
+            <option value="Legal Framework" {{ old('category') == 'Legal Framework' ? 'selected' : '' }}>Legal Framework</option>
+            <option value="Prequalified Transaction Advisory" {{ old('category') == 'Prequalified Transaction Advisory' ? 'selected' : '' }}>Prequalified Transaction Advisory</option>
+            <option value="Policies, Regulations and Guidelines" {{ old('category') == 'Policies, Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
+            <option value="Knowledge Hub" {{ old('category') == 'Knowledge Hub' ? 'selected' : '' }}>Knowledge Hub</option>
+        </select>
+    </div>
+    <p class="mt-1 text-xs text-gray-500">Select the category for this document</p>
+    @error('category')
+        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
+</div>
 
                 {{-- Document Date --}}
                 <div>

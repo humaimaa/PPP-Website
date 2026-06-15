@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Download;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DownloadController extends Controller
 {
@@ -46,13 +47,33 @@ class DownloadController extends Controller
      */
     public function store(Request $request)
     {
+        // Define exact categories that match your database ENUM
+        $exactCategories = [
+            'Legal Framework',
+            'Prequalified Transaction Advisory',
+            'Policies, Regulations and Guidelines',
+            'Knowledge Hub'
+        ];
+        
+        // Get and clean the category value
+        $category = trim($request->category);
+        
+     
+        
+        // Validate the request
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|in:Legal Framework,Prequalified Transaction Advisory,Policies, Regulations and Guidelines,Knowledge Hub',
             'date' => 'required|date|before_or_equal:today',
             'document_path' => 'required|file|mimes:pdf|max:10240',
         ]);
-
+        
+        // Manually validate category
+        if (!in_array($category, $exactCategories)) {
+            return back()
+                ->withErrors(['category' => 'The selected category is invalid. Please select a valid category from the list.'])
+                ->withInput();
+        }
+        
         // Handle file upload
         $documentPath = null;
         if ($request->hasFile('document_path')) {
@@ -64,7 +85,7 @@ class DownloadController extends Controller
         // Create download record
         Download::create([
             'title' => $validated['title'],
-            'category' => $validated['category'],
+            'category' => $category,
             'date' => $validated['date'],
             'document_path' => $documentPath,
         ]);
@@ -94,12 +115,33 @@ class DownloadController extends Controller
      */
     public function update(Request $request, Download $download)
     {
+        // Define exact categories that match your database ENUM
+        $exactCategories = [
+            'Legal Framework',
+            'Prequalified Transaction Advisory',
+            'Policies, Regulations and Guidelines',
+            'Knowledge Hub'
+        ];
+        
+        // Get and clean the category value
+        $category = trim($request->category);
+        
+        // Validate the request
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|in:Legal Framework,Prequalified Transaction Advisory,Policies, Regulations and Guidelines,Knowledge Hub',
             'date' => 'required|date|before_or_equal:today',
             'document_path' => 'nullable|file|mimes:pdf|max:10240',
         ]);
+        
+        // Manually validate category
+        if (!in_array($category, $exactCategories)) {
+            return back()
+                ->withErrors(['category' => 'The selected category is invalid. Please select a valid category from the list.'])
+                ->withInput();
+        }
+        
+        // Add category to validated data
+        $validated['category'] = $category;
 
         // Handle file upload if new file is provided
         if ($request->hasFile('document_path')) {

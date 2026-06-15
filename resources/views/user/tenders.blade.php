@@ -29,14 +29,12 @@
             <a href="{{ route('tenders', ['section' => $section, 'status' => 'active']) }}" 
                class="px-6 py-3 rounded-lg font-semibold transition-all duration-300 
                {{ $status == 'active' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
-                <i class="fas fa-play-circle mr-2"></i>
-                Active Tenders
+                <i class="fas fa-play-circle mr-2"></i>Active Tenders
             </a>
             <a href="{{ route('tenders', ['section' => $section, 'status' => 'archived']) }}" 
                class="px-6 py-3 rounded-lg font-semibold transition-all duration-300 
                {{ $status == 'archived' ? 'bg-primary text-white shadow-lg' : 'bg-white text-text-black hover:bg-gray-100 border border-gray-300' }}">
-                <i class="fas fa-archive mr-2"></i>
-                Archived Tenders
+                <i class="fas fa-archive mr-2"></i>Archived Tenders
             </a>
         </div>
     </div>
@@ -45,7 +43,8 @@
 <!-- ==================== TENDERS TABLE SECTION ==================== -->
 <section class="py-10 bg-background-light/90">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        
+
+        {{-- Status banner --}}
         @if($status == 'active')
             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
                 <div class="flex items-center">
@@ -68,185 +67,202 @@
             </div>
         @endif
 
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        {{-- ===== TABLE ===== --}}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+
+            {{-- Table Header --}}
+            <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-primary text-white text-xs font-semibold uppercase tracking-wider">
+                <div class="col-span-1">#</div>
+                <div class="col-span-6">Tender Name</div>
+                <div class="col-span-2">Opening Date</div>
+                <div class="col-span-2">Closing Date</div>
+                <div class="col-span-1 text-center">Docs</div>
+            </div>
+
+            {{-- Table Rows --}}
             @forelse($tenders as $index => $tender)
             @php
-                $today = now()->startOfDay();
-                $closingDate = $tender->closing_date instanceof \Carbon\Carbon
-                    ? $tender->closing_date->copy()->startOfDay()
-                    : \Carbon\Carbon::parse($tender->closing_date)->startOfDay();
+                $today        = now()->startOfDay();
+                $closingDate  = $tender->closing_date instanceof \Carbon\Carbon
+                                    ? $tender->closing_date->copy()->startOfDay()
+                                    : \Carbon\Carbon::parse($tender->closing_date)->startOfDay();
 
-                $isExtended = !empty($tender->extended_closing_date);
+                $isExtended   = !empty($tender->extended_closing_date);
                 $extendedDate = null;
                 $deadlineDate = $closingDate;
 
                 if ($isExtended) {
                     $extendedDate = $tender->extended_closing_date instanceof \Carbon\Carbon
-                        ? $tender->extended_closing_date->copy()->startOfDay()
-                        : \Carbon\Carbon::parse($tender->extended_closing_date)->startOfDay();
+                                       ? $tender->extended_closing_date->copy()->startOfDay()
+                                       : \Carbon\Carbon::parse($tender->extended_closing_date)->startOfDay();
                     $deadlineDate = $extendedDate;
                 }
 
-                $isActive = $deadlineDate->gte($today);
-                $daysLeft = $isActive ? (int) $today->diffInDays($deadlineDate) : 0;
+                $isActive      = $deadlineDate->gte($today);
+                $daysLeft      = $isActive ? (int) $today->diffInDays($deadlineDate) : 0;
                 $isClosingSoon = $isActive && $daysLeft <= 15 && $daysLeft > 0;
+
+                $hasAdditionalDocs = $tender->additionalDocs && $tender->additionalDocs->count() > 0;
+                $rowBg = $index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
             @endphp
 
-            <div class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                <!-- Main Tender Row -->
-                <div class="px-6 py-4">
-                    <div class="grid grid-cols-12 gap-4 items-start">
-                        <!-- Tender Name Column -->
-                        <div class="col-span-12 md:col-span-5">
-                            <div class="flex items-start gap-3">
-                                <div class="shrink-0 mt-1">
-                                    @if($isActive)
-                                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                    @else
-                                        <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+            <div class="border-b border-gray-200 last:border-b-0 {{ $rowBg }} hover:bg-amber-50/40 transition-colors duration-150">
+
+                {{-- ── Main Row ── --}}
+                <div class="grid grid-cols-12 gap-4 px-6 py-4 items-start">
+
+                    {{-- # --}}
+                    <div class="col-span-1 text-sm font-semibold text-text-muted pt-0.5">
+                        {{ $index + 1 }}
+                    </div>
+
+                    {{-- Tender Name + status badges --}}
+                    <div class="col-span-6">
+                        <div class="flex items-start gap-2">
+                            {{-- active/closed dot --}}
+                            <span class="mt-1.5 shrink-0">
+                                @if($isActive)
+                                    <span class="block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                @else
+                                    <span class="block w-2 h-2 rounded-full bg-gray-400"></span>
+                                @endif
+                            </span>
+                            <div>
+                                <p class="font-semibold text-text-black leading-snug {{ !$isActive ? 'text-gray-500' : '' }}">
+                                    {{ $tender->name }}
+                                </p>
+                                <div class="flex flex-wrap gap-1.5 mt-1.5">
+                                    @if($isExtended)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                                            <i class="fas fa-history mr-1 text-[10px]"></i> Extended
+                                        </span>
+                                    @endif
+                                    @if($isClosingSoon && $isActive)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                                            <i class="fas fa-clock mr-1 text-[10px]"></i> Closing Soon
+                                        </span>
+                                    @endif
+                                    @if(!$isActive)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+                                            <i class="fas fa-archive mr-1 text-[10px]"></i> Closed
+                                        </span>
                                     @endif
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-text-black {{ !$isActive ? 'text-gray-500' : '' }}">
-                                        {{ $tender->name }}
-                                    </h3>
-                                    
-                                    <!-- Status Badges -->
-                                    <div class="flex flex-wrap gap-2 mt-2">
-                                        @if($isExtended)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                                <i class="fas fa-history mr-1 text-xs"></i> Extended
-                                            </span>
-                                        @endif
-                                        
-                                        @if($isClosingSoon && $isActive)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                                <i class="fas fa-clock mr-1 text-xs"></i> Closing Soon!
-                                            </span>
-                                        @endif
-                                        
-                                        @if(!$isActive)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
-                                                <i class="fas fa-archive mr-1 text-xs"></i> Closed
-                                            </span>
-                                        @endif
+                            </div>
+                        </div>
+
+                        {{-- ── Additional Documents (sub-rows, indented under the tender name) ── --}}
+                        @if($hasAdditionalDocs)
+                            <ul class="mt-3 ml-4 space-y-1.5 border-l-2 border-accent-1/40 pl-3">
+                                @foreach($tender->additionalDocs as $doc)
+                                @php
+                                    $docDate = $doc->publish_date instanceof \Carbon\Carbon
+                                        ? $doc->publish_date
+                                        : \Carbon\Carbon::parse($doc->publish_date);
+                                @endphp
+                                <li class="flex items-center justify-between gap-3 group/doc">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <i class="fas fa-circle text-[5px] text-accent-1 shrink-0"></i>
+                                        <span class="text-sm text-text-black truncate">{{ $doc->title }}</span>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Opening Date Column -->
-                        <div class="col-span-6 md:col-span-2">
-                            <div class="text-sm">
-                                <span class="text-text-muted block text-xs mb-1">Opening Date</span>
-                                <div class="font-medium {{ !$isActive ? 'text-gray-500' : 'text-text-black' }}">
-                                    <i class="far fa-calendar-alt text-primary mr-1 text-xs"></i>
-                                    {{ ($tender->opening_date instanceof \Carbon\Carbon
-                                        ? $tender->opening_date
-                                        : \Carbon\Carbon::parse($tender->opening_date))->format('d M Y') }}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Closing Date Column -->
-                        <div class="col-span-6 md:col-span-3">
-                            <div class="text-sm">
-                                <span class="text-text-muted block text-xs mb-1">Closing Date</span>
-                                @if($isExtended)
-                                    <div>
-                                        <span class="line-through text-text-muted text-xs">
-                                            {{ $closingDate->format('d M Y') }}
+                                    <div class="flex items-center gap-3 shrink-0">
+                                        <span class="text-xs text-text-muted whitespace-nowrap">
+                                            {{ $docDate->format('d, M Y') }}
                                         </span>
-                                        <div class="font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-purple-600' : 'text-gray-500') }}">
-                                            <i class="fas fa-calendar-plus mr-1 text-xs"></i>
-                                            {{ $extendedDate->format('d M Y') }}
-                                        </div>
+                                        <a href="{{ asset('storage/' . $doc->document) }}" target="_blank"
+                                           title="{{ $doc->title }}"
+                                           class="text-red-500 hover:text-red-700 transition-colors">
+                                            {{-- PDF icon mimicking the screenshot --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                                <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
+                                                <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
+                                                <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
+                                                <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
+                                            </svg>
+                                        </a>
                                     </div>
-                                @else
-                                    <div class="font-medium {{ $isClosingSoon ? 'text-red-600 font-bold' : ($isActive ? 'text-text-black' : 'text-gray-500') }}">
-                                        <i class="far fa-calendar-check mr-1 text-xs"></i>
-                                        {{ $closingDate->format('d M Y') }}
-                                    </div>
-                                @endif
-                                
-                                @if($isActive)
-                                    <div class="text-xs mt-1">
-                                        @if($daysLeft === 0)
-                                            <span class="text-red-600 font-semibold">Closing today</span>
-                                        @elseif($daysLeft === 1)
-                                            <span class="text-red-600 font-semibold">1 day left</span>
-                                        @else
-                                            <span class="{{ $isClosingSoon ? 'text-red-600' : 'text-text-muted' }}">
-                                                {{ $daysLeft }} days left
-                                            </span>
-                                        @endif
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <!-- Documents Column -->
-                        <div class="col-span-12 md:col-span-2">
-                            <div class="flex flex-wrap gap-2">
-                                @if($tender->document)
-                                    <a href="{{ asset('storage/' . $tender->document) }}" target="_blank"
-                                       class="inline-flex items-center px-3 py-1.5 bg-primary text-white text-sm rounded-lg hover:bg-primary-hover transition-colors">
-                                        <i class="fas fa-file-pdf mr-1"></i> Tender
-                                    </a>
-                                @endif
-                                @if($tender->advertisement)
-                                    <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank"
-                                       class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                                        <i class="fas fa-image mr-1"></i> Advt
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+                                </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
+
+                    {{-- Opening Date --}}
+                    <div class="col-span-2 text-sm {{ !$isActive ? 'text-gray-400' : 'text-text-black' }}">
+                        {{ ($tender->opening_date instanceof \Carbon\Carbon
+                            ? $tender->opening_date
+                            : \Carbon\Carbon::parse($tender->opening_date))->format('d, M Y') }}
+                    </div>
+
+                    {{-- Closing Date --}}
+                    <div class="col-span-2 text-sm">
+                        @if($isExtended)
+                            <span class="line-through text-text-muted text-xs block">{{ $closingDate->format('d, M Y') }}</span>
+                            <span class="font-semibold {{ $isClosingSoon ? 'text-red-600' : ($isActive ? 'text-purple-600' : 'text-gray-400') }}">
+                                {{ $extendedDate->format('d, M Y') }}
+                            </span>
+                        @else
+                            <span class="{{ $isClosingSoon ? 'text-red-600 font-bold' : ($isActive ? 'text-text-black' : 'text-gray-400') }}">
+                                {{ $closingDate->format('d, M Y') }}
+                            </span>
+                        @endif
+
+                        @if($isActive)
+                            <span class="block text-xs mt-0.5 {{ $isClosingSoon ? 'text-red-500 font-semibold' : 'text-text-muted' }}">
+                                @if($daysLeft === 0) Closing today
+                                @elseif($daysLeft === 1) 1 day left
+                                @else {{ $daysLeft }} days left
+                                @endif
+                            </span>
+                        @endif
+                    </div>
+
+                    {{-- Main Documents (Tender PDF + Advertisement) --}}
+                    <div class="col-span-1 flex flex-col items-center gap-2">
+                        @if($tender->document)
+                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank"
+                               title="Tender Document"
+                               class="text-red-500 hover:text-red-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
+                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
+                                    <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
+                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
+                                </svg>
+                            </a>
+                        @endif
+                        @if($tender->advertisement)
+                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank"
+                               title="Advertisement"
+                               class="text-blue-500 hover:text-blue-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="6" fill="#1565C0" opacity=".12"/>
+                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#1565C0"/>
+                                    <path d="M28 8l10 10H28V8z" fill="#0D47A1"/>
+                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">DOC</text>
+                                </svg>
+                            </a>
+                        @endif
+                    </div>
+
                 </div>
-                
-                <!-- Additional Documents (nested within same row, below the name) -->
-                @if($tender->additionalDocs && $tender->additionalDocs->count() > 0)
-                    <div class="bg-gray-50 border-t border-gray-100 px-6 py-3 ml-4 md:ml-[calc(41.666%+1rem)]">
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-paperclip text-text-muted text-xs mt-1"></i>
-                            <div class="flex-1">
-                                <span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Additional Documents:</span>
-                                <div class="flex flex-wrap gap-3 mt-1">
-                                    @foreach($tender->additionalDocs as $doc)
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-file-pdf text-red-500 text-xs"></i>
-                                            <span class="text-text-black text-xs">{{ $doc->title }}</span>
-                                            <span class="text-text-muted text-xs">
-                                                ({{ ($doc->publish_date instanceof \Carbon\Carbon
-                                                    ? $doc->publish_date
-                                                    : \Carbon\Carbon::parse($doc->publish_date))->format('d M Y') }})
-                                            </span>
-                                            <a href="{{ asset('storage/' . $doc->document) }}" target="_blank"
-                                               class="text-primary hover:text-primary-hover text-xs font-medium">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                {{-- ── End Main Row ── --}}
+
             </div>
 
             @empty
-            <div class="text-center py-12">
-                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+            <div class="text-center py-16">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4 block"></i>
                 <p class="text-text-muted text-lg">No {{ $status }} tenders available in this category.</p>
-                <p class="text-text-secondary mt-2">Please check back later for new opportunities.</p>
+                <p class="text-text-secondary mt-2 text-sm">Please check back later for new opportunities.</p>
             </div>
             @endforelse
         </div>
+
     </div>
 </section>
 
-<!-- Tender Submission Guidelines Section -->
+<!-- ==================== TENDER SUBMISSION GUIDELINES ==================== -->
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
@@ -350,7 +366,7 @@
             </div>
         </div>
 
-        <!-- Additional CTA -->
+        <!-- CTA -->
         <div class="mt-16 text-center">
             <h3 class="text-xl font-medium mb-6 text-text-black">Need personalized assistance with your tender application?</h3>
             <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors duration-300 shadow-md hover:shadow-lg">

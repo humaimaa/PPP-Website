@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - About Us')
+@section('title', 'PPP Unit KPK - About Us')
 
 @section('content')
 
@@ -36,7 +36,7 @@
             </div>
             <div class="lg:w-1/2 overflow-hidden">
                 <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-100">
-                    <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Department Overview" class="w-full h-full object-cover">
+                    <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Unit Overview" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="space-y-6 text-text-muted text-justify">
             <p class="text-lg">
-                The PPP Department was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private 
+                The PPP Unit was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private 
                 Partnership Act, which provided the legal framework for private sector participation in public infrastructure 
                 projects.
             </p>

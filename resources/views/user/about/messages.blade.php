@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPP Department KPK - Leadership Messages')
+@section('title', 'PPP Unit KPK - Leadership Messages')
 
 @section('content')
 

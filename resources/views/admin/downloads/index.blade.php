@@ -60,9 +60,8 @@
                             <option value="">All Categories</option>
                             <option value="Legal Framework" {{ request('category') == 'Legal Framework' ? 'selected' : '' }}>Legal Framework</option>
                             <option value="Prequalified Transaction Advisory" {{ request('category') == 'Prequalified Transaction Advisory' ? 'selected' : '' }}>Prequalified Transaction Advisory</option>
-                            <option value="Policies ,Regulations and Guidelines" {{ request('category') == 'Policies ,Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
+                            <option value="Policies, Regulations and Guidelines" {{ request('category') == 'Policies, Regulations and Guidelines' ? 'selected' : '' }}>Policies, Regulations and Guidelines</option>
                             <option value="Knowledge Hub" {{ request('category') == 'Knowledge Hub' ? 'selected' : '' }}>Knowledge Hub</option>
-                            <option value="Pitchbook" {{ request('category') == 'Pitchbook' ? 'selected' : '' }}>Pitchbook</option>
                         </select>
                         <input type="text" 
                                name="search" 
@@ -93,7 +92,6 @@
                                        id="selectAllCheckbox" 
                                        class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </th>
-                          
                             <th class="px-6 py-3 text-left">Title</th>
                             <th class="px-6 py-3 text-left">Category</th>
                             <th class="px-6 py-3 text-left">Document Date</th>
@@ -111,9 +109,6 @@
                                        value="{{ $download->id }}"
                                        class="download-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </td>
-                           
-                               
-                            </td>
                             <td class="px-6 py-4">
                                 <div>
                                     <span class="font-medium text-gray-900">{{ $download->title }}</span>
@@ -123,17 +118,12 @@
                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     @if($download->category == 'Legal Framework') bg-purple-100 text-purple-800
                                     @elseif($download->category == 'Prequalified Transaction Advisory') bg-blue-100 text-blue-800
-                                    @elseif($download->category == 'Policies ,Regulations and Guidelines') bg-indigo-100 text-indigo-800
+                                    @elseif($download->category == 'Policies, Regulations and Guidelines') bg-indigo-100 text-indigo-800
                                     @elseif($download->category == 'Knowledge Hub') bg-green-100 text-green-800
-                                    @elseif($download->category == 'Pitchbook') bg-yellow-100 text-yellow-800
                                     @else bg-gray-100 text-gray-800
                                     @endif">
                                     <i class="fas fa-folder mr-1 text-xs"></i>
-                                    @if($download->category == 'Policies ,Regulations and Guidelines')
-                                        Policies & Guidelines
-                                    @else
-                                        {{ $download->category }}
-                                    @endif
+                                    {{ $download->category }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -141,21 +131,21 @@
                                     <i class="far fa-calendar-alt text-emerald-500 text-xs mr-1"></i>
                                     {{ \Carbon\Carbon::parse($download->date)->format('M d, Y') }}
                                 </div>
-                             </td>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-gray-500 text-xs">
                                     <i class="far fa-clock mr-1"></i>
-                                    {{ $download->created_at->format('M d, Y ') }}
+                                    {{ $download->created_at->format('M d, Y') }}
                                 </div>
-                             </td>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ asset('storage/' . $download->document_path) }}" 
+                                <a href="{{ Storage::url($download->document_path) }}" 
                                    target="_blank"
                                    class="text-emerald-600 hover:text-emerald-900 flex items-center gap-1">
                                     <i class="fas fa-file-pdf text-red-500"></i>
                                     <span>View PDF</span>
                                 </a>
-                             </td>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('admin.downloads.edit', $download) }}" 
@@ -170,11 +160,11 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
-                             </td>
+                            </td>
                         </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-12 text-center text-gray-400">
+                                <td colspan="7" class="px-6 py-12 text-center text-gray-400">
                                     <i class="fas fa-file-alt text-4xl mb-2"></i>
                                     <p class="text-lg mb-1">No documents found</p>
                                     @if(request('search') || request('category'))
@@ -186,7 +176,7 @@
                                             Upload your first document →
                                         </a>
                                     @endif
-                                 </td>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

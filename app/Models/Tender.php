@@ -214,4 +214,21 @@ class Tender extends Model
     {
         return $this->hasMany(TenderAdditionalDoc::class, 'tender_id');
     }
+
+    /**
+ * Get effective closing date for comparison
+ */
+public function getEffectiveClosingDateForComparisonAttribute()
+{
+    return $this->extended_closing_date ?? $this->closing_date;
+}
+
+/**
+ * Check if tender is active (using effective closing date)
+ */
+public function getIsActiveAttribute()
+{
+    $effectiveDate = $this->effective_closing_date_for_comparison;
+    return $effectiveDate && $effectiveDate->gte(now()->startOfDay());
+}
 }

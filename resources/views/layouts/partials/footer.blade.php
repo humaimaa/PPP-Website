@@ -12,17 +12,14 @@
           <a href="https://facebook.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-facebook-f text-text-secondary text-sm"></i>
           </a>
-          <a href="https://twitter.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
-            <i class="fab fa-twitter text-text-secondary text-sm"></i>
+          <a href="https://x.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+            <i class="fa-brands fa-x-twitter text-text-secondary text-sm"></i>
           </a>
           <a href="https://linkedin.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-linkedin-in text-text-secondary text-sm"></i>
           </a>
-          <a href="https://youtube.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
-            <i class="fab fa-youtube text-text-secondary text-sm"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
-            <i class="fab fa-instagram text-text-secondary text-sm"></i>
+          
+          
           </a>
         </div>
       </div>

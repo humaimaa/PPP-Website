@@ -5,9 +5,9 @@
 @section('content')
 
 <!-- Hero Section -->
-<section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+<section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-        <div class="text-center px-4 pt-26">
+        <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Our Leadership Team
             </h1>

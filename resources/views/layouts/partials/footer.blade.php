@@ -77,7 +77,7 @@
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">info@pppunitkpk.gov.pk</span>
+            <span class="text-sm md:text-base text-text-secondary"><chief class="ppp@pndkp.gov.pk"></chief></span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-clock text-accent-1 mr-3 text-sm"></i>

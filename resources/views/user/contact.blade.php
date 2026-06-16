@@ -69,8 +69,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Email</h3>
                             <p class="mt-1 text-text-muted">
-                                General Inquiries: <a href="mailto:info@pppdepartmentkpk.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">info@pppdepartmentkpk.gov.pk</a><br>
-                                Support: <a href="mailto:support@pppdepartmentkpk.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">support@pppdepartmentkpk.gov.pk</a>
+                                <a href="mailto:chief.ppp@pndkp.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">chief.ppp@pndkp.gov.pk</a><br>
                             </p>
                         </div>
                     </div>

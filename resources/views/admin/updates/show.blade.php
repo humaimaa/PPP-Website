@@ -85,9 +85,7 @@
                         <i class="fas fa-calendar-alt text-emerald-600 mr-1"></i>
                         {{ $displayDate->format('F d, Y') }}
                         @if($displayDate->format('H:i:s') != '00:00:00')
-                            <span class="text-gray-500 text-sm ml-1">
-                                at {{ $displayDate->format('h:i A') }}
-                            </span>
+                            
                         @endif
                     </p>
                     @if($news->news_date && $news->created_at)

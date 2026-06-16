@@ -14,7 +14,7 @@
             
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Leadership Messages Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/leadership.jpg') }}" alt="Leadership Messages Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Messages Section -->

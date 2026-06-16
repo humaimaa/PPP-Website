@@ -13,7 +13,7 @@
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Functions Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/function-hero.jpg') }}" alt="Functions Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Functions Section -->

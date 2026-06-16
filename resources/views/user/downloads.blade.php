@@ -23,7 +23,7 @@
             
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/resourse-center.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Downloads Table Section -->

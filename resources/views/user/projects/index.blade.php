@@ -26,7 +26,7 @@
            
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Navigation Tabs -->

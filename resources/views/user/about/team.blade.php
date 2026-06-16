@@ -23,7 +23,6 @@
     $otherMembers = collect();
     
     foreach ($team as $member) {
-        $hierarchyTitle = $member->hierarchy->title ?? '';
         $order = $member->hierarchy->order ?? 999;
         
         // Check if this is a leadership member (order 1)
@@ -33,6 +32,9 @@
             $otherMembers->push($member);
         }
     }
+    
+    // Sort leadership members by ID (to show Chief first, then Assistant Chief)
+    $leadershipMembers = $leadershipMembers->sortBy('id')->values();
     
     // Get chief (first leadership member) and assistant chief (second leadership member)
     $chief = $leadershipMembers->first();
@@ -45,6 +47,11 @@
     $groupedMembers = $groupedMembers->sortBy(function($members) {
         return $members->first()->hierarchy->order ?? 999;
     });
+    
+    // Sort members within each group by ID (oldest first)
+    foreach ($groupedMembers as $key => $group) {
+        $groupedMembers[$key] = $group->sortBy('id')->values();
+    }
 @endphp
 
 <!-- Leadership Section (Chief and Assistant Chief) -->

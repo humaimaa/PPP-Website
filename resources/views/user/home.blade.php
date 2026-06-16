@@ -20,9 +20,9 @@
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
                 Public Private Partnership Unit
             </h1>
-            <p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta eos quia repudiandae iusto, voluptas ratione harum architecto iste molestiae facere neque explicabo hic! Aspernatur sapiente placeat voluptatibus necessitatibus reiciendis dignissimos!
-            </p>
+<p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
+    Strengthening public infrastructure and service delivery through strategic partnerships, innovative solutions, and sustainable investment opportunities across Khyber Pakhtunkhwa.
+</p>
         </div>
     </div>
 
@@ -46,7 +46,7 @@
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
-                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Unit Headquarters</h3>
+                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Unit Meeting</h3>
                         <p class="text-xs text-text-secondary lg:text-sm">Peshawar, Khyber Pakhtunkhwa</p>
                     </div>
                 </div>
@@ -57,42 +57,45 @@
             <div class="w-full about-content">
                 <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
                 <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
-                <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
-                    The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa is a pioneering initiative by
-                    the Government of KP to foster collaboration between the public and private sectors for sustainable
-                    development.
-                </p>
-                <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
-                    Established under the Khyber Pakhtunkhwa Public-Private Partnership Act, our department serves as
-                    the nodal agency for planning, facilitating, and implementing PPP projects across various sectors
-                    including infrastructure, health, education, and transportation.
-                </p>
-                <ul class="space-y-3 text-text-muted mb-6">
-                    <li class="flex items-start group">
-                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span class="text-sm md:text-base">Promoting private sector participation in public projects</span>
-                    </li>
-                    <li class="flex items-start group">
-                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span class="text-sm md:text-base">Ensuring transparent and competitive bidding processes</span>
-                    </li>
-                    <li class="flex items-start group">
-                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span class="text-sm md:text-base">Facilitating infrastructure development across KP</span>
-                    </li>
-                </ul>
-                <button class="btn-position-aware relative inline-block font-medium text-sm uppercase tracking-wider py-3 px-8 overflow-hidden z-10 border-2 border-accent-1 text-accent-1 rounded-lg hover:text-text-primary transition-colors duration-400">
-                    Read more
-                    <span class="position-aware-span absolute w-0 h-0 rounded-full bg-accent-1 transition-all duration-400 -translate-x-1/2 -translate-y-1/2 z-[-1]"></span>
-                </button>
-            </div>
-        </div>
+                <<p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
+    The Public Private Partnership (PPP) Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
+</p>
+
+<p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
+    The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes to ensure efficient planning, evaluation, and implementation of PPP initiatives.
+</p>
+
+<ul class="space-y-3 text-text-muted mb-6">
+    
+    <li class="flex items-start group">
+        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="text-sm md:text-base">
+            Promoting private sector participation in public infrastructure projects
+        </span>
+    </li>
+
+    <li class="flex items-start group">
+        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="text-sm md:text-base">
+            Ensuring projects comply with the PPP Act and procurement regulations
+        </span>
+    </li>
+
+    <li class="flex items-start group">
+        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="text-sm md:text-base">
+            Supporting sustainable and bankable PPP projects for provincial development
+        </span>
+    </li>
+
+</ul>
+
     </div>
 </section>
 

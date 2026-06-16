@@ -44,8 +44,8 @@
     });
 @endphp
 
-<!-- If both chief and assistant chief exist, show them in one row -->
-@if($chief && $assistantChief)
+<!-- Chief and Assistant Chief in one row -->
+@if($chief || $assistantChief)
 <section class="py-12 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
@@ -56,6 +56,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-20 max-w-3xl mx-auto">
             <!-- Chief Card -->
+            @if($chief)
             <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="relative">
                     <img src="{{ $chief->img ? asset('storage/' . $chief->img) : asset('images/boy.jpg') }}"
@@ -63,7 +64,7 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
-                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->hierarchy->title ?? 'Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->designation ?? 'Chief PPP' }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -85,8 +86,10 @@
                     @endif
                 </div>
             </div>
+            @endif
 
             <!-- Assistant Chief Card -->
+            @if($assistantChief)
             <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="relative">
                     <img src="{{ $assistantChief->img ? asset('storage/' . $assistantChief->img) : asset('images/boy.jpg') }}"
@@ -94,7 +97,7 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
-                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->hierarchy->title ?? 'Assistant Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->designation ?? 'Assistant Chief PPP' }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -116,6 +119,7 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </section>
@@ -127,7 +131,6 @@
     $hierarchy = $members->first()->hierarchy;
     $hierarchyTitle = $hierarchy->title ?? 'Team Members';
     $hierarchyOrder = $hierarchy->order ?? 999;
-    $memberCount = $members->count();
     $loopIndex = $loop->index;
 
     // Create strip effect - alternate between gray and white
@@ -158,7 +161,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
+                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
@@ -180,7 +183,7 @@
                              class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-base font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                    <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
+                    <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->designation ?? 'Team Member' }}</p>
                    @if($member->email)
                     <a href="mailto:{{ $member->email }}"
                        class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
@@ -198,7 +201,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
+                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">

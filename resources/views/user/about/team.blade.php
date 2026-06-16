@@ -163,7 +163,7 @@
                    @if($member->email)
                     <a href="mailto:{{ $member->email }}"
                        class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
-                        {{ Str::limit($member->email, 18) }}
+                        {{ Str::limit($member->email, 30) }}
                     </a>
                     @endif
                 </div>

@@ -15,7 +15,7 @@
             
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Team Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/leadership.jpg') }}" alt="Team Banner" class="w-full h-full object-cover">
 </section>
 
 @php

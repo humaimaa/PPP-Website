@@ -36,30 +36,7 @@
                     </div>
                 </form>
                 
-                <!-- Type Filter Dropdown -->
-                <form action="{{ route('media.room.updates') }}" method="GET" class="flex items-center">
-                    @if(request('search'))
-                        <input type="hidden" name="search" value="{{ request('search') }}">
-                    @endif
-                    <select name="type" 
-                            onchange="this.form.submit()"
-                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white">
-                        <option value="">All Types</option>
-                        @foreach($types as $type)
-                            <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
-                                {{ $type }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @if(request('type') || request('search'))
-                        <a href="{{ route('media.room.updates') }}" 
-                           class="ml-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </a>
-                    @endif
-                </form>
+               
             </div>
         </div>
 

@@ -10,7 +10,6 @@
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Updates</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-           
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="News Banner" class="w-full h-full object-cover">
@@ -18,7 +17,58 @@
 
 <section class="py-10 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-bold text-primary mb-8">Latest Updates</h2>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 md:mb-0">Latest Updates</h2>
+            
+            <!-- Filter Section -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <!-- Search Bar -->
+                <form action="{{ route('media.room.updates.index') }}" method="GET" class="flex items-center">
+                    <div class="relative">
+                        <input type="text" 
+                               name="search" 
+                               placeholder="Search updates..." 
+                               value="{{ request('search') }}"
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-64">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </form>
+                
+                <!-- Type Filter Dropdown -->
+                <form action="{{ route('media.room.updates.index') }}" method="GET" class="flex items-center">
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+                    <select name="type" 
+                            onchange="this.form.submit()"
+                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white">
+                        <option value="">All Types</option>
+                        @foreach($types as $type)
+                            <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
+                                {{ $type }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @if(request('type') || request('search'))
+                        <a href="{{ route('media.room.updates.index') }}" 
+                           class="ml-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </a>
+                    @endif
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Count -->
+        @if($updates->total() > 0)
+            <p class="text-sm text-text-muted mb-4">
+                Showing {{ $updates->firstItem() }} - {{ $updates->lastItem() }} of {{ $updates->total() }} updates
+            </p>
+        @endif
 
         <div class="space-y-6">
             @forelse($updates as $news)
@@ -57,25 +107,32 @@
                 <div class="p-6 md:p-8 md:w-2/3 flex flex-col">
                     <div>
                         <div class="flex items-center mb-2 flex-wrap gap-2">
-                            {{-- Date Logic: Show news_date if available, otherwise show created_at --}}
                             @php
-    $displayDate = isset($news->news_date) && $news->news_date 
-        ? \Carbon\Carbon::parse($news->news_date) 
-        : ($news->created_at instanceof \Carbon\Carbon ? $news->created_at : \Carbon\Carbon::parse($news->created_at));
-@endphp
-<span class="text-sm text-accent-1 font-medium">
-    <i class="fas fa-calendar-alt mr-1"></i>
-    {{ $displayDate->format('F d, Y') }}
-</span>
+                                // Use news_date if available, otherwise use created_at
+                                $displayDate = isset($news->news_date) && $news->news_date 
+                                    ? \Carbon\Carbon::parse($news->news_date) 
+                                    : \Carbon\Carbon::parse($news->created_at);
+                            @endphp
+                            <span class="text-sm text-accent-1 font-medium">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                {{ $displayDate->format('F d, Y') }}
+                            </span>
                             <span class="mx-2 text-text-muted hidden sm:inline">|</span>
                             <span class="text-sm text-text-muted">
                                 <i class="fas fa-tag mr-1"></i>
-                                {{ $news->type ?? 'News' }}
+                                {{ $news->type ?? 'Uncategorized' }}
                             </span>
                             @if($news->is_featured)
                                 <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
                                     <i class="fas fa-star mr-1 text-xs"></i>
                                     Featured
+                                </span>
+                            @endif
+                            <!-- Show indicator if using created_at instead of news_date -->
+                            @if(!isset($news->news_date) || !$news->news_date)
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                                    <i class="fas fa-clock mr-1 text-xs"></i>
+                                    Added
                                 </span>
                             @endif
                         </div>
@@ -108,8 +165,13 @@
                         d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                     </path>
                 </svg>
-                <h3 class="text-2xl font-semibold text-gray-700 mb-2">No News Found</h3>
-                <p class="text-gray-500">No news articles available at the moment. Please check back later.</p>
+                <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Updates Found</h3>
+                <p class="text-gray-500">No updates available matching your criteria. Please try different filters.</p>
+                @if(request('type') || request('search'))
+                    <a href="{{ route('media.room.updates.index') }}" class="mt-4 inline-block px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200">
+                        Clear Filters
+                    </a>
+                @endif
             </div>
             @endforelse
         </div>
@@ -117,7 +179,7 @@
         <!-- Pagination -->
         @if($updates->hasPages())
         <div class="mt-8 flex justify-center">
-            {{ $updates->links() }}
+            {{ $updates->appends(request()->query())->links() }}
         </div>
         @endif
     </div>

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class MediaroomController extends Controller
 {
-      /**
+    /**
      * Events page
      */
     public function eventsIndex()
@@ -38,16 +38,38 @@ class MediaroomController extends Controller
         return view('user.events.gallery', compact('event'));
     }
 
-
     /**
-     * Updates page with pagination
+     * Updates page with pagination and filtering
      */
     public function updatesIndex(Request $request)
     {
         $perPage = 6; // Number of items per page
-        $updates = News::orderBy('created_at', 'desc')->paginate($perPage);
         
-        return view('user.updates.index', compact('updates'));
+        // Start query
+        $query = News::query();
+        
+        // Apply filters
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('content', 'like', '%' . $request->search . '%');
+            });
+        }
+        
+        // Sort by date: use news_date if available, otherwise created_at
+        // For MySQL: COALESCE(news_date, created_at) as sort_date
+        $query->orderByRaw('COALESCE(news_date, created_at) DESC');
+        
+        $updates = $query->paginate($perPage);
+        
+        // Get unique types for filter dropdown
+        $types = News::select('type')->distinct()->whereNotNull('type')->pluck('type');
+        
+        return view('user.updates.index', compact('updates', 'types'));
     }
 
     /**
@@ -58,16 +80,18 @@ class MediaroomController extends Controller
         $news = News::findOrFail($id);
         
         // Get previous and next news for navigation
-        $previousNews = News::where('created_at', '<', $news->created_at)
-            ->orderBy('created_at', 'desc')
+        $previousNews = News::where(function($query) use ($news) {
+                $query->whereRaw('COALESCE(news_date, created_at) < ?', [$news->news_date ?? $news->created_at]);
+            })
+            ->orderByRaw('COALESCE(news_date, created_at) DESC')
             ->first();
         
-        $nextNews = News::where('created_at', '>', $news->created_at)
-            ->orderBy('created_at', 'asc')
+        $nextNews = News::where(function($query) use ($news) {
+                $query->whereRaw('COALESCE(news_date, created_at) > ?', [$news->news_date ?? $news->created_at]);
+            })
+            ->orderByRaw('COALESCE(news_date, created_at) ASC')
             ->first();
         
         return view('user.updates.show', compact('news', 'previousNews', 'nextNews'));
     }
-
-
 }

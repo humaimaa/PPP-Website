@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Designation extends Model
+class Hierarchy extends Model
 {
     use HasFactory;
+
+    protected $table = 'hierarchy'; // Explicitly specify table name
 
     protected $fillable = [
         'title',
@@ -15,16 +17,15 @@ class Designation extends Model
     ];
 
     /**
-     * Get the team members with this designation
+     * Get the team members with this hierarchy entry
      */
     public function team()
     {
-        return $this->hasMany(Team::class, 'designation_id');
+        return $this->hasMany(Team::class, 'hierarchy_id'); // Changed foreign key
     }
 
     /**
-     * Check if designation is being used anywhere
-     * Only check team table (leadership_messages uses ENUM, not foreign key)
+     * Check if hierarchy entry is being used anywhere
      */
     public function isUsed()
     {

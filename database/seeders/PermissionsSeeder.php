@@ -26,7 +26,7 @@ class PermissionsSeeder extends Seeder
             'news' => 'News/Updates',
             'gallery' => 'Gallery',
             'sectors' => 'Sectors',
-            'designations' => 'Designations',
+            'hierarchy' => 'Hierarchy', // Changed from 'designations'
             'users' => 'Users',
             'downloads' => 'Downloads',
             'team' => 'Team Members',
@@ -89,7 +89,7 @@ class PermissionsSeeder extends Seeder
             'news.view', 'news.create', 'news.edit',
             'gallery.view', 'gallery.create', 'gallery.edit', 'gallery.set_thumbnail',
             'sectors.view', 'sectors.create', 'sectors.edit',
-            'designations.view', 'designations.create', 'designations.edit',
+            'hierarchy.view', 'hierarchy.create', 'hierarchy.edit', // Changed from 'designations'
             'downloads.view', 'downloads.create', 'downloads.edit',
             'team.view', 'team.create', 'team.edit',
             'leadership.view', 'leadership.create', 'leadership.edit',
@@ -106,7 +106,7 @@ class PermissionsSeeder extends Seeder
             'news.view', 'news.create', 'news.edit',
             'gallery.view', 'gallery.create', 'gallery.edit',
             'sectors.view', 'sectors.create', 'sectors.edit',
-            'designations.view', 'designations.create', 'designations.edit',
+            'hierarchy.view', 'hierarchy.create', 'hierarchy.edit', // Changed from 'designations'
             'downloads.view', 'downloads.create', 'downloads.edit',
             'team.view', 'team.create', 'team.edit',
             'leadership.view', 'leadership.create', 'leadership.edit',
@@ -123,7 +123,7 @@ class PermissionsSeeder extends Seeder
             'news.view',
             'gallery.view',
             'sectors.view',
-            'designations.view',
+            'hierarchy.view', // Changed from 'designations.view'
             'downloads.view',
             'team.view',
             'leadership.view',

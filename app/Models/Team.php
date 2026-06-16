@@ -13,17 +13,27 @@ class Team extends Model
     
     protected $fillable = [
         'name',
-        'designation_id',
+        'hierarchy_id', // Changed from designation_id
+        'designation', // New field
         'img',
         'email',
         'phone',
     ];
     
     /**
-     * Get the designation associated with the team member.
+     * Get the hierarchy associated with the team member.
      */
-    public function designation()
+    public function hierarchy() // Changed from designation()
     {
-        return $this->belongsTo(Designation::class);
+        return $this->belongsTo(Hierarchy::class, 'hierarchy_id');
+    }
+    
+    /**
+     * Get the designation title directly from the column.
+     * This is a helper method for backward compatibility.
+     */
+    public function getDesignationTitleAttribute()
+    {
+        return $this->designation;
     }
 }

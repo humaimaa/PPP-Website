@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('designations', function (Blueprint $table) {
+        Schema::create('hierarchy', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('order');
+            $table->integer('order')->unique();
             $table->timestamps();
         });
     }

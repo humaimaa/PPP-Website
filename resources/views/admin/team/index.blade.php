@@ -63,7 +63,7 @@
                         <input type="text" 
                                name="search" 
                                value="{{ request('search') }}"
-                               placeholder="Search by name, email or phone..." 
+                               placeholder="Search by name, email, phone or designation..." 
                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm w-64">
                         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search"></i>
@@ -95,6 +95,7 @@
                             <th class="px-6 py-3 text-left">ID</th>
                             <th class="px-6 py-3 text-left">Photo</th>
                             <th class="px-6 py-3 text-left">Name</th>
+                            <th class="px-6 py-3 text-left">Hierarchy Level</th>
                             <th class="px-6 py-3 text-left">Designation</th>
                             <th class="px-6 py-3 text-left">Email</th>
                             <th class="px-6 py-3 text-left">Phone</th>
@@ -142,17 +143,27 @@
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                    {{ $member->hierarchy->title ?? 'N/A' }}
+                                </span>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-md">
-                                    {{ $member->designation->title ?? 'N/A' }}
+                                    {{ $member->designation ?? 'N/A' }}
                                 </span>
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-gray-600">
-                                {{ $member->email }}
+                                <a href="mailto:{{ $member->email }}" class="hover:text-emerald-600 transition">
+                                    {{ $member->email }}
+                                </a>
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-gray-600">
-                                {{ $member->phone ?? 'N/A' }}
+                                <a href="tel:{{ $member->phone }}" class="hover:text-emerald-600 transition">
+                                    {{ $member->phone ?? 'N/A' }}
+                                </a>
                             </td>
                             
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-xs">
@@ -197,7 +208,7 @@
                         @empty
                             <tr>
                                 @php
-                                    $colspan = 8;
+                                    $colspan = 9;
                                     if(auth()->user()->can('team.delete')) $colspan++;
                                     if(auth()->user()->can('team.view') || auth()->user()->can('team.edit') || auth()->user()->can('team.delete')) $colspan++;
                                 @endphp
@@ -210,7 +221,7 @@
                                         </a>
                                     @else
                                         @can('team.create')
-                                            <a href="{{ route('admin.team.create') }}" class="text-emerald-600 hover:underline text-sm">
+                                            <a href="{{ route('admin.team.add') }}" class="text-emerald-600 hover:underline text-sm">
                                                 Add your first team member →
                                             </a>
                                         @endcan

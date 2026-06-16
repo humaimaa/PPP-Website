@@ -37,19 +37,14 @@
 
     function updateTotalStats() {
         let totalProjects = 0;
-        let totalInvestment = 0;
         Object.values(divisionsData).forEach(division => {
             if (division) {
                 totalProjects += division.total_projects || 0;
-                totalInvestment += division.investment || 0;
             }
         });
-        
+
         const totalProjectsEl = document.getElementById('total-projects');
-        const totalInvestmentEl = document.getElementById('total-investment');
-        
         if (totalProjectsEl) totalProjectsEl.textContent = totalProjects;
-        if (totalInvestmentEl) totalInvestmentEl.textContent = (totalInvestment / 10000000).toFixed(1);
     }
 
     function initMap() {
@@ -173,8 +168,7 @@
                     tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
                     tooltipContent += `<span style="color: #F59E0B;">Pipeline: ${division.projects?.pipeline || 0}</span> | `;
                     tooltipContent += `<span style="color: #10B981;">Ongoing: ${division.projects?.ongoing || 0}</span> | `;
-                    tooltipContent += `<span style="color: #3B82F6;">Completed: ${division.projects?.completed || 0}</span><br>`;
-                    tooltipContent += `Investment: PKR ${((division.investment || 0) / 10000000).toFixed(1)} Cr`;
+                    tooltipContent += `<span style="color: #3B82F6;">Completed: ${division.projects?.completed || 0}</span>`;
                 } else {
                     tooltipContent += `No project data available`;
                 }
@@ -278,18 +272,18 @@
         '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
     ];
 function createSectorChart(division) {
+    // Set Chart.js global defaults so canvas-rendered text is white
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+
     const chartContainer = document.getElementById('sector-chart');
     if (!chartContainer) return;
 
-    // Destroy previous chart instance immediately to avoid flicker
     if (sectorChart) {
         sectorChart.destroy();
         sectorChart = null;
     }
 
-    // Pre-set container to exact height to prevent layout jump
-    chartContainer.style.height = '200px';
-    chartContainer.style.position = 'relative';
     chartContainer.innerHTML = '';
 
     if (!division || !division.projects_list || division.projects_list.length === 0) {
@@ -300,7 +294,6 @@ function createSectorChart(division) {
     const sectorData = {};
     division.projects_list.forEach(project => {
         let sectorName = project.sector;
-
         if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
             sectorName = 'Other';
         } else {
@@ -309,7 +302,6 @@ function createSectorChart(division) {
                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
             ).join(' ');
         }
-
         sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
     });
 
@@ -321,85 +313,83 @@ function createSectorChart(division) {
         return;
     }
 
-    const sectorColors = {};
-    sectors.forEach((sector) => {
+    // Dynamic height: 24px per bar, min 80px
+    const chartHeight = Math.max(80, sectors.length * 24 + 20);
+    chartContainer.style.height = chartHeight + 'px';
+    chartContainer.style.position = 'relative';
+
+    const chartColors = sectors.map(sector => {
         let hash = 0;
         for (let i = 0; i < sector.length; i++) {
             hash = ((hash << 5) - hash) + sector.charCodeAt(i);
             hash |= 0;
         }
-        const colorIndex = Math.abs(hash) % sectorColorPalette.length;
-        sectorColors[sector] = sectorColorPalette[colorIndex];
+        return sectorColorPalette[Math.abs(hash) % sectorColorPalette.length];
     });
 
-    const chartColors = sectors.map(sector => sectorColors[sector]);
-
-    // Create canvas with explicit dimensions to prevent resize flash
     const canvas = document.createElement('canvas');
-    canvas.style.display = 'block';
     chartContainer.appendChild(canvas);
 
     sectorChart = new Chart(canvas, {
-        type: 'pie',
+        type: 'bar',
         data: {
             labels: sectors,
             datasets: [{
                 data: counts,
                 backgroundColor: chartColors,
-                borderWidth: 0
+                borderWidth: 0,
+                borderRadius: 3,
+                barThickness: 12
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
-            maintainAspectRatio: false,  // false so the container height (200px) is respected without resize jump
-            animation: {
-                duration: 300  // Short animation so it feels instant but still smooth
-            },
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
             plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#ffffff',       // Primary legend text color
-                        font: { size: 10, weight: 'normal', family: 'sans-serif' },
-                        boxWidth: 12,
-                        boxHeight: 12,
-                        padding: 8,
-                        generateLabels: function(chart) {
-                            const data = chart.data;
-                            const datasets = data.datasets;
-                            const labels = data.labels;
-
-                            return labels.map((label, i) => {
-                                const displayLabel = label && label !== 'undefined' ? label : 'Other';
-
-                                return {
-                                    text: displayLabel,
-                                    fillStyle: datasets[0].backgroundColor[i],
-                                    strokeStyle: datasets[0].backgroundColor[i],
-                                    fontColor: '#ffffff',   // Explicit per-item color (Chart.js v3/v4)
-                                    lineWidth: 0,
-                                    hidden: false,
-                                    index: i
-                                };
-                            });
-                        }
-                    }
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const label = context.label || 'Other';
-                            const value = context.parsed || 0;
+                            const value = context.parsed.x || 0;
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
+                            return `${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
                         }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 10 },
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.15)'
+                    },
+                    border: {
+                        color: 'rgba(255,255,255,0.2)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 10 },
+                        autoSkip: false
+                    },
+                    grid: { display: false },
+                    border: {
+                        color: 'rgba(255,255,255,0.2)'
                     }
                 }
             }
         }
     });
 }
+
     function getStatusColorClass(category) {
         switch(category) {
             case 'Pipeline': return 'text-yellow-400 border-yellow-500';
@@ -445,23 +435,16 @@ function createSectorChart(division) {
         if (divisionView) divisionView.classList.remove('hidden');
         
         const total = division.total_projects || 0;
-        const investment = division.investment || 0;
-        const avgCost = total > 0 ? (investment / total) / 10000000 : 0;
-        
         const displayTitle = division.is_merged ? 'Merged Districts (Former FATA)' : (division.name + ' Division');
         
         const titleEl = document.getElementById('division-title');
         const totalProjectsEl = document.getElementById('division-total-projects');
-        const totalInvestmentEl = document.getElementById('division-total-investment');
-        const avgCostEl = document.getElementById('division-avg-cost');
         const pipelineEl = document.getElementById('division-pipeline');
         const ongoingEl = document.getElementById('division-ongoing');
         const completedEl = document.getElementById('division-completed');
         
         if (titleEl) titleEl.textContent = displayTitle;
         if (totalProjectsEl) totalProjectsEl.textContent = total;
-        if (totalInvestmentEl) totalInvestmentEl.textContent = (investment / 10000000).toFixed(1);
-        if (avgCostEl) avgCostEl.textContent = avgCost.toFixed(1);
         if (pipelineEl) pipelineEl.textContent = division.projects?.pipeline || 0;
         if (ongoingEl) ongoingEl.textContent = division.projects?.ongoing || 0;
         if (completedEl) completedEl.textContent = division.projects?.completed || 0;
@@ -567,11 +550,46 @@ function createSectorChart(division) {
         statNumbers.forEach(number => observer.observe(number));
     }
 
+    function syncMapHeight() {
+        const statsPanel = document.getElementById('stats-panel');
+        const mapColumn = document.getElementById('map-column');
+        const mapContainer = document.getElementById('kp-choropleth-map');
+
+        if (!statsPanel || !mapColumn || !mapContainer) return;
+
+        // On large screens, match map column height to stats panel height
+        if (window.innerWidth >= 1024) {
+            const panelHeight = statsPanel.offsetHeight;
+            mapColumn.style.height = panelHeight + 'px';
+            mapContainer.style.height = '100%';
+        } else {
+            // On mobile, reset to natural height with min-height
+            mapColumn.style.height = '';
+            mapContainer.style.height = '';
+            mapContainer.style.minHeight = '400px';
+        }
+
+        // Tell Leaflet the container size changed
+        if (map) {
+            setTimeout(() => map.invalidateSize(), 50);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded, initializing...');
         initStatNumberAnimation();
         updateTotalStats();
         initMap();
+
+        // Observe stats panel for any height changes and sync map
+        const statsPanel = document.getElementById('stats-panel');
+        if (statsPanel && window.ResizeObserver) {
+            const ro = new ResizeObserver(() => syncMapHeight());
+            ro.observe(statsPanel);
+        }
+
+        // Also sync on window resize (handles mobile ↔ desktop switch)
+        window.addEventListener('resize', syncMapHeight);
         
         const resetViewBtn = document.getElementById('reset-view');
         if (resetViewBtn) {

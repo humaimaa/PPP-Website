@@ -8,13 +8,11 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Projects Statistics
             </h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
-            <p class="text-white text-lg mt-4 max-w-2xl mx-auto">
-                Comprehensive overview of all public-private partnership initiatives across Khyber Pakhtunkhwa
-            </p>
+            <div class="w-20 h-1 bg-white mx-auto "></div>
+           
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
@@ -60,9 +58,9 @@
             <p class="text-text-muted mt-4 max-w-2xl mx-auto">Click on any division to view its projects and details</p>
         </div>
 
-        <div class="flex flex-col lg:flex-row gap-6">
-            <div class="w-full lg:w-1/2 z-10">
-                <div id="kp-choropleth-map" style="height: 550px; width: 100%; background-color: #e8f0e8; border-radius: 8px;"></div>
+        <div class="flex flex-col lg:flex-row gap-6 lg:items-stretch">
+            <div class="w-full lg:w-1/2 z-10 flex flex-col" id="map-column">
+                <div id="kp-choropleth-map" style="flex: 1; min-height: 400px; width: 100%; background-color: #e8f0e8; border-radius: 8px;"></div>
             </div>
 
             <div class="w-full lg:w-1/2">
@@ -73,14 +71,10 @@
                             <button id="reset-view" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show All</button>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="grid grid-cols-2 gap-4 mb-6">
                             <div class="text-center bg-white/10 rounded-lg p-3">
                                 <div class="text-3xl font-bold text-green-400" id="total-projects">{{ $totalProjects ?? 0 }}</div>
                                 <div class="text-sm text-gray-300 mt-1">Total Projects</div>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl font-bold text-green-400" id="total-investment">{{ number_format(($totalInvestment ?? 0) / 10000000, 1) }}</div>
-                                <div class="text-sm text-gray-300 mt-1">Total Investment (PKR Cr)</div>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
                                 <div class="text-3xl font-bold text-green-400" id="total-divisions">8</div>
@@ -107,31 +101,20 @@
                             <button id="back-to-all" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back to All</button>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl font-bold text-green-400" id="division-total-projects">0</div>
-                                <div class="text-sm text-gray-300 mt-1">Total Projects</div>
+                        <div class="flex flex-row gap-2 text-center text-sm mb-4">
+                            <div class="bg-white/10 rounded-lg p-2 flex-1 min-w-0">
+                                <div class="font-bold text-green-400 text-lg" id="division-total-projects">0</div>
+                                <div class="text-xs text-gray-300">Total</div>
                             </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl font-bold text-green-400" id="division-total-investment">0</div>
-                                <div class="text-sm text-gray-300 mt-1">Total Investment (PKR Cr)</div>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl font-bold text-green-400" id="division-avg-cost">0</div>
-                                <div class="text-sm text-gray-300 mt-1">Avg Project Cost (Cr)</div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-4">
-                            <div class="bg-yellow-500/20 rounded p-2">
+                            <div class="bg-yellow-500/20 rounded-lg p-2 flex-1 min-w-0">
                                 <div class="font-bold text-yellow-400 text-lg" id="division-pipeline">0</div>
                                 <div class="text-xs text-gray-300">Pipeline</div>
                             </div>
-                            <div class="bg-green-500/20 rounded p-2">
+                            <div class="bg-green-500/20 rounded-lg p-2 flex-1 min-w-0">
                                 <div class="font-bold text-green-400 text-lg" id="division-ongoing">0</div>
                                 <div class="text-xs text-gray-300">Ongoing</div>
                             </div>
-                            <div class="bg-blue-500/20 rounded p-2">
+                            <div class="bg-blue-500/20 rounded-lg p-2 flex-1 min-w-0">
                                 <div class="font-bold text-blue-400 text-lg" id="division-completed">0</div>
                                 <div class="text-xs text-gray-300">Completed</div>
                             </div>
@@ -217,67 +200,13 @@
     background-color: #e8f0e8;
 }
 
-/* Sector Chart Legend - Make text white */
+/* Sector Chart */
 #sector-chart {
     position: relative;
 }
 
-/* Force white text for Chart.js legend - Multiple selectors for full coverage */
-.chartjs-legend,
-.chartjs-legend ul,
-.chartjs-legend li,
-.chartjs-legend li span,
-.chartjs-legend ul li,
-.chartjs-legend ul li span,
-canvas + div,
-canvas + div ul,
-canvas + div li,
-canvas + div li span,
-.legend-label,
-.legend-label span,
-.chart-legend,
-.chart-legend span {
-    color: white !important;
-}
-
-/* Target the legend text specifically */
-.chartjs-legend ul li span:last-child,
-canvas + div ul li span:last-child,
-.legend-text {
-    color: white !important;
-}
-
-/* Target any legend elements */
-[class*="legend"] span,
-[class*="legend"] li,
-div[class*="legend"] {
-    color: white !important;
-}
-
-/* Target the legend label text */
-.legend-label-text {
-    color: white !important;
-}
-
-/* Target Chart.js generated legend items */
-.chartjs-legend li span:last-child {
-    color: white !important;
-}
-
-/* Force white text on all legend related elements */
-#sector-chart ~ div span,
-#sector-chart + div span,
-.canvasjs-chart-legend span {
-    color: white !important;
-}
-
-/* Ensure tooltip text is also white */
-.custom-tooltip {
-    color: white !important;
-}
-
-/* Division grid text colors */
-.division-card {
+/* Force Chart.js axis tick labels to white */
+#sector-chart canvas {
     color: white !important;
 }
 
@@ -285,13 +214,6 @@ div[class*="legend"] {
 #stats-panel,
 #stats-panel * {
     color: white;
-}
-
-/* Override any black text specifically in legend */
-.legend-item span,
-.chartjs-legend ul li span {
-    color: white !important;
-    fill: white !important;
 }
 </style>
 @endpush
@@ -304,6 +226,17 @@ div[class*="legend"] {
 <script>
 window.divisionsDataFromDB = @json($divisionsDataForMap);
 window.sectorChartDataFromDB = @json($sectorChartData);
+</script>
+<script>
+// Override Chart.js defaults AFTER chart.js loads but BEFORE kp-map.js runs
+document.querySelector('script[src*="chart"]') && (function waitForChart() {
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+    } else {
+        setTimeout(waitForChart, 50);
+    }
+})();
 </script>
   @vite([ 
         'resources/js/kp-map.js'

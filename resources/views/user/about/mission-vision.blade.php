@@ -33,42 +33,54 @@
             <div class="lg:w-1/2 overflow-hidden">
                 <div class="space-y-8">
 
-                    <div>
-                        <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Vision</h2>
-                        <p class="text-lg text-text-muted">
-                            To be the leading enabler of sustainable development in Khyber Pakhtunkhwa through innovative 
-                            public-private partnerships that deliver world-class infrastructure and services to our citizens.
-                        </p>
-                    </div>
-                   <div>
-                        <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Mission</h2>
-                        <p class="text-lg text-text-muted mb-4">
-                            To facilitate and promote private sector participation in public infrastructure and service delivery 
-                            through transparent, competitive, and mutually beneficial partnerships.
-                        </p>
-                        <ul class="space-y-3 text-text-muted">
-                            <li class="flex items-start">
-                                <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Create an enabling environment for PPP projects</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Ensure value for money in all partnerships</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Promote innovation and efficiency in service delivery</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                </div>
+
+ <div>
+    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">
+        Our Vision
+    </h2>
+    
+    <p class="text-lg text-text-muted text-justify leading-relaxed">
+        To become a leading catalyst for sustainable economic growth and infrastructure development in Khyber Pakhtunkhwa through innovative, transparent, and effective Public Private Partnerships that create long-term value for citizens and investors.
+    </p>
+</div>
+
+<div>
+    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">
+        Our Mission
+    </h2>
+
+    <p class="text-lg text-text-muted mb-4 text-justify leading-relaxed">
+        To facilitate, strengthen, and promote Public Private Partnerships by providing technical, financial, legal, and institutional support for the development of sustainable, bankable, and high-impact projects that improve public services and accelerate provincial development.
+    </p>
+
+    <ul class="space-y-3 text-text-muted">
+
+        <li class="flex items-start">
+            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Promote private sector participation in public projects</span>
+        </li>
+
+        <li class="flex items-start">
+            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Ensure transparent, efficient, and sustainable PPP processes</span>
+        </li>
+
+        <li class="flex items-start">
+            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Deliver value-driven projects for long-term socio-economic development</span>
+        </li>
+
+    </ul>
+</div>
             </div>
         </div>
     </div>

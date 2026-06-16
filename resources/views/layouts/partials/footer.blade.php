@@ -69,7 +69,11 @@
         <ul class="space-y-3 mb-6">
           <li class="flex items-start">
             <i class="fas fa-map-marker-alt text-accent-1 mr-3 mt-0.5 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">PPP Complex, Sector G-5, Peshawar, Khyber Pakhtunkhwa, Pakistan</span>
+            <span class="text-sm md:text-base text-text-secondary">PPP Unit,
+                                P & D Department,
+                                Civil Secretariat,
+                                Peshawar, Khyber Pakhtunkhwa,
+                                Pakistan</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-phone-alt text-accent-1 mr-3 text-sm"></i>
@@ -77,7 +81,7 @@
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary"><chief class="ppp@pndkp.gov.pk"></chief></span>
+            <span class="text-sm md:text-base text-text-secondary">chief.ppp@pndkp.gov.pk</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-clock text-accent-1 mr-3 text-sm"></i>

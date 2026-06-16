@@ -9,13 +9,13 @@
         </div>
         <p class="mb-4 text-sm md:text-base text-text-secondary text-justify">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
         <div class="flex space-x-4">
-          <a href="https://facebook.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          <a href="https://www.facebook.com/profile.php?id=61585963196702" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-facebook-f text-text-secondary text-sm"></i>
           </a>
-          <a href="https://x.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          {{-- <a href="https://x.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fa-brands fa-x-twitter text-text-secondary text-sm"></i>
-          </a>
-          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          </a> --}}
+          <a href="https://www.linkedin.com/company/ppp-unit-gokp/?viewAsMember=true" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-linkedin-in text-text-secondary text-sm"></i>
           </a>
           

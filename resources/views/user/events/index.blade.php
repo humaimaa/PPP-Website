@@ -13,7 +13,7 @@
          
         </div>
     </div>
-    <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=400&fit=crop" alt="Gallery Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/events.jpg') }}" alt="Gallery Banner" class="w-full h-full object-cover">
 </section>
 
 <section class="py-10 bg-gray-50">

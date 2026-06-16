@@ -26,32 +26,16 @@
            
         </div>
     </div>
-    <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+     @if(($status ?? 'all') === 'operational')
+               <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+                @elseif(($status ?? 'all') === 'ongoing')
+                <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+                @elseif(($status ?? 'all') === 'pipeline')
+                <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+               @endif
+   
 </section>
 
-<!-- Navigation Tabs -->
-<section class="bg-background-white border-b border-gray-200 sticky top-0 z-20">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap justify-center gap-2 py-4">
-            <a href="{{ route('projects.index', 'pipeline') }}" 
-               class="px-6 py-2 rounded-lg transition-all duration-300 {{ $status === 'pipeline' ? 'bg-accent-1 text-text-primary' : 'bg-gray-100 text-text-muted hover:bg-gray-200' }}">
-                Pipeline Projects
-            </a>
-            <a href="{{ route('projects.index', 'ongoing') }}" 
-               class="px-6 py-2 rounded-lg transition-all duration-300 {{ $status === 'ongoing' ? 'bg-accent-1 text-text-primary' : 'bg-gray-100 text-text-muted hover:bg-gray-200' }}">
-                Ongoing Projects
-            </a>
-            <a href="{{ route('projects.index', 'operational') }}" 
-               class="px-6 py-2 rounded-lg transition-all duration-300 {{ $status === 'operational' ? 'bg-accent-1 text-text-primary' : 'bg-gray-100 text-text-muted hover:bg-gray-200' }}">
-                Operational Projects
-            </a>
-            <a href="{{ route('projects.index', 'all') }}" 
-               class="px-6 py-2 rounded-lg transition-all duration-300 {{ $status === 'all' ? 'bg-accent-1 text-text-primary' : 'bg-gray-100 text-text-muted hover:bg-gray-200' }}">
-                All Projects
-            </a>
-        </div>
-    </div>
-</section>
 
 <section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">

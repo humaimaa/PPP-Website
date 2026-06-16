@@ -153,7 +153,7 @@
                 @elseif($isAnalystStyle)
                 {{-- Specialist/Analyst Style Card (Order 3 & 4) --}}
                 <div class="bg-background-white rounded-lg shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    <div class="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
+                    <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
                         <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                              alt="{{ $member->name }}"
                              class="w-full h-full object-cover">

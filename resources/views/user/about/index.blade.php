@@ -29,15 +29,21 @@
                         Overview
                     </h2>
 
-                    <p class="text-lg text-text-muted">
-                        The Public-Private Partnership (PPP) Department of Khyber Pakhtunkhwa serves as the nodal agency for planning, 
-                        facilitating, and implementing PPP projects across the province. Established under the Khyber Pakhtunkhwa 
-                        Public-Private Partnership Act, we bridge the gap between public needs and private sector expertise.
-                    </p>
-                    <p class="text-lg text-text-muted">
-                        Our department works across various sectors including infrastructure, health, education, transportation, 
-                        and urban development, ensuring sustainable growth and improved public services for the citizens of KP.
-                    </p>
+<p class="text-lg text-text-muted">
+    The Public Private Partnership (PPP) Support Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
+</p>
+
+<p class="text-lg text-text-muted">
+    The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes. It assists in identifying, evaluating, and developing viable PPP opportunities while promoting private sector participation in public infrastructure and service delivery.
+</p>
+
+<p class="text-lg text-text-muted">
+    The PPP Support Unit ensures that projects are legally, technically, and financially feasible, comply with the PPP Act and procurement regulations, and safeguard the interests of the Government of Khyber Pakhtunkhwa.
+</p>
+
+<p class="text-lg text-text-muted">
+    Through specialized expertise and capacity-building initiatives, the Unit supports the development of sustainable and bankable PPP projects that contribute to the province's economic growth and development objectives.
+</p>
                 </div>
             </div>
 

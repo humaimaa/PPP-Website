@@ -9,9 +9,9 @@
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-                Our Leadership Team
+                Our Team
             </h1>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
+            <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Team Banner" class="w-full h-full object-cover">

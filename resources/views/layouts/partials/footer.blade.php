@@ -77,7 +77,7 @@
           </li>
           <li class="flex items-center">
             <i class="fas fa-phone-alt text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">+92 91 921 1234</span>
+            <span class="text-sm md:text-base text-text-secondary">+92 333 9391457</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>
@@ -87,10 +87,7 @@
             <i class="fas fa-clock text-accent-1 mr-3 text-sm"></i>
             <span class="text-sm md:text-base text-text-secondary">Mon-Fri: 9:00 AM - 5:00 PM</span>
           </li>
-          <li class="flex items-center">
-            <i class="fas fa-fax text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">+92 91 921 1235</span>
-          </li>
+
         </ul>
 
         

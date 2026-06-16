@@ -53,9 +53,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Phone</h3>
                             <p class="mt-1 text-text-muted">
-                                Main Office: +92 91 921 1234<br>
-                                Help Desk: +92 91 921 5678<br>
-                                Fax: +92 91 921 9876
+                                +92 333 9391457
                             </p>
                         </div>
                     </div>

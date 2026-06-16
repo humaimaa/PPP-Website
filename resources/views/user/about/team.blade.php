@@ -24,7 +24,7 @@
     $otherMembers = collect();
     
     foreach ($team as $member) {
-        $order = $member->designation->order ?? 999;
+        $order = $member->hierarchy->order ?? 999;
         
         if ($order == 1) {
             $chief = $member;
@@ -40,7 +40,7 @@
     
     // Sort groups by the hierarchy order
     $groupedMembers = $groupedMembers->sortBy(function($members) {
-        return $members->first()->designation->order ?? 999;
+        return $members->first()->hierarchy->order ?? 999;
     });
 @endphp
 
@@ -63,7 +63,7 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $chief->name }}</h3>
-                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->designation->title ?? 'Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $chief->hierarchy->title ?? 'Chief PPP' }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -94,7 +94,7 @@
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $assistantChief->name }}</h3>
-                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->designation->title ?? 'Assistant Chief PPP' }}</p>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ $assistantChief->hierarchy->title ?? 'Assistant Chief PPP' }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -124,11 +124,11 @@
 <!-- Other Team Members by Hierarchy -->
 @foreach($groupedMembers as $hierarchyId => $members)
 @php
-    $hierarchy = $members->first()->designation; // Since designation is the hierarchy relation
+    $hierarchy = $members->first()->hierarchy;
     $hierarchyTitle = $hierarchy->title ?? 'Team Members';
     $hierarchyOrder = $hierarchy->order ?? 999;
     $memberCount = $members->count();
-    $loopIndex = $loop->index; // Get the current loop index for strip effect
+    $loopIndex = $loop->index;
 
     // Create strip effect - alternate between gray and white
     $bgClass = ($loopIndex % 2 == 0) ? 'bg-background-light' : 'bg-background-white';
@@ -158,7 +158,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
@@ -180,7 +180,7 @@
                              class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-base font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                    <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                    <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
                    @if($member->email)
                     <a href="mailto:{{ $member->email }}"
                        class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
@@ -198,7 +198,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->hierarchy->title ?? 'Team Member' }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">

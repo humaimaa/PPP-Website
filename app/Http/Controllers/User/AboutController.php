@@ -59,8 +59,8 @@ class AboutController extends Controller
      */
     public function team()
     {
-        // Load team members with their designations, ordered by hierarchy order
-        $team = Team::with('designation')
+        // Load team members with their hierarchy (not designation)
+        $team = Team::with('hierarchy') // Changed from 'designation'
             ->join('hierarchy', 'team.hierarchy_id', '=', 'hierarchy.id')
             ->orderBy('hierarchy.order', 'asc')
             ->select('team.*') // Prevent column conflicts

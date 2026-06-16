@@ -27,12 +27,14 @@
                     <p class="text-sm text-gray-500 mt-1">Update team member information</p>
                 </div>
                 <div class="flex gap-2">
+                    @can('team.delete')
                     <form action="{{ route('admin.team.destroy', $teamMember) }}" 
                           method="POST" 
                           onsubmit="return confirm('Are you sure you want to delete this team member? This action cannot be undone.');">
                         @csrf
                        
                     </form>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -104,30 +106,54 @@
                         @enderror
                     </div>
 
-                    {{-- Designation --}}
+                    {{-- Hierarchy Level --}}
                     <div>
-                        <label for="designation_id" class="block text-sm font-medium text-gray-700 mb-2">
-                            Designation <span class="text-red-500">*</span>
+                        <label for="hierarchy_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Hierarchy Level <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-sitemap"></i>
+                            </span>
+                            <select 
+                                id="hierarchy_id" 
+                                name="hierarchy_id" 
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('hierarchy_id') border-red-500 @enderror">
+                                <option value="">Select Hierarchy Level</option>
+                                @foreach($hierarchies as $hierarchy)
+                                    <option value="{{ $hierarchy->id }}" {{ old('hierarchy_id', $teamMember->hierarchy_id) == $hierarchy->id ? 'selected' : '' }}>
+                                        {{ $hierarchy->title }} (Order: {{ $hierarchy->order }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Select the team member's hierarchy level (e.g., Secretary, Director General)</p>
+                        @error('hierarchy_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Designation (Job Title) --}}
+                    <div>
+                        <label for="designation" class="block text-sm font-medium text-gray-700 mb-2">
+                            Designation / Job Title <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-briefcase"></i>
                             </span>
-                            <select 
-                                id="designation_id" 
-                                name="designation_id" 
+                            <input 
+                                type="text" 
+                                id="designation" 
+                                name="designation" 
                                 required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('designation_id') border-red-500 @enderror">
-                                <option value="">Select Designation</option>
-                                @foreach($designations as $designation)
-                                    <option value="{{ $designation->id }}" {{ old('designation_id', $teamMember->designation_id) == $designation->id ? 'selected' : '' }}>
-                                        {{ $designation->title }}
-                                    </option>
-                                @endforeach
-                            </select>
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('designation') border-red-500 @enderror"
+                                placeholder="e.g., Senior Developer, Manager, Team Lead"
+                                value="{{ old('designation', $teamMember->designation) }}">
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Select the team member's official designation</p>
-                        @error('designation_id')
+                        <p class="mt-1 text-xs text-gray-500">Enter the specific job title/designation for this team member</p>
+                        @error('designation')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -275,8 +301,8 @@
                     <div>
                         <h4 class="text-sm font-medium text-blue-900">About Team Members</h4>
                         <p class="text-xs text-blue-700 mt-1">
-                            Team members will be displayed on the frontend team page with their photo, name, designation, 
-                            email, and phone number. This helps showcase the department's expertise and leadership.
+                            Team members will be displayed on the frontend team page with their photo, name, hierarchy level, 
+                            designation, email, and phone number. This helps showcase the department's expertise and leadership.
                             <br><br>
                             <strong>Note:</strong> If you upload a new profile photo, the old one will be automatically deleted.
                         </p>

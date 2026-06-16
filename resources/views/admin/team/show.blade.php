@@ -24,6 +24,28 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View team member details</p>
                 </div>
+                <div class="flex gap-2">
+                    @can('team.edit')
+                        <a href="{{ route('admin.team.edit', $teamMember) }}" 
+                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-edit"></i>
+                            Edit Member
+                        </a>
+                    @endcan
+                    @can('team.delete')
+                        <form action="{{ route('admin.team.destroy', $teamMember) }}" 
+                              method="POST" 
+                              onsubmit="return confirm('Are you sure you want to delete this team member? This action cannot be undone.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                    class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                                <i class="fas fa-trash-alt"></i>
+                                Delete
+                            </button>
+                        </form>
+                    @endcan
+                </div>
             </div>
         </div>
         
@@ -52,12 +74,30 @@
                     </div>
                 </div>
 
-                {{-- Designation --}}
+                {{-- Hierarchy Level --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Designation</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Hierarchy Level</label>
+                    <div class="text-gray-700 text-base">
+                        <i class="fas fa-sitemap text-gray-400 mr-2"></i>
+                        <span class="inline-flex items-center bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-md">
+                            {{ $teamMember->hierarchy->title ?? 'N/A' }}
+                        </span>
+                        @if($teamMember->hierarchy)
+                            <span class="text-xs text-gray-400 ml-2">
+                                (Order: {{ $teamMember->hierarchy->order }})
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Designation (Job Title) --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Designation / Job Title</label>
                     <div class="text-gray-700 text-base">
                         <i class="fas fa-briefcase text-gray-400 mr-2"></i>
-                        {{ $teamMember->designation->title }}
+                        <span class="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-md">
+                            {{ $teamMember->designation ?? 'N/A' }}
+                        </span>
                     </div>
                 </div>
 
@@ -66,7 +106,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Email Address</label>
                     <div class="text-gray-700">
                         <i class="fas fa-envelope text-gray-400 mr-2"></i>
-                        <a href="mailto:{{ $teamMember->email }}" class="text-emerald-600 hover:text-emerald-800">
+                        <a href="mailto:{{ $teamMember->email }}" class="text-emerald-600 hover:text-emerald-800 transition">
                             {{ $teamMember->email }}
                         </a>
                     </div>
@@ -77,7 +117,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Phone Number</label>
                     <div class="text-gray-700">
                         <i class="fas fa-phone text-gray-400 mr-2"></i>
-                        <a href="tel:{{ $teamMember->phone }}" class="text-emerald-600 hover:text-emerald-800">
+                        <a href="tel:{{ $teamMember->phone }}" class="text-emerald-600 hover:text-emerald-800 transition">
                             {{ $teamMember->phone }}
                         </a>
                     </div>
@@ -91,13 +131,28 @@
                         {{ $teamMember->created_at->format('F d, Y') }}
                     </div>
                 </div>
+
+                {{-- Status / Additional Info --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
+                    <div class="text-gray-700">
+                        <i class="fas fa-circle text-emerald-500 mr-2" style="font-size: 0.6rem;"></i>
+                        <span class="text-sm">Active</span>
+                    </div>
+                </div>
             </div>
 
             {{-- Last Updated --}}
             <div class="mt-6 pt-4 border-t border-gray-200">
-                <div class="text-xs text-gray-400">
-                    <i class="far fa-clock mr-1"></i>
-                    Last updated: {{ $teamMember->updated_at->format('F d, Y ') }}
+                <div class="flex justify-between items-center">
+                    <div class="text-xs text-gray-400">
+                        <i class="far fa-clock mr-1"></i>
+                        Last updated: {{ $teamMember->updated_at->format('F d, Y h:i A') }}
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        <i class="far fa-id-card mr-1"></i>
+                        ID: #{{ $teamMember->id }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\DesignationController;
+use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\LeadershipMessageController;
 use App\Http\Controllers\Auth\LoginController;
@@ -179,15 +179,16 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{sector}', [SectorController::class, 'destroy'])->name('destroy')->middleware('can:sectors.delete');
     });
 
-    // ==================== DESIGNATIONS MANAGEMENT ====================
-    Route::prefix('designations')->name('designations.')->middleware('can:designations.view')->group(function () {
-        Route::get('/', [DesignationController::class, 'index'])->name('index');
-        Route::get('/add', [DesignationController::class, 'create'])->name('add')->middleware('can:designations.create');
-        Route::post('/', [DesignationController::class, 'store'])->name('store')->middleware('can:designations.create');
-        Route::post('/bulk-delete', [DesignationController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-        Route::get('/{designation}/edit', [DesignationController::class, 'edit'])->name('edit')->middleware('can:designations.edit');
-        Route::put('/{designation}', [DesignationController::class, 'update'])->name('update')->middleware('can:designations.edit');
-        Route::delete('/{designation}', [DesignationController::class, 'destroy'])->name('destroy')->middleware('can:designations.delete');
+  // ==================== HIERARCHY MANAGEMENT ====================
+    Route::prefix('hierarchy')->name('hierarchy.')->middleware('can:hierarchy.view')->group(function () {
+        Route::get('/', [HierarchyController::class, 'index'])->name('index');
+        Route::get('/add', [HierarchyController::class, 'create'])->name('add')->middleware('can:hierarchy.create');
+        Route::post('/', [HierarchyController::class, 'store'])->name('store')->middleware('can:hierarchy.create');
+        Route::post('/bulk-delete', [HierarchyController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        Route::get('/{hierarchy}/edit', [HierarchyController::class, 'edit'])->name('edit')->middleware('can:hierarchy.edit');
+        Route::put('/{hierarchy}', [HierarchyController::class, 'update'])->name('update')->middleware('can:hierarchy.edit');
+        Route::delete('/{hierarchy}', [HierarchyController::class, 'destroy'])->name('destroy')->middleware('can:hierarchy.delete');
+        Route::post('/update-order', [HierarchyController::class, 'updateOrder'])->name('update-order')->middleware('can:hierarchy.edit');
     });
 
     // ==================== TEAM MANAGEMENT ====================

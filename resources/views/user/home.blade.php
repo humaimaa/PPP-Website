@@ -255,62 +255,95 @@
         <div class="relative">
             <div class="logo-scroll-container overflow-hidden">
                 <div class="logo-track flex items-center gap-12 md:gap-16">
+
                     <!-- Original set of logos -->
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
 
                     <!-- Duplicate set for seamless loop -->
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
-                    
+
                     <!-- Third set for smoother infinite scroll -->
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_1.jpeg') }}" alt="Partner 1" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_2.jpeg') }}" alt="Partner 2" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_3.png') }}" alt="Partner 3" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_4.png') }}" alt="Partner 4" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <img src="{{ asset('images/partner_5.jpeg') }}" alt="Partner 5" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 @endsection
+
 
 @push('scripts')
     @vite([ 

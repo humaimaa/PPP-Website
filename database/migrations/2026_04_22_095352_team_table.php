@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('team', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('designation_id')->constrained('designations')->onDelete('cascade');
+            $table->foreignId('hierarchy_id')->constrained('hierarchy')->onDelete('cascade');
+            $table->string('designation'); // New column for designation title
             $table->string('img');
             $table->string('email');
             $table->string('phone', 20);

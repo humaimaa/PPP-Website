@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Team;
-use App\Models\Designation;
+use App\Models\Hierarchy; // Changed from Designation
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +15,7 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Team::with('designation');
+        $query = Team::with('hierarchy'); // Changed from 'designation'
         
         // Search functionality
         if ($request->has('search') && $request->search) {
@@ -23,7 +23,8 @@ class TeamController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('email', 'like', '%' . $search . '%')
-                  ->orWhere('phone', 'like', '%' . $search . '%');
+                  ->orWhere('phone', 'like', '%' . $search . '%')
+                  ->orWhere('designation', 'like', '%' . $search . '%'); // Added designation search
             });
         }
         
@@ -37,8 +38,8 @@ class TeamController extends Controller
      */
     public function create()
     {
-        $designations = Designation::orderBy('title')->get();
-        return view('admin.team.create', compact('designations'));
+        $hierarchies = Hierarchy::orderBy('order')->orderBy('title')->get(); // Changed from Designation
+        return view('admin.team.create', compact('hierarchies'));
     }
 
     /**
@@ -48,7 +49,8 @@ class TeamController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'designation_id' => 'required|exists:designations,id',
+            'hierarchy_id' => 'required|exists:hierarchy,id', // Changed from designation_id
+            'designation' => 'required|string|max:255', // New validation for designation
             'email' => 'required|email|unique:team,email',
             'img' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'phone' => 'required|string|max:20',
@@ -58,7 +60,8 @@ class TeamController extends Controller
 
         Team::create([
             'name' => $request->name,
-            'designation_id' => $request->designation_id,
+            'hierarchy_id' => $request->hierarchy_id, // Changed from designation_id
+            'designation' => $request->designation, // New field
             'email' => $request->email,
             'img' => $imagePath,
             'phone' => $request->phone,
@@ -73,7 +76,7 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        $team->load('designation');
+        $team->load('hierarchy'); // Changed from 'designation'
         return view('admin.team.show', ['teamMember' => $team]);
     }
     
@@ -82,8 +85,8 @@ class TeamController extends Controller
      */
     public function edit(Team $team)
     {
-        $designations = Designation::orderBy('title')->get();
-        return view('admin.team.edit', ['teamMember' => $team, 'designations' => $designations]);
+        $hierarchies = Hierarchy::orderBy('order')->orderBy('title')->get(); // Changed from Designation
+        return view('admin.team.edit', ['teamMember' => $team, 'hierarchies' => $hierarchies]);
     }
     
     /**
@@ -93,7 +96,8 @@ class TeamController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'designation_id' => 'required|exists:designations,id',
+            'hierarchy_id' => 'required|exists:hierarchy,id', // Changed from designation_id
+            'designation' => 'required|string|max:255', // New validation for designation
             'email' => 'required|email|unique:team,email,' . $team->id,
             'img' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'phone' => 'required|string|max:20',
@@ -101,7 +105,8 @@ class TeamController extends Controller
 
         $data = [
             'name' => $request->name,
-            'designation_id' => $request->designation_id,
+            'hierarchy_id' => $request->hierarchy_id, // Changed from designation_id
+            'designation' => $request->designation, // New field
             'email' => $request->email,
             'phone' => $request->phone,
         ];

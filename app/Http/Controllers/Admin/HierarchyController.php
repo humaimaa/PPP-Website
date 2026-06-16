@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Designation;
+use App\Models\Hierarchy;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class DesignationController extends Controller
+class HierarchyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Designation::query();
+        $query = Hierarchy::query();
 
         if ($request->has('search') && $request->search) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $designations = $query->orderBy('order')->orderBy('title')->paginate(15);
+        $hierarchies = $query->orderBy('order')->orderBy('title')->paginate(15);
 
-        return view('admin.designations.index', compact('designations'));
+        return view('admin.hierarchy.index', compact('hierarchies'));
     }
 
     /**
@@ -30,7 +30,7 @@ class DesignationController extends Controller
      */
     public function create()
     {
-        return view('admin.designations.create');
+        return view('admin.hierarchy.create');
     }
 
     /**
@@ -39,123 +39,123 @@ class DesignationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255|unique:designations,title',
-            'order' => 'required|integer|min:0|unique:designations,order',
+            'title' => 'required|string|max:255|unique:hierarchy,title',
+            'order' => 'required|integer|min:0|unique:hierarchy,order',
         ], [
-            'title.required' => 'The designation title is required.',
-            'title.unique'   => 'This designation already exists. Please enter a unique title.',
-            'title.max'      => 'The designation title cannot exceed 255 characters.',
+            'title.required' => 'The hierarchy title is required.',
+            'title.unique'   => 'This hierarchy entry already exists. Please enter a unique title.',
+            'title.max'      => 'The hierarchy title cannot exceed 255 characters.',
             'order.required' => 'The display order is required.',
             'order.unique'   => 'This order number is already taken. Please choose a different one.',
             'order.integer'  => 'Order must be a valid number.',
             'order.min'      => 'Order must be at least 0.',
         ]);
 
-        Designation::create([
+        Hierarchy::create([
             'title' => $request->title,
             'order' => $request->order,
         ]);
 
-        return redirect()->route('admin.designations.index')
-            ->with('success', 'Designation created successfully!');
+        return redirect()->route('admin.hierarchy.index')
+            ->with('success', 'Hierarchy entry created successfully!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Designation $designation)
+    public function edit(Hierarchy $hierarchy)
     {
-        return view('admin.designations.edit', compact('designation'));
+        return view('admin.hierarchy.edit', compact('hierarchy'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Designation $designation)
+    public function update(Request $request, Hierarchy $hierarchy)
     {
         $request->validate([
             'title' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('designations', 'title')->ignore($designation->id),
+                Rule::unique('hierarchy', 'title')->ignore($hierarchy->id),
             ],
             'order' => [
                 'required',
                 'integer',
                 'min:0',
-                Rule::unique('designations', 'order')->ignore($designation->id),
+                Rule::unique('hierarchy', 'order')->ignore($hierarchy->id),
             ],
         ], [
-            'title.required' => 'The designation title is required.',
-            'title.unique'   => 'This designation already exists. Please enter a unique title.',
-            'title.max'      => 'The designation title cannot exceed 255 characters.',
+            'title.required' => 'The hierarchy title is required.',
+            'title.unique'   => 'This hierarchy entry already exists. Please enter a unique title.',
+            'title.max'      => 'The hierarchy title cannot exceed 255 characters.',
             'order.required' => 'The display order is required.',
             'order.unique'   => 'This order number is already taken. Please choose a different one.',
             'order.integer'  => 'Order must be a valid number.',
             'order.min'      => 'Order must be at least 0.',
         ]);
 
-        $designation->update([
+        $hierarchy->update([
             'title' => $request->title,
             'order' => $request->order,
         ]);
 
-        return redirect()->route('admin.designations.index')
-            ->with('success', 'Designation updated successfully!');
+        return redirect()->route('admin.hierarchy.index')
+            ->with('success', 'Hierarchy entry updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Designation $designation)
+    public function destroy(Hierarchy $hierarchy)
     {
         try {
-            if ($designation->isUsed()) {
-                $usageDetails = $designation->getUsageDetails();
-                return redirect()->route('admin.designations.index')
-                    ->with('error', 'Cannot delete this designation because it is currently being used by ' . $usageDetails . '. Please reassign or delete those team members first.');
+            if ($hierarchy->isUsed()) {
+                $usageDetails = $hierarchy->getUsageDetails();
+                return redirect()->route('admin.hierarchy.index')
+                    ->with('error', 'Cannot delete this hierarchy entry because it is currently being used by ' . $usageDetails . '. Please reassign or delete those team members first.');
             }
 
-            $designationTitle = $designation->title;
-            $designation->delete();
+            $hierarchyTitle = $hierarchy->title;
+            $hierarchy->delete();
 
-            return redirect()->route('admin.designations.index')
-                ->with('success', 'Designation "' . $designationTitle . '" deleted successfully!');
+            return redirect()->route('admin.hierarchy.index')
+                ->with('success', 'Hierarchy entry "' . $hierarchyTitle . '" deleted successfully!');
 
         } catch (\Exception $e) {
-            return redirect()->route('admin.designations.index')
-                ->with('error', 'Error deleting designation: ' . $e->getMessage());
+            return redirect()->route('admin.hierarchy.index')
+                ->with('error', 'Error deleting hierarchy entry: ' . $e->getMessage());
         }
     }
 
     /**
-     * Bulk delete designations
+     * Bulk delete hierarchy entries
      */
     public function bulkDelete(Request $request)
     {
         $request->validate([
-            'designation_ids' => 'required|array',
-            'designation_ids.*' => 'exists:designations,id'
+            'hierarchy_ids' => 'required|array',
+            'hierarchy_ids.*' => 'exists:hierarchy,id'
         ]);
 
-        $designationIds = $request->designation_ids;
+        $hierarchyIds = $request->hierarchy_ids;
         $deletedCount = 0;
         $failedDeletions = [];
 
-        foreach ($designationIds as $designationId) {
-            $designation = Designation::find($designationId);
-            if ($designation && !$designation->isUsed()) {
-                $designation->delete();
+        foreach ($hierarchyIds as $hierarchyId) {
+            $hierarchy = Hierarchy::find($hierarchyId);
+            if ($hierarchy && !$hierarchy->isUsed()) {
+                $hierarchy->delete();
                 $deletedCount++;
-            } else if ($designation && $designation->isUsed()) {
-                $failedDeletions[] = $designation->title;
+            } else if ($hierarchy && $hierarchy->isUsed()) {
+                $failedDeletions[] = $hierarchy->title;
             }
         }
 
         $message = '';
         if ($deletedCount > 0) {
-            $message .= $deletedCount . ' designation(s) deleted successfully! ';
+            $message .= $deletedCount . ' hierarchy entry(ies) deleted successfully! ';
         }
 
         if (count($failedDeletions) > 0) {
@@ -163,23 +163,23 @@ class DesignationController extends Controller
         }
 
         if ($deletedCount > 0 || count($failedDeletions) > 0) {
-            return redirect()->route('admin.designations.index')
+            return redirect()->route('admin.hierarchy.index')
                 ->with('warning', trim($message));
         }
 
-        return redirect()->route('admin.designations.index')
-            ->with('error', 'No designations were deleted. Please select valid designations that are not in use.');
+        return redirect()->route('admin.hierarchy.index')
+            ->with('error', 'No hierarchy entries were deleted. Please select valid entries that are not in use.');
     }
 
     /**
-     * Update order of designations (for drag-and-drop sorting) - with duplicate check
+     * Update order of hierarchy entries (for drag-and-drop sorting)
      */
     public function updateOrder(Request $request)
     {
         try {
             $request->validate([
                 'orders' => 'required|array',
-                'orders.*.id' => 'exists:designations,id',
+                'orders.*.id' => 'exists:hierarchy,id',
                 'orders.*.order' => 'required|integer|min:0',
             ]);
 
@@ -194,7 +194,7 @@ class DesignationController extends Controller
             }
 
             foreach ($request->orders as $item) {
-                Designation::where('id', $item['id'])->update(['order' => $item['order']]);
+                Hierarchy::where('id', $item['id'])->update(['order' => $item['order']]);
             }
 
             return response()->json(['success' => true, 'message' => 'Order updated successfully!']);

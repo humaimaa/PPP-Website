@@ -206,30 +206,30 @@
         </div>
         @endcan
 
-        {{-- Designations --}}
-        @can('designations.view')
-        <div class="mb-1" data-dropdown>
-            <button type="button"
-                    class="dropdown-btn group w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left relative">
-                <div class="flex items-center">
-                    <i class="fas fa-tag w-6 text-center shrink-0"></i>
-                    <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-                          style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Designations</span>
-                </div>
-                <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
-                   style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Designations</span>
-            </button>
-            <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
-                @can('designations.create')
-                <a href="{{ route('admin.designations.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.designations.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Designation</a>
-                @endcan
-                <a href="{{ route('admin.designations.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.designations.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Designations</a>
-            </div>
+        {{-- Hierarchy --}}
+@can('hierarchy.view')
+<div class="mb-1" data-dropdown>
+    <button type="button"
+            class="dropdown-btn group w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left relative">
+        <div class="flex items-center">
+            <i class="fas fa-sitemap w-6 text-center shrink-0"></i>
+            <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+                  style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Hierarchy</span>
         </div>
+        <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
+           style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
+        <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
+                     opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
+                     {{ $isOpen ? 'hidden' : '' }}">Hierarchy</span>
+    </button>
+    <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
+        @can('hierarchy.create')
+        <a href="{{ route('admin.hierarchy.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Hierarchy</a>
         @endcan
+        <a href="{{ route('admin.hierarchy.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Hierarchy</a>
+    </div>
+</div>
+@endcan
 
         {{-- Leadership Messages --}}
         @can('leadership.view')

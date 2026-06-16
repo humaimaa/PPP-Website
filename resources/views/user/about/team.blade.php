@@ -12,14 +12,13 @@
                 Our Leadership Team
             </h1>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Team Banner" class="w-full h-full object-cover">
 </section>
 
 @php
-    // Separate team members by designation order
+    // Separate team members by hierarchy order
     $chief = null;
     $assistantChief = null;
     $otherMembers = collect();
@@ -36,10 +35,10 @@
         }
     }
     
-    // Group other members by designation_id for section display
-    $groupedMembers = $otherMembers->groupBy('designation_id');
+    // Group other members by hierarchy_id for section display
+    $groupedMembers = $otherMembers->groupBy('hierarchy_id');
     
-    // Sort groups by the designation order
+    // Sort groups by the hierarchy order
     $groupedMembers = $groupedMembers->sortBy(function($members) {
         return $members->first()->designation->order ?? 999;
     });
@@ -122,33 +121,28 @@
 </section>
 @endif
 
-<!-- Other Team Members by Designation -->
-@foreach($groupedMembers as $designationId => $members)
+<!-- Other Team Members by Hierarchy -->
+@foreach($groupedMembers as $hierarchyId => $members)
 @php
-    $designation = $members->first()->designation;
-    $designationName = $designation->title ?? 'Team Members';
-    $designationOrder = $designation->order ?? 999;
+    $hierarchy = $members->first()->designation; // Since designation is the hierarchy relation
+    $hierarchyTitle = $hierarchy->title ?? 'Team Members';
+    $hierarchyOrder = $hierarchy->order ?? 999;
     $memberCount = $members->count();
     $loopIndex = $loop->index; // Get the current loop index for strip effect
 
     // Create strip effect - alternate between gray and white
-    // Even index (0,2,4...) - Gray background (same as Research Officer)
-    // Odd index (1,3,5...) - White background
     $bgClass = ($loopIndex % 2 == 0) ? 'bg-background-light' : 'bg-background-white';
     
-    // Card styling based on designation
-    $isOfficerStyle = ($designationOrder == 3);  // Research Officers
-    $isAnalystStyle = ($designationOrder >= 4);  // Analysts and above
+    // Card styling based on hierarchy order
+    $isOfficerStyle = ($hierarchyOrder == 3);  // Research Officers
+    $isAnalystStyle = ($hierarchyOrder >= 4);  // Analysts and above
 @endphp
 
 <section class="py-12 {{ $bgClass }} transition-all duration-300">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-black">{{ $designationName }}</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black">{{ $hierarchyTitle }}</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
-            @if($designation->description)
-            <p class="text-text-muted mt-4">{{ $designation->description }}</p>
-            @endif
         </div>
 
         <!-- Grid to show 4 cards in one row -->
@@ -194,12 +188,35 @@
                     </a>
                     @endif
                 </div>
+                @else
+                {{-- Default Style Card --}}
+                <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="h-56 overflow-hidden">
+                        <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                             alt="{{ $member->name }}"
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
+                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation->title ?? 'Team Member' }}</p>
+                        @if($member->email)
+                        <a href="mailto:{{ $member->email }}"
+                           class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
+                            <svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            {{ Str::limit($member->email, 20) }}
+                        </a>
+                        @endif
+                    </div>
+                </div>
                 @endif
             @endforeach
         </div>
     </div>
 </section>
 @endforeach
+
 <!-- Empty state -->
 @if($team->isEmpty())
 <section class="py-20 bg-background-white">

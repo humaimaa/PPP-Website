@@ -59,14 +59,12 @@ class AboutController extends Controller
      */
     public function team()
     {
-        // Load team members with their designations, ordered by designation.order
-        $team = Team::with(['designation' => function($query) {
-            $query->orderBy('order', 'asc');
-        }])
-        ->get()
-        ->sortBy(function($member) {
-            return $member->designation->order ?? 999;
-        });
+        // Load team members with their designations, ordered by hierarchy order
+        $team = Team::with('designation')
+            ->join('hierarchy', 'team.hierarchy_id', '=', 'hierarchy.id')
+            ->orderBy('hierarchy.order', 'asc')
+            ->select('team.*') // Prevent column conflicts
+            ->get();
         
         return view('user.about.team', compact('team'));
     }

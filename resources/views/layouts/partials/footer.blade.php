@@ -46,9 +46,9 @@
           </li>
 
           <li>
-            <a href="https://www.adb.org" target="_blank" class="hover:text-accent-1 transition-colors duration-300 block flex items-center text-text-secondary">
+            <a href="https://kpezdmc.org.pk/" target="_blank" class="hover:text-accent-1 transition-colors duration-300 block flex items-center text-text-secondary">
               <i class="fas fa-external-link-alt mr-2 text-xs text-accent-1"></i>
-              Asian Development Bank (ADB)
+              KPEZDMC
             </a>
           </li>
           <li>

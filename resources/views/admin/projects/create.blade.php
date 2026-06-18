@@ -87,8 +87,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('sector') border-red-500 @enderror">
                                 <option value="">Select Sector</option>
                                 @foreach($sectors as $sector)
-                                <option value="{{ $sector->name }}" {{ old('sector')==$sector->name ? 'selected' : ''
-                                    }}>
+                                <option value="{{ $sector->name }}" {{ old('sector')==$sector->name ? 'selected' : '' }}>
                                     {{ $sector->name }}
                                 </option>
                                 @endforeach
@@ -119,8 +118,7 @@
                         @enderror
                     </div>
 
-                    {{-- Location (NOT REQUIRED) --}}
-                    <div>
+                    {{-- Location (NOT REQUIRED) --}}                    <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                             Location
                         </label>
@@ -171,7 +169,7 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-rupee-sign"></i>
                             </span>
-                            <input type="text" id="cost" name="cost"  value="{{ old('cost') }}"
+                            <input type="text" id="cost" name="cost" value="{{ old('cost') }}"
                                 required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('cost') border-red-500 @enderror"
                                 placeholder="0.00">
@@ -181,26 +179,7 @@
                         @enderror
                     </div>
 
-                    {{-- Status (NOT REQUIRED) --}}
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Status
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-chart-simple"></i>
-                            </span>
-                            <input type="text" id="status" name="status" value="{{ old('status') }}"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
-                                placeholder="e.g., Planning, Implementation, Completed (optional)">
-                        </div>
-                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
-                        @error('status')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Category --}}
+                    {{-- ===== CATEGORY (now first in the row) ===== --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Category <span class="text-red-500">*</span>
@@ -213,16 +192,32 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('category') border-red-500 @enderror"
                                 onchange="toggleProjectDetails()">
                                 <option value="">Select Category</option>
-                                <option value="Pipeline" {{ old('category')=='Pipeline' ? 'selected' : '' }}>Pipeline
-                                </option>
-                                <option value="Ongoing" {{ old('category')=='Ongoing' ? 'selected' : '' }}>Ongoing
-                                </option>
-                                <option value="Completed" {{ old('category')=='Completed' ? 'selected' : '' }}>Completed
-                                </option>
+                                <option value="Pipeline" {{ old('category')=='Pipeline' ? 'selected' : '' }}>Pipeline</option>
+                                <option value="Ongoing" {{ old('category')=='Ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                <option value="Completed" {{ old('category')=='Completed' ? 'selected' : '' }}>Completed</option>
                             </select>
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
                         @error('category')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- ===== STATUS FIELD (now on the right side of category) ===== --}}
+                    <div id="status-wrapper" style="display: none;">
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Status <span id="status-required" class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-chart-simple"></i>
+                            </span>
+                            <select id="status" name="status"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror">
+                                <option value="">Select Status</option>
+                            </select>
+                        </div>
+                        @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -499,23 +494,56 @@
         const pipelineSection = document.getElementById('pipeline-section');
         const ongoingSection = document.getElementById('ongoing-section');
         const completedSection = document.getElementById('completed-section');
-        
+        const statusWrapper = document.getElementById('status-wrapper');
+        const statusSelect = document.getElementById('status');
+        const statusRequired = document.getElementById('status-required');
+
         // Hide all sections
         if(pipelineSection) pipelineSection.style.display = 'none';
         if(ongoingSection) ongoingSection.style.display = 'none';
         if(completedSection) completedSection.style.display = 'none';
-        
+
         // Remove required attributes from all conditional fields first
         removeRequiredAttributes();
-        
-        // Show and enable appropriate section
+
+        // Clear and hide status by default
+        statusWrapper.style.display = 'none';
+        statusSelect.removeAttribute('required');
+        statusSelect.innerHTML = '<option value="">Select Status</option>';
+
         if (category === 'Pipeline') {
             if(pipelineSection) pipelineSection.style.display = 'block';
+            // status remains hidden
         } else if (category === 'Ongoing') {
             if(ongoingSection) ongoingSection.style.display = 'block';
+            // Show status with Ongoing options
+            statusWrapper.style.display = 'block';
+            statusSelect.setAttribute('required', 'required');
+            statusRequired.style.display = 'inline';
+            // Add options
+            const options = ['Private Partner Selection', 'Transaction Advisory'];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if ("{{ old('status') }}" === opt) option.selected = true;
+                statusSelect.appendChild(option);
+            });
             addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
         } else if (category === 'Completed') {
             if(completedSection) completedSection.style.display = 'block';
+            // Show status with Completed options
+            statusWrapper.style.display = 'block';
+            statusSelect.setAttribute('required', 'required');
+            statusRequired.style.display = 'inline';
+            const options = ['Operational', 'Construction'];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if ("{{ old('status') }}" === opt) option.selected = true;
+                statusSelect.appendChild(option);
+            });
             addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
         }
     }
@@ -549,15 +577,6 @@
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         toggleProjectDetails();
-        
-        // Debug: Log when form is submitted
-        const form = document.getElementById('projectForm');
-        if(form) {
-            form.addEventListener('submit', function(e) {
-                console.log('Form is being submitted');
-                // Don't prevent default - let it submit naturally
-            });
-        }
     });
 </script>
 @endsection

@@ -182,26 +182,7 @@
                         @enderror
                     </div>
 
-                    {{-- Status (NOT REQUIRED) --}}
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Status
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-chart-simple"></i>
-                            </span>
-                            <input type="text" id="status" name="status" value="{{ old('status', $project->status) }}"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror"
-                                placeholder="e.g., Planning, Implementation, Completed (optional)">
-                        </div>
-                        <p class="mt-1 text-xs text-gray-500">Optional field</p>
-                        @error('status')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Category --}}
+                    {{-- ===== CATEGORY (now first in the row) ===== --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Category <span class="text-red-500">*</span>
@@ -221,6 +202,25 @@
                         </div>
                         <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
                         @error('category')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- ===== STATUS FIELD (now on the right side of category) ===== --}}
+                    <div id="status-wrapper" style="display: none;">
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            Project Status <span id="status-required" class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-chart-simple"></i>
+                            </span>
+                            <select id="status" name="status"
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('status') border-red-500 @enderror">
+                                <option value="">Select Status</option>
+                            </select>
+                        </div>
+                        @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -505,23 +505,58 @@
         const pipelineSection = document.getElementById('pipeline-section');
         const ongoingSection = document.getElementById('ongoing-section');
         const completedSection = document.getElementById('completed-section');
-        
+        const statusWrapper = document.getElementById('status-wrapper');
+        const statusSelect = document.getElementById('status');
+        const statusRequired = document.getElementById('status-required');
+
         // Hide all sections
-        pipelineSection.style.display = 'none';
-        ongoingSection.style.display = 'none';
-        completedSection.style.display = 'none';
-        
+        if(pipelineSection) pipelineSection.style.display = 'none';
+        if(ongoingSection) ongoingSection.style.display = 'none';
+        if(completedSection) completedSection.style.display = 'none';
+
         // Remove required attributes from all conditional fields first
         removeRequiredAttributes();
-        
-        // Show and enable appropriate section
+
+        // Clear and hide status by default
+        statusWrapper.style.display = 'none';
+        statusSelect.removeAttribute('required');
+        statusSelect.innerHTML = '<option value="">Select Status</option>';
+
+        // Get current status value from the project (or old input)
+        let currentStatus = "{{ old('status', $project->status) }}";
+
         if (category === 'Pipeline') {
-            pipelineSection.style.display = 'block';
+            if(pipelineSection) pipelineSection.style.display = 'block';
+            // status remains hidden
         } else if (category === 'Ongoing') {
-            ongoingSection.style.display = 'block';
+            if(ongoingSection) ongoingSection.style.display = 'block';
+            // Show status with Ongoing options
+            statusWrapper.style.display = 'block';
+            statusSelect.setAttribute('required', 'required');
+            statusRequired.style.display = 'inline';
+            const options = ['Private Partner Selection', 'Transaction Advisory'];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (currentStatus === opt) option.selected = true;
+                statusSelect.appendChild(option);
+            });
             addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
         } else if (category === 'Completed') {
-            completedSection.style.display = 'block';
+            if(completedSection) completedSection.style.display = 'block';
+            // Show status with Completed options
+            statusWrapper.style.display = 'block';
+            statusSelect.setAttribute('required', 'required');
+            statusRequired.style.display = 'inline';
+            const options = ['Operational', 'Construction'];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (currentStatus === opt) option.selected = true;
+                statusSelect.appendChild(option);
+            });
             addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
         }
     }

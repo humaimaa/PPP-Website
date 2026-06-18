@@ -81,9 +81,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Office Hours</h3>
                             <p class="mt-1 text-text-muted">
-                                Monday to Friday: 9:00 AM to 5:00 PM<br>
-                                Saturday: 9:00 AM to 1:00 PM<br>
-                                Sunday: Closed
+                                Monday to Friday: 9:00 AM to 5:00 PM
                             </p>
                         </div>
                     </div>

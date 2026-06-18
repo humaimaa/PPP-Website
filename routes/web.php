@@ -33,9 +33,13 @@ Route::prefix('about')->name('about.')->group(function () {
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
 // ==================== PROJECT ROUTES ====================
+// IMPORTANT: Specific routes must come before generic routes
 Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
-Route::get('/projects/{status?}', [ProjectController::class, 'index'])->name('projects.index');
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
+// Generic route with optional status parameter - must be last
+Route::get('/projects/{status?}', [ProjectController::class, 'index'])
+    ->name('projects.index')
+    ->where('status', 'all|pipeline|ongoing|operational|complete|private-partner|transaction-advisory|construction');
 
 // Resource Center (Downloads) with optional section parameter
 Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');
@@ -52,7 +56,7 @@ Route::prefix('media-room')->name('media.room.')->group(function () {
 Route::post('/api/downloads/{id}', [PageController::class, 'apiDownloadFile'])->name('api.downloads.file');
 Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFile'])->name('api.downloads.preview');
 
-// Contact page - Make sure these routes are properly defined
+// Contact page
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact/submit', [PageController::class, 'submitContact'])->name('contact.submit');
 

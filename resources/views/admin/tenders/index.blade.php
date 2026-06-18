@@ -92,233 +92,226 @@
             </div>
         </div>
 
-        <form id="bulkDeleteForm" action="{{ route('admin.tenders.bulk-delete') }}" method="POST">
-            @csrf
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-                        <tr>
-                            @can('tenders.delete')
-                                <th class="px-6 py-3 text-left w-10">
-                                    <input type="checkbox" 
-                                           id="selectAllCheckbox" 
-                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                </th>
-                            @endcan
-                            <th class="px-6 py-3 text-left">ID</th>
-                            <th class="px-6 py-3 text-left">Document</th>
-                            <th class="px-6 py-3 text-left">Tender Name</th>
-                            <th class="px-6 py-3 text-left">Category</th>
-                            <th class="px-6 py-3 text-left">Opening Date</th>
-                            <th class="px-6 py-3 text-left">Closing Date</th>
-                            <th class="px-6 py-3 text-left">Status</th>
-                            <th class="px-6 py-3 text-left">Days Left</th>
-                            @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
-                                <th class="px-6 py-3 text-right">Actions</th>
-                            @endif
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-700">
-                        @forelse($tenders as $tender)
-                        <tr class="hover:bg-gray-50 transition" data-tender-id="{{ $tender->id }}">
-                            @can('tenders.delete')
-                                <td class="px-6 py-4">
-                                    <input type="checkbox" 
-                                           name="tender_ids[]" 
-                                           value="{{ $tender->id }}"
-                                           class="tender-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                </td>
-                            @endcan
-                            
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500">
-                                #{{ $tender->id }}
-                            </td>
-                            
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                    <tr>
+                        @can('tenders.delete')
+                            <th class="px-6 py-3 text-left w-10">
+                                <input type="checkbox" 
+                                       id="selectAllCheckbox" 
+                                       class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </th>
+                        @endcan
+                        
+                        <th class="px-6 py-3 text-left">Document</th>
+                        <th class="px-6 py-3 text-left">Tender Name</th>
+                        <th class="px-6 py-3 text-left">Category</th>
+                        <th class="px-6 py-3 text-left">Opening Date</th>
+                        <th class="px-6 py-3 text-left">Closing Date</th>
+                        <th class="px-6 py-3 text-left">Status</th>
+                        <th class="px-6 py-3 text-left">Days Left</th>
+                        @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    @forelse($tenders as $tender)
+                    <tr class="hover:bg-gray-50 transition" data-tender-id="{{ $tender->id }}">
+                        @can('tenders.delete')
                             <td class="px-6 py-4">
-                                @if($tender->document && Storage::disk('public')->exists($tender->document))
-                                    <a href="{{ Storage::url($tender->document) }}" target="_blank" 
-                                       class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700">
-                                        <i class="fas fa-file-pdf text-lg"></i>
-                                        <span class="text-xs">View</span>
+                                <input type="checkbox" 
+                                       name="tender_ids[]" 
+                                       value="{{ $tender->id }}"
+                                       class="tender-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </td>
+                        @endcan
+                        
+                        <td class="px-6 py-4">
+                            @if($tender->document && Storage::disk('public')->exists($tender->document))
+                                <a href="{{ Storage::url($tender->document) }}" target="_blank" 
+                                   class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700">
+                                    <i class="fas fa-file-pdf text-lg"></i>
+                                    <span class="text-xs">View</span>
+                                </a>
+                            @else
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                                    <i class="fas fa-file text-gray-400"></i>
+                                </div>
+                            @endif
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            <div>
+                                <span class="font-medium text-gray-900">{{ $tender->name }}</span>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Created: {{ $tender->created_at->format('M d, Y') }}
+                                </div>
+                                @if($tender->is_extended)
+                                    <div class="text-xs text-orange-600 mt-1">
+                                        <i class="fas fa-calendar-plus mr-1"></i>
+                                        Extended
+                                    </div>
+                                @endif
+                            </div>
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                <i class="fas fa-tag mr-1 text-xs"></i>
+                                {{ $tender->category }}
+                            </span>
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">
+                                {{ $tender->opening_date ? $tender->opening_date->format('M d, Y') : 'N/A' }}
+                            </div>
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            <div class="text-sm">
+                                @if($tender->is_extended)
+                                    <span class="text-gray-500 line-through">
+                                        {{ $tender->closing_date->format('M d, Y') }}
+                                    </span>
+                                    <div class="text-orange-600 font-medium mt-1">
+                                        <i class="fas fa-arrow-right text-xs"></i>
+                                        {{ $tender->effective_closing_date->format('M d, Y') }}
+                                    </div>
+                                @else
+                                    <span class="text-gray-900">
+                                        {{ $tender->closing_date->format('M d, Y') }}
+                                    </span>
+                                @endif
+                            </div>
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            @php
+                                $status = $tender->status;
+                                $statusColor = $tender->statusColor;
+                            @endphp
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                @if($statusColor == 'green') bg-green-100 text-green-800
+                                @elseif($statusColor == 'yellow') bg-yellow-100 text-yellow-800
+                                @elseif($statusColor == 'red') bg-red-100 text-red-800
+                                @else bg-gray-100 text-gray-800
+                                @endif">
+                                <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                                {{ $status }}
+                            </span>
+                        </td>
+                        
+                        <td class="px-6 py-4">
+                            @if($tender->isOpen())
+                                @php
+                                    $daysRemaining = $tender->days_remaining;
+                                @endphp
+                                <div class="text-sm">
+                                    @if($daysRemaining <= 7)
+                                        <span class="text-red-600 font-semibold">
+                                            <i class="fas fa-hourglass-end mr-1"></i>
+                                            {{ $tender->days_remaining_text }}
+                                        </span>
+                                    @else
+                                        <span class="text-emerald-600">
+                                            <i class="fas fa-hourglass-half mr-1"></i>
+                                            {{ $tender->days_remaining_text }}
+                                        </span>
+                                    @endif
+                                </div>
+                            @elseif($tender->isClosed())
+                                <span class="text-red-600 text-sm">
+                                    <i class="fas fa-times-circle mr-1"></i>
+                                    Closed
+                                </span>
+                            @elseif($tender->isUpcoming())
+                                <span class="text-yellow-600 text-sm">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Upcoming
+                                </span>
+                            @endif
+                        </td>
+                        
+                        @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center justify-end gap-2">
+                                    @can('tenders.view')
+                                        <a href="{{ route('admin.tenders.show', $tender) }}" 
+                                           class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                           title="View Tender Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    @endcan
+                                    
+                                    @can('tenders.edit')
+                                        <a href="{{ route('admin.tenders.edit', $tender) }}" 
+                                           class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                           title="Edit Tender">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    
+                                    @can('tenders.edit')
+                                        @if($tender->is_extended)
+                                            <button type="button"
+                                                    onclick="confirmRemoveExtension({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
+                                                    class="text-orange-600 hover:text-orange-900 p-2 rounded hover:bg-orange-50 transition-colors"
+                                                    title="Remove Extension">
+                                                <i class="fas fa-calendar-minus"></i>
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                    onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
+                                                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                                    title="Extend Closing Date">
+                                                <i class="fas fa-calendar-plus"></i>
+                                            </button>
+                                        @endif
+                                    @endcan
+                                    
+                                    @can('tenders.delete')
+                                        <button type="button"
+                                                onclick="confirmDelete({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
+                                                class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                title="Delete Tender">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        @endif
+                    </tr>
+                    @empty
+                        <tr>
+                            @php
+                                $colspan = 9;
+                                if(auth()->user()->can('tenders.delete')) $colspan++;
+                                if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete')) $colspan++;
+                            @endphp
+                            <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-file-alt text-4xl mb-2"></i>
+                                <p class="text-lg mb-1">No tenders found</p>
+                                @if(request('search') || request('category') || request('status'))
+                                    <a href="{{ route('admin.tenders.index') }}" class="text-emerald-600 hover:underline text-sm">
+                                        Clear filters
                                     </a>
                                 @else
-                                    <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                                        <i class="fas fa-file text-gray-400"></i>
-                                    </div>
-                                @endif
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <div>
-                                    <span class="font-medium text-gray-900">{{ $tender->name }}</span>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        <i class="fas fa-clock mr-1"></i>
-                                        Created: {{ $tender->created_at->format('M d, Y') }}
-                                    </div>
-                                    @if($tender->is_extended)
-                                        <div class="text-xs text-orange-600 mt-1">
-                                            <i class="fas fa-calendar-plus mr-1"></i>
-                                            Extended
-                                        </div>
-                                    @endif
-                                </div>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
-                                    <i class="fas fa-tag mr-1 text-xs"></i>
-                                    {{ $tender->category }}
-                                </span>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">
-                                    {{ $tender->opening_date ? $tender->opening_date->format('M d, Y') : 'N/A' }}
-                                </div>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <div class="text-sm">
-                                    @if($tender->is_extended)
-                                        <span class="text-gray-500 line-through">
-                                            {{ $tender->closing_date->format('M d, Y') }}
-                                        </span>
-                                        <div class="text-orange-600 font-medium mt-1">
-                                            <i class="fas fa-arrow-right text-xs"></i>
-                                            {{ $tender->effective_closing_date->format('M d, Y') }}
-                                        </div>
-                                    @else
-                                        <span class="text-gray-900">
-                                            {{ $tender->closing_date->format('M d, Y') }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                @php
-                                    $status = $tender->status;
-                                    $statusColor = $tender->statusColor;
-                                @endphp
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    @if($statusColor == 'green') bg-green-100 text-green-800
-                                    @elseif($statusColor == 'yellow') bg-yellow-100 text-yellow-800
-                                    @elseif($statusColor == 'red') bg-red-100 text-red-800
-                                    @else bg-gray-100 text-gray-800
-                                    @endif">
-                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
-                                    {{ $status }}
-                                </span>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                @if($tender->isOpen())
-                                    @php
-                                        $daysRemaining = $tender->days_remaining;
-                                    @endphp
-                                    <div class="text-sm">
-                                        @if($daysRemaining <= 7)
-                                            <span class="text-red-600 font-semibold">
-                                                <i class="fas fa-hourglass-end mr-1"></i>
-                                                {{ $tender->days_remaining_text }}
-                                            </span>
-                                        @else
-                                            <span class="text-emerald-600">
-                                                <i class="fas fa-hourglass-half mr-1"></i>
-                                                {{ $tender->days_remaining_text }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                @elseif($tender->isClosed())
-                                    <span class="text-red-600 text-sm">
-                                        <i class="fas fa-times-circle mr-1"></i>
-                                        Closed
-                                    </span>
-                                @elseif($tender->isUpcoming())
-                                    <span class="text-yellow-600 text-sm">
-                                        <i class="fas fa-clock mr-1"></i>
-                                        Upcoming
-                                    </span>
-                                @endif
-                            </td>
-                            
-                            @if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete'))
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center justify-end gap-2">
-                                        @can('tenders.view')
-                                            <a href="{{ route('admin.tenders.show', $tender) }}" 
-                                               class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                               title="View Tender Details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        @endcan
-                                        
-                                        @can('tenders.edit')
-                                            <a href="{{ route('admin.tenders.edit', $tender) }}" 
-                                               class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                               title="Edit Tender">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        @endcan
-                                        
-                                        @can('tenders.edit')
-                                            @if($tender->is_extended)
-                                                <button type="button"
-                                                        onclick="confirmRemoveExtension({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
-                                                        class="text-orange-600 hover:text-orange-900 p-2 rounded hover:bg-orange-50 transition-colors"
-                                                        title="Remove Extension">
-                                                    <i class="fas fa-calendar-minus"></i>
-                                                </button>
-                                            @else
-                                                <button type="button"
-                                                        onclick="showExtendModal({{ $tender->id }}, '{{ addslashes($tender->name) }}', '{{ $tender->closing_date ? $tender->closing_date->format('Y-m-d') : '' }}')" 
-                                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                                        title="Extend Closing Date">
-                                                    <i class="fas fa-calendar-plus"></i>
-                                                </button>
-                                            @endif
-                                        @endcan
-                                        
-                                        @can('tenders.delete')
-                                            <button type="button"
-                                                    onclick="confirmDelete({{ $tender->id }}, '{{ addslashes($tender->name) }}')" 
-                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                                    title="Delete Tender">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        @endcan
-                                    </div>
-                                </td>
-                            @endif
-                        </tr>
-                        @empty
-                            <tr>
-                                @php
-                                    $colspan = 9;
-                                    if(auth()->user()->can('tenders.delete')) $colspan++;
-                                    if(auth()->user()->can('tenders.view') || auth()->user()->can('tenders.edit') || auth()->user()->can('tenders.delete')) $colspan++;
-                                @endphp
-                                <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
-                                    <i class="fas fa-file-alt text-4xl mb-2"></i>
-                                    <p class="text-lg mb-1">No tenders found</p>
-                                    @if(request('search') || request('category') || request('status'))
-                                        <a href="{{ route('admin.tenders.index') }}" class="text-emerald-600 hover:underline text-sm">
-                                            Clear filters
+                                    @can('tenders.create')
+                                        <a href="{{ route('admin.tenders.create') }}" class="text-emerald-600 hover:underline text-sm">
+                                            Create your first tender →
                                         </a>
-                                    @else
-                                        @can('tenders.create')
-                                            <a href="{{ route('admin.tenders.create') }}" class="text-emerald-600 hover:underline text-sm">
-                                                Create your first tender →
-                                            </a>
-                                        @endcan
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </form>
+                                    @endcan
+                                @endif
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @if($tenders->hasPages())
@@ -328,7 +321,7 @@
     @endif
 </div>
 
-{{-- Delete Confirmation Modal --}}
+{{-- Single Delete Confirmation Modal --}}
 <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -464,13 +457,12 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bulk delete functionality
+        // ---- Bulk Delete ----
         @can('tenders.delete')
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const tenderCheckboxes = document.querySelectorAll('.tender-checkbox');
             const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
             const selectedCountSpan = document.getElementById('selectedCount');
-            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
             const bulkDeleteModal = document.getElementById('bulkDeleteModal');
             const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
             const cancelBulkDeleteBtn = document.getElementById('cancelBulkDeleteBtn');
@@ -492,6 +484,7 @@
                 }
             }
             
+            // Select All
             if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function() {
                     tenderCheckboxes.forEach(checkbox => {
@@ -501,6 +494,7 @@
                 });
             }
             
+            // Individual checkbox changes
             tenderCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     updateSelectedCount();
@@ -512,6 +506,7 @@
                 });
             });
             
+            // Bulk Delete Button -> open modal
             if (bulkDeleteBtn) {
                 bulkDeleteBtn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -529,23 +524,60 @@
                 });
             }
             
+            // Confirm Bulk Delete using fetch
             if (confirmBulkDeleteBtn) {
                 confirmBulkDeleteBtn.addEventListener('click', function() {
-                    bulkDeleteModal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                    
+                    // Gather selected IDs
                     const checkedBoxes = document.querySelectorAll('.tender-checkbox:checked');
-                    checkedBoxes.forEach(checkbox => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'tender_ids[]';
-                        input.value = checkbox.value;
-                        bulkDeleteForm.appendChild(input);
+                    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                    
+                    if (ids.length === 0) {
+                        alert('No items selected.');
+                        return;
+                    }
+                    
+                    // Disable button and show spinner (keep text "Delete")
+                    confirmBulkDeleteBtn.disabled = true;
+                    confirmBulkDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Delete';
+                    
+                    // Prepare CSRF token
+                    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                                  document.querySelector('input[name="_token"]')?.value;
+                    
+                    // Send POST request
+                    fetch('{{ route("admin.tenders.bulk-delete") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ tender_ids: ids })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal and reload page to show flash message
+                            bulkDeleteModal.classList.add('hidden');
+                            document.body.style.overflow = '';
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Failed to delete tenders.');
+                            // Re-enable button
+                            confirmBulkDeleteBtn.disabled = false;
+                            confirmBulkDeleteBtn.innerHTML = 'Delete';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting.');
+                        confirmBulkDeleteBtn.disabled = false;
+                        confirmBulkDeleteBtn.innerHTML = 'Delete';
                     });
-                    bulkDeleteForm.submit();
                 });
             }
             
+            // Cancel Bulk Delete
             if (cancelBulkDeleteBtn) {
                 cancelBulkDeleteBtn.addEventListener('click', function() {
                     bulkDeleteModal.classList.add('hidden');
@@ -553,11 +585,13 @@
                 });
             }
             
+            // Click outside modal to close
             window.addEventListener('click', function(e) {
                 if (e.target === bulkDeleteModal) {
                     bulkDeleteModal.classList.add('hidden');
                     document.body.style.overflow = '';
                 }
+                // other modals...
                 if (e.target === document.getElementById('deleteModal')) {
                     closeDeleteModal();
                 }
@@ -569,10 +603,11 @@
                 }
             });
             
+            // Initial count
             updateSelectedCount();
         @endcan
         
-        // Delete confirmation functions
+        // ---- Single Delete ----
         @can('tenders.delete')
             window.confirmDelete = function(tenderId, tenderName) {
                 const modal = document.getElementById('deleteModal');
@@ -588,12 +623,6 @@
                 document.getElementById('cancelDeleteBtn').onclick = function() {
                     closeDeleteModal();
                 };
-                
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        closeDeleteModal();
-                    }
-                };
             };
             
             function closeDeleteModal() {
@@ -605,7 +634,7 @@
             }
         @endcan
         
-        // Extend date modal functions
+        // ---- Extend Date ----
         @can('tenders.edit')
             window.showExtendModal = function(tenderId, tenderName, currentClosingDate) {
                 const modal = document.getElementById('extendModal');
@@ -617,7 +646,6 @@
                 extendTenderNameSpan.textContent = tenderName;
                 extendForm.action = `/admin/tenders/${tenderId}/extend`;
                 
-                // Format current closing date
                 if (currentClosingDate) {
                     const date = new Date(currentClosingDate);
                     currentClosingDateSpan.textContent = date.toLocaleDateString('en-US', { 
@@ -626,7 +654,6 @@
                         day: 'numeric' 
                     });
                     
-                    // Set minimum date to current closing date + 1 day
                     const minDate = new Date(currentClosingDate);
                     minDate.setDate(minDate.getDate() + 1);
                     const year = minDate.getFullYear();
@@ -651,7 +678,7 @@
                 }
             }
             
-            // Remove extension modal functions
+            // ---- Remove Extension ----
             window.confirmRemoveExtension = function(tenderId, tenderName) {
                 const modal = document.getElementById('removeExtensionModal');
                 const removeExtendTenderNameSpan = document.getElementById('removeExtendTenderName');
@@ -666,12 +693,6 @@
                 document.getElementById('cancelRemoveExtendBtn').onclick = function() {
                     closeRemoveExtensionModal();
                 };
-                
-                modal.onclick = function(e) {
-                    if (e.target === modal) {
-                        closeRemoveExtensionModal();
-                    }
-                };
             };
             
             function closeRemoveExtensionModal() {
@@ -683,7 +704,7 @@
             }
         @endcan
         
-        // Close modal on escape key
+        // ---- Close modals on Escape key ----
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 @can('tenders.delete')

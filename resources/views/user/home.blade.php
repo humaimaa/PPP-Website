@@ -28,9 +28,8 @@
         </div>
     </div>
 
-    <!-- Scroll Down Arrow -->
     <!-- Scroll Down Arrow - Sidcup Style (White, Left Side) -->
-    <div id="arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
+<div id="scroll-down-arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
         <div
             class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group">
             <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-[#0A612B] transition-all duration-300"

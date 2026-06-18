@@ -16,7 +16,6 @@ use App\Http\Controllers\User\ProjectController;
 // Homepage
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
-
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 
@@ -33,14 +32,9 @@ Route::prefix('about')->name('about.')->group(function () {
 // Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-// ==================== PROJECT ROUTES - ORDER MATTERS! ====================
-// Put MORE SPECIFIC routes FIRST
+// ==================== PROJECT ROUTES ====================
 Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
-
-// Then the dynamic routes
 Route::get('/projects/{status?}', [ProjectController::class, 'index'])->name('projects.index');
-
-// Individual project detail page - this should come LAST because it's the most dynamic
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Resource Center (Downloads) with optional section parameter
@@ -56,12 +50,11 @@ Route::prefix('media-room')->name('media.room.')->group(function () {
 
 // API endpoint for downloading files
 Route::post('/api/downloads/{id}', [PageController::class, 'apiDownloadFile'])->name('api.downloads.file');
-
-// API endpoint for previewing files
 Route::get('/api/downloads/{id}/preview', [PageController::class, 'apiPreviewFile'])->name('api.downloads.preview');
 
-// Contact page
+// Contact page - Make sure these routes are properly defined
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact/submit', [PageController::class, 'submitContact'])->name('contact.submit');
 
 // ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {

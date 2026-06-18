@@ -74,7 +74,6 @@
                     @enderror
                 </div>
 
-                {{-- Document Category --}}
 {{-- Document Category --}}
 <div>
     <label for="category" class="block text-sm font-medium text-gray-700 mb-2">

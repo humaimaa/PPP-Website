@@ -12,7 +12,7 @@
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
-    <img src="{{ asset('images/resourse-center.jpg') }}" alt="News Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/updates.jpg') }}" alt="News Banner" class="w-full h-full object-cover">
 </section>
 
 <section class="py-10 bg-white">

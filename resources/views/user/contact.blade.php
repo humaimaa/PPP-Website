@@ -13,7 +13,7 @@
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
-    <img src="{{ asset('images/project-1.jpg') }}" alt="Contact Us Banner" class="w-full h-full object-cover">
+    <img src="{{ asset('images/contact us.jpg') }}" alt="Contact Us Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Contact Section -->

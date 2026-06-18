@@ -14,7 +14,6 @@
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-         
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Tenders Banner" class="w-full h-full object-cover">
@@ -102,6 +101,46 @@
 
                 $hasAdditionalDocs = $tender->additionalDocs && $tender->additionalDocs->count() > 0;
                 $rowBg = $index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                
+                // Helper function to get file extension and icon
+                $getFileInfo = function($filePath) {
+                    if (!$filePath) return null;
+                    
+                    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                    $icon = '';
+                    $color = '';
+                    
+                    switch($extension) {
+                        case 'pdf':
+                            $icon = 'fa-file-pdf';
+                            $color = 'text-red-600';
+                            break;
+                        case 'doc':
+                        case 'docx':
+                            $icon = 'fa-file-word';
+                            $color = 'text-blue-600';
+                            break;
+                        case 'xls':
+                        case 'xlsx':
+                            $icon = 'fa-file-excel';
+                            $color = 'text-green-600';
+                            break;
+                        case 'ppt':
+                        case 'pptx':
+                            $icon = 'fa-file-powerpoint';
+                            $color = 'text-orange-600';
+                            break;
+                        default:
+                            $icon = 'fa-file';
+                            $color = 'text-gray-600';
+                    }
+                    
+                    return [
+                        'extension' => strtoupper($extension),
+                        'icon' => $icon,
+                        'color' => $color
+                    ];
+                };
             @endphp
 
             <div class="border-b border-gray-200 last:border-b-0 {{ $rowBg }} hover:bg-amber-50/40 transition-colors duration-150">
@@ -188,46 +227,60 @@
                         @endif
                     </div>
 
-                    {{-- Docs column: main tender doc + advertisement + all additional docs stacked --}}
+                    {{-- Docs column: Show PDF and Word documents only --}}
                     <div class="col-span-1 flex flex-col items-center gap-2">
-                        {{-- Main tender PDF --}}
+                        {{-- Main tender document --}}
                         @if($tender->document)
-                            <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" title="Tender Document"
-                               class="text-red-500 hover:text-red-700 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
-                                    <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
-                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
-                                    <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
-                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
-                                </svg>
-                            </a>
+                            @php
+                                $fileInfo = $getFileInfo($tender->document);
+                            @endphp
+                            @if($fileInfo)
+                                <a href="{{ asset('storage/' . $tender->document) }}" target="_blank" 
+                                   title="Tender Document ({{ $fileInfo['extension'] }})"
+                                   class="{{ $fileInfo['color'] }} hover:opacity-75 transition-opacity">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas {{ $fileInfo['icon'] }} text-3xl"></i>
+                                        <span class="text-[10px] font-semibold mt-0.5">{{ $fileInfo['extension'] }}</span>
+                                    </div>
+                                </a>
+                            @endif
                         @endif
 
                         {{-- Advertisement --}}
                         @if($tender->advertisement)
-                            <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" title="Advertisement"
-                               class="text-blue-500 hover:text-blue-700 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
-                                    <rect width="48" height="48" rx="6" fill="#1565C0" opacity=".12"/>
-                                    <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#1565C0"/>
-                                    <path d="M28 8l10 10H28V8z" fill="#0D47A1"/>
-                                    <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">DOC</text>
-                                </svg>
-                            </a>
+                            @php
+                                $fileInfo = $getFileInfo($tender->advertisement);
+                            @endphp
+                            @if($fileInfo)
+                                <a href="{{ asset('storage/' . $tender->advertisement) }}" target="_blank" 
+                                   title="Advertisement ({{ $fileInfo['extension'] }})"
+                                   class="{{ $fileInfo['color'] }} hover:opacity-75 transition-opacity">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas {{ $fileInfo['icon'] }} text-3xl"></i>
+                                        <span class="text-[10px] font-semibold mt-0.5">{{ $fileInfo['extension'] }}</span>
+                                    </div>
+                                </a>
+                            @endif
                         @endif
 
-                        {{-- Additional doc icons, vertically aligned under the main ones --}}
+                        {{-- Additional documents --}}
                         @if($hasAdditionalDocs)
                             @foreach($tender->additionalDocs as $doc)
-                                <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" title="{{ $doc->title }}"
-                                   class="text-red-500 hover:text-red-700 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 48 48" fill="none">
-                                        <rect width="48" height="48" rx="6" fill="#E53935" opacity=".12"/>
-                                        <path d="M14 8h14l10 10v24a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="#E53935"/>
-                                        <path d="M28 8l10 10H28V8z" fill="#B71C1C"/>
-                                        <text x="24" y="34" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Arial">PDF</text>
-                                    </svg>
-                                </a>
+                                @if($doc->document)
+                                    @php
+                                        $fileInfo = $getFileInfo($doc->document);
+                                    @endphp
+                                    @if($fileInfo)
+                                        <a href="{{ asset('storage/' . $doc->document) }}" target="_blank" 
+                                           title="{{ $doc->title }} ({{ $fileInfo['extension'] }})"
+                                           class="{{ $fileInfo['color'] }} hover:opacity-75 transition-opacity">
+                                            <div class="flex flex-col items-center">
+                                                <i class="fas {{ $fileInfo['icon'] }} text-3xl"></i>
+                                                <span class="text-[10px] font-semibold mt-0.5">{{ $fileInfo['extension'] }}</span>
+                                            </div>
+                                        </a>
+                                    @endif
+                                @endif
                             @endforeach
                         @endif
                     </div>

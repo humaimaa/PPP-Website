@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Alpine from 'alpinejs';
 
-// Register GSAP plugins (keeping for potential future use, but not used for section animations)
+// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 // ========== NAVBAR DROPDOWN COMPONENT ==========
@@ -12,7 +12,6 @@ function navbarDropdown() {
         mobileMenuOpen: false,
         
         toggleDropdown(dropdown) {
-            // Close if clicking the same dropdown, otherwise open the new one
             if (this.dropdownOpen === dropdown) {
                 this.dropdownOpen = null;
             } else {
@@ -48,6 +47,14 @@ function navbarDropdown() {
                     }
                 }
             });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                const navbar = document.querySelector('.navbar');
+                if (navbar && !navbar.contains(e.target)) {
+                    this.closeAllDropdowns();
+                }
+            });
         }
     };
 }
@@ -73,7 +80,7 @@ function initializeNavbarScroll() {
         };
         
         window.addEventListener('scroll', handleScroll);
-        handleScroll(); // Initial call
+        handleScroll();
     }
 }
 
@@ -97,10 +104,8 @@ function initializeLogoRotation() {
     }
 }
 
-
 // ========== FOOTER INITIALIZATION ==========
 function initializeFooter() {
-    // Add current year to copyright if not already there
     const copyrightElement = document.querySelector('footer .border-t p:first-child');
     if (copyrightElement) {
         const year = new Date().getFullYear();
@@ -118,9 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFooter();
 });
 
-// ========== WINDOW LOAD (for images and complete load) ==========
+// ========== WINDOW LOAD ==========
 window.addEventListener('load', () => {
-    // Additional initialization after all resources are loaded
     document.body.classList.add('loaded');
 });
 

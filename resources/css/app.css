@@ -195,7 +195,54 @@
   color: var(--color-accent-1) !important;
 }
 
-/* Mobile menu styles */
+/* ========== SUB-DROPDOWN STYLES ========== */
+
+/* Sub-dropdown container - ensures proper hover behavior */
+.sub-dropdown-container {
+  position: relative;
+}
+
+/* IMPORTANT: The parent dropdown-menu / Projects panel must NOT use
+   overflow:hidden, since .sub-dropdown-menu is absolutely positioned
+   with left:100% (left-full) and escapes the parent's box to flyout
+   to the right. overflow:hidden on the parent clips it invisible. */
+
+/* Sub-dropdown menu - hidden by default */
+.sub-dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  background-color: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Show sub-dropdown on hover */
+.sub-dropdown-container:hover .sub-dropdown-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Sub-dropdown arrow rotation */
+.sub-dropdown-container:hover .sub-dropdown-arrow {
+  transform: rotate(90deg);
+}
+
+/* Sub-dropdown arrow transition */
+.sub-dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+/* Ensure main dropdown items don't have background on hover */
+.dropdown-item {
+  background: transparent !important;
+}
+
+/* ========== MOBILE MENU STYLES ========== */
+
 .mobile-menu {
   background-color: var(--color-primary);
 }

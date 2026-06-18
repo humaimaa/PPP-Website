@@ -42,35 +42,44 @@ class ProjectController extends Controller
     }
 
     /**
-     * Projects page with optional status parameter
-     * Filtering by status field with specific values
+     * Projects page with optional category and status parameters
      */
-    public function index($status = 'all')
+    public function index($category = 'all', $status = 'all')
     {
-        $validStatuses = ['all', 'pipeline', 'ongoing', 'operational', 'complete', 'private-partner', 'transaction-advisory', 'construction'];
+        $validCategories = ['all', 'pipeline', 'ongoing', 'completed'];
+        $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
 
+        // Validate parameters
+        if (!in_array($category, $validCategories)) {
+            $category = 'all';
+        }
         if (!in_array($status, $validStatuses)) {
             $status = 'all';
         }
 
-        // Build query based on status field
+        // Build query
         $query = Project::query();
         
-        if ($status !== 'all') {
-            // Map URL status to database status values
-            switch ($status) {
+        // Apply category filter
+        if ($category !== 'all') {
+            switch ($category) {
                 case 'pipeline':
-                    $query->where('status', 'Pipeline');
+                    $query->where('category', 'Pipeline');
                     break;
                 case 'ongoing':
-                    $query->where('status', 'Ongoing');
+                    $query->where('category', 'Ongoing');
                     break;
-                case 'operational':
-                    $query->where('status', 'Operational');
+                case 'completed':
+                    $query->where('category', 'Completed');
                     break;
-                case 'complete':
-                    $query->where('status', 'Complete');
-                    break;
+                default:
+                    $query->where('category', $category);
+            }
+        }
+        
+        // Apply status filter
+        if ($status !== 'all') {
+            switch ($status) {
                 case 'private-partner':
                     $query->where('status', 'Private Partner Selection');
                     break;
@@ -80,6 +89,9 @@ class ProjectController extends Controller
                 case 'construction':
                     $query->where('status', 'Construction');
                     break;
+                case 'operational':
+                    $query->where('status', 'Operational');
+                    break;
                 default:
                     $query->where('status', $status);
             }
@@ -88,7 +100,7 @@ class ProjectController extends Controller
         // Get projects with pagination
         $projects = $query->orderBy('created_at', 'desc')->paginate(9);
         
-        // Get statistics with proper cost conversion
+        // Get statistics
         $allProjects = Project::all();
         $totalInvestmentRaw = 0;
         
@@ -97,17 +109,20 @@ class ProjectController extends Controller
         }
         
         $stats = [
-            'pipeline' => Project::where('status', 'Pipeline')->count(),
-            'ongoing' => Project::where('status', 'Ongoing')->count(),
-            'operational' => Project::where('status', 'Operational')->count(),
-            'complete' => Project::where('status', 'Complete')->count(),
+            // Category counts
+            'pipeline' => Project::where('category', 'Pipeline')->count(),
+            'ongoing' => Project::where('category', 'Ongoing')->count(),
+            'completed' => Project::where('category', 'Completed')->count(),
+            // Status counts
             'private_partner' => Project::where('status', 'Private Partner Selection')->count(),
             'transaction_advisory' => Project::where('status', 'Transaction Advisory')->count(),
             'construction' => Project::where('status', 'Construction')->count(),
-            'total_investment' => $totalInvestmentRaw
+            'operational' => Project::where('status', 'Operational')->count(),
+            'total_investment' => $totalInvestmentRaw,
+            'total_projects' => $allProjects->count()
         ];
         
-        return view('user.projects.index', compact('projects', 'status', 'stats'));
+        return view('user.projects.index', compact('projects', 'category', 'status', 'stats'));
     }
 
     /**
@@ -166,53 +181,35 @@ class ProjectController extends Controller
         }
         $totalInvestment = $totalInvestmentRaw;
         
+        // Get counts by category
+        $pipelineCount = Project::where('category', 'Pipeline')->count();
+        $ongoingCount = Project::where('category', 'Ongoing')->count();
+        $completedCount = Project::where('category', 'Completed')->count();
+        
         // Get counts by status
-        $pipelineCount = Project::where('status', 'Pipeline')->count();
-        $ongoingCount = Project::where('status', 'Ongoing')->count();
-        $operationalCount = Project::where('status', 'Operational')->count();
-        $completeCount = Project::where('status', 'Complete')->count();
         $privatePartnerCount = Project::where('status', 'Private Partner Selection')->count();
         $transactionAdvisoryCount = Project::where('status', 'Transaction Advisory')->count();
         $constructionCount = Project::where('status', 'Construction')->count();
+        $operationalCount = Project::where('status', 'Operational')->count();
         
-        // Get investment by status
+        // Get investment by category
         $pipelineInvestmentRaw = 0;
         $ongoingInvestmentRaw = 0;
-        $operationalInvestmentRaw = 0;
-        $completeInvestmentRaw = 0;
-        $privatePartnerInvestmentRaw = 0;
-        $transactionAdvisoryInvestmentRaw = 0;
-        $constructionInvestmentRaw = 0;
+        $completedInvestmentRaw = 0;
         
-        foreach (Project::where('status', 'Pipeline')->get() as $proj) {
+        foreach (Project::where('category', 'Pipeline')->get() as $proj) {
             $pipelineInvestmentRaw += $this->getRawCostValue($proj->cost);
         }
-        foreach (Project::where('status', 'Ongoing')->get() as $proj) {
+        foreach (Project::where('category', 'Ongoing')->get() as $proj) {
             $ongoingInvestmentRaw += $this->getRawCostValue($proj->cost);
         }
-        foreach (Project::where('status', 'Operational')->get() as $proj) {
-            $operationalInvestmentRaw += $this->getRawCostValue($proj->cost);
-        }
-        foreach (Project::where('status', 'Complete')->get() as $proj) {
-            $completeInvestmentRaw += $this->getRawCostValue($proj->cost);
-        }
-        foreach (Project::where('status', 'Private Partner Selection')->get() as $proj) {
-            $privatePartnerInvestmentRaw += $this->getRawCostValue($proj->cost);
-        }
-        foreach (Project::where('status', 'Transaction Advisory')->get() as $proj) {
-            $transactionAdvisoryInvestmentRaw += $this->getRawCostValue($proj->cost);
-        }
-        foreach (Project::where('status', 'Construction')->get() as $proj) {
-            $constructionInvestmentRaw += $this->getRawCostValue($proj->cost);
+        foreach (Project::where('category', 'Completed')->get() as $proj) {
+            $completedInvestmentRaw += $this->getRawCostValue($proj->cost);
         }
         
         $pipelineInvestment = $pipelineInvestmentRaw;
         $ongoingInvestment = $ongoingInvestmentRaw;
-        $operationalInvestment = $operationalInvestmentRaw;
-        $completeInvestment = $completeInvestmentRaw;
-        $privatePartnerInvestment = $privatePartnerInvestmentRaw;
-        $transactionAdvisoryInvestment = $transactionAdvisoryInvestmentRaw;
-        $constructionInvestment = $constructionInvestmentRaw;
+        $completedInvestment = $completedInvestmentRaw;
         
         // Define valid divisions
         $validDivisions = ['Peshawar', 'Mardan', 'Kohat', 'Bannu', 'Dera Ismail Khan', 'Malakand', 'Hazara'];
@@ -224,11 +221,11 @@ class ProjectController extends Controller
                 'total' => 0,
                 'pipeline' => 0,
                 'ongoing' => 0,
-                'operational' => 0,
-                'complete' => 0,
+                'completed' => 0,
                 'private_partner' => 0,
                 'transaction_advisory' => 0,
                 'construction' => 0,
+                'operational' => 0,
                 'investment' => 0,
                 'projects' => []
             ];
@@ -239,11 +236,11 @@ class ProjectController extends Controller
             'total' => 0,
             'pipeline' => 0,
             'ongoing' => 0,
-            'operational' => 0,
-            'complete' => 0,
+            'completed' => 0,
             'private_partner' => 0,
             'transaction_advisory' => 0,
             'construction' => 0,
+            'operational' => 0,
             'investment' => 0,
             'projects' => [],
             'is_merged' => true,
@@ -258,28 +255,31 @@ class ProjectController extends Controller
                 $projectsByDivision[$division]['total']++;
                 $projectsByDivision[$division]['investment'] += $this->getRawCostValue($project->cost);
                 
-                // Categorize by status
-                if ($project->status === 'Pipeline') {
+                // Categorize by category
+                if ($project->category === 'Pipeline') {
                     $projectsByDivision[$division]['pipeline']++;
-                } elseif ($project->status === 'Ongoing') {
+                } elseif ($project->category === 'Ongoing') {
                     $projectsByDivision[$division]['ongoing']++;
-                } elseif ($project->status === 'Operational') {
-                    $projectsByDivision[$division]['operational']++;
-                } elseif ($project->status === 'Complete') {
-                    $projectsByDivision[$division]['complete']++;
-                } elseif ($project->status === 'Private Partner Selection') {
+                } elseif ($project->category === 'Completed') {
+                    $projectsByDivision[$division]['completed']++;
+                }
+                
+                // Categorize by status
+                if ($project->status === 'Private Partner Selection') {
                     $projectsByDivision[$division]['private_partner']++;
                 } elseif ($project->status === 'Transaction Advisory') {
                     $projectsByDivision[$division]['transaction_advisory']++;
                 } elseif ($project->status === 'Construction') {
                     $projectsByDivision[$division]['construction']++;
+                } elseif ($project->status === 'Operational') {
+                    $projectsByDivision[$division]['operational']++;
                 }
                 
                 $projectsByDivision[$division]['projects'][] = [
                     'id' => $project->id,
                     'name' => $project->name,
-                    'status' => $project->status,
                     'category' => $project->category,
+                    'status' => $project->status,
                     'cost' => $this->getRawCostValue($project->cost),
                     'cost_display' => $project->cost,
                     'sector' => $project->sector,
@@ -300,11 +300,11 @@ class ProjectController extends Controller
                 'projects' => [
                     'pipeline' => $data['pipeline'],
                     'ongoing' => $data['ongoing'],
-                    'operational' => $data['operational'],
-                    'complete' => $data['complete'],
+                    'completed' => $data['completed'],
                     'private_partner' => $data['private_partner'],
                     'transaction_advisory' => $data['transaction_advisory'],
-                    'construction' => $data['construction']
+                    'construction' => $data['construction'],
+                    'operational' => $data['operational']
                 ],
                 'investment' => $data['investment'],
                 'total_projects' => $totalProjectsCount,
@@ -339,11 +339,11 @@ class ProjectController extends Controller
                 'total' => $projectsByDivision[$division]['total'] ?? 0,
                 'pipeline' => $projectsByDivision[$division]['pipeline'] ?? 0,
                 'ongoing' => $projectsByDivision[$division]['ongoing'] ?? 0,
-                'operational' => $projectsByDivision[$division]['operational'] ?? 0,
-                'complete' => $projectsByDivision[$division]['complete'] ?? 0,
+                'completed' => $projectsByDivision[$division]['completed'] ?? 0,
                 'private_partner' => $projectsByDivision[$division]['private_partner'] ?? 0,
                 'transaction_advisory' => $projectsByDivision[$division]['transaction_advisory'] ?? 0,
                 'construction' => $projectsByDivision[$division]['construction'] ?? 0,
+                'operational' => $projectsByDivision[$division]['operational'] ?? 0,
                 'investment' => $projectsByDivision[$division]['investment'] ?? 0
             ];
         }
@@ -354,11 +354,11 @@ class ProjectController extends Controller
             'total' => $projectsByDivision['FATA']['total'] ?? 0,
             'pipeline' => $projectsByDivision['FATA']['pipeline'] ?? 0,
             'ongoing' => $projectsByDivision['FATA']['ongoing'] ?? 0,
-            'operational' => $projectsByDivision['FATA']['operational'] ?? 0,
-            'complete' => $projectsByDivision['FATA']['complete'] ?? 0,
+            'completed' => $projectsByDivision['FATA']['completed'] ?? 0,
             'private_partner' => $projectsByDivision['FATA']['private_partner'] ?? 0,
             'transaction_advisory' => $projectsByDivision['FATA']['transaction_advisory'] ?? 0,
             'construction' => $projectsByDivision['FATA']['construction'] ?? 0,
+            'operational' => $projectsByDivision['FATA']['operational'] ?? 0,
             'investment' => $projectsByDivision['FATA']['investment'] ?? 0
         ];
         
@@ -372,18 +372,14 @@ class ProjectController extends Controller
             'totalInvestment',
             'pipelineCount',
             'ongoingCount',
-            'operationalCount',
-            'completeCount',
+            'completedCount',
             'privatePartnerCount',
             'transactionAdvisoryCount',
             'constructionCount',
+            'operationalCount',
             'pipelineInvestment',
             'ongoingInvestment',
-            'operationalInvestment',
-            'completeInvestment',
-            'privatePartnerInvestment',
-            'transactionAdvisoryInvestment',
-            'constructionInvestment',
+            'completedInvestment',
             'projectsByDivision',
             'sectorChartData',
             'divisionsGrid',
@@ -403,13 +399,13 @@ class ProjectController extends Controller
         foreach ($validDivisions as $division) {
             $projects = Project::where('division', $division)->get();
             
-            $pipeline = $projects->where('status', 'Pipeline')->count();
-            $ongoing = $projects->where('status', 'Ongoing')->count();
-            $operational = $projects->where('status', 'Operational')->count();
-            $complete = $projects->where('status', 'Complete')->count();
+            $pipeline = $projects->where('category', 'Pipeline')->count();
+            $ongoing = $projects->where('category', 'Ongoing')->count();
+            $completed = $projects->where('category', 'Completed')->count();
             $privatePartner = $projects->where('status', 'Private Partner Selection')->count();
             $transactionAdvisory = $projects->where('status', 'Transaction Advisory')->count();
             $construction = $projects->where('status', 'Construction')->count();
+            $operational = $projects->where('status', 'Operational')->count();
             
             $investment = 0;
             foreach ($projects as $proj) {
@@ -421,11 +417,11 @@ class ProjectController extends Controller
                 'projects' => [
                     'pipeline' => $pipeline,
                     'ongoing' => $ongoing,
-                    'operational' => $operational,
-                    'complete' => $complete,
+                    'completed' => $completed,
                     'private_partner' => $privatePartner,
                     'transaction_advisory' => $transactionAdvisory,
-                    'construction' => $construction
+                    'construction' => $construction,
+                    'operational' => $operational
                 ],
                 'investment' => (float)$investment,
                 'total_projects' => $projects->count(),
@@ -433,8 +429,8 @@ class ProjectController extends Controller
                     return [
                         'id' => $project->id,
                         'name' => $project->name,
-                        'status' => $project->status,
                         'category' => $project->category,
+                        'status' => $project->status,
                         'cost' => $this->getRawCostValue($project->cost),
                         'cost_display' => $project->cost,
                         'sector' => $project->sector,
@@ -456,13 +452,13 @@ class ProjectController extends Controller
             'is_merged' => true,
             'merged_districts' => ['Bajaur', 'Khyber', 'Kurram', 'Mohmand', 'Orakzai', 'North Waziristan', 'South Waziristan'],
             'projects' => [
-                'pipeline' => $fataProjects->where('status', 'Pipeline')->count(),
-                'ongoing' => $fataProjects->where('status', 'Ongoing')->count(),
-                'operational' => $fataProjects->where('status', 'Operational')->count(),
-                'complete' => $fataProjects->where('status', 'Complete')->count(),
+                'pipeline' => $fataProjects->where('category', 'Pipeline')->count(),
+                'ongoing' => $fataProjects->where('category', 'Ongoing')->count(),
+                'completed' => $fataProjects->where('category', 'Completed')->count(),
                 'private_partner' => $fataProjects->where('status', 'Private Partner Selection')->count(),
                 'transaction_advisory' => $fataProjects->where('status', 'Transaction Advisory')->count(),
-                'construction' => $fataProjects->where('status', 'Construction')->count()
+                'construction' => $fataProjects->where('status', 'Construction')->count(),
+                'operational' => $fataProjects->where('status', 'Operational')->count()
             ],
             'investment' => (float)$fataInvestment,
             'total_projects' => $fataProjects->count(),
@@ -470,8 +466,8 @@ class ProjectController extends Controller
                 return [
                     'id' => $project->id,
                     'name' => $project->name,
-                    'status' => $project->status,
                     'category' => $project->category,
+                    'status' => $project->status,
                     'cost' => $this->getRawCostValue($project->cost),
                     'cost_display' => $project->cost,
                     'sector' => $project->sector,

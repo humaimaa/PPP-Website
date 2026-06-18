@@ -36,10 +36,11 @@ Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('t
 // IMPORTANT: Specific routes must come before generic routes
 Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
-// Generic route with optional status parameter - must be last
-Route::get('/projects/{status?}', [ProjectController::class, 'index'])
+// Generic route with optional category and status parameters
+Route::get('/projects/{category?}/{status?}', [ProjectController::class, 'index'])
     ->name('projects.index')
-    ->where('status', 'all|pipeline|ongoing|operational|complete|private-partner|transaction-advisory|construction');
+    ->where('category', 'all|pipeline|ongoing|completed')
+    ->where('status', 'all|private-partner|transaction-advisory|construction|operational');
 
 // Resource Center (Downloads) with optional section parameter
 Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');

@@ -4,7 +4,7 @@
     <div class="px-4">
         <div class="flex justify-between items-center">
            
-            <!-- Left: Logo with Continuous 3D Rotation -->
+            <!-- Left: Logo -->
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center py-2 group outline-none">
                     <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KP Logo" 
@@ -20,23 +20,14 @@
             <div class="desktop-menu hidden md:flex bg-linear-to-br from-white/15 via-white/5 to-white/2 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-2xl px-6 py-2 space-x-6 hover:bg-linear-to-br hover:from-white/20 hover:via-white/8 hover:to-white/4 hover:border-white/30 transition-all duration-300">
                 
                 <!-- About Us Dropdown -->
-                <div class="relative">
-                    <button @click="toggleDropdown('about')" 
-                            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
+                <div class="relative group">
+                    <button class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
                         About Us
-                        <svg :class="{'rotate-180': dropdownOpen === 'about'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div x-show="dropdownOpen === 'about'" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 translate-y-0"
-                         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-                         class="dropdown-menu absolute top-full left-0 mt-2 w-64 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
-                         style="display: none;">
+                    <div class="absolute top-full left-0 mt-2 w-64 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                         <a href="{{ route('about.index') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">About PPP</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('about.mission-vision') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Vision & Mission</a>
@@ -52,52 +43,100 @@
                 </div>
                 
                 <!-- Projects Dropdown -->
-                <div class="relative">
-                    <button @click="toggleDropdown('projects')" 
-                            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
+                <div class="relative group">
+                    <button class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
                         Projects
-                        <svg :class="{'rotate-180': dropdownOpen === 'projects'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div x-show="dropdownOpen === 'projects'" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 translate-y-0"
-                         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-                         class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
-                         style="display: none;">
-                        <a href="{{ route('projects.index', 'pipeline') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Pipeline</a>
-                        <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
-                        <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('projects.index', 'complete') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
-                        <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
                     
+                    <!-- Main Projects Dropdown -->
+                    <div class="absolute top-full left-0 mt-2 w-56 bg-primary border border-white/10 rounded-xl z-50 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        
+                        <!-- Pipeline -->
+                        <a href="{{ route('projects.index', ['category' => 'pipeline', 'status' => 'all']) }}" 
+                           class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                            Pipeline
+                        </a>
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        
+                        <!-- Ongoing with Sub-dropdown -->
+                        <div class="relative sub-dropdown-container">
+                            <a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'all']) }}" 
+                               class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300 flex items-center justify-between">
+                                <span>Ongoing</span>
+                                <svg class="w-4 h-4 text-text-secondary sub-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                            
+                            <!-- Ongoing Sub-dropdown -->
+                            <div class="sub-dropdown-menu absolute top-0 left-full ml-1 w-64">
+                                <a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'private-partner']) }}" 
+                                   class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                                    Private Partner Selection
+                                </a>
+                                <div class="h-px bg-white/10 mx-4"></div>
+                                <a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'transaction-advisory']) }}" 
+                                   class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                                    Transaction Advisory
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        
+                        <!-- Completed with Sub-dropdown -->
+                        <div class="relative sub-dropdown-container">
+                            <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'all']) }}" 
+                               class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300 flex items-center justify-between">
+                                <span>Completed</span>
+                                <svg class="w-4 h-4 text-text-secondary sub-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                            
+                            <!-- Completed Sub-dropdown -->
+                            <div class="sub-dropdown-menu absolute top-0 left-full ml-1 w-56">
+                                <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'construction']) }}" 
+                                   class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                                    Construction
+                                </a>
+                                <div class="h-px bg-white/10 mx-4"></div>
+                                <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'operational']) }}" 
+                                   class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                                    Operational
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        
+                        <!-- All Projects -->
+                        <a href="{{ route('projects.index', ['category' => 'all', 'status' => 'all']) }}" 
+                           class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                            All Projects
+                        </a>
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        
+                        <!-- Projects Statistics -->
+                        <a href="{{ route('projects.projectStats') }}" 
+                           class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
+                            Projects Statistics
+                        </a>
                     </div>
                 </div>
 
                 <!-- Resource Center Dropdown -->
-                <div class="relative">
-                    <button @click="toggleDropdown('resource')" 
-                            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
+                <div class="relative group">
+                    <button class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
                         Resource Center
-                        <svg :class="{'rotate-180': dropdownOpen === 'resource'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div x-show="dropdownOpen === 'resource'" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 translate-y-0"
-                         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-                         class="dropdown-menu absolute top-full left-0 mt-2 w-72 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
-                         style="display: none;">
+                    <div class="absolute top-full left-0 mt-2 w-72 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                         <a href="{{ route('resource.center', 'legal-framework') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Legal Framework</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('resource.center', 'pre-qualified-advisors') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Pre-qualified Transaction Advisory</a>
@@ -109,47 +148,29 @@
                 </div>
                 
                 <!-- Media Room Dropdown -->
-<div class="relative">
-    <button @click="toggleDropdown('media')" 
-            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
-        Media Room
-        <svg :class="{'rotate-180': dropdownOpen === 'media'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    <div x-show="dropdownOpen === 'media'" 
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-         class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
-         style="display: none;">
-        <a href="{{ route('media.room.events') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Events</a>
-        <div class="h-px bg-white/10 mx-4"></div>
-        <a href="{{ route('media.room.updates') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Updates</a>
-    </div>
-</div>
-                
-                <!-- Tenders Dropdown - Right aligned -->
-                <div class="relative">
-                    <button @click="toggleDropdown('tenders')" 
-                            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
-                        Tenders
-                        <svg :class="{'rotate-180': dropdownOpen === 'tenders'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="relative group">
+                    <button class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
+                        Media Room
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div x-show="dropdownOpen === 'tenders'" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 translate-y-0"
-                         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-                         class="dropdown-menu absolute top-full mt-2 w-80 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl right-0"
-                         style="display: none;">
+                    <div class="absolute top-full left-0 mt-2 w-56 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="{{ route('media.room.events') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Events</a>
+                        <div class="h-px bg-white/10 mx-4"></div>
+                        <a href="{{ route('media.room.updates') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Updates</a>
+                    </div>
+                </div>
+                
+                <!-- Tenders Dropdown -->
+                <div class="relative group">
+                    <button class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
+                        Tenders
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute top-full mt-2 w-80 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl right-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                         <a href="{{ route('tenders', 'general-procurement') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">General Procurement</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('tenders', 'transaction-advisory') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Selection of Transaction Advisory</a>
@@ -217,34 +238,71 @@
                         </ul>
                     </li>
 
-                    <!-- Projects Dropdown -->
-<div class="relative">
-    <button @click="toggleDropdown('projects')" 
-            class="dropdown-button text-text-primary hover:text-accent-1 transition-all duration-300 focus:outline-none whitespace-nowrap flex items-center gap-1">
-        Projects
-        <svg :class="{'rotate-180': dropdownOpen === 'projects'}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    <div x-show="dropdownOpen === 'projects'" 
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 translate-y-[-10px]"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-[-10px]"
-         class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-primary border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
-         style="display: none;">
-        <a href="{{ route('projects.index', 'pipeline') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Pipeline</a>
-        <div class="h-px bg-white/10 mx-4"></div>
-        <a href="{{ route('projects.index', 'ongoing') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Ongoing</a>
-        <div class="h-px bg-white/10 mx-4"></div>
-        <a href="{{ route('projects.index', 'operational') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Complete</a>
-        <div class="h-px bg-white/10 mx-4"></div>
-        <a href="{{ route('projects.projectStats') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Projects Statistics</a>
-    
-    </div>
-</div>
+                    <!-- Projects Mobile -->
+                    <li x-data="{ open: false, ongoingOpen: false, completedOpen: false }">
+                        <button @click="open = !open" 
+                                class="flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-text-primary hover:text-accent-1 rounded-lg transition-all duration-300">
+                            Projects
+                            <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <ul x-show="open" 
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0"
+                            class="mt-2 space-y-1 pl-6">
+                            
+                            <!-- Pipeline -->
+                            <li><a href="{{ route('projects.index', ['category' => 'pipeline', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Pipeline</a></li>
+                            
+                            <!-- Ongoing with Sub-menu -->
+                            <li>
+                                <button @click="ongoingOpen = !ongoingOpen" 
+                                        class="flex justify-between items-center w-full text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">
+                                    <span>Ongoing</span>
+                                    <svg :class="{'rotate-180': ongoingOpen}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <ul x-show="ongoingOpen" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    class="mt-1 space-y-1 pl-6">
+                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Ongoing</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'private-partner']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Private Partner Selection</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'transaction-advisory']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Transaction Advisory</a></li>
+                                </ul>
+                            </li>
+                            
+                            <!-- Completed with Sub-menu -->
+                            <li>
+                                <button @click="completedOpen = !completedOpen" 
+                                        class="flex justify-between items-center w-full text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">
+                                    <span>Completed</span>
+                                    <svg :class="{'rotate-180': completedOpen}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <ul x-show="completedOpen" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    class="mt-1 space-y-1 pl-6">
+                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Completed</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'construction']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Construction</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'operational']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Operational</a></li>
+                                </ul>
+                            </li>
+                            
+                            <!-- All Projects -->
+                            <li><a href="{{ route('projects.index', ['category' => 'all', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Projects</a></li>
+                            
+                            <!-- Projects Statistics -->
+                            <li><a href="{{ route('projects.projectStats') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Projects Statistics</a></li>
+                        </ul>
+                    </li>
 
                     <!-- Resource Center Mobile -->
                     <li x-data="{ open: false }">
@@ -267,24 +325,24 @@
                         </ul>
                     </li>
 
-                   <!-- Media Room Mobile -->
-<li x-data="{ open: false }">
-    <button @click="open = !open" 
-            class="flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-text-primary hover:text-accent-1 rounded-lg transition-all duration-300">
-        Media Room
-        <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    <ul x-show="open" 
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 transform -translate-y-2"
-        x-transition:enter-end="opacity-100 transform translate-y-0"
-        class="mt-2 space-y-1 pl-6">
-        <li><a href="{{ route('media.room.events') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Events</a></li>
-        <li><a href="{{ route('media.room.updates') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Updates</a></li>
-    </ul>
-</li>
+                    <!-- Media Room Mobile -->
+                    <li x-data="{ open: false }">
+                        <button @click="open = !open" 
+                                class="flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-text-primary hover:text-accent-1 rounded-lg transition-all duration-300">
+                            Media Room
+                            <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <ul x-show="open" 
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0"
+                            class="mt-2 space-y-1 pl-6">
+                            <li><a href="{{ route('media.room.events') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Events</a></li>
+                            <li><a href="{{ route('media.room.updates') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Updates</a></li>
+                        </ul>
+                    </li>
 
                     <!-- Tenders Mobile -->
                     <li x-data="{ open: false }">

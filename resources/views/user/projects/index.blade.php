@@ -12,7 +12,7 @@
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-                @if(($status ?? 'all') === 'completed')
+                @if(($status ?? 'all') === 'complete')
                 Completed Projects
                 @elseif(($status ?? 'all') === 'ongoing')
                 Ongoing Projects

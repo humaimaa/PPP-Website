@@ -1,4 +1,4 @@
-import cgsap from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
@@ -266,43 +266,26 @@ function initializeStatsCounter() {
     });
 }
 
-// Smooth scroll arrow to bottom of page
+// SMOOTH SCROLL ARROW - SIMPLEST RELIABLE VERSION
 function initSmoothScrollArrow() {
     const arrow = document.getElementById('scroll-down-arrow');
-    if (!arrow) return;
+    if (!arrow) {
+        console.log('Arrow not found');
+        return;
+    }
     
     arrow.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         
         // Get the bottom of the page
-        const targetPosition = document.body.scrollHeight;
-        const startPosition = window.scrollY;
-        const distance = targetPosition - startPosition;
+        const bottomOfPage = document.documentElement.scrollHeight;
         
-        if (Math.abs(distance) < 10) return;
-        
-        const duration = 2000; // 2 seconds for smooth slow scroll
-        const startTime = performance.now();
-        
-        // Easing function for smooth deceleration
-        const easeOutCubic = (t) => {
-            return 1 - Math.pow(1 - t, 3);
-        };
-        
-        function animateScroll(currentTime) {
-            const elapsed = currentTime - startTime;
-            let progress = Math.min(1, elapsed / duration);
-            const easedProgress = easeOutCubic(progress);
-            const newPosition = startPosition + (distance * easedProgress);
-            
-            window.scrollTo(0, newPosition);
-            
-            if (progress < 1) {
-                requestAnimationFrame(animateScroll);
-            }
-        }
-        
-        requestAnimationFrame(animateScroll);
+        // Use native smooth scroll - this is the most reliable
+        window.scrollTo({
+            top: bottomOfPage,
+            behavior: 'smooth'
+        });
     });
 }
 
@@ -337,7 +320,6 @@ function initPositionAwareButton() {
     });
 }
 
-// Alternative: Using GSAP's built-in repeat functionality
 function initPartnerLogosScroll() {
     const logoContainer = document.querySelector('.logo-scroll-container');
     const logoTrack = document.querySelector('.logo-track');
@@ -361,7 +343,6 @@ function initPartnerLogosScroll() {
     
     // Get the width of one set (original width before duplication)
     const originalSetWidth = trackWidth;
-    const totalWidth = logoTrack.scrollWidth;
     
     // Create the seamless infinite scroll animation
     const tl = gsap.timeline({

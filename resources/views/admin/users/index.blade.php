@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Users Management - PPP Unit KPK')
+@section('title', 'Users Management - PPP Unit KP')
 
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -105,7 +105,7 @@
                                     class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             </th>
                         @endcan
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                      
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email Status</th>
@@ -138,7 +138,7 @@
                             </td>
                         @endcan
                         
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ $users->firstItem() + $index }}</td>
+                       
                         
                         <td class="px-6 py-4">
                             <div class="flex items-center">
@@ -323,7 +323,7 @@
 </form>
 @endcan
 
-{{-- Delete Confirmation Modal --}}
+{{-- Single Delete Confirmation Modal --}}
 <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -355,6 +355,36 @@
         </div>
     </div>
 </div>
+
+{{-- Bulk Delete Confirmation Modal --}}
+@can('users.delete')
+<div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">Bulk Delete Users</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete <span id="bulkDeleteCount" class="font-semibold text-gray-700"></span> user(s)?
+                </p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone.</p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="cancelBulkDeleteBtn" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <button id="confirmBulkDeleteBtn" 
+                        class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@endcan
 
 @push('scripts')
 <script>
@@ -399,7 +429,16 @@
         }
     }
     
+    function closeBulkModal() {
+        const modal = document.getElementById('bulkDeleteModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
+        // ---- Single Delete Modal ---- 
         const modal = document.getElementById('deleteModal');
         const cancelBtn = document.getElementById('cancelDeleteBtn');
         
@@ -424,98 +463,137 @@
             }
         });
         
-        // Bulk delete functionality
-        @can('users.delete')
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            const userCheckboxes = document.querySelectorAll('.user-checkbox');
-            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-            const selectedCountSpan = document.getElementById('selectedCount');
-            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
-            
-            function updateSelectedCount() {
+        // ---- Bulk Delete Modal ----
+        const bulkModal = document.getElementById('bulkDeleteModal');
+        const cancelBulkBtn = document.getElementById('cancelBulkDeleteBtn');
+        const confirmBulkBtn = document.getElementById('confirmBulkDeleteBtn');
+        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+        const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+        
+        if (cancelBulkBtn) {
+            cancelBulkBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeBulkModal();
+            });
+        }
+        
+        if (bulkModal) {
+            bulkModal.addEventListener('click', function(e) {
+                if (e.target === bulkModal) {
+                    closeBulkModal();
+                }
+            });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && bulkModal && !bulkModal.classList.contains('hidden')) {
+                closeBulkModal();
+            }
+        });
+        
+        if (confirmBulkBtn) {
+            confirmBulkBtn.addEventListener('click', function() {
+                // Gather selected checkboxes
+                const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
+                
+                // Clear any existing inputs
+                const existingInputs = bulkDeleteForm.querySelectorAll('input[name="user_ids[]"]');
+                existingInputs.forEach(input => input.remove());
+                
+                // Add hidden inputs for each selected user ID
+                checkedBoxes.forEach(checkbox => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'user_ids[]';
+                    input.value = checkbox.value;
+                    bulkDeleteForm.appendChild(input);
+                });
+                
+                // Submit the form
+                bulkDeleteForm.submit();
+            });
+        }
+        
+        // ---- Bulk Delete Button Click: show modal with count ----
+        if (bulkDeleteBtn) {
+            bulkDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
                 const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
                 const count = checkedBoxes.length;
-                if (selectedCountSpan) {
-                    selectedCountSpan.textContent = count;
+                
+                if (count === 0) {
+                    alert('Please select at least one user to delete.');
+                    return;
                 }
                 
-                if (bulkDeleteBtn) {
-                    if (count > 0) {
-                        bulkDeleteBtn.style.display = 'inline-flex';
-                    } else {
-                        bulkDeleteBtn.style.display = 'none';
+                // Check if current user is selected
+                let hasCurrentUser = false;
+                checkedBoxes.forEach(checkbox => {
+                    const row = checkbox.closest('tr');
+                    const youBadge = row.querySelector('.text-blue-600');
+                    if (youBadge && youBadge.innerText === '(You)') {
+                        hasCurrentUser = true;
                     }
+                });
+                
+                if (hasCurrentUser) {
+                    alert('⚠️ Warning: You have selected your own account. You cannot delete yourself.');
+                    return;
                 }
-            }
-            
-            if (selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', function() {
-                    userCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
-                    });
-                    updateSelectedCount();
-                });
-            }
-            
-            userCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    updateSelectedCount();
-                    
-                    if (selectAllCheckbox) {
-                        const allChecked = userCheckboxes.length === document.querySelectorAll('.user-checkbox:checked').length;
-                        selectAllCheckbox.checked = allChecked;
-                    }
-                });
+                
+                // Show modal and set count
+                const countSpan = document.getElementById('bulkDeleteCount');
+                if (countSpan) {
+                    countSpan.textContent = count;
+                }
+                bulkModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             });
+        }
+        
+        // ---- Select All / Update Count ----
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const userCheckboxes = document.querySelectorAll('.user-checkbox');
+        const selectedCountSpan = document.getElementById('selectedCount');
+        
+        function updateSelectedCount() {
+            const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
+            const count = checkedBoxes.length;
+            if (selectedCountSpan) {
+                selectedCountSpan.textContent = count;
+            }
             
             if (bulkDeleteBtn) {
-                bulkDeleteBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
-                    const count = checkedBoxes.length;
-                    
-                    if (count === 0) {
-                        alert('Please select at least one user to delete.');
-                        return;
-                    }
-                    
-                    let hasCurrentUser = false;
-                    checkedBoxes.forEach(checkbox => {
-                        const row = checkbox.closest('tr');
-                        const youBadge = row.querySelector('.text-blue-600');
-                        if (youBadge && youBadge.innerText === '(You)') {
-                            hasCurrentUser = true;
-                        }
-                    });
-                    
-                    if (hasCurrentUser) {
-                        alert('⚠️ Warning: You have selected your own account. You cannot delete yourself.');
-                        return;
-                    }
-                    
-                    let confirmMessage = `Are you sure you want to delete ${count} user${count > 1 ? 's' : ''}? This action cannot be undone.`;
-                    if (confirm(confirmMessage)) {
-                        // Clear any existing inputs
-                        const existingInputs = bulkDeleteForm.querySelectorAll('input[name="user_ids[]"]');
-                        existingInputs.forEach(input => input.remove());
-                        
-                        // Add hidden inputs for each selected user ID
-                        checkedBoxes.forEach(checkbox => {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'user_ids[]';
-                            input.value = checkbox.value;
-                            bulkDeleteForm.appendChild(input);
-                        });
-                        
-                        // Submit the form
-                        bulkDeleteForm.submit();
-                    }
-                });
+                if (count > 0) {
+                    bulkDeleteBtn.style.display = 'inline-flex';
+                } else {
+                    bulkDeleteBtn.style.display = 'none';
+                }
             }
-            
-            updateSelectedCount();
-        @endcan
+        }
+        
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function() {
+                userCheckboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+                updateSelectedCount();
+            });
+        }
+        
+        userCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateSelectedCount();
+                
+                if (selectAllCheckbox) {
+                    const allChecked = userCheckboxes.length === document.querySelectorAll('.user-checkbox:checked').length;
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+        
+        // Initialize count
+        updateSelectedCount();
         
         // Auto-hide messages after 5 seconds
         setTimeout(function() {

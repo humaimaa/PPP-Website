@@ -115,7 +115,7 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <h3 class="font-semibold text-text-black">{{ $download->title }}</h3>
+                                        <h3 class="font-semibold text-text-black">{{Str::title( $download->title )}}</h3>
                                         <span class="text-xs text-text-muted uppercase">{{ $extension }}</span>
                                     </div>
                                 </div>

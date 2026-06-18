@@ -105,16 +105,10 @@
                                     Featured
                                 </span>
                             @endif
-                            <!-- Show indicator if using created_at instead of news_date -->
-                            @if(!isset($news->news_date) || !$news->news_date)
-                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                                    <i class="fas fa-clock mr-1 text-xs"></i>
-                                    Added
-                                </span>
-                            @endif
+                           
                         </div>
                         <h3 class="text-xl font-bold text-text-black mb-3 hover:text-accent-1 transition-colors duration-300">
-                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ $news->title }}</a>
+                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ Str::title($news->title )}}</a>
                         </h3>
                         <p class="text-text-muted line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
                     </div>

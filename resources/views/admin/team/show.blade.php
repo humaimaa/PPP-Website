@@ -24,27 +24,8 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View team member details</p>
                 </div>
-                <div class="flex gap-2">
-                    @can('team.edit')
-                        <a href="{{ route('admin.team.edit', $teamMember) }}" 
-                           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                            <i class="fas fa-edit"></i>
-                            Edit Member
-                        </a>
-                    @endcan
-                    @can('team.delete')
-                        <form action="{{ route('admin.team.destroy', $teamMember) }}" 
-                              method="POST" 
-                              onsubmit="return confirm('Are you sure you want to delete this team member? This action cannot be undone.');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                                <i class="fas fa-trash-alt"></i>
-                                Delete
-                            </button>
-                        </form>
-                    @endcan
+               
+                    
                 </div>
             </div>
         </div>
@@ -147,12 +128,9 @@
                 <div class="flex justify-between items-center">
                     <div class="text-xs text-gray-400">
                         <i class="far fa-clock mr-1"></i>
-                        Last updated: {{ $teamMember->updated_at->format('F d, Y h:i A') }}
+                        Last updated: {{ $teamMember->updated_at->format('F d, Y ') }}
                     </div>
-                    <div class="text-xs text-gray-400">
-                        <i class="far fa-id-card mr-1"></i>
-                        ID: #{{ $teamMember->id }}
-                    </div>
+                    
                 </div>
             </div>
         </div>

@@ -13,46 +13,43 @@ class TenderController extends Controller
     /**
      * Display a listing of the resource.
      */
-/**
- * Display a listing of the resource.
- */
-public function index(Request $request)
-{
-    $query = Tender::query();
-    
-    // Search by name
-    if ($request->filled('search')) {
-        $query->where('name', 'like', '%' . $request->search . '%');
-    }
-    
-    // Filter by category
-    if ($request->filled('category')) {
-        $query->where('category', $request->category);
-    }
-    
-    // Filter by status (using effective closing date)
-    if ($request->filled('status')) {
-        $now = now();
-        switch ($request->status) {
-            case 'open':
-                $query->where(function($q) use ($now) {
-                    $q->whereRaw('COALESCE(extended_closing_date, closing_date) > ?', [$now])
-                      ->where('opening_date', '<=', $now);
-                });
-                break;
-            case 'closed':
-                $query->whereRaw('COALESCE(extended_closing_date, closing_date) < ?', [$now]);
-                break;
-            case 'upcoming':
-                $query->where('opening_date', '>', $now);
-                break;
+    public function index(Request $request)
+    {
+        $query = Tender::query();
+        
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
         }
+        
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
+        // Filter by status (using effective closing date)
+        if ($request->filled('status')) {
+            $now = now();
+            switch ($request->status) {
+                case 'open':
+                    $query->where(function($q) use ($now) {
+                        $q->whereRaw('COALESCE(extended_closing_date, closing_date) > ?', [$now])
+                          ->where('opening_date', '<=', $now);
+                    });
+                    break;
+                case 'closed':
+                    $query->whereRaw('COALESCE(extended_closing_date, closing_date) < ?', [$now]);
+                    break;
+                case 'upcoming':
+                    $query->where('opening_date', '>', $now);
+                    break;
+            }
+        }
+        
+        $tenders = $query->latest()->paginate(10);
+        
+        return view('admin.tenders.index', compact('tenders'));
     }
-    
-    $tenders = $query->latest()->paginate(10);
-    
-    return view('admin.tenders.index', compact('tenders'));
-}
 
     /**
      * Show the form for creating a new resource.
@@ -281,24 +278,37 @@ public function index(Request $request)
      */
     public function bulkDelete(Request $request)
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:tenders,id',
-        ]);
+        // Accept either 'tender_ids' (from fetch) or 'ids' (traditional)
+        $ids = $request->input('tender_ids') ?? $request->input('ids');
+        
+        if (empty($ids) || !is_array($ids)) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'No tender IDs provided.'], 400);
+            }
+            return redirect()->route('admin.tenders.index')->with('error', 'No tenders selected.');
+        }
 
-        $tenders = Tender::whereIn('id', $request->ids)->get();
+        // Validate each ID exists
+        $validIds = Tender::whereIn('id', $ids)->pluck('id')->toArray();
+        if (empty($validIds)) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'No valid tenders found.'], 400);
+            }
+            return redirect()->route('admin.tenders.index')->with('error', 'No valid tenders found.');
+        }
+
+        $tenders = Tender::whereIn('id', $validIds)->get();
+        $deletedCount = 0;
 
         foreach ($tenders as $tender) {
             // Delete main document
             if ($tender->document && Storage::disk('public')->exists($tender->document)) {
                 Storage::disk('public')->delete($tender->document);
             }
-
             // Delete advertisement
             if ($tender->advertisement && Storage::disk('public')->exists($tender->advertisement)) {
                 Storage::disk('public')->delete($tender->advertisement);
             }
-
             // Delete additional documents physical files
             $additionalDocs = TenderAdditionalDoc::where('tender_id', $tender->id)->get();
             foreach ($additionalDocs as $doc) {
@@ -306,53 +316,63 @@ public function index(Request $request)
                     Storage::disk('public')->delete($doc->document);
                 }
             }
-
-            // Delete the tender (additional docs will be deleted automatically due to cascade)
+            // Delete the tender
             $tender->delete();
+            $deletedCount++;
         }
 
-        return redirect()->route('admin.tenders.index')
-            ->with('success', count($request->ids) . ' tender(s) deleted successfully.');
+        // Set flash message for the next request (so it appears after reload)
+        $message = "{$deletedCount} tender(s) deleted successfully.";
+        session()->flash('success', $message);
+
+        // If AJAX request, return JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+        }
+
+        // Otherwise redirect (for traditional form submission)
+        return redirect()->route('admin.tenders.index')->with('success', $message);
     }
 
-
+    /**
+     * Extend the closing date of a tender
+     */
+    public function extend(Request $request, Tender $tender)
+    {
+        $request->validate([
+            'new_closing_date' => 'required|date|after:' . $tender->closing_date->format('Y-m-d'),
+        ]);
+        
+        $tender->update([
+            'extended_closing_date' => $request->new_closing_date
+        ]);
+        
+        return redirect()->route('admin.tenders.index')
+            ->with('success', sprintf(
+                'Closing date extended from %s to %s for tender: %s',
+                $tender->closing_date->format('M d, Y'),
+                $tender->effective_closing_date->format('M d, Y'),
+                $tender->name
+            ));
+    }
 
     /**
- * Extend the closing date of a tender
- */
-public function extend(Request $request, Tender $tender)
-{
-    $request->validate([
-        'new_closing_date' => 'required|date|after:' . $tender->closing_date->format('Y-m-d'),
-    ]);
-    
-    $tender->update([
-        'extended_closing_date' => $request->new_closing_date
-    ]);
-    
-    return redirect()->route('admin.tenders.index')
-        ->with('success', sprintf(
-            'Closing date extended from %s to %s for tender: %s',
-            $tender->closing_date->format('M d, Y'),
-            $tender->effective_closing_date->format('M d, Y'),
-            $tender->name
-        ));
-}
-
-/**
- * Remove extension (reset to original closing date)
- */
-public function removeExtension(Tender $tender)
-{
-    $tender->update([
-        'extended_closing_date' => null
-    ]);
-    
-    return redirect()->route('admin.tenders.index')
-        ->with('success', sprintf(
-            'Extension removed for tender: %s. Closing date reset to %s',
-            $tender->name,
-            $tender->closing_date->format('M d, Y')
-        ));
-}
+     * Remove extension (reset to original closing date)
+     */
+    public function removeExtension(Tender $tender)
+    {
+        $tender->update([
+            'extended_closing_date' => null
+        ]);
+        
+        return redirect()->route('admin.tenders.index')
+            ->with('success', sprintf(
+                'Extension removed for tender: %s. Closing date reset to %s',
+                $tender->name,
+                $tender->closing_date->format('M d, Y')
+            ));
+    }
 }

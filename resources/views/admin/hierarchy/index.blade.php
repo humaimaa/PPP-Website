@@ -99,7 +99,7 @@
                                            class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </th>
                             @endcan
-                            <th class="px-6 py-3 text-left">#</th>
+                           
                             <th class="px-6 py-3 text-left">Hierarchy Title</th>
                             <th class="px-6 py-3 text-left">Order</th>
                             <th class="px-6 py-3 text-left">Status</th>
@@ -131,9 +131,7 @@
                                 </td>
                             @endcan
                             
-                            <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ $hierarchies->firstItem() + $index }} {{-- Changed $hierarchy to $hierarchies --}}
-                            </td>
+                            
                             
                             <td class="px-6 py-4">
                                 <div class="flex items-center">

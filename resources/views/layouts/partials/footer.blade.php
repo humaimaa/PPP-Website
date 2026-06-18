@@ -9,13 +9,13 @@
         </div>
         <p class="mb-4 text-sm md:text-base text-text-secondary text-justify">The Public-Private Partnership Department of Khyber Pakhtunkhwa facilitates sustainable development through collaborative projects between government and private sector.</p>
         <div class="flex space-x-4">
-          <a href="https://facebook.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          <a href="https://www.facebook.com/profile.php?id=61585963196702" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-facebook-f text-text-secondary text-sm"></i>
           </a>
-          <a href="https://x.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          {{-- <a href="https://x.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fa-brands fa-x-twitter text-text-secondary text-sm"></i>
-          </a>
-          <a href="https://linkedin.com" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
+          </a> --}}
+          <a href="https://www.linkedin.com/company/ppp-unit-gokp/?viewAsMember=true" target="_blank" class="w-8 h-8 bg-text-secondary/10 rounded-full flex items-center justify-center hover:bg-accent-1 hover:scale-110 transition-all duration-300">
             <i class="fab fa-linkedin-in text-text-secondary text-sm"></i>
           </a>
           
@@ -69,24 +69,25 @@
         <ul class="space-y-3 mb-6">
           <li class="flex items-start">
             <i class="fas fa-map-marker-alt text-accent-1 mr-3 mt-0.5 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">PPP Complex, Sector G-5, Peshawar, Khyber Pakhtunkhwa, Pakistan</span>
+            <span class="text-sm md:text-base text-text-secondary">PPP Unit,
+                                P & D Department,
+                                Civil Secretariat,
+                                Peshawar, Khyber Pakhtunkhwa,
+                                Pakistan</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-phone-alt text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">+92 91 921 1234</span>
+            <span class="text-sm md:text-base text-text-secondary">+92 333 9391457</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">info@pppunitkpk.gov.pk</span>
+            <span class="text-sm md:text-base text-text-secondary">chief.ppp@pndkp.gov.pk</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-clock text-accent-1 mr-3 text-sm"></i>
             <span class="text-sm md:text-base text-text-secondary">Mon-Fri: 9:00 AM - 5:00 PM</span>
           </li>
-          <li class="flex items-center">
-            <i class="fas fa-fax text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">+92 91 921 1235</span>
-          </li>
+
         </ul>
 
         

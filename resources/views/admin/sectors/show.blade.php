@@ -46,17 +46,7 @@
 
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Sector ID --}}
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
-                        <i class="fas fa-hashtag mr-1"></i> Sector ID
-                    </label>
-                    <div class="flex items-center">
-                        <span class="text-2xl font-mono font-bold text-gray-800">
-                            #{{ $sector->id }}
-                        </span>
-                    </div>
-                </div>
+               
 
                 {{-- Sector Name --}}
                 <div class="bg-gray-50 rounded-lg p-4">

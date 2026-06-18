@@ -10,31 +10,35 @@
         <source src="{{ asset('videos/video-1.mp4') }}" type="video/mp4">
         <img src="{{ asset('images/hero-fallback.jpg') }}" alt="Background" class="w-full h-full object-cover">
     </video>
-    
+
     <!-- Overlay that fades on scroll -->
     <div class="absolute inset-0 bg-black/50 transition-opacity duration-500" id="heroOverlay"></div>
-    
+
     <!-- Center Text Content -->
     <div class="absolute inset-0 flex items-center justify-center z-10">
         <div class="text-center px-4 max-w-4xl">
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
+            <h1
+                class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
                 Public Private Partnership Unit
             </h1>
-<p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
-    Strengthening public infrastructure and service delivery through strategic partnerships, innovative solutions, and sustainable investment opportunities across Khyber Pakhtunkhwa.
-</p>
+            <p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
+                Strengthening public infrastructure and service delivery through strategic partnerships, innovative
+                solutions, and sustainable investment opportunities across Khyber Pakhtunkhwa.
+            </p>
         </div>
     </div>
 
-    <!-- Scroll Down Arrow -->
-         <!-- Scroll Down Arrow - Sidcup Style (White, Left Side) -->
-         <div id="arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
-            <div class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group">
-                 <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-[#0A612B] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                  </svg>
-            </div>
+    <!-- Scroll Down Arrow - Sidcup Style (White, Left Side) -->
+<div id="scroll-down-arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
+        <div
+            class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group">
+            <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-[#0A612B] transition-all duration-300"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
+                </path>
+            </svg>
         </div>
+    </div>
 </section>
 
 <!-- About Section -->
@@ -45,7 +49,8 @@
                 <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Unit KP Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
+                    <div
+                        class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
                         <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Unit Meeting</h3>
                         <p class="text-xs text-text-secondary lg:text-sm">Peshawar, Khyber Pakhtunkhwa</p>
                     </div>
@@ -53,50 +58,61 @@
             </div>
         </div>
 
-        <div class="order-first md:order-last py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
+        <div
+            class="order-first md:order-last py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
             <div class="w-full about-content">
                 <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
                 <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
                 <<p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
-    The Public Private Partnership (PPP) Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
-</p>
+                    The Public Private Partnership (PPP) Unit, established under the Planning & Development Department,
+                    Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating
+                    PPP projects across the province.
+                    </p>
 
-<p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
-    The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes to ensure efficient planning, evaluation, and implementation of PPP initiatives.
-</p>
+                    <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
+                        The Unit provides technical, financial, legal, and institutional support to the PPP Committee,
+                        PPP Unit, and departmental PPP Nodes to ensure efficient planning, evaluation, and
+                        implementation of PPP initiatives.
+                    </p>
 
-<ul class="space-y-3 text-text-muted mb-6">
-    
-    <li class="flex items-start group">
-        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span class="text-sm md:text-base">
-            Promoting private sector participation in public infrastructure projects
-        </span>
-    </li>
+                    <ul class="space-y-3 text-text-muted mb-6">
 
-    <li class="flex items-start group">
-        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span class="text-sm md:text-base">
-            Ensuring projects comply with the PPP Act and procurement regulations
-        </span>
-    </li>
+                        <li class="flex items-start group">
+                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-sm md:text-base">
+                                Promoting private sector participation in public infrastructure projects
+                            </span>
+                        </li>
 
-    <li class="flex items-start group">
-        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span class="text-sm md:text-base">
-            Supporting sustainable and bankable PPP projects for provincial development
-        </span>
-    </li>
+                        <li class="flex items-start group">
+                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-sm md:text-base">
+                                Ensuring projects comply with the PPP Act and procurement regulations
+                            </span>
+                        </li>
 
-</ul>
+                        <li class="flex items-start group">
+                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-sm md:text-base">
+                                Supporting sustainable and bankable PPP projects for provincial development
+                            </span>
+                        </li>
 
-    </div>
+                    </ul>
+
+            </div>
 </section>
 
 <!-- Departmental Leadership Section - Dynamic from Database (Chief Minister) -->
@@ -106,22 +122,21 @@
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Message from Leadership</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
-        
+
         @if($leadershipMessage)
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
             <!-- Leader's Photo -->
             <div class="lg:w-1/3">
                 <div class="relative rounded-lg overflow-hidden shadow-2xl">
-                    <img src="{{ $leadershipMessage->image ? asset('storage/' . $leadershipMessage->image) : asset('images/boy.jpg') }}" 
-                         alt="{{ $leadershipMessage->name }}" 
-                         class="w-full h-96 object-cover">
+                    <img src="{{ $leadershipMessage->image ? asset('storage/' . $leadershipMessage->image) : asset('images/boy.jpg') }}"
+                        alt="{{ $leadershipMessage->name }}" class="w-full h-96 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $leadershipMessage->name }}</h3>
                         <p class="text-accent-1">{{ $leadershipMessage->designation }}</p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="lg:w-1/2">
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
@@ -147,17 +162,22 @@
             @foreach($sectors as $sector)
             <div class="sector-card relative h-64 overflow-hidden group w-full">
                 <!-- Gradient overlay - changes on hover to lighter green -->
-                <div class="absolute inset-0 z-10 transition-all duration-500" 
-                     style="background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));"></div>
-                <div class="absolute inset-0 z-10 transition-all duration-500 opacity-0 group-hover:opacity-100" 
-                     style="background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));"></div>
-                
+                <div class="absolute inset-0 z-10 transition-all duration-500"
+                    style="background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));"></div>
+                <div class="absolute inset-0 z-10 transition-all duration-500 opacity-0 group-hover:opacity-100"
+                    style="background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));">
+                </div>
+
                 <img src="{{ asset('storage/' . $sector->img) }}" alt="{{ $sector->name }} Sector"
                     class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110">
-                
+
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
-                    <h3 class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">{{ $sector->name }}</h3>
-                    <p class="text-text-secondary text-sm  mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">{{ $sector->tagline }}</p>
+                    <h3
+                        class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">
+                        {{ $sector->name }}</h3>
+                    <p
+                        class="text-text-secondary text-sm  mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">
+                        {{ $sector->tagline }}</p>
                 </div>
             </div>
             @endforeach
@@ -173,10 +193,12 @@
     <div class="absolute inset-0 bg-accent-3/70"></div>
     <div class="relative z-10 px-4 mx-auto text-center md:px-6 lg:px-8 max-w-7xl">
         <div class="max-w-3xl mx-auto">
-            <h2 class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
+            <h2
+                class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
                 Our Vision for Sustainable Development
             </h2>
-            <p class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
+            <p
+                class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
                 We are committed to fostering public-private partnerships that drive innovation, infrastructure
                 development, and economic growth across Khyber Pakhtunkhwa.
             </p>
@@ -194,39 +216,45 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($latestNews as $news)
-            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div
+                class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div class="h-48 overflow-hidden bg-background-primary/10">
                     @if($news->img_path)
-                        <!-- Show the update's image if available -->
-                        <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    <!-- Show the update's image if available -->
+                    <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}"
+                        class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                     @elseif($news->pdf_path)
-                        <!-- Fallback: PDF icon -->
-                        <div class="w-full h-full flex items-center justify-center bg-background-primary/5">
-                            <svg class="w-16 h-16 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
+                    <!-- Fallback: PDF icon -->
+                    <div class="w-full h-full flex items-center justify-center bg-background-primary/5">
+                        <svg class="w-16 h-16 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
                     @else
-                        <!-- Final fallback: gradient with type text -->
-                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
-                            <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
-                        </div>
+                    <!-- Final fallback: gradient with type text -->
+                    <div
+                        class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
+                        <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
+                    </div>
                     @endif
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-2">
                         <span class="text-sm text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
                         <span class="mx-2 text-text-muted">|</span>
-                        <span class="text-sm text-text-muted">{{ $news->type }}</span>
+                        <span class="text-sm text-text-muted">{{ Str::title($news->type) }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ $news->title }}</h3>
+                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ Str::title($news->title) }}</h3>
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
                     <a href="{{ url('/media-room/updates/' . $news->id) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
-                        <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
                         </svg>
                     </a>
                 </div>
@@ -251,7 +279,8 @@
         <div class="text-center mb-10">
             <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto rounded-full"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Collaborating with leading organizations to drive sustainable development in Khyber Pakhtunkhwa</p>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Collaborating with leading organizations to drive
+                sustainable development in Khyber Pakhtunkhwa</p>
         </div>
 
         <!-- Infinite scrolling logo carousel -->
@@ -262,84 +291,168 @@
                     <!-- Original set of logos -->
                     <div class="partner-logo shrink-0">
                         <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
+                            target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+                    <div class="partner-logo shrink-0">
+                        <a href="https://www.shiftcities.org/organization/asian-development-bank" target="_blank"
+                            rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_6.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
 
-                    <!-- Duplicate set for seamless loop -->
+                    <div class="partner-logo shrink-0">
+                        <a href="https://www.pwc.com.pk/en/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_7.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                    <div class="partner-logo shrink-0">
+                        <a href="https://www.pavron.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_8.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                    <div class="partner-logo shrink-0">
+                        <a href="https://nespak.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_9.jpg') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                    <div class="partner-logo shrink-0">
+                        <a href="https://riaabarkergillette.com/pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_10.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300"
+                                style="filter: brightness(0) saturate(100%) invert(18%) sepia(49%) saturate(1234%) hue-rotate(260deg) brightness(92%) contrast(96%);">
+                        </a>
+                    </div>
+
+                   <div class="partner-logo shrink-0">
+                        <a href="https://www.rsm.global/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_11.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                   <div class="partner-logo shrink-0">
+                        <a href="https://www.icci.pk/listing/tahir-builders-pvt-ltd/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_12.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                     <!-- duplicate set of logos -->
                     <div class="partner-logo shrink-0">
                         <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
                         <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
+                            target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+                    <div class="partner-logo shrink-0">
+                        <a href="https://www.shiftcities.org/organization/asian-development-bank" target="_blank"
+                            rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_6.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
 
-                    <!-- Third set for smoother infinite scroll -->
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.pwc.com.pk/en/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_7.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
 
+                    <div class="partner-logo shrink-0">
+                        <a href="https://www.pavron.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_8.png') }}" alt="FCDO"
+                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                    <div class="partner-logo shrink-0">
+                        <a href="https://nespak.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_9.jpg') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                    <div class="partner-logo shrink-0">
+                        <a href="https://riaabarkergillette.com/pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_10.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300"
+                                style="filter: brightness(0) saturate(100%) invert(18%) sepia(49%) saturate(1234%) hue-rotate(260deg) brightness(92%) contrast(96%);">
+                        </a>
+                    </div>
+
+                   <div class="partner-logo shrink-0">
+                        <a href="https://www.rsm.global/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_11.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
+
+                   <div class="partner-logo shrink-0">
+                        <a href="https://www.icci.pk/listing/tahir-builders-pvt-ltd/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_12.png') }}" alt="FCDO"
+                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -349,7 +462,7 @@
 
 
 @push('scripts')
-    @vite([ 
-        'resources/js/home-animate.js'
-    ])
+@vite([
+'resources/js/home-animate.js'
+])
 @endpush

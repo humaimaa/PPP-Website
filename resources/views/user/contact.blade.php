@@ -53,9 +53,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Phone</h3>
                             <p class="mt-1 text-text-muted">
-                                Main Office: +92 91 921 1234<br>
-                                Help Desk: +92 91 921 5678<br>
-                                Fax: +92 91 921 9876
+                                +92 333 9391457
                             </p>
                         </div>
                     </div>
@@ -69,8 +67,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Email</h3>
                             <p class="mt-1 text-text-muted">
-                                General Inquiries: <a href="mailto:info@pppdepartmentkpk.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">info@pppdepartmentkpk.gov.pk</a><br>
-                                Support: <a href="mailto:support@pppdepartmentkpk.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">support@pppdepartmentkpk.gov.pk</a>
+                                <a href="mailto:chief.ppp@pndkp.gov.pk" class="text-accent-1 hover:text-accent-2 hover:underline transition-colors">chief.ppp@pndkp.gov.pk</a><br>
                             </p>
                         </div>
                     </div>
@@ -84,9 +81,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Office Hours</h3>
                             <p class="mt-1 text-text-muted">
-                                Monday to Friday: 9:00 AM to 5:00 PM<br>
-                                Saturday: 9:00 AM to 1:00 PM<br>
-                                Sunday: Closed
+                                Monday to Friday: 9:00 AM to 5:00 PM
                             </p>
                         </div>
                     </div>
@@ -96,13 +91,24 @@
             <!-- Contact Form (Right) -->
             <div class="bg-background-white p-8 rounded-lg shadow-md flex-1">
                 <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-6">Send Us a Message</h2>
+                
+                <!-- Success Message -->
+                <div id="successMessage" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+                    <strong>Success!</strong> Your message has been sent successfully. We will get back to you soon.
+                </div>
+                
+                <!-- Error Message -->
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                    <strong>Error!</strong> <span id="errorText">Something went wrong. Please try again.</span>
+                </div>
+                
                 <form id="contactForm" class="space-y-6" novalidate>
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="first-name" class="block text-sm font-medium text-text-green">First Name <span class="text-red-500">*</span></label>
                             <input type="text" id="first-name" name="first-name" required
-                                class="mt-1 block w-full border border-background-light rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-accent-1 focus:border-accent-1 text-text-black" >
+                                class="mt-1 block w-full border border-background-light rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-accent-1 focus:border-accent-1 text-text-black">
                             <p class="mt-1 text-sm text-red-600 hidden" id="first-name-error">First name is required</p>
                         </div>
                         <div>
@@ -148,7 +154,7 @@
                     </div>
 
                     <div>
-                        <button type="submit"
+                        <button type="submit" id="submitBtn"
                             class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-text-primary bg-accent-1 hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-1 transition-colors duration-300">
                             Send Message
                         </button>
@@ -183,6 +189,14 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        
+        // Hide messages initially
+        successMessage.classList.add('hidden');
+        errorMessage.classList.add('hidden');
         
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -192,6 +206,10 @@
             document.querySelectorAll('[id$="-error"]').forEach(el => {
                 el.classList.add('hidden');
             });
+            
+            // Reset messages
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
             
             // Validate first name
             const firstName = document.getElementById('first-name');
@@ -230,14 +248,15 @@
             }
             
             if (isValid) {
-                // For static website, show success message
-                alert('Form submitted successfully!');
-                form.reset();
+                // Disable submit button and show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Sending...';
                 
-                // If you want to submit via AJAX, uncomment the code below
-                /*
+                // Prepare form data
                 const formData = new FormData(form);
-                fetch('{{ url("contact/submit") }}', {
+                
+                // Send via AJAX
+                fetch('{{ route("contact.submit") }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
@@ -247,18 +266,38 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Message';
+                    
                     if(data.success) {
-                        alert('Message sent successfully!');
+                        // Show success message
+                        successMessage.classList.remove('hidden');
+                        successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         form.reset();
+                        
+                        // Hide success message after 10 seconds
+                        setTimeout(() => {
+                            successMessage.classList.add('hidden');
+                        }, 10000);
                     } else {
-                        alert('An error occurred. Please try again.');
+                        // Show error message
+                        errorText.textContent = data.message || 'Failed to send your message. Please try again.';
+                        errorMessage.classList.remove('hidden');
+                        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Message';
+                    
+                    // Show error message
+                    errorText.textContent = 'Network error. Please check your connection and try again.';
+                    errorMessage.classList.remove('hidden');
+                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
-                */
             }
         });
         
@@ -270,6 +309,25 @@
             } else {
                 document.getElementById('email-error').classList.add('hidden');
             }
+        });
+        
+        // Clear error messages on input
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', function() {
+                const errorId = this.id + '-error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.classList.add('hidden');
+                }
+            });
+            
+            element.addEventListener('change', function() {
+                const errorId = this.id + '-error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.classList.add('hidden');
+                }
+            });
         });
     });
 </script>

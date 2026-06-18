@@ -92,7 +92,7 @@
                                            class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 </th>
                             @endcan
-                            <th class="px-6 py-3 text-left">ID</th>
+                            
                             <th class="px-6 py-3 text-left">Photo</th>
                             <th class="px-6 py-3 text-left">Name</th>
                             <th class="px-6 py-3 text-left">Hierarchy Level</th>
@@ -120,9 +120,7 @@
                                 </td>
                             @endcan
                             
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">
-                                #{{ $member->id }}
-                            </td>
+                           
                             
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($member->img)

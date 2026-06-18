@@ -63,15 +63,15 @@
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 
-        <div class="grid grid-cols-1 {{ $leadershipMembers->count() > 1 ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-md mx-auto' }} gap-20 max-w-3xl mx-auto">
+        <div class="flex flex-wrap justify-center gap-20 max-w-3xl mx-auto">
             @foreach($leadershipMembers as $leadershipMember)
-            <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 w-full {{ $leadershipMembers->count() > 1 ? 'md:w-[calc(50%-2.5rem)]' : 'md:w-[calc(100%)]' }}">
                 <div class="relative">
                     <img src="{{ $leadershipMember->img ? asset('storage/' . $leadershipMember->img) : asset('images/boy.jpg') }}"
                          alt="{{ $leadershipMember->name }}"
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
-                        <h3 class="text-2xl font-bold text-text-primary">{{ $leadershipMember->name }}</h3>
+                        <h3 class="text-2xl font-bold text-text-primary">{{ ucwords(strtolower($leadershipMember->name)) }}</h3>
                         <p class="text-accent-1 text-lg font-semibold mt-1">{{ $leadershipMember->designation ?? 'Leadership' }}</p>
                     </div>
                 </div>
@@ -123,72 +123,74 @@
             <div class="w-20 h-1 bg-accent-1 mx-auto mt-4"></div>
         </div>
 
-        <!-- Grid to show 4 cards in one row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Grid with flex to center when fewer cards -->
+        <div class="flex flex-wrap justify-center -mx-3">
             @foreach($members as $member)
-                @if($isOfficerStyle)
-                {{-- Research Officer Style Card (Order 2) --}}
-                <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="h-56 overflow-hidden">
-                        <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                             alt="{{ $member->name }}"
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                <div class="w-full sm:w-1/2 lg:w-1/4 px-3 mb-6">
+                    @if($isOfficerStyle)
+                    {{-- Research Officer Style Card (Order 2) --}}
+                    <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
+                        <div class="h-56 overflow-hidden">
+                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                                 alt="{{ $member->name }}"
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-text-black mb-1">{{ ucwords(strtolower($member->name)) }}</h3>
+                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
+                            @if($member->email)
+                            <a href="mailto:{{ $member->email }}"
+                               class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
+                                <svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                                {{ Str::limit($member->email, 30) }}
+                            </a>
+                            @endif
+                        </div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
+
+                    @elseif($isAnalystStyle)
+                    {{-- Specialist/Analyst Style Card (Order 3 & 4) --}}
+                    <div class="bg-background-white rounded-lg shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                        <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
+                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                                 alt="{{ $member->name }}"
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-base font-bold text-text-black mb-1">{{ ucwords(strtolower($member->name)) }}</h3>
+                        <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->designation ?? 'Team Member' }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
-                           class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
-                            <svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
+                           class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
                             {{ Str::limit($member->email, 30) }}
                         </a>
                         @endif
                     </div>
-                </div>
-
-                @elseif($isAnalystStyle)
-                {{-- Specialist/Analyst Style Card (Order 3 & 4) --}}
-                <div class="bg-background-white rounded-lg shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-gray-100">
-                        <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                             alt="{{ $member->name }}"
-                             class="w-full h-full object-cover">
+                    @else
+                    {{-- Default Style Card --}}
+                    <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
+                        <div class="h-56 overflow-hidden">
+                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                                 alt="{{ $member->name }}"
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-text-black mb-1">{{ ucwords(strtolower($member->name)) }}</h3>
+                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
+                            @if($member->email)
+                            <a href="mailto:{{ $member->email }}"
+                               class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
+                                <svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                                {{ Str::limit($member->email, 30) }}
+                            </a>
+                            @endif
+                        </div>
                     </div>
-                    <h3 class="text-base font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                    <p class="text-accent-1 text-xs font-medium mb-2">{{ $member->designation ?? 'Team Member' }}</p>
-                   @if($member->email)
-                    <a href="mailto:{{ $member->email }}"
-                       class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
-                        {{ Str::limit($member->email, 30) }}
-                    </a>
                     @endif
                 </div>
-                @else
-                {{-- Default Style Card --}}
-                <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="h-56 overflow-hidden">
-                        <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                             alt="{{ $member->name }}"
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-text-black mb-1">{{ $member->name }}</h3>
-                        <p class="text-accent-1 font-semibold text-sm mb-2">{{ $member->designation ?? 'Team Member' }}</p>
-                        @if($member->email)
-                        <a href="mailto:{{ $member->email }}"
-                           class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
-                            <svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                            {{ Str::limit($member->email, 30) }}
-                        </a>
-                        @endif
-                    </div>
-                </div>
-                @endif
             @endforeach
         </div>
     </div>

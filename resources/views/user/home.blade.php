@@ -218,9 +218,9 @@
                     <div class="flex items-center mb-2">
                         <span class="text-sm text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
                         <span class="mx-2 text-text-muted">|</span>
-                        <span class="text-sm text-text-muted">{{ $news->type }}</span>
+                        <span class="text-sm text-text-muted">{{ Str::title($news->type) }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ $news->title }}</h3>
+                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ Str::title($news->title) }}</h3>
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
                     <a href="{{ url('/media-room/updates/' . $news->id) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">

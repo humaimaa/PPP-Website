@@ -125,7 +125,7 @@
                             </span>
                             <div>
                                 <p class="font-semibold text-text-black leading-snug {{ !$isActive ? 'text-gray-500' : '' }}">
-                                    {{ $tender->name }}
+                                    {{ Str::title($tender->name) }}
                                 </p>
                                 <div class="flex flex-wrap gap-1.5 mt-1.5">
                                     @if($isExtended)

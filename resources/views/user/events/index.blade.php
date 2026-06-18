@@ -78,7 +78,7 @@
                     <!-- Card Content -->
                     <div class="p-6">
                         <h3 class="text-xl line-clamp-1 font-bold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors duration-300">
-                            {{ $event->title }}
+                            {{Str::title( $event->title) }}
                         </h3>
                         <p class="text-gray-600 text-sm mb-3 line-clamp-3">
                             {{ Str::limit($event->description ?? 'No description available.', 100) }}

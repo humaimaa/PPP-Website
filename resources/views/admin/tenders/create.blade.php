@@ -274,7 +274,7 @@
                                     <i class="fas fa-file-upload"></i>
                                 </span>
                                 <input type="file" name="additional_docs[0][document]" 
-                                       accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                       accept=".pdf,.doc,.docx"
                                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
                                        onchange="validateAdditionalDoc(this)">
                             </div>

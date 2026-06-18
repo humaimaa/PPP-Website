@@ -285,60 +285,35 @@
                             <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
-
-                    <!-- Duplicate set for seamless loop -->
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.shiftcities.org/organization/asian-development-bank" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_6.png') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
 
-                    <!-- Third set for smoother infinite scroll -->
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.pwc.com.pk/en/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_7.png') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
+
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://www.pavron.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_8.png') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
+
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
+                        <a href="https://nespak.com.pk/" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('images/partner_9.jpg') }}" alt="FCDO" class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
                         </a>
                     </div>
+
                     <div class="partner-logo shrink-0">
-                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO" class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
+    <a href="https://riaabarkergillette.com/pk/" target="_blank" rel="noopener noreferrer">
+        <img src="{{ asset('images/partner_10.png') }}" alt="FCDO" class="partner-img h-16 md:h-24 w-auto transition-all duration-300" style="filter: brightness(0) saturate(100%) invert(18%) sepia(49%) saturate(1234%) hue-rotate(260deg) brightness(92%) contrast(96%);">
+    </a>
+</div>
 
                 </div>
             </div>

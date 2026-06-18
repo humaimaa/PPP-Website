@@ -70,11 +70,7 @@
                     <p class="text-gray-900">
                         <i class="fas fa-calendar-alt text-emerald-600 mr-1"></i>
                         {{ $tender->opening_date ? $tender->opening_date->format('F d, Y') : 'N/A' }}
-                        @if($tender->opening_date)
-                            <span class="text-gray-500 text-sm ml-2">
-                                ({{ $tender->opening_date->format('l') }})
-                            </span>
-                        @endif
+                        
                     </p>
                 </div>
                 <div>
@@ -84,20 +80,12 @@
                             <p class="text-gray-500 line-through">
                                 <i class="fas fa-calendar-times text-gray-400 mr-1"></i>
                                 {{ $tender->closing_date ? $tender->closing_date->format('F d, Y') : 'N/A' }}
-                                @if($tender->closing_date)
-                                    <span class="text-gray-400 text-sm ml-2">
-                                        ({{ $tender->closing_date->format('l') }})
-                                    </span>
-                                @endif
+                               
                             </p>
                             <p class="text-orange-600 font-medium mt-1">
                                 <i class="fas fa-calendar-plus text-orange-600 mr-1"></i>
                                 {{ $tender->effective_closing_date ? $tender->effective_closing_date->format('F d, Y') : 'N/A' }}
-                                @if($tender->effective_closing_date)
-                                    <span class="text-orange-400 text-sm ml-2">
-                                        ({{ $tender->effective_closing_date->format('l') }})
-                                    </span>
-                                @endif
+                                
                                 <span class="text-xs text-orange-500 ml-2">
                                     (Extended)
                                 </span>
@@ -106,11 +94,7 @@
                             <p class="text-gray-900">
                                 <i class="fas fa-calendar-times text-red-600 mr-1"></i>
                                 {{ $tender->closing_date ? $tender->closing_date->format('F d, Y') : 'N/A' }}
-                                @if($tender->closing_date)
-                                    <span class="text-gray-500 text-sm ml-2">
-                                        ({{ $tender->closing_date->format('l') }})
-                                    </span>
-                                @endif
+                               
                             </p>
                         @endif
                         
@@ -281,12 +265,12 @@
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
                     <p class="text-sm font-semibold text-gray-800">{{ $tender->created_at->format('M d, Y') }}</p>
-                    <p class="text-xs text-gray-400">{{ $tender->created_at->format('h:i A') }}</p>
+                    
                 </div>
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
                     <p class="text-sm font-semibold text-gray-800">{{ $tender->updated_at->format('M d, Y') }}</p>
-                    <p class="text-xs text-gray-400">{{ $tender->updated_at->format('h:i A') }}</p>
+                   
                 </div>
                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                     <p class="text-xs text-gray-500 uppercase mb-1">Time Remaining</p>

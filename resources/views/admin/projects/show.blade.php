@@ -25,6 +25,15 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View complete project information</p>
                 </div>
+                <div class="flex gap-2">
+                    @can('projects.edit')
+                    <a href="{{ route('admin.projects.edit', $project) }}"
+                        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-edit"></i>
+                        Edit Project
+                    </a>
+                    @endcan
+                </div>
             </div>
         </div>
 
@@ -36,8 +45,7 @@
                     <img src="{{ Storage::url($project->image) }}" alt="{{ $project->name }}"
                         class="w-full rounded-lg object-cover border border-gray-200 shadow-sm">
                     @else
-                    <div
-                        class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                    <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
                         <div class="text-center">
                             <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
                             <p class="text-sm text-gray-500">No image available</p>
@@ -60,24 +68,26 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Implementing Authority</p>
                             <p class="text-sm font-medium text-gray-900">
-                                <i class="fas fa-building text-gray-400 mr-1"></i>
+                                <i class="fas fa-university text-gray-400 mr-1"></i>
                                 {{ $project->implementing_authority }}
                             </p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Project Cost</p>
                             <p class="text-sm font-semibold text-gray-900">
+                                <i class="fas fa-rupee-sign text-gray-400 mr-1"></i>
                                 {{ $project->cost }}
                             </p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Category</p>
                             <p>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                     @if($project->category == 'Pipeline') bg-blue-100 text-blue-800
                                     @elseif($project->category == 'Ongoing') bg-yellow-100 text-yellow-800
-                                    @elseif($project->category == 'Completed') bg-green-100 text-green-800
+                                    @elseif($project->category == 'Construction & Operational') bg-green-100 text-green-800
                                     @endif">
+                                    <i class="fas fa-tag mr-1 text-xs"></i>
                                     {{ $project->category }}
                                 </span>
                             </p>
@@ -86,15 +96,14 @@
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Status</p>
                             <p>
                                 @if($project->status)
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    @if($project->status == 'Planning') bg-blue-100 text-blue-800
-                                    @elseif($project->status == 'Feasibility Study') bg-purple-100 text-purple-800
-                                    @elseif($project->status == 'Bidding') bg-yellow-100 text-yellow-800
-                                    @elseif($project->status == 'Implementation') bg-orange-100 text-orange-800
-                                    @elseif($project->status == 'Completed') bg-green-100 text-green-800
-                                    @elseif($project->status == 'Operational') bg-emerald-100 text-emerald-800
-                                    @else bg-gray-100 text-gray-800
+                                <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full
+                                    @if($project->status == 'Private Partner Selection') bg-orange-100 text-orange-800
+                                    @elseif($project->status == 'Transaction Advisory') bg-cyan-100 text-cyan-800
+                                    @elseif($project->status == 'Operational') bg-green-100 text-green-800
+                                    @elseif($project->status == 'Construction') bg-amber-100 text-amber-800
+                                    @else bg-gray-100 text-gray-700
                                     @endif">
+                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
                                     {{ $project->status }}
                                 </span>
                                 @else
@@ -163,12 +172,12 @@
             </div>
             @endif
 
-            {{-- Completed Project Details --}}
-            @if($project->category == 'Completed' && $project->completedDetail)
+            {{-- Construction & Operational Project Details --}}
+            @if($project->category == 'Construction & Operational' && $project->completedDetail)
             <div class="mb-6">
                 <h4 class="text-md font-semibold text-gray-800 mb-3">
-                    <i class="fas fa-check-circle mr-2 text-emerald-600"></i>
-                    Completed Project Details
+                    <i class="fas fa-hard-hat mr-2 text-emerald-600"></i>
+                    Construction & Operational Project Details
                 </h4>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="bg-gray-50 rounded-lg p-4">
@@ -187,8 +196,7 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-sm font-medium text-gray-700 mb-2">Financial Benefits to Government</p>
-                        <p class="text-gray-600">{{ $project->completedDetail->expected_financial_benefits_to_government
-                            }}</p>
+                        <p class="text-gray-600">{{ $project->completedDetail->expected_financial_benefits_to_government }}</p>
                     </div>
                 </div>
             </div>
@@ -199,11 +207,11 @@
                 <div class="flex gap-6 text-xs text-gray-500">
                     <div>
                         <i class="far fa-calendar-alt mr-1"></i>
-                        Created: {{ $project->created_at->format('F d, Y ') }}
+                        Created: {{ $project->created_at->format('F d, Y') }}
                     </div>
                     <div>
                         <i class="far fa-clock mr-1"></i>
-                        Last Updated: {{ $project->updated_at->format('F d, Y ') }}
+                        Last Updated: {{ $project->updated_at->format('F d, Y') }}
                     </div>
                 </div>
             </div>

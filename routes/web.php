@@ -19,7 +19,7 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 // Pitchbook page
 Route::get('/pitchbook', [PageController::class, 'pitchbook'])->name('pitchbook');
 
-// About pages - simplified route structure
+// About pages
 Route::prefix('about')->name('about.')->group(function () {
     Route::get('/', [AboutController::class, 'about'])->name('index');
     Route::get('/functions', [AboutController::class, 'function'])->name('functions');
@@ -36,10 +36,11 @@ Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('t
 // IMPORTANT: Specific routes must come before generic routes
 Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
+
 // Generic route with optional category and status parameters
 Route::get('/projects/{category?}/{status?}', [ProjectController::class, 'index'])
     ->name('projects.index')
-    ->where('category', 'all|pipeline|ongoing|completed')
+    ->where('category', 'all|pipeline|ongoing|construction-operational')
     ->where('status', 'all|private-partner|transaction-advisory|construction|operational');
 
 // Resource Center (Downloads) with optional section parameter

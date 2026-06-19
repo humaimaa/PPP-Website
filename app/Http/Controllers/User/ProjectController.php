@@ -6,61 +6,48 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\OngoingProjectDetail;
 use App\Models\CompletedProjectDetail;
-use App\Models\PipelineProjectDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
-{  
+{
     /**
-     * Helper function to convert cost string to numeric value in PKR
+     * Convert cost string to numeric value (in PKR)
      */
     private function getRawCostValue($costString)
     {
         if (empty($costString)) return 0;
-        
-        if (is_numeric($costString)) {
-            return (float)$costString;
-        }
-        
+        if (is_numeric($costString)) return (float)$costString;
+
         $costString = strtolower(trim($costString));
         preg_match('/([\d,]+\.?\d*)/', $costString, $matches);
         $numericValue = isset($matches[1]) ? (float)str_replace(',', '', $matches[1]) : 0;
-        
+
         if (strpos($costString, 'billion') !== false) {
             return $numericValue * 1000000000;
-        }
-        elseif (strpos($costString, 'million') !== false) {
+        } elseif (strpos($costString, 'million') !== false) {
             return $numericValue * 1000000;
-        }
-        elseif (strpos($costString, 'crore') !== false || strpos($costString, 'cr') !== false) {
+        } elseif (strpos($costString, 'crore') !== false || strpos($costString, 'cr') !== false) {
             return $numericValue * 10000000;
         }
-        else {
-            return $numericValue;
-        }
+        return $numericValue;
     }
 
     /**
-     * Projects page with optional category and status parameters
+     * Display projects with category and status filters
      */
     public function index($category = 'all', $status = 'all')
     {
-        $validCategories = ['all', 'pipeline', 'ongoing', 'completed'];
+        // Allowed slugs – must match route constraints AND your view's dropdown values
+        $validCategories = ['all', 'pipeline', 'ongoing', 'construction-operational'];
         $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
 
-        // Validate parameters
-        if (!in_array($category, $validCategories)) {
-            $category = 'all';
-        }
-        if (!in_array($status, $validStatuses)) {
-            $status = 'all';
-        }
+        // Validate and sanitize inputs
+        if (!in_array($category, $validCategories)) $category = 'all';
+        if (!in_array($status, $validStatuses)) $status = 'all';
 
-        // Build query
         $query = Project::query();
-        
-        // Apply category filter
+
+        // ---- Category filter (slug → DB value) ----
         if ($category !== 'all') {
             switch ($category) {
                 case 'pipeline':
@@ -69,15 +56,15 @@ class ProjectController extends Controller
                 case 'ongoing':
                     $query->where('category', 'Ongoing');
                     break;
-                case 'completed':
-                    $query->where('category', 'Completed');
+                case 'construction-operational':
+                    $query->where('category', 'Construction & Operational');   // <-- matches your DB column
                     break;
                 default:
                     $query->where('category', $category);
             }
         }
-        
-        // Apply status filter
+
+        // ---- Status filter (slug → DB value) ----
         if ($status !== 'all') {
             switch ($status) {
                 case 'private-partner':
@@ -96,58 +83,50 @@ class ProjectController extends Controller
                     $query->where('status', $status);
             }
         }
-        
-        // Get projects with pagination
+
+        // Paginate results (9 per page)
         $projects = $query->orderBy('created_at', 'desc')->paginate(9);
-        
-        // Get statistics
+
+        // ---- Statistics (optional) ----
         $allProjects = Project::all();
         $totalInvestmentRaw = 0;
-        
         foreach ($allProjects as $project) {
             $totalInvestmentRaw += $this->getRawCostValue($project->cost);
         }
-        
+
         $stats = [
-            // Category counts
             'pipeline' => Project::where('category', 'Pipeline')->count(),
-            'ongoing' => Project::where('category', 'Ongoing')->count(),
-            'completed' => Project::where('category', 'Completed')->count(),
-            // Status counts
-            'private_partner' => Project::where('status', 'Private Partner Selection')->count(),
-            'transaction_advisory' => Project::where('status', 'Transaction Advisory')->count(),
-            'construction' => Project::where('status', 'Construction')->count(),
-            'operational' => Project::where('status', 'Operational')->count(),
-            'total_investment' => $totalInvestmentRaw,
-            'total_projects' => $allProjects->count()
+            'ongoing'  => Project::where('category', 'Ongoing')->count(),
+            'construction_operational' => Project::where('category', 'Construction & Operational')->count(),
+            'private_partner'     => Project::where('status', 'Private Partner Selection')->count(),
+            'transaction_advisory'=> Project::where('status', 'Transaction Advisory')->count(),
+            'construction'        => Project::where('status', 'Construction')->count(),
+            'operational'         => Project::where('status', 'Operational')->count(),
+            'total_investment'    => $totalInvestmentRaw,
+            'total_projects'      => $allProjects->count()
         ];
-        
+
         return view('user.projects.index', compact('projects', 'category', 'status', 'stats'));
     }
 
     /**
-     * Project show page
+     * Show a single project
      */
     public function show($id)
     {
-        // Fetch the project with its details based on category
         $project = Project::findOrFail($id);
-        
+
         $pipelineDetails = null;
         $ongoingDetails = null;
         $completedDetails = null;
         $achievements = [];
-        
-        // Fetch category-specific details
+
         if ($project->category === 'Pipeline') {
             $pipelineDetails = $project->pipelineDetail;
-        }
-        elseif ($project->category === 'Ongoing') {
+        } elseif ($project->category === 'Ongoing') {
             $ongoingDetails = OngoingProjectDetail::where('project_id', $project->id)->first();
-        }
-        elseif ($project->category === 'Completed') {
+        } elseif ($project->category === 'Construction & Operational') {
             $completedDetails = CompletedProjectDetail::where('project_id', $project->id)->first();
-            
             $achievements = [
                 'Successfully completed within budget',
                 'Created 500+ local jobs',
@@ -155,11 +134,11 @@ class ProjectController extends Controller
                 'Received international recognition for best practices'
             ];
         }
-        
+
         return view('user.projects.show', compact(
-            'project', 
-            'pipelineDetails', 
-            'ongoingDetails', 
+            'project',
+            'pipelineDetails',
+            'ongoingDetails',
             'completedDetails',
             'achievements'
         ));

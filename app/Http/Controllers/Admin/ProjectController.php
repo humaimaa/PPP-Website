@@ -91,7 +91,7 @@ class ProjectController extends Controller
                 'overview' => 'required|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
                 'division' => 'nullable|in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
-                'category' => 'required|in:Pipeline,Ongoing,Completed',
+                'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
             ];
 
             // Conditional validation for status and category-specific fields
@@ -101,7 +101,7 @@ class ProjectController extends Controller
                 $rules['government_contribution'] = 'required|string';
                 $rules['government_return'] = 'required|string';
                 $rules['private_party_return'] = 'required|string';
-            } elseif ($request->category === 'Completed') {
+            } elseif ($request->category === 'Construction & Operational'){
                 $rules['status'] = 'required|in:Operational,Construction';
                 $rules['scope'] = 'required|string';
                 $rules['cost_financing_mix'] = 'required|string';
@@ -136,7 +136,7 @@ class ProjectController extends Controller
                     'government_return' => $request->government_return,
                     'private_party_return' => $request->private_party_return,
                 ]);
-            } elseif ($request->category === 'Completed') {
+            } elseif ($request->category === 'Construction & Operational') {
                 CompletedProjectDetail::create([
                     'project_id' => $project->id,
                     'scope' => $request->scope,
@@ -206,7 +206,8 @@ class ProjectController extends Controller
             'overview' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'division' => 'nullable|in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
-            'category' => 'required|in:Pipeline,Ongoing,Completed',
+            // ✅ Correct
+'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
         ];
 
         // Conditional validation for status and category-specific fields
@@ -216,7 +217,7 @@ class ProjectController extends Controller
             $rules['government_contribution'] = 'required|string';
             $rules['government_return'] = 'required|string';
             $rules['private_party_return'] = 'required|string';
-        } elseif ($request->category === 'Completed') {
+        } elseif ($request->category === 'Construction & Operational') {
             $rules['status'] = 'required|in:Operational,Construction';
             $rules['scope'] = 'required|string';
             $rules['cost_financing_mix'] = 'required|string';
@@ -260,7 +261,7 @@ class ProjectController extends Controller
                 
                 CompletedProjectDetail::where('project_id', $project->id)->delete();
                 
-            } elseif ($request->category === 'Completed') {
+            } elseif ($request->category === 'Construction & Operational') {
                 CompletedProjectDetail::updateOrCreate(
                     ['project_id' => $project->id],
                     [

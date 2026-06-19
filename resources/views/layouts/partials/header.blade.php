@@ -87,24 +87,24 @@
                         
                         <div class="h-px bg-white/10 mx-4"></div>
                         
-                        <!-- Completed with Sub-dropdown -->
+                        <!-- Construction & Operational with Sub-dropdown -->
                         <div class="relative sub-dropdown-container">
-                            <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'all']) }}" 
+                            <a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'all']) }}" 
                                class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300 flex items-center justify-between">
-                                <span>Completed</span>
+                                <span>Construction & Operational</span>
                                 <svg class="w-4 h-4 text-text-secondary sub-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </a>
                             
-                            <!-- Completed Sub-dropdown -->
+                            <!-- Construction & Operational Sub-dropdown -->
                             <div class="sub-dropdown-menu absolute top-0 left-full ml-1 w-56">
-                                <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'construction']) }}" 
+                                <a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'construction']) }}" 
                                    class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
                                     Construction
                                 </a>
                                 <div class="h-px bg-white/10 mx-4"></div>
-                                <a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'operational']) }}" 
+                                <a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'operational']) }}" 
                                    class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">
                                     Operational
                                 </a>
@@ -215,6 +215,7 @@
 
             <div class="flex-1 flex items-start justify-center mt-8">
                 <ul class="space-y-3 w-full max-w-md px-8">
+
                     <!-- About Us Mobile -->
                     <li x-data="{ open: false }">
                         <button @click="open = !open" 
@@ -239,7 +240,7 @@
                     </li>
 
                     <!-- Projects Mobile -->
-                    <li x-data="{ open: false, ongoingOpen: false, completedOpen: false }">
+                    <li x-data="{ open: false, ongoingOpen: false, constructionOpen: false }">
                         <button @click="open = !open" 
                                 class="flex justify-between items-center w-full text-lg md:text-xl font-semibold px-6 py-3 text-text-primary hover:text-accent-1 rounded-lg transition-all duration-300">
                             Projects
@@ -271,28 +272,28 @@
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
                                     class="mt-1 space-y-1 pl-6">
                                     <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Ongoing</a></li>
-                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'private-partner']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Private Partner Selection</a></li>
-                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'transaction-advisory']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Transaction Advisory</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'private-partner']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Private Partner Selection</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'ongoing', 'status' => 'transaction-advisory']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Transaction Advisory</a></li>
                                 </ul>
                             </li>
                             
-                            <!-- Completed with Sub-menu -->
+                            <!-- Construction & Operational with Sub-menu -->
                             <li>
-                                <button @click="completedOpen = !completedOpen" 
+                                <button @click="constructionOpen = !constructionOpen" 
                                         class="flex justify-between items-center w-full text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">
-                                    <span>Completed</span>
-                                    <svg :class="{'rotate-180': completedOpen}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <span>Construction & Operational</span>
+                                    <svg :class="{'rotate-180': constructionOpen}" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </button>
-                                <ul x-show="completedOpen" 
+                                <ul x-show="constructionOpen" 
                                     x-transition:enter="transition ease-out duration-200"
                                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
                                     class="mt-1 space-y-1 pl-6">
-                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Completed</a></li>
-                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'construction']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Construction</a></li>
-                                    <li><a href="{{ route('projects.index', ['category' => 'completed', 'status' => 'operational']) }}" class="block text-base md:text-lg px-6 py-2 pl-6 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Operational</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'all']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">All Construction & Operational</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'construction']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Construction</a></li>
+                                    <li><a href="{{ route('projects.index', ['category' => 'construction-operational', 'status' => 'operational']) }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Operational</a></li>
                                 </ul>
                             </li>
                             

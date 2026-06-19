@@ -118,7 +118,8 @@
                         @enderror
                     </div>
 
-                    {{-- Location (NOT REQUIRED) --}}                    <div>
+                    {{-- Location (NOT REQUIRED) --}}
+                    <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                             Location
                         </label>
@@ -179,7 +180,7 @@
                         @enderror
                     </div>
 
-                    {{-- ===== CATEGORY (now first in the row) ===== --}}
+                    {{-- Category --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Category <span class="text-red-500">*</span>
@@ -194,16 +195,16 @@
                                 <option value="">Select Category</option>
                                 <option value="Pipeline" {{ old('category')=='Pipeline' ? 'selected' : '' }}>Pipeline</option>
                                 <option value="Ongoing" {{ old('category')=='Ongoing' ? 'selected' : '' }}>Ongoing</option>
-                                <option value="Completed" {{ old('category')=='Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Construction & Operational" {{ old('category')=='Construction & Operational' ? 'selected' : '' }}>Construction & Operational</option>
                             </select>
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant details</p>
+                        <p class="mt-1 text-xs text-gray-500">Select the project category to show relevant fields</p>
                         @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- ===== STATUS FIELD (now on the right side of category) ===== --}}
+                    {{-- Status Field --}}
                     <div id="status-wrapper" style="display: none;">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                             Project Status <span id="status-required" class="text-red-500">*</span>
@@ -356,12 +357,12 @@
                 </div>
             </div>
 
-            {{-- Completed Project Details Section --}}
+            {{-- Construction & Operational Project Details Section --}}
             <div id="completed-section" class="mb-6 pb-4 border-b border-gray-200"
-                style="{{ old('category') == 'Completed' ? 'display: block;' : 'display: none;' }}">
+                style="{{ old('category') == 'Construction & Operational' ? 'display: block;' : 'display: none;' }}">
                 <h4 class="text-md font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-check-circle mr-2 text-emerald-600"></i>
-                    Completed Project Details
+                    <i class="fas fa-hard-hat mr-2 text-emerald-600"></i>
+                    Construction & Operational Project Details
                 </h4>
                 <div class="grid grid-cols-1 gap-6">
                     <div>
@@ -370,7 +371,7 @@
                         </label>
                         <textarea id="scope" name="scope" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the scope of the completed project...">{{ old('scope') }}</textarea>
+                            placeholder="Describe the scope of the project...">{{ old('scope') }}</textarea>
                         @error('scope')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -408,7 +409,7 @@
                         <textarea id="expected_financial_benefits_to_government"
                             name="expected_financial_benefits_to_government" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Describe the financial benefits realized by the government...">{{ old('expected_financial_benefits_to_government') }}</textarea>
+                            placeholder="Describe the financial benefits to the government...">{{ old('expected_financial_benefits_to_government') }}</textarea>
                         @error('expected_financial_benefits_to_government')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -416,7 +417,7 @@
                 </div>
             </div>
 
-            {{-- Preview Information --}}
+            {{-- Info Box --}}
             <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-start">
                     <i class="fas fa-info-circle text-blue-600 mt-0.5 mr-3"></i>
@@ -425,7 +426,7 @@
                         <p class="text-xs text-blue-700 mt-1">
                             Projects are categorized into three types: <strong>Pipeline</strong> (basic info only),
                             <strong>Ongoing</strong> (includes implementation details and returns), and
-                            <strong>Completed</strong> (includes scope, timeline, and benefits).
+                            <strong>Construction & Operational</strong> (includes scope, timeline, and benefits).
                             Select the appropriate category to display relevant fields.
                         </p>
                     </div>
@@ -453,21 +454,21 @@
     function previewImage(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
-        
+
         if (file) {
             if (file.size > 5242880) {
                 alert('File is too large. Maximum size is 5MB.');
                 event.target.value = '';
                 return;
             }
-            
+
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             if (!allowedTypes.includes(file.type)) {
                 alert('Invalid file type. Please upload JPG, JPEG, PNG, or GIF.');
                 event.target.value = '';
                 return;
             }
-            
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.innerHTML = `
@@ -488,7 +489,7 @@
             preview.classList.add('border-dashed');
         }
     }
-    
+
     function toggleProjectDetails() {
         const category = document.getElementById('category').value;
         const pipelineSection = document.getElementById('pipeline-section');
@@ -499,9 +500,9 @@
         const statusRequired = document.getElementById('status-required');
 
         // Hide all sections
-        if(pipelineSection) pipelineSection.style.display = 'none';
-        if(ongoingSection) ongoingSection.style.display = 'none';
-        if(completedSection) completedSection.style.display = 'none';
+        if (pipelineSection) pipelineSection.style.display = 'none';
+        if (ongoingSection) ongoingSection.style.display = 'none';
+        if (completedSection) completedSection.style.display = 'none';
 
         // Remove required attributes from all conditional fields first
         removeRequiredAttributes();
@@ -512,15 +513,14 @@
         statusSelect.innerHTML = '<option value="">Select Status</option>';
 
         if (category === 'Pipeline') {
-            if(pipelineSection) pipelineSection.style.display = 'block';
+            if (pipelineSection) pipelineSection.style.display = 'block';
             // status remains hidden
+
         } else if (category === 'Ongoing') {
-            if(ongoingSection) ongoingSection.style.display = 'block';
-            // Show status with Ongoing options
+            if (ongoingSection) ongoingSection.style.display = 'block';
             statusWrapper.style.display = 'block';
             statusSelect.setAttribute('required', 'required');
             statusRequired.style.display = 'inline';
-            // Add options
             const options = ['Private Partner Selection', 'Transaction Advisory'];
             options.forEach(opt => {
                 const option = document.createElement('option');
@@ -530,9 +530,9 @@
                 statusSelect.appendChild(option);
             });
             addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
-        } else if (category === 'Completed') {
-            if(completedSection) completedSection.style.display = 'block';
-            // Show status with Completed options
+
+        } else if (category === 'Construction & Operational') {
+            if (completedSection) completedSection.style.display = 'block';
             statusWrapper.style.display = 'block';
             statusSelect.setAttribute('required', 'required');
             statusRequired.style.display = 'inline';
@@ -547,14 +547,14 @@
             addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
         }
     }
-    
+
     function removeRequiredAttributes() {
         const allConditionalFields = [
-            'implementing_modality', 'government_contribution', 'government_return', 
-            'private_party_return', 'scope', 'cost_financing_mix', 
+            'implementing_modality', 'government_contribution', 'government_return',
+            'private_party_return', 'scope', 'cost_financing_mix',
             'project_timeline', 'expected_financial_benefits_to_government'
         ];
-        
+
         allConditionalFields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
@@ -563,7 +563,7 @@
             }
         });
     }
-    
+
     function addRequiredAttributes(fieldIds) {
         fieldIds.forEach(fieldId => {
             const field = document.getElementById(fieldId);
@@ -573,7 +573,7 @@
             }
         });
     }
-    
+
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         toggleProjectDetails();

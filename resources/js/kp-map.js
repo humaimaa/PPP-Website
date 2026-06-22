@@ -36,15 +36,19 @@
     }
 
     function updateTotalStats() {
-        let totalProjects = 0;
+        // Count unique projects across all divisions (avoid double counting)
+        const allProjectsMap = {};
         Object.values(divisionsData).forEach(division => {
-            if (division) {
-                totalProjects += division.total_projects || 0;
+            if (division && division.projects_list) {
+                division.projects_list.forEach(project => {
+                    allProjectsMap[project.id] = true;
+                });
             }
         });
-
+        
+        const totalUniqueProjects = Object.keys(allProjectsMap).length;
         const totalProjectsEl = document.getElementById('total-projects');
-        if (totalProjectsEl) totalProjectsEl.textContent = totalProjects;
+        if (totalProjectsEl) totalProjectsEl.textContent = totalUniqueProjects;
     }
 
     function initMap() {
@@ -271,130 +275,131 @@
         '#E74C3C', '#2ECC71', '#F39C12', '#1ABC9C', '#3498DB',
         '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
     ];
-function createSectorChart(division) {
-    // Set Chart.js global defaults so canvas-rendered text is white
-    Chart.defaults.color = '#ffffff';
-    Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
 
-    const chartContainer = document.getElementById('sector-chart');
-    if (!chartContainer) return;
+    function createSectorChart(division) {
+        // Set Chart.js global defaults so canvas-rendered text is white
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
 
-    if (sectorChart) {
-        sectorChart.destroy();
-        sectorChart = null;
-    }
+        const chartContainer = document.getElementById('sector-chart');
+        if (!chartContainer) return;
 
-    chartContainer.innerHTML = '';
-
-    if (!division || !division.projects_list || division.projects_list.length === 0) {
-        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-        return;
-    }
-
-    const sectorData = {};
-    division.projects_list.forEach(project => {
-        let sectorName = project.sector;
-        if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
-            sectorName = 'Other';
-        } else {
-            sectorName = sectorName.trim();
-            sectorName = sectorName.split(' ').map(word =>
-                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-            ).join(' ');
+        if (sectorChart) {
+            sectorChart.destroy();
+            sectorChart = null;
         }
-        sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
-    });
 
-    const sectors = Object.keys(sectorData);
-    const counts = Object.values(sectorData);
+        chartContainer.innerHTML = '';
 
-    if (sectors.length === 0) {
-        chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
-        return;
-    }
-
-    // Dynamic height: 24px per bar, min 80px
-    const chartHeight = Math.max(80, sectors.length * 24 + 20);
-    chartContainer.style.height = chartHeight + 'px';
-    chartContainer.style.position = 'relative';
-
-    const chartColors = sectors.map(sector => {
-        let hash = 0;
-        for (let i = 0; i < sector.length; i++) {
-            hash = ((hash << 5) - hash) + sector.charCodeAt(i);
-            hash |= 0;
+        if (!division || !division.projects_list || division.projects_list.length === 0) {
+            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+            return;
         }
-        return sectorColorPalette[Math.abs(hash) % sectorColorPalette.length];
-    });
 
-    const canvas = document.createElement('canvas');
-    chartContainer.appendChild(canvas);
+        const sectorData = {};
+        division.projects_list.forEach(project => {
+            let sectorName = project.sector;
+            if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
+                sectorName = 'Other';
+            } else {
+                sectorName = sectorName.trim();
+                sectorName = sectorName.split(' ').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
+            }
+            sectorData[sectorName] = (sectorData[sectorName] || 0) + 1;
+        });
 
-    sectorChart = new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels: sectors,
-            datasets: [{
-                data: counts,
-                backgroundColor: chartColors,
-                borderWidth: 0,
-                borderRadius: 3,
-                barThickness: 12
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 300 },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const value = context.parsed.x || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
+        const sectors = Object.keys(sectorData);
+        const counts = Object.values(sectorData);
+
+        if (sectors.length === 0) {
+            chartContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No sector data available</div>';
+            return;
+        }
+
+        // Dynamic height: 24px per bar, min 80px
+        const chartHeight = Math.max(80, sectors.length * 24 + 20);
+        chartContainer.style.height = chartHeight + 'px';
+        chartContainer.style.position = 'relative';
+
+        const chartColors = sectors.map(sector => {
+            let hash = 0;
+            for (let i = 0; i < sector.length; i++) {
+                hash = ((hash << 5) - hash) + sector.charCodeAt(i);
+                hash |= 0;
+            }
+            return sectorColorPalette[Math.abs(hash) % sectorColorPalette.length];
+        });
+
+        const canvas = document.createElement('canvas');
+        chartContainer.appendChild(canvas);
+
+        sectorChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: sectors,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: chartColors,
+                    borderWidth: 0,
+                    borderRadius: 3,
+                    barThickness: 12
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 300 },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed.x || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#ffffff',
+                            font: { size: 10 },
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(255,255,255,0.15)'
+                        },
+                        border: {
+                            color: 'rgba(255,255,255,0.2)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#ffffff',
+                            font: { size: 10 },
+                            autoSkip: false
+                        },
+                        grid: { display: false },
+                        border: {
+                            color: 'rgba(255,255,255,0.2)'
                         }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#ffffff',
-                        font: { size: 10 },
-                        stepSize: 1
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.15)'
-                    },
-                    border: {
-                        color: 'rgba(255,255,255,0.2)'
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: '#ffffff',
-                        font: { size: 10 },
-                        autoSkip: false
-                    },
-                    grid: { display: false },
-                    border: {
-                        color: 'rgba(255,255,255,0.2)'
-                    }
-                }
             }
-        }
-    });
-}
+        });
+    }
 
     function getStatusColorClass(category) {
         switch(category) {
             case 'Pipeline': return 'text-yellow-400 border-yellow-500';
             case 'Ongoing': return 'text-green-400 border-green-500';
-            case 'Completed': return 'text-blue-400 border-blue-500';
+            case 'Construction & Operational': return 'text-blue-400 border-blue-500';
             default: return 'text-gray-400 border-gray-500';
         }
     }
@@ -403,7 +408,7 @@ function createSectorChart(division) {
         switch(category) {
             case 'Pipeline': return '<span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded">Pipeline</span>';
             case 'Ongoing': return '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">Ongoing</span>';
-            case 'Completed': return '<span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Completed</span>';
+            case 'Construction & Operational': return '<span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Completed</span>';
             default: return '';
         }
     }
@@ -475,7 +480,8 @@ function createSectorChart(division) {
             if (!division.projects_list || division.projects_list.length === 0) {
                 projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
             } else {
-                division.projects_list.slice(0, 10).forEach(project => {
+                // Show all projects (not just first 10) for better visibility
+                division.projects_list.forEach(project => {
                     const borderColorClass = getStatusColorClass(project.category);
                     const statusBadge = getStatusBadge(project.category);
                     const costDisplay = project.cost_display || `PKR ${((project.cost || 0) / 10000000).toFixed(1)} Cr`;
@@ -557,19 +563,16 @@ function createSectorChart(division) {
 
         if (!statsPanel || !mapColumn || !mapContainer) return;
 
-        // On large screens, match map column height to stats panel height
         if (window.innerWidth >= 1024) {
             const panelHeight = statsPanel.offsetHeight;
             mapColumn.style.height = panelHeight + 'px';
             mapContainer.style.height = '100%';
         } else {
-            // On mobile, reset to natural height with min-height
             mapColumn.style.height = '';
             mapContainer.style.height = '';
             mapContainer.style.minHeight = '400px';
         }
 
-        // Tell Leaflet the container size changed
         if (map) {
             setTimeout(() => map.invalidateSize(), 50);
         }
@@ -581,14 +584,12 @@ function createSectorChart(division) {
         updateTotalStats();
         initMap();
 
-        // Observe stats panel for any height changes and sync map
         const statsPanel = document.getElementById('stats-panel');
         if (statsPanel && window.ResizeObserver) {
             const ro = new ResizeObserver(() => syncMapHeight());
             ro.observe(statsPanel);
         }
 
-        // Also sync on window resize (handles mobile ↔ desktop switch)
         window.addEventListener('resize', syncMapHeight);
         
         const resetViewBtn = document.getElementById('reset-view');

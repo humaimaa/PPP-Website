@@ -33,6 +33,34 @@ class ProjectController extends Controller
     }
 
     /**
+     * Helper function to get divisions array from project
+     */
+    private function getProjectDivisions($project)
+    {
+        if (empty($project->division)) {
+            return [];
+        }
+        
+        // If division is stored as JSON
+        if ($this->isJson($project->division)) {
+            return json_decode($project->division, true) ?? [];
+        }
+        
+        // If division is stored as comma-separated string (SET column)
+        return array_map('trim', explode(',', $project->division));
+    }
+    
+    /**
+     * Check if string is JSON
+     */
+    private function isJson($string)
+    {
+        if (!is_string($string)) return false;
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
      * Display projects with category and status filters
      */
     public function index($category = 'all', $status = 'all')
@@ -57,7 +85,7 @@ class ProjectController extends Controller
                     $query->where('category', 'Ongoing');
                     break;
                 case 'construction-operational':
-                    $query->where('category', 'Construction & Operational');   // <-- matches your DB column
+                    $query->where('category', 'Construction & Operational');
                     break;
                 default:
                     $query->where('category', $category);
@@ -163,7 +191,7 @@ class ProjectController extends Controller
         // Get counts by category
         $pipelineCount = Project::where('category', 'Pipeline')->count();
         $ongoingCount = Project::where('category', 'Ongoing')->count();
-        $completedCount = Project::where('category', 'Completed')->count();
+        $completedCount = Project::where('category', 'Construction & Operational')->count();
         
         // Get counts by status
         $privatePartnerCount = Project::where('status', 'Private Partner Selection')->count();
@@ -182,7 +210,7 @@ class ProjectController extends Controller
         foreach (Project::where('category', 'Ongoing')->get() as $proj) {
             $ongoingInvestmentRaw += $this->getRawCostValue($proj->cost);
         }
-        foreach (Project::where('category', 'Completed')->get() as $proj) {
+        foreach (Project::where('category', 'Construction & Operational')->get() as $proj) {
             $completedInvestmentRaw += $this->getRawCostValue($proj->cost);
         }
         
@@ -226,11 +254,19 @@ class ProjectController extends Controller
             'merged_districts' => ['Bajaur', 'Khyber', 'Kurram', 'Mohmand', 'Orakzai', 'North Waziristan', 'South Waziristan']
         ];
         
-        // Populate with actual data from database
+        // ✅ FIX: Populate with actual data from database - handle multiple divisions
         foreach ($allProjects as $project) {
-            $division = $project->division;
+            // Get all divisions for this project
+            $divisions = $this->getProjectDivisions($project);
             
-            if ($division && isset($projectsByDivision[$division])) {
+            // If no divisions, skip
+            if (empty($divisions)) continue;
+            
+            // For each division, add the project data
+            foreach ($divisions as $division) {
+                // Check if division exists in our data structure
+                if (!isset($projectsByDivision[$division])) continue;
+                
                 $projectsByDivision[$division]['total']++;
                 $projectsByDivision[$division]['investment'] += $this->getRawCostValue($project->cost);
                 
@@ -239,7 +275,7 @@ class ProjectController extends Controller
                     $projectsByDivision[$division]['pipeline']++;
                 } elseif ($project->category === 'Ongoing') {
                     $projectsByDivision[$division]['ongoing']++;
-                } elseif ($project->category === 'Completed') {
+                } elseif ($project->category === 'Construction & Operational') {
                     $projectsByDivision[$division]['completed']++;
                 }
                 
@@ -254,17 +290,28 @@ class ProjectController extends Controller
                     $projectsByDivision[$division]['operational']++;
                 }
                 
-                $projectsByDivision[$division]['projects'][] = [
-                    'id' => $project->id,
-                    'name' => $project->name,
-                    'category' => $project->category,
-                    'status' => $project->status,
-                    'cost' => $this->getRawCostValue($project->cost),
-                    'cost_display' => $project->cost,
-                    'sector' => $project->sector,
-                    'description' => $project->overview,
-                    'location' => $project->location
-                ];
+                // Add project to division's project list (avoid duplicates)
+                $projectExists = false;
+                foreach ($projectsByDivision[$division]['projects'] as $existingProject) {
+                    if ($existingProject['id'] === $project->id) {
+                        $projectExists = true;
+                        break;
+                    }
+                }
+                
+                if (!$projectExists) {
+                    $projectsByDivision[$division]['projects'][] = [
+                        'id' => $project->id,
+                        'name' => $project->name,
+                        'category' => $project->category,
+                        'status' => $project->status,
+                        'cost' => $this->getRawCostValue($project->cost),
+                        'cost_display' => $project->cost,
+                        'sector' => $project->sector,
+                        'description' => $project->overview,
+                        'location' => $project->location
+                    ];
+                }
             }
         }
         
@@ -372,22 +419,39 @@ class ProjectController extends Controller
     public function getDivisionsData()
     {
         $validDivisions = ['Peshawar', 'Mardan', 'Kohat', 'Bannu', 'Dera Ismail Khan', 'Malakand', 'Hazara'];
+        $allProjects = Project::all();
         
         $divisionsData = [];
         
         foreach ($validDivisions as $division) {
-            $projects = Project::where('division', $division)->get();
+            // Find projects that belong to this division
+            $projects = [];
+            foreach ($allProjects as $project) {
+                $divisions = $this->getProjectDivisions($project);
+                if (in_array($division, $divisions)) {
+                    $projects[] = $project;
+                }
+            }
             
-            $pipeline = $projects->where('category', 'Pipeline')->count();
-            $ongoing = $projects->where('category', 'Ongoing')->count();
-            $completed = $projects->where('category', 'Completed')->count();
-            $privatePartner = $projects->where('status', 'Private Partner Selection')->count();
-            $transactionAdvisory = $projects->where('status', 'Transaction Advisory')->count();
-            $construction = $projects->where('status', 'Construction')->count();
-            $operational = $projects->where('status', 'Operational')->count();
-            
+            $pipeline = 0;
+            $ongoing = 0;
+            $completed = 0;
+            $privatePartner = 0;
+            $transactionAdvisory = 0;
+            $construction = 0;
+            $operational = 0;
             $investment = 0;
+            
             foreach ($projects as $proj) {
+                if ($proj->category === 'Pipeline') $pipeline++;
+                elseif ($proj->category === 'Ongoing') $ongoing++;
+                elseif ($proj->category === 'Construction & Operational') $completed++;
+                
+                if ($proj->status === 'Private Partner Selection') $privatePartner++;
+                elseif ($proj->status === 'Transaction Advisory') $transactionAdvisory++;
+                elseif ($proj->status === 'Construction') $construction++;
+                elseif ($proj->status === 'Operational') $operational++;
+                
                 $investment += $this->getRawCostValue($proj->cost);
             }
             
@@ -403,8 +467,8 @@ class ProjectController extends Controller
                     'operational' => $operational
                 ],
                 'investment' => (float)$investment,
-                'total_projects' => $projects->count(),
-                'projects_list' => $projects->map(function($project) {
+                'total_projects' => count($projects),
+                'projects_list' => array_map(function($project) {
                     return [
                         'id' => $project->id,
                         'name' => $project->name,
@@ -413,17 +477,44 @@ class ProjectController extends Controller
                         'cost' => $this->getRawCostValue($project->cost),
                         'cost_display' => $project->cost,
                         'sector' => $project->sector,
-                        'description' => $project->overview
+                        'description' => $project->overview,
+                        'location' => $project->location
                     ];
-                })->toArray()
+                }, $projects)
             ];
         }
         
         // Add FATA data
-        $fataProjects = Project::where('division', 'FATA')->get();
+        $fataProjects = [];
+        foreach ($allProjects as $project) {
+            $divisions = $this->getProjectDivisions($project);
+            if (in_array('FATA', $divisions)) {
+                $fataProjects[] = $project;
+            }
+        }
+        
         $fataInvestment = 0;
         foreach ($fataProjects as $proj) {
             $fataInvestment += $this->getRawCostValue($proj->cost);
+        }
+        
+        $fataPipeline = 0;
+        $fataOngoing = 0;
+        $fataCompleted = 0;
+        $fataPrivatePartner = 0;
+        $fataTransactionAdvisory = 0;
+        $fataConstruction = 0;
+        $fataOperational = 0;
+        
+        foreach ($fataProjects as $proj) {
+            if ($proj->category === 'Pipeline') $fataPipeline++;
+            elseif ($proj->category === 'Ongoing') $fataOngoing++;
+            elseif ($proj->category === 'Construction & Operational') $fataCompleted++;
+            
+            if ($proj->status === 'Private Partner Selection') $fataPrivatePartner++;
+            elseif ($proj->status === 'Transaction Advisory') $fataTransactionAdvisory++;
+            elseif ($proj->status === 'Construction') $fataConstruction++;
+            elseif ($proj->status === 'Operational') $fataOperational++;
         }
         
         $divisionsData['FATA'] = [
@@ -431,17 +522,17 @@ class ProjectController extends Controller
             'is_merged' => true,
             'merged_districts' => ['Bajaur', 'Khyber', 'Kurram', 'Mohmand', 'Orakzai', 'North Waziristan', 'South Waziristan'],
             'projects' => [
-                'pipeline' => $fataProjects->where('category', 'Pipeline')->count(),
-                'ongoing' => $fataProjects->where('category', 'Ongoing')->count(),
-                'completed' => $fataProjects->where('category', 'Completed')->count(),
-                'private_partner' => $fataProjects->where('status', 'Private Partner Selection')->count(),
-                'transaction_advisory' => $fataProjects->where('status', 'Transaction Advisory')->count(),
-                'construction' => $fataProjects->where('status', 'Construction')->count(),
-                'operational' => $fataProjects->where('status', 'Operational')->count()
+                'pipeline' => $fataPipeline,
+                'ongoing' => $fataOngoing,
+                'completed' => $fataCompleted,
+                'private_partner' => $fataPrivatePartner,
+                'transaction_advisory' => $fataTransactionAdvisory,
+                'construction' => $fataConstruction,
+                'operational' => $fataOperational
             ],
             'investment' => (float)$fataInvestment,
-            'total_projects' => $fataProjects->count(),
-            'projects_list' => $fataProjects->map(function($project) {
+            'total_projects' => count($fataProjects),
+            'projects_list' => array_map(function($project) {
                 return [
                     'id' => $project->id,
                     'name' => $project->name,
@@ -450,9 +541,10 @@ class ProjectController extends Controller
                     'cost' => $this->getRawCostValue($project->cost),
                     'cost_display' => $project->cost,
                     'sector' => $project->sector,
-                    'description' => $project->overview
+                    'description' => $project->overview,
+                    'location' => $project->location
                 ];
-            })->toArray()
+            }, $fataProjects)
         ];
         
         return response()->json($divisionsData);

@@ -283,178 +283,59 @@
                 sustainable development in Khyber Pakhtunkhwa</p>
         </div>
 
-        <!-- Infinite scrolling logo carousel -->
+        <!-- Partner Logos with Navigation Arrows -->
         <div class="relative">
-            <div class="logo-scroll-container overflow-hidden">
-                <div class="logo-track flex items-center gap-12 md:gap-16">
+            <!-- Left Arrow -->
+            <button id="partner-scroll-left" 
+                class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-lg rounded-full p-3 transition-all duration-300 hover:scale-110 focus:outline-none border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                aria-label="Scroll left" disabled>
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
 
-                    <!-- Original set of logos -->
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
-                            target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.shiftcities.org/organization/asian-development-bank" target="_blank"
-                            rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_6.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
+            <!-- Logo Container -->
+            <div class="logo-scroll-container overflow-hidden mx-10 md:mx-14">
+                <div class="logo-track flex items-center gap-8 md:gap-12" id="partner-track">
+                    @php
+                        $partnerLogos = [
+                            ['src' => 'partner_1.png', 'alt' => 'FWO', 'url' => 'https://www.fwo.com.pk'],
+                            ['src' => 'partner_2.png', 'alt' => 'ZKB', 'url' => 'https://www.zkb.com.pk'],
+                            ['src' => 'partner_3.png', 'alt' => 'AIIB', 'url' => 'https://www.aiib.org'],
+                            ['src' => 'partner_4.png', 'alt' => 'IFC', 'url' => 'https://www.ifc.org'],
+                            ['src' => 'partner_5.png', 'alt' => 'FCDO', 'url' => 'https://www.gov.uk/government/organisations/foreign-commonwealth-development-office'],
+                            ['src' => 'partner_6.png', 'alt' => 'Asian Development Bank', 'url' => 'https://www.shiftcities.org/organization/asian-development-bank'],
+                            ['src' => 'partner_7.png', 'alt' => 'PwC', 'url' => 'https://www.pwc.com.pk/en/'],
+                            ['src' => 'partner_8.png', 'alt' => 'Pavron', 'url' => 'https://www.pavron.com.pk/'],
+                            ['src' => 'partner_9.png', 'alt' => 'Nespak', 'url' => 'https://nespak.com.pk/'],
+                            ['src' => 'partner_10.png', 'alt' => 'Riaa Barker Gillette', 'url' => 'https://riaabarkergillette.com/pk/'],
+                            ['src' => 'partner_11.png', 'alt' => 'RSM', 'url' => 'https://www.rsm.global/'],
+                            ['src' => 'partner_12.png', 'alt' => 'Tahir Builders', 'url' => 'https://tahirbuilders.com/'],
+                            ['src' => 'partner_13.png', 'alt' => 'KPMG', 'url' => 'https://kpmg.com/xx/en.html'],
+                            ['src' => 'partner_14.png', 'alt' => 'Icon Consult', 'url' => 'https://www.iconsult.com.pk/'],
+                            ['src' => 'partner_15.png', 'alt' => 'EY', 'url' => 'https://www.ey.com/en_pk'],
+                        ];
+                    @endphp
 
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.pwc.com.pk/en/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_7.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.pavron.com.pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_8.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://nespak.com.pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_9.jpg') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://riaabarkergillette.com/pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_10.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300"
-                                style="filter: brightness(0) saturate(100%) invert(18%) sepia(49%) saturate(1234%) hue-rotate(260deg) brightness(92%) contrast(96%);">
-                        </a>
-                    </div>
-
-                   <div class="partner-logo shrink-0">
-                        <a href="https://www.rsm.global/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_11.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                   <div class="partner-logo shrink-0">
-                        <a href="https://www.icci.pk/listing/tahir-builders-pvt-ltd/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_12.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                     <!-- duplicate set of logos -->
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.fwo.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_1.jpeg') }}" alt="FWO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.zkb.com.pk" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_2.jpeg') }}" alt="ZKB"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.aiib.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_3.png') }}" alt="AIIB"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.ifc.org" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_4.png') }}" alt="IFC"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
-                            target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_5.jpeg') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.shiftcities.org/organization/asian-development-bank" target="_blank"
-                            rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_6.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.pwc.com.pk/en/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_7.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://www.pavron.com.pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_8.png') }}" alt="FCDO"
-                                class="partner-img h-20 md:h-28 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://nespak.com.pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_9.jpg') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                    <div class="partner-logo shrink-0">
-                        <a href="https://riaabarkergillette.com/pk/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_10.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300"
-                                style="filter: brightness(0) saturate(100%) invert(18%) sepia(49%) saturate(1234%) hue-rotate(260deg) brightness(92%) contrast(96%);">
-                        </a>
-                    </div>
-
-                   <div class="partner-logo shrink-0">
-                        <a href="https://www.rsm.global/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_11.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
-
-                   <div class="partner-logo shrink-0">
-                        <a href="https://www.icci.pk/listing/tahir-builders-pvt-ltd/" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ asset('images/partner_12.png') }}" alt="FCDO"
-                                class="partner-img h-16 md:h-24 w-auto transition-all duration-300 opacity-80 hover:opacity-100">
-                        </a>
-                    </div>
+                    @foreach($partnerLogos as $index => $logo)
+                        <div class="partner-logo w-32 md:w-40 shrink-0 flex items-center justify-center">
+                            <a href="{{ $logo['url'] }}" target="_blank" rel="noopener noreferrer" class="block w-full">
+                                <img src="{{ asset('images/' . $logo['src']) }}" alt="{{ $logo['alt'] }}"
+                                    class="w-full h-auto max-h-16 md:max-h-20 object-contain transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105">
+                            </a>
+                        </div>
+                    @endforeach
                 </div>
             </div>
+
+            <!-- Right Arrow -->
+            <button id="partner-scroll-right" 
+                class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-lg rounded-full p-3 transition-all duration-300 hover:scale-110 focus:outline-none border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                aria-label="Scroll right">
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
         </div>
     </div>
 </section>

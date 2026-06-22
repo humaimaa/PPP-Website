@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->text('overview');
             $table->string('image'); 
-            $table->enum('division', ['Bannu', 'Dera Ismail Khan', 'Hazara', 'Kohat', 'Malakand', 'Mardan', 'Peshawar', 'FATA']);
-            $table->enum('category', ['Pipeline', 'Ongoing', 'Completed']);
+            $table->set('division', ['Bannu', 'Dera Ismail Khan', 'Hazara', 'Kohat', 'Malakand', 'Mardan', 'Peshawar', 'FATA']);
+            $table->enum('category', ['Pipeline', 'Ongoing', 'Construction & Completed']);
             $table->timestamps();
         });
     }

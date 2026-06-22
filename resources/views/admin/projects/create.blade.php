@@ -138,28 +138,29 @@
                     </div>
 
                     {{-- Division --}}
-                    <div>
-                        <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
-                            Division <span class="text-red-500">*</span>
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <i class="fas fa-building"></i>
-                            </span>
-                            <select id="division" name="division"
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('division') border-red-500 @enderror">
-                                <option value="">Select Division</option>
-                                @foreach($divisions as $division)
-                                <option value="{{ $division }}" {{ old('division')==$division ? 'selected' : '' }}>
-                                    {{ $division }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('division')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+<div>
+    <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
+        Division(s) <span class="text-red-500">*</span>
+    </label>
+    <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">
+            <i class="fas fa-building"></i>
+        </span>
+        <select id="division" name="division[]" multiple required
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 @error('division') border-red-500 @enderror"
+            style="min-height: 120px;">
+            @foreach($divisions as $division)
+            <option value="{{ $division }}" {{ in_array($division, old('division', [])) ? 'selected' : '' }}>
+                {{ $division }}
+            </option>
+            @endforeach
+        </select>
+    </div>
+    <p class="mt-1 text-xs text-gray-500">Hold CTRL (or CMD on Mac) to select multiple divisions</p>
+    @error('division')
+    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
+</div>
 
                     {{-- Project Cost --}}
                     <div>

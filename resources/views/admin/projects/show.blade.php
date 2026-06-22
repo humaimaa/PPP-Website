@@ -120,12 +120,25 @@
                                 {{ $project->location ?: 'N/A' }}
                             </p>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase tracking-wider">Division</p>
-                            <p class="text-sm font-medium text-gray-900">
-                                <i class="fas fa-building text-gray-400 mr-1"></i>
-                                {{ $project->division ?: 'N/A' }}
-                            </p>
+                        <div class="col-span-2">
+                            <p class="text-xs text-gray-500 uppercase tracking-wider">Division(s)</p>
+                            <div class="mt-1">
+                                @if($project->division)
+                                <div class="flex flex-wrap gap-2">
+                                    @php
+                                        $divisions = explode(',', $project->division);
+                                    @endphp
+                                    @foreach($divisions as $division)
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-building mr-1.5 text-xs"></i>
+                                        {{ trim($division) }}
+                                    </span>
+                                    @endforeach
+                                </div>
+                                @else
+                                <span class="text-sm text-gray-500">N/A</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

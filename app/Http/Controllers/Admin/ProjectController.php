@@ -74,101 +74,106 @@ class ProjectController extends Controller
         $divisions = ['Bannu', 'Dera Ismail Khan', 'Hazara', 'Kohat', 'Malakand', 'Mardan', 'Peshawar', 'FATA'];
         return view('admin.projects.create', compact('sectors', 'divisions'));
     }
+/**
+ * Store a newly created resource in storage.
+ */
+public function store(Request $request)
+{
+    try {
+        // Basic validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'sector' => 'required|exists:sectors,name',
+            'implementing_authority' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'cost' => 'required|string|max:50',
+            'overview' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'division' => 'required|array|min:1', // Changed to array for multiple selection
+            'division.*' => 'in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
+            'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
+        ];
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        try {
-            // Basic validation rules
-            $rules = [
-                'name' => 'required|string|max:255',
-                'sector' => 'required|exists:sectors,name',
-                'implementing_authority' => 'required|string|max:255',
-                'location' => 'nullable|string|max:255',
-                'cost' => 'required|string|max:50',
-                'overview' => 'required|string',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
-                'division' => 'nullable|in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
-                'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
-            ];
-
-            // Conditional validation for status and category-specific fields
-            if ($request->category === 'Ongoing') {
-                $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
-                $rules['implementing_modality'] = 'required|string';
-                $rules['government_contribution'] = 'required|string';
-                $rules['government_return'] = 'required|string';
-                $rules['private_party_return'] = 'required|string';
-            } elseif ($request->category === 'Construction & Operational'){
-                $rules['status'] = 'required|in:Operational,Construction';
-                $rules['scope'] = 'required|string';
-                $rules['cost_financing_mix'] = 'required|string';
-                $rules['project_timeline'] = 'required|string';
-                $rules['expected_financial_benefits_to_government'] = 'required|string';
-            } else { // Pipeline
-                $rules['status'] = 'nullable'; // not required
-            }
-
-            $validated = $request->validate($rules);
-
-            DB::beginTransaction();
-
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
-                $imagePath = $image->storeAs('projects', $imageName, 'public');
-                $validated['image'] = $imagePath;
-            }
-
-            // Create the project
-            $project = Project::create($validated);
-
-            // Handle category-specific details
-            if ($request->category === 'Ongoing') {
-                OngoingProjectDetail::create([
-                    'project_id' => $project->id,
-                    'implementing_modality' => $request->implementing_modality,
-                    'government_contribution' => $request->government_contribution,
-                    'government_return' => $request->government_return,
-                    'private_party_return' => $request->private_party_return,
-                ]);
-            } elseif ($request->category === 'Construction & Operational') {
-                CompletedProjectDetail::create([
-                    'project_id' => $project->id,
-                    'scope' => $request->scope,
-                    'cost_financing_mix' => $request->cost_financing_mix,
-                    'project_timeline' => $request->project_timeline,
-                    'expected_financial_benefits_to_government' => $request->expected_financial_benefits_to_government,
-                ]);
-            }
-
-            DB::commit();
-
-            return redirect()->route('admin.projects.index')
-                ->with('success', 'Project created successfully!');
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            DB::rollback();
-            
-            // Delete uploaded image if exists
-            if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-            
-            \Log::error('Project creation failed: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
-            
-            return redirect()->back()
-                ->with('error', 'Error creating project: ' . $e->getMessage())
-                ->withInput();
+        // Conditional validation for status and category-specific fields
+        if ($request->category === 'Ongoing') {
+            $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
+            $rules['implementing_modality'] = 'required|string';
+            $rules['government_contribution'] = 'required|string';
+            $rules['government_return'] = 'required|string';
+            $rules['private_party_return'] = 'required|string';
+        } elseif ($request->category === 'Construction & Operational') {
+            $rules['status'] = 'required|in:Operational,Construction';
+            $rules['scope'] = 'required|string';
+            $rules['cost_financing_mix'] = 'required|string';
+            $rules['project_timeline'] = 'required|string';
+            $rules['expected_financial_benefits_to_government'] = 'required|string';
+        } else { // Pipeline
+            $rules['status'] = 'nullable'; // not required
         }
+
+        $validated = $request->validate($rules);
+
+        DB::beginTransaction();
+
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
+            $imagePath = $image->storeAs('projects', $imageName, 'public');
+            $validated['image'] = $imagePath;
+        }
+
+        // Convert division array to comma-separated string for SET column
+        if ($request->has('division') && is_array($request->division)) {
+            $validated['division'] = implode(',', $request->division);
+        }
+
+        // Create the project
+        $project = Project::create($validated);
+
+        // Handle category-specific details
+        if ($request->category === 'Ongoing') {
+            OngoingProjectDetail::create([
+                'project_id' => $project->id,
+                'implementing_modality' => $request->implementing_modality,
+                'government_contribution' => $request->government_contribution,
+                'government_return' => $request->government_return,
+                'private_party_return' => $request->private_party_return,
+            ]);
+        } elseif ($request->category === 'Construction & Operational') {
+            CompletedProjectDetail::create([
+                'project_id' => $project->id,
+                'scope' => $request->scope,
+                'cost_financing_mix' => $request->cost_financing_mix,
+                'project_timeline' => $request->project_timeline,
+                'expected_financial_benefits_to_government' => $request->expected_financial_benefits_to_government,
+            ]);
+        }
+
+        DB::commit();
+
+        return redirect()->route('admin.projects.index')
+            ->with('success', 'Project created successfully!');
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        throw $e;
+    } catch (\Exception $e) {
+        DB::rollback();
+        
+        // Delete uploaded image if exists
+        if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        
+        \Log::error('Project creation failed: ' . $e->getMessage());
+        \Log::error($e->getTraceAsString());
+        
+        return redirect()->back()
+            ->with('error', 'Error creating project: ' . $e->getMessage())
+            ->withInput();
     }
+}
 
     /**
      * Display the specified resource.
@@ -190,110 +195,126 @@ class ProjectController extends Controller
         return view('admin.projects.edit', compact('project', 'sectors', 'divisions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $project = Project::findOrFail($id);
+   /**
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, $id)
+{
+    $project = Project::findOrFail($id);
 
-        $rules = [
-            'name' => 'required|string|max:255',
-            'sector' => 'required|exists:sectors,name',
-            'implementing_authority' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'cost' => 'required|string|max:50',
-            'overview' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'division' => 'nullable|in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
-            // ✅ Correct
-'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
-        ];
+    // Validation rules
+    $rules = [
+        'name' => 'required|string|max:255',
+        'sector' => 'required|exists:sectors,name',
+        'implementing_authority' => 'required|string|max:255',
+        'location' => 'nullable|string|max:255',
+        'cost' => 'required|string|max:50',
+        'overview' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+        'division' => 'required|array|min:1', // Changed to array for multiple selection
+        'division.*' => 'in:Bannu,Dera Ismail Khan,Hazara,Kohat,Malakand,Mardan,Peshawar,FATA',
+        'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
+    ];
 
-        // Conditional validation for status and category-specific fields
-        if ($request->category === 'Ongoing') {
-            $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
-            $rules['implementing_modality'] = 'required|string';
-            $rules['government_contribution'] = 'required|string';
-            $rules['government_return'] = 'required|string';
-            $rules['private_party_return'] = 'required|string';
-        } elseif ($request->category === 'Construction & Operational') {
-            $rules['status'] = 'required|in:Operational,Construction';
-            $rules['scope'] = 'required|string';
-            $rules['cost_financing_mix'] = 'required|string';
-            $rules['project_timeline'] = 'required|string';
-            $rules['expected_financial_benefits_to_government'] = 'required|string';
-        } else {
-            $rules['status'] = 'nullable';
-        }
-
-        $validated = $request->validate($rules);
-        
-        DB::beginTransaction();
-        
-        try {
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                // Delete old image
-                if ($project->image && Storage::disk('public')->exists($project->image)) {
-                    Storage::disk('public')->delete($project->image);
-                }
-                
-                $image = $request->file('image');
-                $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
-                $imagePath = $image->storeAs('projects', $imageName, 'public');
-                $validated['image'] = $imagePath;
-            }
-            
-            $project->update($validated);
-            
-            // Handle category-specific details
-            if ($request->category === 'Ongoing') {
-                OngoingProjectDetail::updateOrCreate(
-                    ['project_id' => $project->id],
-                    [
-                        'implementing_modality' => $request->implementing_modality,
-                        'government_contribution' => $request->government_contribution,
-                        'government_return' => $request->government_return,
-                        'private_party_return' => $request->private_party_return,
-                    ]
-                );
-                
-                CompletedProjectDetail::where('project_id', $project->id)->delete();
-                
-            } elseif ($request->category === 'Construction & Operational') {
-                CompletedProjectDetail::updateOrCreate(
-                    ['project_id' => $project->id],
-                    [
-                        'scope' => $request->scope,
-                        'cost_financing_mix' => $request->cost_financing_mix,
-                        'project_timeline' => $request->project_timeline,
-                        'expected_financial_benefits_to_government' => $request->expected_financial_benefits_to_government,
-                    ]
-                );
-                
-                OngoingProjectDetail::where('project_id', $project->id)->delete();
-                
-            } else { // Pipeline
-                OngoingProjectDetail::where('project_id', $project->id)->delete();
-                CompletedProjectDetail::where('project_id', $project->id)->delete();
-            }
-            
-            DB::commit();
-            
-            return redirect()->route('admin.projects.index')
-                ->with('success', 'Project updated successfully!');
-                
-        } catch (\Exception $e) {
-            DB::rollback();
-            if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-            return redirect()->back()
-                ->with('error', 'Error updating project: ' . $e->getMessage())
-                ->withInput();
-        }
+    // Conditional validation for status and category-specific fields
+    if ($request->category === 'Ongoing') {
+        $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
+        $rules['implementing_modality'] = 'required|string';
+        $rules['government_contribution'] = 'required|string';
+        $rules['government_return'] = 'required|string';
+        $rules['private_party_return'] = 'required|string';
+    } elseif ($request->category === 'Construction & Operational') {
+        $rules['status'] = 'required|in:Operational,Construction';
+        $rules['scope'] = 'required|string';
+        $rules['cost_financing_mix'] = 'required|string';
+        $rules['project_timeline'] = 'required|string';
+        $rules['expected_financial_benefits_to_government'] = 'required|string';
+    } else { // Pipeline
+        $rules['status'] = 'nullable';
     }
+
+    $validated = $request->validate($rules);
+    
+    DB::beginTransaction();
+    
+    try {
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($project->image && Storage::disk('public')->exists($project->image)) {
+                Storage::disk('public')->delete($project->image);
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
+            $imagePath = $image->storeAs('projects', $imageName, 'public');
+            $validated['image'] = $imagePath;
+        }
+
+        // Convert division array to comma-separated string for SET column
+        if ($request->has('division') && is_array($request->division)) {
+            $validated['division'] = implode(',', $request->division);
+        }
+
+        // Update the project
+        $project->update($validated);
+        
+        // Handle category-specific details
+        if ($request->category === 'Ongoing') {
+            OngoingProjectDetail::updateOrCreate(
+                ['project_id' => $project->id],
+                [
+                    'implementing_modality' => $request->implementing_modality,
+                    'government_contribution' => $request->government_contribution,
+                    'government_return' => $request->government_return,
+                    'private_party_return' => $request->private_party_return,
+                ]
+            );
+            
+            // Delete completed details if they exist
+            CompletedProjectDetail::where('project_id', $project->id)->delete();
+            
+        } elseif ($request->category === 'Construction & Operational') {
+            CompletedProjectDetail::updateOrCreate(
+                ['project_id' => $project->id],
+                [
+                    'scope' => $request->scope,
+                    'cost_financing_mix' => $request->cost_financing_mix,
+                    'project_timeline' => $request->project_timeline,
+                    'expected_financial_benefits_to_government' => $request->expected_financial_benefits_to_government,
+                ]
+            );
+            
+            // Delete ongoing details if they exist
+            OngoingProjectDetail::where('project_id', $project->id)->delete();
+            
+        } else { // Pipeline
+            // Delete both details if they exist
+            OngoingProjectDetail::where('project_id', $project->id)->delete();
+            CompletedProjectDetail::where('project_id', $project->id)->delete();
+        }
+        
+        DB::commit();
+        
+        return redirect()->route('admin.projects.index')
+            ->with('success', 'Project updated successfully!');
+            
+    } catch (\Exception $e) {
+        DB::rollback();
+        
+        // Delete newly uploaded image if error occurs
+        if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        
+        \Log::error('Project update failed: ' . $e->getMessage());
+        \Log::error($e->getTraceAsString());
+        
+        return redirect()->back()
+            ->with('error', 'Error updating project: ' . $e->getMessage())
+            ->withInput();
+    }
+}
 
     /**
      * Remove the specified resource from storage.

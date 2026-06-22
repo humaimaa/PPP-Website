@@ -143,12 +143,22 @@
                                         {{ Str::limit($project->location, 30) }}
                                     </div>
                                     @endif
+                                    
+                                    {{-- Display Divisions as Badges --}}
                                     @if($project->division)
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        <i class="fas fa-building text-gray-400 mr-1"></i>
-                                        Division: {{ $project->division }}
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        @php
+                                            $divisions = explode(',', $project->division);
+                                        @endphp
+                                        @foreach($divisions as $division)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <i class="fas fa-building mr-1 text-[8px]"></i>
+                                            {{ trim($division) }}
+                                        </span>
+                                        @endforeach
                                     </div>
                                     @endif
+                                    
                                     @if(!$project->location && !$project->division)
                                     <span class="text-gray-400 text-sm">—</span>
                                     @endif

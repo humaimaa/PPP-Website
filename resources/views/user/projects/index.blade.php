@@ -3,7 +3,7 @@
 @section('title', 
     ($category ?? 'all') === 'pipeline' ? 'PPP Department KP - Pipeline Projects' :
     (($category ?? 'all') === 'ongoing' ? 'PPP Department KP - Ongoing Projects' :
-    (($category ?? 'all') === 'completed' ? 'PPP Department KP - Completed Projects' :
+    (($category ?? 'all') === 'construction-operational' ? 'PPP Department KP - Construction & Operational Projects' :
     (($status ?? 'all') === 'private-partner' ? 'PPP Department KP - Private Partner Selection Projects' :
     (($status ?? 'all') === 'transaction-advisory' ? 'PPP Department KP - Transaction Advisory Projects' :
     (($status ?? 'all') === 'construction' ? 'PPP Department KP - Construction Projects' :
@@ -77,14 +77,14 @@
                         &nbsp;&nbsp;&nbsp;Transaction Advisory
                     </option>
                     
-                    <!-- Completed -->
-                    <option value="completed_all" {{ ($category ?? 'all') === 'completed' && ($status ?? 'all') === 'all' ? 'selected' : '' }}>
-                        Completed
+                    <!-- Construction & Operational -->
+                    <option value="construction-operational_all" {{ ($category ?? 'all') === 'construction-operational' && ($status ?? 'all') === 'all' ? 'selected' : '' }}>
+                        Construction & Operational
                     </option>
-                    <option value="completed_construction" {{ ($category ?? 'all') === 'completed' && ($status ?? 'all') === 'construction' ? 'selected' : '' }}>
+                    <option value="construction-operational_construction" {{ ($category ?? 'all') === 'construction-operational' && ($status ?? 'all') === 'construction' ? 'selected' : '' }}>
                         &nbsp;&nbsp;&nbsp;Construction
                     </option>
-                    <option value="completed_operational" {{ ($category ?? 'all') === 'completed' && ($status ?? 'all') === 'operational' ? 'selected' : '' }}>
+                    <option value="construction-operational_operational" {{ ($category ?? 'all') === 'construction-operational' && ($status ?? 'all') === 'operational' ? 'selected' : '' }}>
                         &nbsp;&nbsp;&nbsp;Operational
                     </option>
                 </select>

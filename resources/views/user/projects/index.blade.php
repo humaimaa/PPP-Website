@@ -138,7 +138,8 @@ function updateFilter() {
                         {{ $project->category ?? 'N/A' }}
                     </div>
 
-                    <!-- Status Badge -->
+                    <!-- Status Badge - HIDDEN FOR PIPELINE PROJECTS -->
+                    @if($project->category !== 'Pipeline')
                     <div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium capitalize text-white
                             @if($project->status === 'Complete' || $project->status === 'Completed') bg-green-700
                             @elseif($project->status === 'Ongoing') bg-yellow-600
@@ -149,6 +150,7 @@ function updateFilter() {
                             @else bg-gray-600 @endif">
                         {{ $project->status ?? 'N/A' }}
                     </div>
+                    @endif
                 </div>
 
                 <div class="p-6">

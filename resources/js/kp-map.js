@@ -106,6 +106,11 @@
     }
 
     function formatDivisionLabel(divisionName) {
+        // Special handling for FATA
+        if (divisionName === 'FATA' || divisionName === 'F.A.T.A.') {
+            return 'Merged<br>Districts';
+        }
+        
         const words = divisionName.split(' ');
         if (words.length > 1) {
             if (words.length === 2) {
@@ -117,6 +122,14 @@
             else {
                 return `${words[0]}<br>${words.slice(1).join(' ')}`;
             }
+        }
+        return divisionName;
+    }
+
+    function getDisplayName(divisionName) {
+        // Special handling for FATA
+        if (divisionName === 'FATA' || divisionName === 'F.A.T.A.') {
+            return 'Merged Districts';
         }
         return divisionName;
     }
@@ -162,9 +175,10 @@
                 let divisionName = feature.properties?.NAME_2;
                 if (divisionName === 'DeraIsmailKhan') divisionName = 'Dera Ismail Khan';
                 const isFATA = divisionName === 'F.A.T.A.';
-                const displayName = isFATA ? 'FATA' : divisionName;
+                const displayName = isFATA ? 'Merged Districts' : divisionName;
+                const dataKey = isFATA ? 'FATA' : divisionName;
                 
-                const division = divisionsData[isFATA ? 'FATA' : divisionName];
+                const division = divisionsData[dataKey];
                 
                 let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName || 'Unknown'}</strong><br>`;
                 
@@ -215,6 +229,20 @@
                         const label = L.divIcon({
                             className: 'division-label',
                             html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${formattedLabel}</div>`,
+                            iconSize: [45, 20],
+                            iconAnchor: [22, 10]
+                        });
+                        
+                        L.marker(center, { icon: label, interactive: false }).addTo(map);
+                    }
+                } else if (isFATA) {
+                    // Add label for FATA as "Merged Districts"
+                    const bounds = layer.getBounds();
+                    if (bounds && bounds.isValid()) {
+                        const center = bounds.getCenter();
+                        const label = L.divIcon({
+                            className: 'division-label',
+                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">Merged<br>Districts</div>`,
                             iconSize: [45, 20],
                             iconAnchor: [22, 10]
                         });
@@ -440,6 +468,7 @@
         if (divisionView) divisionView.classList.remove('hidden');
         
         const total = division.total_projects || 0;
+        // Use "Merged Districts" for FATA
         const displayTitle = division.is_merged ? 'Merged Districts (Former FATA)' : (division.name + ' Division');
         
         const titleEl = document.getElementById('division-title');

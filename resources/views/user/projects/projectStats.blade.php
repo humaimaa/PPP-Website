@@ -12,7 +12,7 @@
                 Projects Statistics
             </h1>
             <div class="w-20 h-1 bg-white mx-auto "></div>
-           
+
         </div>
     </div>
     <img src="{{ asset('images/project-1.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
@@ -26,23 +26,31 @@
             <div class="w-24 h-1 bg-yellow-500 mx-auto rounded"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-yellow-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-yellow-600 mb-3" data-count="{{ $pipelineCount ?? 0 }}">0</div>
+            <div
+                class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-yellow-500">
+                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-yellow-600 mb-3"
+                    data-count="{{ $pipelineCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Pipeline Projects</p>
             </div>
-            
-            <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3" data-count="{{ $ongoingCount ?? 0 }}">0</div>
+
+            <div
+                class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
+                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3"
+                    data-count="{{ $ongoingCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Ongoing Projects</p>
             </div>
-            
-            <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-blue-600 mb-3" data-count="{{ $completedCount ?? 0 }}">0</div>
+
+            <div
+                class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
+                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-blue-600 mb-3"
+                    data-count="{{ $completedCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Completed Projects</p>
-           </div>
-            
-            <div class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-purple-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-purple-600 mb-3" data-count="{{ $totalProjects ?? 0 }}">0</div>
+            </div>
+
+            <div
+                class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-purple-500">
+                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-purple-600 mb-3"
+                    data-count="{{ $totalProjects ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Total Projects</p>
             </div>
         </div>
@@ -60,20 +68,26 @@
 
         <div class="flex flex-col lg:flex-row gap-6 lg:items-stretch">
             <div class="w-full lg:w-1/2 z-10 flex flex-col" id="map-column">
-                <div id="kp-choropleth-map" style="flex: 1; min-height: 400px; width: 100%; background-color: #e8f0e8; border-radius: 8px;"></div>
+                <div id="kp-choropleth-map"
+                    style="flex: 1; min-height: 400px; width: 100%; background-color: #e8f0e8; border-radius: 8px;">
+                </div>
             </div>
 
             <div class="w-full lg:w-1/2">
-                <div id="stats-panel" class="bg-gradient-to-br from-[#0D2818] to-[#1a4a2a] shadow-lg rounded-lg p-6 transition-all duration-300 h-full">
+                <div id="stats-panel"
+                    class="bg-gradient-to-br from-[#0D2818] to-[#1a4a2a] shadow-lg rounded-lg p-6 transition-all duration-300 h-full">
                     <div id="default-view">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white">Projects Overview</h3>
-                            <button id="reset-view" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show All</button>
+                            <button id="reset-view"
+                                class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show
+                                All</button>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl font-bold text-green-400" id="total-projects">{{ $totalProjects ?? 0 }}</div>
+                                <div class="text-3xl font-bold text-green-400" id="total-projects">{{ $totalProjects ??
+                                    0 }}</div>
                                 <div class="text-sm text-gray-300 mt-1">Total Projects</div>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
@@ -83,11 +97,18 @@
                         </div>
 
                         <h4 class="font-semibold mb-3 text-lg text-white">All Divisions</h4>
-                        <div id="divisions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
+                        <div id="divisions-grid"
+                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
                             @foreach($divisionsGrid as $division)
-                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card text-center" 
-                                 data-division="{{ $division['name'] }}">
-                                <div class="font-semibold text-white text-sm">{{ $division['name'] }}</div>
+                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-all duration-200 division-card text-center"
+                                data-division="{{ $division['name'] }}">
+                                <div class="font-semibold text-white text-sm">
+                                    @if($division['name'] === 'FATA')
+                                    Merged Districts
+                                    @else
+                                    {{ $division['name'] }}
+                                    @endif
+                                </div>
                                 <div class="text-2xl font-bold text-green-400 mt-1">{{ $division['total'] }}</div>
                                 <div class="text-xs text-gray-300">Total Projects</div>
                             </div>
@@ -98,7 +119,9 @@
                     <div id="division-view" class="hidden">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white" id="division-title"></h3>
-                            <button id="back-to-all" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back to All</button>
+                            <button id="back-to-all"
+                                class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back
+                                to All</button>
                         </div>
 
                         <div class="flex flex-row gap-2 text-center text-sm mb-4">
@@ -145,8 +168,9 @@
             <div class="w-20 h-1 bg-yellow-500 mx-auto mt-4"></div>
         </div>
         <div class="flex justify-center items-center w-full">
-            <a href="{{ url('/pitchbook') }}" class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-                <img src="{{ asset('images/Pitchbook-Cover.png') }}" alt="Pitchbook Icon" 
+            <a href="{{ url('/pitchbook') }}"
+                class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <img src="{{ asset('images/Pitchbook-Cover.png') }}" alt="Pitchbook Icon"
                     class="w-60 h-40 md:w-90 md:h-50 drop-shadow-lg hover:drop-shadow-xl">
             </a>
         </div>
@@ -155,66 +179,75 @@
 
 @push('styles')
 <style>
-.custom-tooltip {
-    background: rgba(0, 0, 0, 0.8) !important;
-    border: none !important;
-    border-radius: 4px !important;
-    color: white !important;
-    font-size: 11px !important;
-    padding: 4px 8px !important;
-}
-.division-label {
-    background: transparent !important;
-    border: none !important;
-}
-.division-label div {
-    font-size: 8px !important;
-    padding: 2px 4px !important;
-    white-space: normal !important;
-    text-align: center !important;
-    line-height: 1.3 !important;
-}
-#division-projects-list::-webkit-scrollbar {
-    width: 6px;
-}
-#division-projects-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-#division-projects-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-}
-#division-projects-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-.division-card {
-    transition: all 0.2s ease;
-}
-#kp-choropleth-map {
-    background-color: #e8f0e8;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-.leaflet-container {
-    background-color: #e8f0e8;
-}
+    .custom-tooltip {
+        background: rgba(0, 0, 0, 0.8) !important;
+        border: none !important;
+        border-radius: 4px !important;
+        color: white !important;
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+    }
 
-/* Sector Chart */
-#sector-chart {
-    position: relative;
-}
+    .division-label {
+        background: transparent !important;
+        border: none !important;
+    }
 
-/* Force Chart.js axis tick labels to white */
-#sector-chart canvas {
-    color: white !important;
-}
+    .division-label div {
+        font-size: 8px !important;
+        padding: 2px 4px !important;
+        white-space: normal !important;
+        text-align: center !important;
+        line-height: 1.3 !important;
+    }
 
-/* Stats panel text colors */
-#stats-panel,
-#stats-panel * {
-    color: white;
-}
+    #division-projects-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #division-projects-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+
+    #division-projects-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+
+    #division-projects-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .division-card {
+        transition: all 0.2s ease;
+    }
+
+    #kp-choropleth-map {
+        background-color: #e8f0e8;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .leaflet-container {
+        background-color: #e8f0e8;
+    }
+
+    /* Sector Chart */
+    #sector-chart {
+        position: relative;
+    }
+
+    /* Force Chart.js axis tick labels to white */
+    #sector-chart canvas {
+        color: white !important;
+    }
+
+    /* Stats panel text colors */
+    #stats-panel,
+    #stats-panel * {
+        color: white;
+    }
 </style>
 @endpush
 
@@ -224,11 +257,11 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <script>
-window.divisionsDataFromDB = @json($divisionsDataForMap);
+    window.divisionsDataFromDB = @json($divisionsDataForMap);
 window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
 <script>
-// Override Chart.js defaults AFTER chart.js loads but BEFORE kp-map.js runs
+    // Override Chart.js defaults AFTER chart.js loads but BEFORE kp-map.js runs
 document.querySelector('script[src*="chart"]') && (function waitForChart() {
     if (typeof Chart !== 'undefined') {
         Chart.defaults.color = '#ffffff';
@@ -238,9 +271,9 @@ document.querySelector('script[src*="chart"]') && (function waitForChart() {
     }
 })();
 </script>
-  @vite([ 
-        'resources/js/kp-map.js'
-    ])
+@vite([
+'resources/js/kp-map.js'
+])
 @endpush
 
 @endsection

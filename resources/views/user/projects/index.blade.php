@@ -16,19 +16,19 @@
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                @if(($category ?? 'all') === 'pipeline')
+                @if($category  === 'pipeline' && $status === 'all')
                 Pipeline Projects
-                @elseif(($category ?? 'all') === 'ongoing')
+                @elseif($category  === 'ongoing' && $status === 'all')
                 Ongoing Projects
-                @elseif(($category ?? 'all') === 'completed')
-                Completed Projects
-                @elseif(($status ?? 'all') === 'private-partner')
+                @elseif($category  === 'construction-operational' && $status === 'all')
+                Construction &  Operational Projects
+                @elseif($status  === 'private-partner' && $category  === 'ongoing')
                 Private Partner Selection Projects
-                @elseif(($status ?? 'all') === 'transaction-advisory')
+                @elseif($status  === 'transaction-advisory' && $category  === 'ongoing')
                 Transaction Advisory Projects
-                @elseif(($status ?? 'all') === 'construction')
+                @elseif($status  === 'construction' && $category  === 'construction-operational')
                 Construction Projects
-                @elseif(($status ?? 'all') === 'operational')
+                @elseif($status  === 'operational' && $category  === 'construction-operational')
                 Operational Projects
                 @else
                 All Projects
@@ -131,7 +131,7 @@ function updateFilter() {
 
                     <!-- Category Badge -->
                     <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium capitalize text-white
-                            @if($project->category === 'Completed') bg-green-600
+                            @if($project->category === 'Construction & Operational') bg-green-600
                             @elseif($project->category === 'Ongoing') bg-yellow-500
                             @elseif($project->category === 'Pipeline') bg-purple-600
                             @else bg-gray-600 @endif">

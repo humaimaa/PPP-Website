@@ -90,4 +90,22 @@ class ProfileController extends Controller
         return redirect()->route('admin.profile')
             ->with('success', 'Password updated successfully. Please use your new password next time you log in.');
     }
+
+    /**
+     * Resend email verification notification.
+     */
+    public function resendVerification(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->email_verified_at) {
+            return redirect()->route('admin.profile')
+                ->with('info', 'Your email is already verified.');
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('admin.profile')
+            ->with('success', 'A new verification link has been sent to your email address.');
+    }
 }

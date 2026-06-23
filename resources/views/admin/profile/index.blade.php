@@ -154,7 +154,7 @@
                         Change Password
                     </button>
                     @if(!Auth::user()->email_verified_at)
-                        <form action="{{ route('verification.send') }}" method="POST" class="inline-block w-full">
+                        <form action="{{ route('profile.resend-verification') }}" method="POST" class="inline-block w-full">
                             @csrf
                             <button type="submit" 
                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
@@ -235,7 +235,7 @@
                                             <p class="text-sm text-yellow-700">
                                                 Your email address is not verified.
                                             </p>
-                                            <form action="{{ route('verification.send') }}" method="POST" class="mt-2">
+                                            <form action="{{ route('profile.resend-verification') }}" method="POST" class="mt-2">
                                                 @csrf
                                                 <button type="submit" 
                                                         class="text-sm text-yellow-700 underline hover:text-yellow-800 font-medium">

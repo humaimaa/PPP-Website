@@ -28,8 +28,9 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.submit');
 
 // ==================== EMAIL VERIFICATION ROUTES ====================
+// These need to be accessible for the verification process
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->middleware(['signed'])
+    ->middleware(['signed', 'auth'])
     ->name('verification.verify');
 
 Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
@@ -39,7 +40,6 @@ Route::post('/email/verification-notification', [VerificationController::class, 
 Route::get('/email/verify', [VerificationController::class, 'show'])
     ->middleware(['auth'])
     ->name('verification.notice');
-
 
 // ==================== PROTECTED ADMIN ROUTES ====================
 Route::middleware(['auth'])->group(function () {
@@ -52,13 +52,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Profile Routes
-    Route::prefix('profile')->name('profile')->middleware('auth')->group(function () {
+    Route::prefix('profile')->name('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('');
         Route::put('/update', [ProfileController::class, 'update'])->name('.update');
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('.password');
-        Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.send');
+        // Use a different route name to avoid conflict with verification.send
+        Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.resend-verification');
     });
 
+    
     // ==================== USER MANAGEMENT ====================
     Route::prefix('users')->name('users.')->middleware('can:users.view')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');

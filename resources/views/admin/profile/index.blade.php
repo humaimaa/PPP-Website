@@ -154,7 +154,7 @@
                         Change Password
                     </button>
                     @if(!Auth::user()->email_verified_at)
-                        <form action="{{ route('profile.resend-verification') }}" method="POST" class="inline-block w-full">
+                        <form action="{{ route('admin.profile.resend-verification') }}" method="POST" class="inline-block w-full">
                             @csrf
                             <button type="submit" 
                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">

@@ -235,7 +235,7 @@
                                             <p class="text-sm text-yellow-700">
                                                 Your email address is not verified.
                                             </p>
-                                            <form action="{{ route('profile.resend-verification') }}" method="POST" class="mt-2">
+                                            <form action="{{ route('admin.profile.resend-verification') }}" method="POST" class="mt-2">
                                                 @csrf
                                                 <button type="submit" 
                                                         class="text-sm text-yellow-700 underline hover:text-yellow-800 font-medium">

@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('');
         Route::put('/update', [ProfileController::class, 'update'])->name('.update');
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('.password');
-        Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.resend-verification');
+        Route::post('/resend-verification', [ProfileController::class, 'resendVerification'])->name('.send');
     });
 
     // ==================== USER MANAGEMENT ====================

@@ -71,20 +71,14 @@
                     <div class="md:w-2/3 lg:w-3/4 p-6 md:p-8">
                         <!-- Designation Badge -->
                         <div class="inline-block mb-4">
-                            <span class="px-4 py-1.5 rounded-full text-sm font-semibold 
-                                @if($message->designation == 'Chief Secretary') bg-primary text-text-primary
-                                @elseif($message->designation == 'Additional Chief Secretary Development') bg-primary-light text-text-primary
-                                @elseif($message->designation == 'Secretary P&D') bg-green-700 text-text-primary
-                                @elseif($message->designation == 'Chief PPP') bg-accent-1 text-text-primary
-                                @else bg-background-primary/80 text-text-primary
-                                @endif">
+                            <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-primary text-text-primary">
                                 {{ $message->designation }}
                             </span>
                         </div>
                         
                         <!-- Name -->
                         <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3">
-                            {{ Str::title($message->name) }}
+                            {{ formatTitle($message->name) }}
                         </h2>
                         
                         <!-- Message with line break support -->

@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-4">{{Str::title($project->name ?? 'Project Details') }}</h1>
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-4">{{formatTitle($project->name ?? 'Project Details') }}</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
             <p class="text-text-primary text-md md:text-lg mt-4">Comprehensive information about our PPP initiatives</p>
         </div>
@@ -36,7 +36,7 @@
                 <div class="p-6 md:p-8">
                     <div class="flex flex-wrap justify-between items-start mb-6">
                         <div>
-                            <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-text-green mb-2">{{Str::title($project->name)  }}</h1>
+                            <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-text-green mb-2">{{formatTitle($project->name)  }}</h1>
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">{{ $project->sector }}</span>
                                 <span class="px-3 py-1 rounded-full text-sm font-medium capitalize 

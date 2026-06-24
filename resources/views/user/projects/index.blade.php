@@ -155,7 +155,7 @@ function updateFilter() {
 
                 <div class="p-6">
                     <!-- Title -->
-                    <h3 class="text-xl font-bold text-emerald-800 mb-2 line-clamp-2">{{ Str::title($project->name) }}</h3>
+                    <h3 class="text-xl font-bold text-emerald-800 mb-2 line-clamp-2">{{ formatTitle($project->name) }}</h3>
                     
                     <!-- Cost -->
                     @if($project->cost)

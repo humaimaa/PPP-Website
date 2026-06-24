@@ -151,14 +151,14 @@
 </section>
 
 <!-- Sectors Section - Dynamic from Database (4 per row) -->
-<section class="pt-10 w-full bg-background-light" id="sectors-section">
+<section class="py-10 w-full bg-background-light" id="sectors-section">
     <div class="w-full px-0">
         <div class="text-center mb-12 overflow-hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-text-green animate-on-scroll-title">Our Project Sectors</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
-        <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
+        <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4  gap-0 w-full">
             @foreach($sectors as $sector)
             <div class="sector-card relative h-64 overflow-hidden group w-full">
                 <!-- Gradient overlay - changes on hover to lighter green -->

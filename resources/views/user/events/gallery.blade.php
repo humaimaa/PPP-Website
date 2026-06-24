@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{formatTitle( $event->title )}}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{formatTitle( str :: title($event->title) )}}</h1>
             <div class="w-20 h-1 bg-orange-500 mx-auto"></div>
 
         </div>
@@ -41,7 +41,7 @@
         
         <!-- Event Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{formatTitle( $event->title )}}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{formatTitle( str :: title($event->title) )}}</h1>
             <div class="flex flex-wrap gap-4 text-gray-600 mb-6 pb-6 border-b border-gray-200">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt text-orange-500 mr-2"></i>

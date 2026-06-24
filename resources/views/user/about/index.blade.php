@@ -66,19 +66,13 @@
         </div>
         <div class="space-y-6 text-text-muted text-justify">
             <p class="text-lg">
-                The PPP Unit was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private 
-                Partnership Act, which provided the legal framework for private sector participation in public infrastructure 
-                projects.
+                The PPP Unit was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private Partnership Act, which provided the legal framework for private sector participation in public infrastructure projects.
             </p>
             <p class="text-lg">
-                Our first major project, the Peshawar Rapid Transit System, was launched in 2015 and set the standard for 
-                future PPP initiatives in the province. Since then, we have successfully facilitated over 50 projects 
-                across various sectors with a total investment exceeding $2 billion.
+                Our first major project, the Swat Expressway-I, was launched in 2017 and set the standard for future PPP initiatives in the province. It was followed by Rashakai Economic zone in 2020; Swat Expressway-II in 2021 and Thandiani Tourism Project in 2026. Since then, we have successfully facilitated a number of projects across various sectors including but not limited to Tourism Sector, Industries sector, Agriculture, Livestock, education, Health and others which are in various stages of PPP project life cycle.
             </p>
             <p class="text-lg">
-                In 2020, the department underwent significant restructuring to enhance its capacity for project development 
-                and implementation, establishing specialized units for different sectors and introducing digital platforms 
-                for greater transparency.
+                In 2020, the PPP Act and rules made thereunder were revised to make PPP regime more robust, investment friendly, and to enhance its capacity for project development and implementation. Furhtermore, PPP Nodes are notified across 13 potential departments to conceive, develop and procure PPP projects.
             </p>
         </div>
     </div>

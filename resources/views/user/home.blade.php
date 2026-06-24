@@ -7,7 +7,7 @@
 <section class="hero-video-section relative h-screen overflow-hidden">
     <!-- Background Video -->
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source src="{{ asset('videos/video-1.mp4') }}" type="video/mp4">
+        <source src="{{ asset('videos/video.mp4') }}" type="video/mp4">
         <img src="{{ asset('images/hero-fallback.jpg') }}" alt="Background" class="w-full h-full object-cover">
     </video>
 

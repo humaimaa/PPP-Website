@@ -1,13 +1,25 @@
 <?php
 
 if (!function_exists('formatTitle')) {
-    function formatTitle($text) {
-        if (!$text) return $text;
+    /**
+     * Format title by uppercasing specific keywords
+     * 
+     * @param string|null $text
+     * @return string|null
+     */
+    function formatTitle($text)
+    {
+        if (empty($text)) {
+            return $text;
+        }
         
         $keywords = ['ppp', 'kp'];
+        $formattedText = $text;
+        
         foreach ($keywords as $keyword) {
-            $text = str_ireplace($keyword, strtoupper($keyword), $text);
+            $formattedText = str_ireplace($keyword, strtoupper($keyword), $formattedText);
         }
-        return $text;
+        
+        return $formattedText;
     }
 }

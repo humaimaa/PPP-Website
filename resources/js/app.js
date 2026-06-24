@@ -4,6 +4,31 @@ import Alpine from 'alpinejs';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+// **
+//  * Check if a function exists globally
+//  */
+if (!window.function_exists) {
+    window.function_exists = function(functionName) {
+        return typeof window[functionName] === 'function';
+    };
+}
+
+/**
+ * Format title with uppercase keywords
+ */
+if (!window.formatTitle) {
+    window.formatTitle = function(text) {
+        if (!text) return text;
+        
+        const keywords = ['ppp', 'kp'];
+        let formattedText = text;
+        keywords.forEach(keyword => {
+            const regex = new RegExp(keyword, 'gi');
+            formattedText = formattedText.replace(regex, keyword.toUpperCase());
+        });
+        return formattedText;
+    };
+}
 
 // ========== NAVBAR DROPDOWN COMPONENT ==========
 function navbarDropdown() {

@@ -108,7 +108,7 @@
                            
                         </div>
                         <h3 class="text-xl font-bold text-text-black mb-3 hover:text-accent-1 transition-colors duration-300">
-                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ formatTitle($news->title )}}</a>
+                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ formatTitle( str::title($news->title) )}}</a>
                         </h3>
                         <p class="text-text-muted line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
                     </div>

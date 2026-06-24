@@ -78,7 +78,7 @@
                         
                         <!-- Name -->
                         <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3">
-                            {{ formatTitle($message->name) }}
+                            {{ formatTitle( str::title($message->name) ) }}
                         </h2>
                         
                         <!-- Message with line break support -->

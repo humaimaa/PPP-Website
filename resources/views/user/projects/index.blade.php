@@ -148,14 +148,14 @@ function updateFilter() {
                             @elseif($project->status === 'Transaction Advisory') bg-cyan-600
                             @elseif($project->status === 'Construction') bg-orange-600
                             @else bg-gray-600 @endif">
-                        {{ formatTitle( str::title($project->status ?? 'N/A') )   }}         }}
+                        {{ formatTitle( Str::title($project->status ?? 'N/A') )   }}         }}
                     </div>
                     @endif
                 </div>
 
                 <div class="p-6">
                     <!-- Title -->
-                    <h3 class="text-xl font-bold text-emerald-800 mb-2 line-clamp-2">{{ formatTitle( str::title($project->name) ) }}</h3>
+                    <h3 class="text-xl font-bold text-emerald-800 mb-2 line-clamp-2">{{ formatTitle( Str::title($project->name) ) }}</h3>
                     
                     <!-- Cost -->
                     @if($project->cost)
@@ -172,7 +172,7 @@ function updateFilter() {
                         <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
-                        {{ formatTitle( str::title($project->sector) ) }}
+                        {{ formatTitle( Str::title($project->sector) ) }}
                     </div>
 
                     <!-- View Details Button -->

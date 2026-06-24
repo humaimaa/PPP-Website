@@ -11,7 +11,7 @@
             
             <!-- Title with word wrap and line clamp for long titles -->
             <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 break-words hyphens-auto">
-                {{ formatTitle(str::title($news->title)) }}
+                {{ formatTitle(Str::title($news->title)) }}
             </h1>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
            

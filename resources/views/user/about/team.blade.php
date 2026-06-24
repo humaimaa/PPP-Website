@@ -71,8 +71,8 @@
                          alt="{{ $leadershipMember->name }}"
                          class="w-full h-80 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
-                        <h3 class="text-2xl font-bold text-text-primary">{{ formatTitle( str::title($leadershipMember->name) ) }}</h3>
-                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ formatTitle( str::title($leadershipMember->designation ?? 'Leadership') ) }}</p>
+                        <h3 class="text-2xl font-bold text-text-primary">{{ formatTitle( Str::title($leadershipMember->name) ) }}</h3>
+                        <p class="text-accent-1 text-lg font-semibold mt-1">{{ formatTitle( Str::title($leadershipMember->designation ?? 'Leadership') ) }}</p>
                     </div>
                 </div>
                 <div class="p-4">
@@ -136,8 +136,8 @@
                                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                         </div>
                         <div class="p-4">
-                            <h3 class="text-lg font-bold text-text-black mb-1">{{ formatTitle( str::title($member->name) ) }}</h3>
-                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( str::title($member->designation ?? 'Team Member') ) }}</p>
+                            <h3 class="text-lg font-bold text-text-black mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
                             @if($member->email)
                             <a href="mailto:{{ $member->email }}"
                                class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
@@ -158,8 +158,8 @@
                                  alt="{{ $member->name }}"
                                  class="w-full h-full object-cover">
                         </div>
-                        <h3 class="text-base font-bold text-text-black mb-1">{{ formatTitle( str::title($member->name) ) }}</h3>
-                        <p class="text-accent-1 text-xs font-medium mb-2">{{formatTitle( str::title($member->designation ?? 'Team Member') ) }}</p>
+                        <h3 class="text-base font-bold text-text-black mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                        <p class="text-accent-1 text-xs font-medium mb-2">{{formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
                         @if($member->email)
                         <a href="mailto:{{ $member->email }}"
                            class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
@@ -176,8 +176,8 @@
                                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                         </div>
                         <div class="p-4">
-                            <h3 class="text-lg font-bold text-text-black mb-1">{{ formatTitle( str::title($member->name) ) }}</h3>
-                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( str::title($member->designation ?? 'Team Member') ) }}</p>
+                            <h3 class="text-lg font-bold text-text-black mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
                             @if($member->email)
                             <a href="mailto:{{ $member->email }}"
                                class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">

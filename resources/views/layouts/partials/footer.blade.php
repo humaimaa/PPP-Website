@@ -51,12 +51,12 @@
               KPEZDMC
             </a>
           </li>
-          <li>
+          {{-- <li>
             <a href="https://www.worldbank.org" target="_blank" class="hover:text-accent-1 transition-colors duration-300 block flex items-center text-text-secondary">
               <i class="fas fa-external-link-alt mr-2 text-xs text-accent-1"></i>
               World Bank
             </a>
-          </li>
+          </li> --}}
         </ul>
       </div>
 

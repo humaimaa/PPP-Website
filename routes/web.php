@@ -37,6 +37,9 @@ Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('t
 Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
 
+// Sector-specific route (must come before generic route)
+Route::get('/projects/sector/{sector}', [ProjectController::class, 'indexBySector'])->name('projects.sector');
+
 // Generic route with optional category and status parameters
 Route::get('/projects/{category?}/{status?}', [ProjectController::class, 'index'])
     ->name('projects.index')

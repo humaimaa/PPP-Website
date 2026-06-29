@@ -20,7 +20,6 @@
                 @endif
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-            
         </div>
     </div>
     <img src="{{ asset('images/resourse-center.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
@@ -161,11 +160,28 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+            <!-- ===== PAGINATION ===== -->
             @if($downloads->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200 bg-background-light/60">
-                {{ $downloads->appends(request()->query())->links() }}
-            </div>
+                @php
+                    // Determine the route name and parameters for the pagination partial
+                    $routeName = 'resource.center';
+                    $params = ['section' => $section];
+                    
+                    // Merge any additional query parameters (like search, sort)
+                    $queryParams = request()->except(['page', 'section']);
+                    $params = array_merge($params, $queryParams);
+                @endphp
+                
+                <div class="px-6 py-4 border-t border-gray-200 bg-background-light/60">
+                    @include('layouts.partials.pagination', [
+                        'currentPage' => $downloads->currentPage(),
+                        'lastPage' => $downloads->lastPage(),
+                        'total' => $downloads->total(),
+                        'perPage' => $downloads->perPage(),
+                        'routeName' => $routeName,
+                        'params' => $params
+                    ])
+                </div>
             @endif
         </div>
 

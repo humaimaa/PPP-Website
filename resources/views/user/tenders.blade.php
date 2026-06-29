@@ -41,6 +41,13 @@
 <section class="py-10 bg-background-light/90">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
+        {{-- Results Count --}}
+        @if($tenders->total() > 0)
+            <div class="text-sm text-text-muted mb-4">
+                Showing {{ $tenders->firstItem() }} - {{ $tenders->lastItem() }} of {{ $tenders->total() }} tenders
+            </div>
+        @endif
+
         {{-- Status banner --}}
         @if($status == 'active')
             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
@@ -149,7 +156,7 @@
 
                     {{-- # --}}
                     <div class="col-span-1 text-sm font-semibold text-text-muted pt-0.5">
-                        {{ $index + 1 }}
+                        {{ $tenders->firstItem() + $index }}
                     </div>
 
                     {{-- Tender Name + status badges + additional doc titles only --}}
@@ -296,6 +303,33 @@
             </div>
             @endforelse
         </div>
+
+        <!-- ===== PAGINATION ===== -->
+        @if($tenders->hasPages())
+            @php
+                // Determine the route name and parameters for the pagination partial
+                $routeName = 'tenders';
+                $params = [
+                    'section' => $section,
+                    'status' => $status
+                ];
+                
+                // Merge any additional query parameters
+                $queryParams = request()->except(['page', 'section', 'status']);
+                $params = array_merge($params, $queryParams);
+            @endphp
+            
+            <div class="mt-6">
+                @include('layouts.partials.pagination', [
+                    'currentPage' => $tenders->currentPage(),
+                    'lastPage' => $tenders->lastPage(),
+                    'total' => $tenders->total(),
+                    'perPage' => $tenders->perPage(),
+                    'routeName' => $routeName,
+                    'params' => $params
+                ])
+            </div>
+        @endif
 
     </div>
 </section>

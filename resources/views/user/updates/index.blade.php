@@ -35,17 +35,9 @@
                         </svg>
                     </div>
                 </form>
-                
-               
             </div>
         </div>
 
-        <!-- Results Count -->
-        @if($updates->total() > 0)
-            <p class="text-sm text-text-muted mb-4">
-                Showing {{ $updates->firstItem() }} - {{ $updates->lastItem() }} of {{ $updates->total() }} updates
-            </p>
-        @endif
 
         <div class="space-y-6">
             @forelse($updates as $news)
@@ -147,11 +139,16 @@
             @endforelse
         </div>
 
-        <!-- Pagination -->
+        <!-- ===== PAGINATION ===== -->
         @if($updates->hasPages())
-        <div class="mt-8 flex justify-center">
-            {{ $updates->appends(request()->query())->links() }}
-        </div>
+            @include('layouts.partials.pagination', [
+                'currentPage' => $updates->currentPage(),
+                'lastPage' => $updates->lastPage(),
+                'total' => $updates->total(),
+                'perPage' => $updates->perPage(),
+                'routeName' => 'media.room.updates',
+                'params' => request()->except('page') // Preserve all query parameters except page
+            ])
         @endif
     </div>
 </section>

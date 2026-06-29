@@ -10,7 +10,6 @@
         <div class="text-center px-4 pt-30">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Events & Photo Gallery</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
-         
         </div>
     </div>
     <img src="{{ asset('images/events.jpg') }}" alt="Gallery Banner" class="w-full h-full object-cover">
@@ -18,6 +17,13 @@
 
 <section class="py-10 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Results Count -->
+        @if($events->total() > 0)
+            <p class="text-sm text-text-muted mb-4">
+                Showing {{ $events->firstItem() }} - {{ $events->lastItem() }} of {{ $events->total() }} events
+            </p>
+        @endif
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($events as $event)
@@ -105,11 +111,16 @@
             @endforelse
         </div>
         
-        <!-- Pagination -->
+        <!-- ===== PAGINATION ===== -->
         @if($events->hasPages())
-        <div class="mt-8 flex justify-center">
-            {{ $events->links() }}
-        </div>
+            @include('layouts.partials.pagination', [
+                'currentPage' => $events->currentPage(),
+                'lastPage' => $events->lastPage(),
+                'total' => $events->total(),
+                'perPage' => $events->perPage(),
+                'routeName' => 'media.room.events',
+                'params' => request()->except('page') // Preserve all query parameters except page
+            ])
         @endif
     </div>
 </section>

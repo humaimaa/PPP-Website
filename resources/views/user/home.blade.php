@@ -158,9 +158,10 @@
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
-        <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4  gap-0 w-full">
+        <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             @foreach($sectors as $sector)
-            <div class="sector-card relative h-64 overflow-hidden group w-full">
+            <a href="{{ route('projects.sector', ['sector' => $sector->name]) }}" 
+               class="sector-card relative h-64 overflow-hidden group w-full block cursor-pointer no-underline">
                 <!-- Gradient overlay - changes on hover to lighter green -->
                 <div class="absolute inset-0 z-10 transition-all duration-500"
                     style="background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));"></div>
@@ -176,10 +177,10 @@
                         class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">
                         {{ $sector->name }}</h3>
                     <p
-                        class="text-text-secondary text-sm  mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">
+                        class="text-text-secondary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">
                         {{ $sector->tagline }}</p>
                 </div>
-            </div>
+            </a>
             @endforeach
         </div>
     </div>

@@ -23,23 +23,28 @@
         // If custom route name is provided
         $routeParams = [];
         
-        // Add status for projects
-        if ($status) {
-            $routeParams = ['status' => $status];
+        // Add status for projects (only if not 'all' and not null)
+        if ($status && $status !== 'all') {
+            $routeParams['status'] = $status;
         }
         // Add section for about page
         elseif ($section) {
-            $routeParams = ['section' => $section];
+            $routeParams['section'] = $section;
         }
         // Add tenderType for tenders
         elseif ($tenderType) {
-            $routeParams = ['section' => $tenderType];
+            $routeParams['section'] = $tenderType;
         }
         
-        // Merge any additional params
+        // Merge any additional params (like category, sector, etc.)
         $routeParams = array_merge($routeParams, $params);
         
-        $baseUrl = route($routeName, $routeParams);
+        try {
+            $baseUrl = route($routeName, $routeParams);
+        } catch (\Exception $e) {
+            // If route fails, use current URL as fallback
+            $baseUrl = url()->current();
+        }
     } else {
         // Fallback to current URL
         $baseUrl = url()->current();
@@ -47,8 +52,26 @@
     
     // Helper function to build pagination URL
     function buildPaginationUrl($baseUrl, $queryParams, $page) {
+        // Add page to query parameters
         $queryParams['page'] = $page;
-        return $baseUrl . '?' . http_build_query($queryParams);
+        
+        // Check if the base URL already has query parameters
+        if (parse_url($baseUrl, PHP_URL_QUERY)) {
+            // If it has query params, append with & instead of ?
+            $baseUrlWithoutQuery = strtok($baseUrl, '?');
+            $existingQuery = parse_url($baseUrl, PHP_URL_QUERY);
+            
+            // Parse existing query parameters
+            parse_str($existingQuery, $existingParams);
+            
+            // Merge with new query parameters
+            $allParams = array_merge($existingParams, $queryParams);
+            
+            return $baseUrlWithoutQuery . '?' . http_build_query($allParams);
+        } else {
+            // No existing query parameters, just add them
+            return $baseUrl . '?' . http_build_query($queryParams);
+        }
     }
 @endphp
 

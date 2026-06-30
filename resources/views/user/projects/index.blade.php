@@ -129,36 +129,32 @@
         </div>
         
                 <!-- ===== PAGINATION ===== -->
-        @if($projects->hasPages())
-            @php
-                // Determine the route name and parameters for the pagination partial
-                $routeName = 'projects.index';
-                $params = [];
-                
-                // If sector filter is active, use the sector route
-                if(isset($sectorFilter)) {
-                    $routeName = 'projects.sector';
-                    $params = ['sector' => $sectorFilter];
-                } else {
-                    // Add category and status to params
-                    if($category !== 'all') {
-                        $params['category'] = $category;
-                    }
-                    if($status !== 'all') {
-                        $params['status'] = $status;
-                    }
-                }
-            @endphp
-            
-            @include('layouts.partials.pagination', [
-                'currentPage' => $projects->currentPage(),
-                'lastPage' => $projects->lastPage(),
-                'total' => $projects->total(),
-                'perPage' => $projects->perPage(),
-                'routeName' => $routeName,
-                'params' => $params
-            ])
-        @endif
+       <!-- ===== PAGINATION ===== -->
+@if($projects->hasPages())
+    @php
+        $routeName = 'projects.index';
+        $params = [];
+        
+        // Always include category and status in the route parameters
+        // The route expects: projects/{category}/{status}
+        $params['category'] = $category ?? 'all';
+        $params['status'] = $status ?? 'all';
+        
+        // Add sector filter if it exists (as query parameter)
+        if(isset($sectorFilter) && $sectorFilter) {
+            $params['sector'] = $sectorFilter;
+        }
+    @endphp
+    
+    @include('layouts.partials.pagination', [
+        'currentPage' => $projects->currentPage(),
+        'lastPage' => $projects->lastPage(),
+        'total' => $projects->total(),
+        'perPage' => $projects->perPage(),
+        'routeName' => $routeName,
+        'params' => $params
+    ])
+@endif
         
         @else
         <!-- No Projects Found -->

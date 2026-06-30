@@ -46,7 +46,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="py-10 px-12 md:px-12 flex justify-center items-center w-full bg-background-gray/20">
             <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
-                <img src="{{ asset('images/about-us-img.jpg') }}" alt="PPP Unit KP Headquarters"
+                <img src="{{ asset('images/about-us-img.jpeg') }}" alt="PPP Unit KP Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
                     <div

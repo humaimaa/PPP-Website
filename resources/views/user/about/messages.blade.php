@@ -24,15 +24,15 @@
         @php
             // Define hierarchy order based on enum values (excluding Chief Minister)
             $hierarchyOrder = [
-                'Chief Secretary',
-                'Additional Chief Secretary Development',
+                'Chief Secretary / Chairman of PPP Unit',
+                'Additional Chief Secretary Development / Chairman of PDF Committee',
                 'Secretary P&D',
                 'Chief PPP'
             ];
             
             // Filter out Chief Minister and sort messages by hierarchy
             $filteredMessages = $messages->filter(function($message) {
-                return $message->designation !== 'Chief Minister';
+                return $message->designation !== 'Chief Minister / Chairman of PPP Committee';
             });
             
             // Sort messages by hierarchy

@@ -19,29 +19,29 @@
 
 <!-- Overview Section -->
 <section class="py-10 bg-background-light">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="flex flex-col lg:flex-row items-center gap-8">
             
             <div class="lg:w-1/2">
                 <div class="space-y-6 text-justify leading-relaxed">
                     
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-6">
+                    <h2 class="ext-2xl md:text-3xl font-bold text-text-green mb-4">
                         Overview
                     </h2>
 
-<p class="text-lg text-text-muted">
+<p class="text-md text-text-muted">
     The Public Private Partnership (PPP) Support Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
 </p>
 
-<p class="text-lg text-text-muted">
+<p class="text-md text-text-muted">
     The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes. It assists in identifying, evaluating, and developing viable PPP opportunities while promoting private sector participation in public infrastructure and service delivery.
 </p>
 
-<p class="text-lg text-text-muted">
+<p class="text-md text-text-muted">
     The PPP Support Unit ensures that projects are legally, technically, and financially feasible, comply with the PPP Act and procurement regulations, and safeguard the interests of the Government of Khyber Pakhtunkhwa.
 </p>
 
-<p class="text-lg text-text-muted">
+<p class="text-md text-text-muted">
     Through specialized expertise and capacity-building initiatives, the Unit supports the development of sustainable and bankable PPP projects that contribute to the province's economic growth and development objectives.
 </p>
                 </div>
@@ -59,19 +59,19 @@
 
 <!-- History Section -->
 <section class="py-10 bg-background-white">
-    <div class="container mx-auto px-8 sm:px-18 lg:px-32">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green">Our History</h2>
+    <div class="container mx-auto px-8 sm:px-18 lg:px-32 max-w-6xl">
+        <div class="text-center mb-4">
+            <h2 class="ext-2xl md:text-3xl font-bold text-text-green">Our History</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
         <div class="space-y-6 text-text-muted text-justify">
-            <p class="text-lg">
+            <p class="text-md ">
                 The PPP Unit was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private Partnership Act, which provided the legal framework for private sector participation in public infrastructure projects.
             </p>
-            <p class="text-lg">
+            <p class="text-md ">
                 Our first major project, the Swat Expressway-I, was launched in 2017 and set the standard for future PPP initiatives in the province. It was followed by Rashakai Economic zone in 2020; Swat Expressway-II in 2021 and Thandiani Tourism Project in 2026. Since then, we have successfully facilitated a number of projects across various sectors including but not limited to Tourism Sector, Industries sector, Agriculture, Livestock, education, Health and others which are in various stages of PPP project life cycle.
             </p>
-            <p class="text-lg">
+            <p class="text-md ">
                 In 2020, the PPP Act and rules made thereunder were revised to make PPP regime more robust, investment friendly, and to enhance its capacity for project development and implementation. Furhtermore, PPP Nodes are notified across 13 potential departments to conceive, develop and procure PPP projects.
             </p>
         </div>
@@ -81,10 +81,10 @@
 
 
 <!-- Core Values Section -->
-<section class="py-10 bg-background-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-3">Our Core Values</h2>
+<section class="pb-10 bg-background-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div class="text-center mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3">Our Core Values</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
             <p class="text-text-muted mt-4 max-w-2xl mx-auto">The principles that guide our work and partnerships</p>
         </div>

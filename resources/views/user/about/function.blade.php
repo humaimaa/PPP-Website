@@ -18,7 +18,7 @@
 
 <!-- Functions Section -->
 <section class="py-10 bg-background-light">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
        
 @php
     $functions = [
@@ -73,8 +73,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold text-text-green">{{ $function['title'] }}</h3>
-                    <p class="text-text-muted">{{ $function['desc'] }}</p>
+                    <h3 class="text-lg font-semibold text-text-green">{{ $function['title'] }}</h3>
+                    <p class="text-md text-text-muted">{{ $function['desc'] }}</p>
                 </div>
             </div>
             @endforeach

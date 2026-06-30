@@ -41,12 +41,12 @@
     </div>
 </section>
 
-<!-- About Section - Full width background with content constrained to max-w-6xl -->
+<!-- About Section - Full width background with content constrained -->
 <section class="bg-background-white" id="about-section">
     <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- Left Column - Image (full width background) -->
-        <div class="py-10 px-12 md:px-12 flex justify-center items-center w-full bg-background-gray/20">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div class="py-10 px-6 md:px-12 flex justify-center items-center w-full bg-background-gray/20">
+            <div class="w-full max-w-2xl mx-auto">
                 <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
                     <img src="{{ asset('images/about-us-img.jpeg') }}" alt="PPP Unit KP Headquarters"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -62,8 +62,8 @@
         </div>
 
         <!-- Right Column - Content (full width background) -->
-        <div class="order-first md:order-last py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div class="order-first md:order-last py-10 px-6 md:px-12 bg-background-primary/5 flex justify-center items-center">
+            <div class="w-full max-w-2xl mx-auto">
                 <div class="w-full about-content">
                     <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
                     <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
@@ -144,7 +144,7 @@
             <div class="lg:w-1/2">
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
-                    <p class="text-text-secondary text-justify leading-snug">
+                    <p class="text-text-secondary text-justify leading-normal">
                         {{ $leadershipMessage->message }}
                     </p>
                 </div>
@@ -203,7 +203,7 @@
                 Our Vision for Sustainable Development
             </h2>
             <p
-                class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
+                class="mt-6 text-md leading-normal text-text-primary md:text-xl md:leading-normal animate-on-scroll-text">
                 We are committed to fostering public-private partnerships that drive innovation, infrastructure
                 development, and economic growth across Khyber Pakhtunkhwa.
             </p>

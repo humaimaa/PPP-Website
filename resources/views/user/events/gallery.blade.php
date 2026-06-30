@@ -56,7 +56,7 @@
                     <span>{{ $event->gallery->count() }} {{ Str::plural('Photo', $event->gallery->count()) }}</span>
                 </div>
             </div>
-            <p class="text-gray-700 text-lg leading-relaxed">{{ $event->description }}</p>
+            <p class="text-gray-700 text-lg leading-normal">{{ $event->description }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->

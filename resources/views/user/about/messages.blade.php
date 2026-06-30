@@ -19,7 +19,7 @@
 
 <!-- Messages Section -->
 <section class="py-12 bg-background-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         
         @php
             // Define hierarchy order based on enum values (excluding Chief Minister)
@@ -45,7 +45,7 @@
         @forelse($sortedMessages as $message)
         <!-- Message Card -->
         <div class="mb-12 last:mb-0">
-            <div class="bg-background-light/20 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 {{ $loop->first ? 'border-l-4 border-accent-1' : '' }}">
+            <div class="bg-background-light/30 rounded-lg   overflow-hidden hover:shadow-xl transition-all duration-300 {{ $loop->first ? 'border-l-4 border-accent-1' : '' }}">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
                     <div class="md:w-1/3 lg:w-1/4">
@@ -68,7 +68,7 @@
                     </div>
                     
                     <!-- Content Section -->
-                    <div class="md:w-2/3 lg:w-3/4 p-6 md:p-8">
+                    <div class="md:w-2/3 lg:w-3/4 p-4 md:p-6">
                         <!-- Designation Badge -->
                         <div class="inline-block mb-3">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-primary text-text-primary">
@@ -77,18 +77,18 @@
                         </div>
                         
                         <!-- Name -->
-                        <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3">
+                        <h2 class="text-xl md:text-2xl font-bold text-text-green mb-3">
                             {{ formatTitle( Str::title($message->name) ) }}
                         </h2>
                         
                         <!-- Message with line break support -->
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal text-sm text-justify space-y-3 mb-6">
                             {!! nl2br(e($message->message)) !!}
                         </div>
                         
                         <!-- Quote Icon -->
                         <div class="flex justify-end">
-                            <svg class="w-12 h-12 text-accent-1/30" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-accent-1/30" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                             </svg>
                         </div>

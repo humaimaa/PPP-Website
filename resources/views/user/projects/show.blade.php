@@ -63,7 +63,7 @@
                     <!-- Project Overview -->
                     <div class="mb-6">
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Project Overview</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 text-justify">
+                        <div class="text-text-muted leading-normal space-y-3 text-justify">
                             {!! nl2br(e($project->overview)) !!}
                         </div>
                     </div>
@@ -72,22 +72,22 @@
                     @if($project->category === 'Pipeline' && $pipelineDetails)
                     <div class="mb-6">
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Project Scope</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($pipelineDetails->scope)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Cost & Financing Mix</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($pipelineDetails->cost_financing_mix)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Project Timeline</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($pipelineDetails->project_timeline)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Expected Financial Benefits to Government</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3">
+                        <div class="text-text-muted leading-normal space-y-3">
                             {!! nl2br(e($pipelineDetails->expected_financial_benefits_to_government)) !!}
                         </div>
                     </div>
@@ -97,22 +97,22 @@
                     @if($project->category === 'Ongoing' && $ongoingDetails)
                     <div class="mb-6">
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Implementing Modality</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($ongoingDetails->implementing_modality)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Government Contribution</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($ongoingDetails->government_contribution)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Government Return</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($ongoingDetails->government_return)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Private Party Return</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3">
+                        <div class="text-text-muted leading-normal space-y-3">
                             {!! nl2br(e($ongoingDetails->private_party_return)) !!}
                         </div>
                     </div>
@@ -122,22 +122,22 @@
                     @if($project->category === 'Completed' && $completedDetails)
                     <div class="mb-6">
                         <h2 class="text-lg md:text-xl   font-bold text-text-green mb-3">Project Scope</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($completedDetails->scope)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Cost & Financing Mix</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted leading-normal space-y-3 mb-6">
                             {!! nl2br(e($completedDetails->cost_financing_mix)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Project Timeline</h2>
-                        <div class="text-text-muted  leading-relaxed space-y-3 mb-6">
+                        <div class="text-text-muted  leading-normal space-y-3 mb-6">
                             {!! nl2br(e($completedDetails->project_timeline)) !!}
                         </div>
 
                         <h2 class="text-lg md:text-xl font-bold text-text-green mb-3">Financial Benefits to Government</h2>
-                        <div class="text-text-muted leading-relaxed space-y-3">
+                        <div class="text-text-muted leading-normal space-y-3">
                             {!! nl2br(e($completedDetails->expected_financial_benefits_to_government)) !!}
                         </div>
                     </div>

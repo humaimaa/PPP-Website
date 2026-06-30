@@ -7,7 +7,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3">
                 About PPP Unit
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
@@ -84,7 +84,7 @@
 <section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">Our Core Values</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-3">Our Core Values</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
             <p class="text-text-muted mt-4 max-w-2xl mx-auto">The principles that guide our work and partnerships</p>
         </div>
@@ -101,7 +101,7 @@
 
             @foreach($values as $value)
             <div class="text-center p-6 rounded-lg bg-background-light/30 hover:bg-background-light/50 transition-all duration-300 hover:transform hover:-translate-y-2 group">
-                <div class="w-16 h-16 bg-accent-1/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-accent-1/20 transition-all duration-300">
+                <div class="w-16 h-16 bg-accent-1/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-accent-1/20 transition-all duration-300">
                     <svg class="w-8 h-8 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $value['icon'] }}"></path>
                     </svg>

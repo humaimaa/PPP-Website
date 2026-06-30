@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{formatTitle(Str::title( $event->title ))}}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">{{formatTitle(Str::title( $event->title ))}}</h1>
             <div class="w-20 h-1 bg-white-500 mx-auto"></div>
 
         </div>
@@ -41,7 +41,7 @@
         
         <!-- Event Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{formatTitle( Str::title($event->title) )}}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">{{formatTitle( Str::title($event->title) )}}</h1>
             <div class="flex flex-wrap gap-4 text-gray-600 mb-6 pb-6 border-b border-gray-200">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt text-orange-500 mr-2"></i>
@@ -104,7 +104,7 @@
         </div>
         @else
         <div class="text-center py-12 bg-white rounded-lg">
-            <i class="fas fa-camera text-6xl text-gray-400 mb-4"></i>
+            <i class="fas fa-camera text-6xl text-gray-400 mb-3"></i>
             <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Photos Available</h3>
             <p class="text-gray-500">No photos have been added to this gallery yet.</p>
         </div>

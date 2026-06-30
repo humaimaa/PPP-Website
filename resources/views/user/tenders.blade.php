@@ -7,7 +7,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
                 @if($section == 'general-procurement') General Procurement
                 @elseif($section == 'transaction-advisory') Transaction Advisory
                 @else Private Partner Selection
@@ -43,7 +43,7 @@
 
         {{-- Results Count --}}
         @if($tenders->total() > 0)
-            <div class="text-sm text-text-muted mb-4">
+            <div class="text-sm text-text-muted mb-3">
                 Showing {{ $tenders->firstItem() }} - {{ $tenders->lastItem() }} of {{ $tenders->total() }} tenders
             </div>
         @endif
@@ -297,7 +297,7 @@
 
             @empty
             <div class="text-center py-16">
-                <i class="fas fa-inbox text-6xl text-gray-300 mb-4 block"></i>
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-3 block"></i>
                 <p class="text-text-muted text-lg">No {{ $status }} tenders available in this category.</p>
                 <p class="text-text-secondary mt-2 text-sm">Please check back later for new opportunities.</p>
             </div>
@@ -338,7 +338,7 @@
 <section class="py-10 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-green">Tender Submission Guidelines</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-3 text-text-green">Tender Submission Guidelines</h2>
             <div class="w-24 h-1.5 bg-accent-1 mx-auto mb-6"></div>
             <p class="text-lg text-text-muted max-w-3xl mx-auto">Essential information to ensure your tender submission meets all requirements</p>
         </div>
@@ -350,7 +350,7 @@
                 <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-file-signature"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-4 text-text-black">Submission Requirements</h3>
+                <h3 class="text-xl font-bold mb-3 text-text-black">Submission Requirements</h3>
                 <ul class="space-y-3 text-text-muted">
                     <li class="flex items-start">
                         <span class="text-primary mr-3 mt-0.5"><i class="fas fa-check-circle"></i></span>
@@ -373,7 +373,7 @@
                 <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-clock"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-4 text-text-black">Deadlines & Process</h3>
+                <h3 class="text-xl font-bold mb-3 text-text-black">Deadlines & Process</h3>
                 <div class="space-y-4">
                     <div class="flex items-start bg-background-light p-3 rounded-lg">
                         <div class="bg-primary text-white rounded-lg w-10 h-10 flex items-center justify-center mr-3 shrink-0">
@@ -411,7 +411,7 @@
                 <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6 text-2xl text-white group-hover:bg-primary-hover transition-colors duration-300">
                     <i class="fas fa-question-circle"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-4 text-text-black">Support & Assistance</h3>
+                <h3 class="text-xl font-bold mb-3 text-text-black">Support & Assistance</h3>
                 <div class="space-y-4">
                     <div class="p-4 bg-background-light rounded-lg border border-gray-200 hover:border-accent-1/50 transition-colors duration-200">
                         <h4 class="font-semibold mb-2 text-text-black flex items-center">

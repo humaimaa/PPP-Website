@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3">
                 Projects Statistics
             </h1>
             <div class="w-20 h-1 bg-white mx-auto "></div>
@@ -22,34 +22,34 @@
 <section class="w-full py-10 px-12 md:px-12 bg-gray-50" id="stats-section">
     <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4">Our Impact in Numbers</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-3">Our Impact in Numbers</h2>
             <div class="w-24 h-1 bg-yellow-500 mx-auto rounded"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <div
                 class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-yellow-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-yellow-600 mb-3"
+                <div class="stat-number text-3xl md:text-4xl lg:text-6xl font-bold text-yellow-600 mb-3"
                     data-count="{{ $pipelineCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Pipeline Projects</p>
             </div>
 
             <div
                 class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-green-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-green-600 mb-3"
+                <div class="stat-number text-3xl md:text-4xl lg:text-6xl font-bold text-green-600 mb-3"
                     data-count="{{ $ongoingCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Ongoing Projects</p>
             </div>
 
             <div
                 class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-blue-600 mb-3"
+                <div class="stat-number text-3xl md:text-4xl lg:text-6xl font-bold text-blue-600 mb-3"
                     data-count="{{ $completedCount ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Completed Projects</p>
             </div>
 
             <div
                 class="text-center p-5 md:p-8 rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-purple-500">
-                <div class="stat-number text-4xl md:text-5xl lg:text-6xl font-bold text-purple-600 mb-3"
+                <div class="stat-number text-3xl md:text-4xl lg:text-6xl font-bold text-purple-600 mb-3"
                     data-count="{{ $totalProjects ?? 0 }}">0</div>
                 <p class="text-gray-700 text-sm md:text-base font-medium">Total Projects</p>
             </div>
@@ -77,7 +77,7 @@
                 <div id="stats-panel"
                     class="bg-gradient-to-br from-[#0D2818] to-[#1a4a2a] shadow-lg rounded-lg p-6 transition-all duration-300 h-full">
                     <div id="default-view">
-                        <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
+                        <div class="flex justify-between items-center mb-3 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white">Projects Overview</h3>
                             <button id="reset-view"
                                 class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Show
@@ -117,14 +117,14 @@
                     </div>
 
                     <div id="division-view" class="hidden">
-                        <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
+                        <div class="flex justify-between items-center mb-3 border-b border-gray-600 pb-2">
                             <h3 class="text-xl font-bold text-white" id="division-title"></h3>
                             <button id="back-to-all"
                                 class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">Back
                                 to All</button>
                         </div>
 
-                        <div class="flex flex-row gap-2 text-center text-sm mb-4">
+                        <div class="flex flex-row gap-2 text-center text-sm mb-3">
                             <div class="bg-white/10 rounded-lg p-2 flex-1 min-w-0">
                                 <div class="font-bold text-green-400 text-lg" id="division-total-projects">0</div>
                                 <div class="text-xs text-gray-300">Total</div>
@@ -143,13 +143,13 @@
                             </div>
                         </div>
 
-                        <div id="merged-districts-section" class="hidden mb-4">
+                        <div id="merged-districts-section" class="hidden mb-3">
                             <h4 class="font-semibold mb-2 text-sm text-white">Merged Districts</h4>
-                            <div id="merged-districts-list" class="flex flex-wrap gap-2 mb-4"></div>
+                            <div id="merged-districts-list" class="flex flex-wrap gap-2 mb-3"></div>
                         </div>
 
                         <h4 class="font-semibold mb-2 text-sm text-white">Projects by Sector</h4>
-                        <div id="sector-chart" class="mb-4" style="height: 200px;"></div>
+                        <div id="sector-chart" class="mb-3" style="height: 200px;"></div>
 
                         <h4 class="font-semibold mb-2 text-sm text-white">Project Details</h4>
                         <div id="division-projects-list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
@@ -163,7 +163,7 @@
 <!-- Pitchbook Section -->
 <section class="py-10 bg-gray-50 w-full">
     <div class="w-full px-0">
-        <div class="text-center mb-4 overflow-hidden">
+        <div class="text-center mb-3 overflow-hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-green-800">Our Pitchbook</h2>
             <div class="w-20 h-1 bg-yellow-500 mx-auto mt-4"></div>
         </div>

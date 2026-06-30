@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Events & Photo Gallery</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Events & Photo Gallery</h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
         </div>
     </div>
@@ -20,7 +20,7 @@
         
         <!-- Results Count -->
         @if($events->total() > 0)
-            <p class="text-sm text-text-muted mb-4">
+            <p class="text-sm text-text-muted mb-3">
                 Showing {{ $events->firstItem() }} - {{ $events->lastItem() }} of {{ $events->total() }} events
             </p>
         @endif
@@ -104,7 +104,7 @@
             </div>
             @empty
             <div class="col-span-full text-center py-12">
-                <i class="fas fa-images text-6xl text-gray-400 mb-4"></i>
+                <i class="fas fa-images text-6xl text-gray-400 mb-3"></i>
                 <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Events Found</h3>
                 <p class="text-gray-500">No events or photo albums available at the moment. Please check back later.</p>
             </div>

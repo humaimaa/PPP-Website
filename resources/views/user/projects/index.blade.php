@@ -16,31 +16,40 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                @if(isset($sectorFilter))
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
+                @if(isset($sectorFilter) && $sectorData)
+                    {{ $sectorData->name }} Projects
+                @elseif(isset($sectorFilter))
                     {{ $sectorFilter }} Projects
-                @elseif($category  === 'pipeline' && $status === 'all')
+                @elseif($category === 'pipeline' && $status === 'all')
                     Pipeline Projects
-                @elseif($category  === 'ongoing' && $status === 'all')
+                @elseif($category === 'ongoing' && $status === 'all')
                     Ongoing Projects
-                @elseif($category  === 'construction-operational' && $status === 'all')
+                @elseif($category === 'construction-operational' && $status === 'all')
                     Construction & Operational Projects
-                @elseif($status  === 'private-partner' && $category  === 'ongoing')
+                @elseif($status === 'private-partner' && $category === 'ongoing')
                     Private Partner Selection Projects
-                @elseif($status  === 'transaction-advisory' && $category  === 'ongoing')
+                @elseif($status === 'transaction-advisory' && $category === 'ongoing')
                     Transaction Advisory Projects
-                @elseif($status  === 'construction' && $category  === 'construction-operational')
+                @elseif($status === 'construction' && $category === 'construction-operational')
                     Construction Projects
-                @elseif($status  === 'operational' && $category  === 'construction-operational')
+                @elseif($status === 'operational' && $category === 'construction-operational')
                     Operational Projects
                 @else
                     All Projects
                 @endif
             </h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
+            
+            <div class="w-20 h-1 bg-white mx-auto mt-4"></div>
         </div>
     </div>
-    <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+    @if(isset($sectorFilter) && $sectorData && $sectorData->img)
+        <!-- Use sector image from database -->
+        <img src="{{ asset('storage/' . $sectorData->img) }}" alt="{{ $sectorData->name }} Sector" class="w-full h-full object-cover">
+    @else
+        <!-- Default fallback image -->
+        <img src="{{ asset('images/project.jpg') }}" alt="Projects Banner" class="w-full h-full object-cover">
+    @endif
 </section>
 
 <!-- Projects Grid -->
@@ -128,7 +137,6 @@
             @endforeach
         </div>
         
-                <!-- ===== PAGINATION ===== -->
        <!-- ===== PAGINATION ===== -->
 @if($projects->hasPages())
     @php
@@ -159,7 +167,7 @@
         @else
         <!-- No Projects Found -->
         <div class="text-center py-16">
-            <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>

@@ -8,7 +8,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
                 @if($section == 'legal-framework')
                     Legal Framework
                 @elseif($section == 'pre-qualified-advisors')
@@ -149,7 +149,7 @@
                         <tr>
                             <td colspan="3" class="px-6 py-16 text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                                    <i class="fas fa-folder-open text-6xl text-gray-300 mb-3"></i>
                                     <p class="text-text-muted text-lg">No documents found in this category.</p>
                                     <p class="text-text-secondary text-sm mt-1">Please check back later for new resources.</p>
                                 </div>

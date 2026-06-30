@@ -11,14 +11,14 @@
         <img src="{{ asset('images/hero-fallback.jpg') }}" alt="Background" class="w-full h-full object-cover">
     </video>
 
-    <!-- Overlay that fades on scroll -->
-    <div class="absolute inset-0 bg-black/50 transition-opacity duration-500" id="heroOverlay"></div>
+    <!-- Overlay that fades on scroll - Using theme variable -->
+    <div class="absolute inset-0 transition-opacity duration-500" id="heroOverlay"></div>
 
     <!-- Center Text Content -->
     <div class="absolute inset-0 flex items-center justify-center z-10">
-        <div class="text-center px-4 max-w-4xl">
+        <div class="text-center px-4 max-w-3xl">
             <h1
-                class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mt-28 text-text-primary animate-text-fade-in-up">
+                class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mt-28 text-text-primary animate-text-fade-in-up">
                 Public Private Partnership Unit
             </h1>
             <p class="text-sm md:text-lg mb-8 text-text-secondary animate-text-fade-in-up animation-delay-200">
@@ -28,11 +28,11 @@
         </div>
     </div>
 
-    <!-- Scroll Down Arrow - Sidcup Style (White, Left Side) -->
-<div id="scroll-down-arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
+    <!-- Scroll Down Arrow - Using theme variables -->
+    <div id="scroll-down-arrow" class="absolute bottom-8 left-4 md:left-8 cursor-pointer z-30">
         <div
-            class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white group">
-            <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-white group-hover:text-[#0A612B] transition-all duration-300"
+            class="arrow-circle w-10 h-10 md:w-14 md:h-14 border-2 border-text-primary rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-text-primary group">
+            <svg class="arrow-icon w-5 h-5 md:w-7 md:h-7 text-text-primary group-hover:text-primary transition-all duration-300"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
                 </path>
@@ -48,10 +48,10 @@
             <div class="relative overflow-hidden shadow-lg w-full rounded-lg group">
                 <img src="{{ asset('images/about-us-img.jpeg') }}" alt="PPP Unit KP Headquarters"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-3 lg:p-6">
+                <div class="absolute inset-0 overlay-primary-dark flex items-end p-3 lg:p-6">
                     <div
                         class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-2 mr-20 md:p-4 md:mr-10 lg:mr-2 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1">
-                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PPP Unit Meeting</h3>
+                        <h3 class="text-md lg:text-lg font-semibold text-text-primary pr-2">PDF Committee Meeting</h3>
                         <p class="text-xs text-text-secondary lg:text-sm">Peshawar, Khyber Pakhtunkhwa</p>
                     </div>
                 </div>
@@ -61,65 +61,64 @@
         <div
             class="order-first md:order-last py-10 px-12 md:px-12 bg-background-primary/5 flex justify-center items-center">
             <div class="w-full about-content">
-                <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
-                <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
-                <<p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
+                <div class="w-24 h-2 bg-accent-1 mb-3 rounded"></div>
+                <h2 class="font-bold text-xl md:text-2xl lg:text-3xl mb-3 text-text-black">About PPP Unit KP</h2>
+                <p class="text-text-muted text-sm mb-3 leading-normal text-justify">
                     The Public Private Partnership (PPP) Unit, established under the Planning & Development Department,
                     Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating
                     PPP projects across the province.
-                    </p>
+                </p>
 
-                    <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
-                        The Unit provides technical, financial, legal, and institutional support to the PPP Committee,
-                        PPP Unit, and departmental PPP Nodes to ensure efficient planning, evaluation, and
-                        implementation of PPP initiatives.
-                    </p>
+                <p class="text-text-muted text-sm mb-3 leading-normal text-justify">
+                    The Unit provides technical, financial, legal, and institutional support to the PPP Committee,
+                    PPP Unit, and departmental PPP Nodes to ensure efficient planning, evaluation, and
+                    implementation of PPP initiatives.
+                </p>
 
-                    <ul class="space-y-3 text-text-muted mb-6">
+                <ul class="space-y-3 text-text-muted mb-6">
+                    <li class="flex items-start group">
+                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-sm">
+                            Promoting private sector participation in public infrastructure projects
+                        </span>
+                    </li>
 
-                        <li class="flex items-start group">
-                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="text-sm md:text-base">
-                                Promoting private sector participation in public infrastructure projects
-                            </span>
-                        </li>
+                    <li class="flex items-start group">
+                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-sm">
+                            Ensuring projects comply with the PPP Act and procurement regulations
+                        </span>
+                    </li>
 
-                        <li class="flex items-start group">
-                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="text-sm md:text-base">
-                                Ensuring projects comply with the PPP Act and procurement regulations
-                            </span>
-                        </li>
-
-                        <li class="flex items-start group">
-                            <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="text-sm md:text-base">
-                                Supporting sustainable and bankable PPP projects for provincial development
-                            </span>
-                        </li>
-
-                    </ul>
-
+                    <li class="flex items-start group">
+                        <svg class="h-5 w-5 text-accent-1 mr-2 mt-1 transform transition-transform group-hover:scale-110"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-sm">
+                            Supporting sustainable and bankable PPP projects for provincial development
+                        </span>
+                    </li>
+                </ul>
             </div>
+        </div>
+    </div>
 </section>
 
 <!-- Departmental Leadership Section - Dynamic from Database (Chief Minister) -->
 <section class="py-12 bg-linear-to-br from-primary to-primary-light text-text-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Message from Leadership</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-3">Message from Leadership</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 
@@ -140,7 +139,7 @@
             <div class="lg:w-1/2">
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
-                    <p class="text-text-secondary text-justify leading-relaxed">
+                    <p class="text-text-secondary text-sm text-justify">
                         {{ $leadershipMessage->message }}
                     </p>
                 </div>
@@ -162,12 +161,9 @@
             @foreach($sectors as $sector)
             <a href="{{ route('projects.sector', ['sector' => $sector->name]) }}" 
                class="sector-card relative h-64 overflow-hidden group w-full block cursor-pointer no-underline">
-                <!-- Gradient overlay - changes on hover to lighter green -->
-                <div class="absolute inset-0 z-10 transition-all duration-500"
-                    style="background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));"></div>
-                <div class="absolute inset-0 z-10 transition-all duration-500 opacity-0 group-hover:opacity-100"
-                    style="background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));">
-                </div>
+                <!-- Gradient overlays using theme utility classes -->
+                <div class="absolute inset-0 z-10 overlay-default transition-all duration-500"></div>
+                <div class="absolute inset-0 z-10 overlay-hover transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
 
                 <img src="{{ asset('storage/' . $sector->img) }}" alt="{{ $sector->name }} Sector"
                     class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110">
@@ -175,10 +171,12 @@
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-5">
                     <h3
                         class="text-xl lg:text-2xl font-bold text-text-primary transition-all duration-400 group-hover:-translate-y-2 group-hover:text-white">
-                        {{ $sector->name }}</h3>
+                        {{ $sector->name }}
+                    </h3>
                     <p
                         class="text-text-secondary text-sm mt-2 max-w-[80%] opacity-0 translate-y-5 transition-all duration-400 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-gray-200">
-                        {{ $sector->tagline }}</p>
+                        {{ $sector->tagline }}
+                    </p>
                 </div>
             </a>
             @endforeach
@@ -187,7 +185,7 @@
 </section>
 
 <!-- Vision Message Section -->
-<section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+<section class="relative h-[50vh] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0">
         <img src="{{ asset('images/msg-img.jpg') }}" alt="Background" class="w-full h-full object-cover">
     </div>
@@ -195,11 +193,11 @@
     <div class="relative z-10 px-4 mx-auto text-center md:px-6 lg:px-8 max-w-7xl">
         <div class="max-w-3xl mx-auto">
             <h2
-                class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
+                class="text-2xl font-bold leading-tight text-text-primary md:text-3xl md:leading-snug animate-on-scroll-title">
                 Our Vision for Sustainable Development
             </h2>
             <p
-                class="mt-6 text-md leading-relaxed text-text-primary md:text-xl md:leading-relaxed animate-on-scroll-text">
+                class="mt-4 text-md leading-relaxed text-text-primary md:leading-relaxed animate-on-scroll-text">
                 We are committed to fostering public-private partnerships that drive innovation, infrastructure
                 development, and economic growth across Khyber Pakhtunkhwa.
             </p>
@@ -221,11 +219,9 @@
                 class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div class="h-48 overflow-hidden bg-background-primary/10">
                     @if($news->img_path)
-                    <!-- Show the update's image if available -->
                     <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}"
                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                     @elseif($news->pdf_path)
-                    <!-- Fallback: PDF icon -->
                     <div class="w-full h-full flex items-center justify-center bg-background-primary/5">
                         <svg class="w-16 h-16 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -234,7 +230,6 @@
                         </svg>
                     </div>
                     @else
-                    <!-- Final fallback: gradient with type text -->
                     <div
                         class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                         <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
@@ -243,14 +238,14 @@
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-2">
-                        <span class="text-sm text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
+                        <span class="text-xs text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
                         <span class="mx-2 text-text-muted">|</span>
-                        <span class="text-sm text-text-muted">{{ Str::title($news->type) }}</span>
+                        <span class="text-xs text-text-muted">{{ Str::title($news->type) }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ Str::title($news->title) }}</h3>
-                    <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
+                    <h3 class="text-lg font-bold text-text-black mb-3 line-clamp-2">{{ formatTitle(Str::title($news->title)) }}</h3>
+                    <p class="text-text-muted mb-3 text-sm line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
                     <a href="{{ url('/media-room/updates/' . $news->id) }}"
-                        class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
+                        class="text-accent-1 text-sm font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
                         <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,10 +270,10 @@
 </section>
 
 <!-- Our Partners Section with Scrolling Logos -->
-<section class="py-12 bg-background-white overflow-hidden">
+<section class="py-10 bg-background-white overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-3">Our Trusted Partners</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto rounded-full"></div>
             <p class="text-text-muted mt-4 max-w-2xl mx-auto">Collaborating with leading organizations to drive
                 sustainable development in Khyber Pakhtunkhwa</p>
@@ -341,7 +336,6 @@
     </div>
 </section>
 @endsection
-
 
 @push('scripts')
 @vite([

@@ -7,7 +7,7 @@
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
     <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3">
                 Vision & Mission
             </h1>
             <div class="w-20 h-1 bg-white mx-auto"></div>
@@ -35,7 +35,7 @@
 
 
  <div>
-    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-3">
         Our Vision
     </h2>
     
@@ -45,11 +45,11 @@
 </div>
 
 <div>
-    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-text-green mb-3">
         Our Mission
     </h2>
 
-    <p class="text-lg text-text-muted mb-4 text-justify leading-relaxed">
+    <p class="text-lg text-text-muted mb-3 text-justify leading-relaxed">
         To facilitate, strengthen, and promote Public Private Partnerships by providing technical, financial, legal, and institutional support for the development of sustainable, bankable, and high-impact projects that improve public services and accelerate provincial development.
     </p>
 

@@ -13,7 +13,7 @@ if (!function_exists('formatTitle')) {
             return $text;
         }
         
-        $keywords = ['ppp ', 'kp' ,'kpha ',];
+        $keywords = ['ppp', 'kp' ,'kpha', 'ifm', 'arr', 'ii', 'di','itz'];
         $formattedText = $text;
         
         foreach ($keywords as $keyword) {

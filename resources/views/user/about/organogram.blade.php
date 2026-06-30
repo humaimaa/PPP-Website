@@ -25,7 +25,7 @@
                 <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" alt="PPP Unit Organogram" class="max-w-full h-auto rounded-lg shadow-md">
             </div>
             <div class="text-center mt-6">
-                <a href="{{ asset('images/organogram.jpg') }}" download="PPP-Department-Organogram.jpg" 
+                <a href="{{ asset('images/Line-Organizational-Structure-1.png') }}" download="PPP-Department-Organogram.jpg" 
                    class="inline-block px-6 py-3 bg-accent-1 text-text-primary font-medium rounded-md hover:bg-accent-2 transition duration-300">
                     Download Organogram
                 </a>

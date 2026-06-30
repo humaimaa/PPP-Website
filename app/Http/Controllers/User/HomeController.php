@@ -17,11 +17,11 @@ class HomeController extends Controller
         $sectors = Sector::all();
         
         // Get leadership messages - prioritize Chief Minister
-        $leadershipMessage = LeadershipMessage::where('designation', 'Chief Minister')->first();
+        $leadershipMessage = LeadershipMessage::where('designation', 'Chief Minister / Chairman of PPP Committee')->first();
         
         // If no Chief Minister message, try Chief Secretary
         if (!$leadershipMessage) {
-            $leadershipMessage = LeadershipMessage::where('designation', 'Chief Secretary')->first();
+            $leadershipMessage = LeadershipMessage::where('designation', 'Chief Secretary / Chairman of PPP Unit')->first();
         }
         
         // If still no message, get the first available

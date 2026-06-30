@@ -38,12 +38,15 @@ class LeadershipMessageController extends Controller
             'name'        => 'required|string|max:255',
             'designation' => ['required', 'string', Rule::in(LeadershipMessage::getDesignations())],
             'message'     => 'required|string',
-            'image'       => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:2048',
         ]);
 
         $data = $request->only(['name', 'designation', 'message']);
+        
+        // Handle image upload
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('leadership', 'public');
+            $imagePath = $request->file('image')->store('leadership', 'public');
+            $data['image'] = $imagePath;
         }
 
         LeadershipMessage::create($data);
@@ -72,15 +75,20 @@ class LeadershipMessageController extends Controller
             'name'        => 'required|string|max:255',
             'designation' => ['required', 'string', Rule::in(LeadershipMessage::getDesignations())],
             'message'     => 'required|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:2048',
         ]);
 
         $data = $request->only(['name', 'designation', 'message']);
+        
+        // Handle image upload
         if ($request->hasFile('image')) {
-            if ($message->image) {
+            // Delete old image if exists
+            if ($message->image && Storage::disk('public')->exists($message->image)) {
                 Storage::disk('public')->delete($message->image);
             }
-            $data['image'] = $request->file('image')->store('leadership', 'public');
+            
+            $imagePath = $request->file('image')->store('leadership', 'public');
+            $data['image'] = $imagePath;
         }
 
         $message->update($data);
@@ -92,9 +100,12 @@ class LeadershipMessageController extends Controller
     public function destroy($id)
     {
         $message = LeadershipMessage::findOrFail($id);
-        if ($message->image) {
+        
+        // Delete image if exists
+        if ($message->image && Storage::disk('public')->exists($message->image)) {
             Storage::disk('public')->delete($message->image);
         }
+        
         $message->delete();
 
         return redirect()->route('admin.leadership.index')
@@ -115,7 +126,8 @@ class LeadershipMessageController extends Controller
         foreach ($ids as $id) {
             $message = LeadershipMessage::find($id);
             if ($message) {
-                if ($message->image) {
+                // Delete image if exists
+                if ($message->image && Storage::disk('public')->exists($message->image)) {
                     Storage::disk('public')->delete($message->image);
                 }
                 $deletedNames[] = $message->name;

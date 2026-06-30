@@ -92,9 +92,9 @@
         >
             <option value="">Select Designation</option>
             <option value="Chief Minister" {{ old('designation', $message->designation) == 'Chief Minister / Chairman of PPP Committee' ? 'selected' : '' }}>Chief Minister / Chairman of PPP Committee</option>
-            <option value="Chief Secretary" {{ old('designation', $message->designation) == 'Chief Secretary / Chairman of PPP Unit' ? 'selected' : '' }}>Chief Secretary / Chairman of PPP Unit</option>
+            <option value="Chief Secretary" {{ old('designation', $message->designation) == 'Chief Secretary ' ? 'selected' : '' }}>Chief Secretary </option>
             <option value="Additional Chief Secretary Development" {{ old('designation', $message->designation) == 'Additional Chief Secretary Development / Chairman of PDF Committee' ? 'selected' : '' }}>Additional Chief Secretary Development / Chairman of PDF Committee</option>
-            <option value="Secretary P&D" {{ old('designation', $message->designation) == 'Secretary P&D' ? 'selected' : '' }}>Secretary P&D</option>
+            <option value="Secretary P&D" {{ old('designation', $message->designation) == 'Secretary P&D / Chairman of PPP Unit' ? 'selected' : '' }}>Secretary P&D / Chairman of PPP Unit</option>
             <option value="Chief PPP" {{ old('designation', $message->designation) == 'Chief PPP' ? 'selected' : '' }}>Chief PPP</option>
           
         </select>

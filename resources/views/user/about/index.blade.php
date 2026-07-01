@@ -3,53 +3,55 @@
 @section('title', 'PPP Unit KP - About Us')
 
 @section('content')
-
+<!-- Hero Banner Section -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+    <!-- Using theme variables for overlay -->
+    <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
                 About PPP Unit
             </h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
+            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
         </div>
     </div>
     <img src="{{ asset('images/about.jpg') }}" alt="About Us Banner" class="w-full h-full object-cover">
 </section>
 
-
 <!-- Overview Section -->
-<section class="py-10 bg-background-light">
+<section class="py-16 bg-background-light" id="overview-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="flex flex-col lg:flex-row items-center gap-8">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
             
             <div class="lg:w-1/2">
                 <div class="space-y-6 text-justify leading-relaxed">
-                    
-                    <h2 class="ext-2xl md:text-3xl font-bold text-text-green mb-4">
+                    <div class="w-24 h-1.5 bg-accent-1 mb-4 rounded"></div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-4">
                         Overview
                     </h2>
 
-<p class="text-md text-text-muted">
-    The Public Private Partnership (PPP) Support Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
-</p>
+                    <p class="text-text-muted text-sm md:text-md lg:text-base leading-relaxed">
+                        The Public Private Partnership (PPP) Support Unit, established under the Planning & Development Department, Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating PPP projects across the province.
+                    </p>
 
-<p class="text-md text-text-muted">
-    The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes. It assists in identifying, evaluating, and developing viable PPP opportunities while promoting private sector participation in public infrastructure and service delivery.
-</p>
+                    <p class="text-text-muted text-sm md:text-md lg:text-base leading-relaxed">
+                        The Unit provides technical, financial, legal, and institutional support to the PPP Committee, PPP Unit, and departmental PPP Nodes. It assists in identifying, evaluating, and developing viable PPP opportunities while promoting private sector participation in public infrastructure and service delivery.
+                    </p>
 
-<p class="text-md text-text-muted">
-    The PPP Support Unit ensures that projects are legally, technically, and financially feasible, comply with the PPP Act and procurement regulations, and safeguard the interests of the Government of Khyber Pakhtunkhwa.
-</p>
+                    <p class="text-text-muted text-sm md:text-md lg:text-base leading-relaxed">
+                        The PPP Support Unit ensures that projects are legally, technically, and financially feasible, comply with the PPP Act and procurement regulations, and safeguard the interests of the Government of Khyber Pakhtunkhwa.
+                    </p>
 
-<p class="text-md text-text-muted">
-    Through specialized expertise and capacity-building initiatives, the Unit supports the development of sustainable and bankable PPP projects that contribute to the province's economic growth and development objectives.
-</p>
+                    <p class="text-text-muted text-sm md:text-md lg:text-base leading-relaxed">
+                        Through specialized expertise and capacity-building initiatives, the Unit supports the development of sustainable and bankable PPP projects that contribute to the province's economic growth and development objectives.
+                    </p>
                 </div>
             </div>
 
             <div class="lg:w-1/2">
-                <div class="relative rounded-lg overflow-hidden shadow-lg h-75 md:h-100">
-                    <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Unit Overview" class="w-full h-full object-cover">
+                <div class="relative rounded-lg overflow-hidden shadow-lg group">
+                    <img src="{{ asset('images/project-2.jpg') }}" alt="PPP Unit Overview" 
+                        class="w-full h-75 md:h-100 object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
             </div>
 
@@ -58,38 +60,37 @@
 </section>
 
 <!-- History Section -->
-<section class="py-10 bg-background-white">
-    <div class="container mx-auto px-8 sm:px-18 lg:px-32 max-w-6xl">
-        <div class="text-center mb-4">
-            <h2 class="ext-2xl md:text-3xl font-bold text-text-green">Our History</h2>
-            <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
+<section class="py-16 bg-background-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Our History</h2>
+            <div class="w-20 h-1.5 bg-accent-1 mx-auto mt-4 rounded"></div>
         </div>
-        <div class="space-y-6 text-text-muted text-justify">
-            <p class="text-md ">
+        
+        <div class="space-y-5 text-text-muted text-justify max-w-4xl mx-auto">
+            <p class="text-sm md:text-md lg:text-base leading-relaxed">
                 The PPP Unit was established in 2014 following the enactment of the Khyber Pakhtunkhwa Public-Private Partnership Act, which provided the legal framework for private sector participation in public infrastructure projects.
             </p>
-            <p class="text-md ">
+            <p class="text-sm md:text-md lg:text-base leading-relaxed">
                 Our first major project, the Swat Expressway-I, was launched in 2017 and set the standard for future PPP initiatives in the province. It was followed by Rashakai Economic zone in 2020; Swat Expressway-II in 2021 and Thandiani Tourism Project in 2026. Since then, we have successfully facilitated a number of projects across various sectors including but not limited to Tourism Sector, Industries sector, Agriculture, Livestock, education, Health and others which are in various stages of PPP project life cycle.
             </p>
-            <p class="text-md ">
-                In 2020, the PPP Act and rules made thereunder were revised to make PPP regime more robust, investment friendly, and to enhance its capacity for project development and implementation. Furhtermore, PPP Nodes are notified across 13 potential departments to conceive, develop and procure PPP projects.
+            <p class="text-sm md:text-md lg:text-base leading-relaxed">
+                In 2020, the PPP Act and rules made thereunder were revised to make PPP regime more robust, investment friendly, and to enhance its capacity for project development and implementation. Furthermore, PPP Nodes are notified across 13 potential departments to conceive, develop and procure PPP projects.
             </p>
         </div>
     </div>
 </section>
 
-
-
 <!-- Core Values Section -->
-<section class="pb-10 bg-background-white">
+<section class="py-16 bg-background-light">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3">Our Core Values</h2>
-            <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto">The principles that guide our work and partnerships</p>
+        <div class="text-center mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Our Core Values</h2>
+            <div class="w-20 h-1.5 bg-accent-1 mx-auto mt-4 rounded"></div>
+            <p class="text-text-muted mt-4 max-w-2xl mx-auto text-sm md:text-md lg:text-base">The principles that guide our work and partnerships</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @php
                 $values = [
                     ['icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'title' => 'Transparency', 'desc' => 'Open and honest communication in all our dealings'],
@@ -100,19 +101,23 @@
             @endphp
 
             @foreach($values as $value)
-            <div class="text-center p-6 rounded-lg bg-background-light/30 hover:bg-background-light/50 transition-all duration-300 hover:transform hover:-translate-y-2 group">
-                <div class="w-16 h-16 bg-accent-1/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-accent-1/20 transition-all duration-300">
+            <div class="text-center p-6 rounded-lg bg-background-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div class="w-16 h-16 bg-accent-1/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-accent-1/20 transition-all duration-300 group-hover:scale-110">
                     <svg class="w-8 h-8 text-accent-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $value['icon'] }}"></path>
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-text-green mb-2">{{ $value['title'] }}</h3>
-                <p class="text-text-muted text-sm">{{ $value['desc'] }}</p>
+                <p class="text-text-muted text-sm md:text-md lg:text-base">{{ $value['desc'] }}</p>
             </div>
             @endforeach
         </div>
     </div>
 </section>
-
-
 @endsection
+
+@push('scripts')
+@vite([
+'resources/js/home-animate.js'
+])
+@endpush

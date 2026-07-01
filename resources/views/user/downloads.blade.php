@@ -4,11 +4,12 @@
 
 @section('content')
 
-<!-- Page Header -->
+<!-- Hero Banner Section -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+    <!-- Using theme variables for overlay -->
+    <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
                 @if($section == 'legal-framework')
                     Legal Framework
                 @elseif($section == 'pre-qualified-advisors')
@@ -19,21 +20,21 @@
                     Knowledge Hub
                 @endif
             </h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
+            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
         </div>
     </div>
     <img src="{{ asset('images/resourse-center.jpg') }}" alt="Resource Center Banner" class="w-full h-full object-cover">
 </section>
 
 <!-- Downloads Table Section -->
-<section class="py-12 bg-background-light/90">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-10 bg-background-light">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
 
         <!-- Header with Search and Sort -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
                 <p class="text-text-muted text-sm">
-                    Showing <span id="resultsCount">{{ $downloads->total() }}</span> documents
+                    Showing <span id="resultsCount" class="font-semibold text-accent-1">{{ $downloads->total() }}</span> documents
                 </p>
             </div>
 
@@ -43,13 +44,13 @@
                     <input type="text"
                            id="searchInput"
                            placeholder="Search documents..."
-                           class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 w-full md:w-64 bg-white text-text-black">
+                           class="pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:border-accent-1 focus:ring-2 focus:ring-accent-1/20 w-full md:w-64 bg-background-white text-text-black transition-all duration-300">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"></i>
                 </div>
 
                 <!-- Sort Dropdown -->
                 <div class="relative">
-                    <select id="sortSelect" class="pl-10 pr-8 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 appearance-none bg-white text-text-black cursor-pointer">
+                    <select id="sortSelect" class="pl-10 pr-8 py-2.5 rounded-lg border border-gray-300 focus:border-accent-1 focus:ring-2 focus:ring-accent-1/20 appearance-none bg-background-white text-text-black cursor-pointer transition-all duration-300">
                         <option value="date_desc">Latest First</option>
                         <option value="date_asc">Oldest First</option>
                         <option value="title_asc">Title (A-Z)</option>
@@ -62,7 +63,7 @@
         </div>
 
         <!-- Downloads Table -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+        <div class="bg-background-white rounded-xl shadow-md overflow-hidden border border-gray-200/30">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-primary text-white">
@@ -70,7 +71,7 @@
                             <th class="px-6 py-4 text-left font-semibold text-sm uppercase tracking-wider">
                                 <i class="fas fa-file-alt mr-2"></i> Document Title
                             </th>
-                            <th class="px-6 py-4 text-left font-semibold text-sm uppercase tracking-wider w-36">
+                            <th class="px-6 py-4 text-left font-semibold text-sm uppercase tracking-wider w-48">
                                 <i class="fas fa-calendar-alt mr-2"></i> Date
                             </th>
                             <th class="px-6 py-4 text-center font-semibold text-sm uppercase tracking-wider w-28">
@@ -82,9 +83,9 @@
                         @forelse($downloads as $index => $download)
                         @php
                             $extension = pathinfo($download->document_path, PATHINFO_EXTENSION);
-                            $rowBg = $index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                            $rowBg = $index % 2 === 0 ? 'bg-background-white' : 'bg-background-light/30';
                         @endphp
-                        <tr class="border-b border-gray-200 hover:bg-amber-50/40 transition-colors duration-150 download-row {{ $rowBg }}"
+                        <tr class="border-b border-gray-200/30 hover:bg-accent-1/5 transition-colors duration-200 download-row {{ $rowBg }}"
                             data-title="{{ strtolower($download->title) }}"
                             data-date="{{ $download->date ? $download->date->format('Y-m-d') : '' }}"
                             data-formatted-date="{{ $download->formatted_date }}">
@@ -114,7 +115,7 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <h3 class="font-semibold text-text-black">{{formatTitle( Str::title($download->title) ?? $download->title )}}</h3>
+                                        <h3 class="font-semibold text-text-green">{{ formatTitle( Str::title($download->title) ?? $download->title ) }}</h3>
                                         <span class="text-xs text-text-muted uppercase">{{ $extension }}</span>
                                     </div>
                                 </div>
@@ -122,24 +123,17 @@
 
                             <!-- Date -->
                             <td class="px-6 py-4 text-text-muted text-sm">
-                                <i class="far fa-calendar-alt mr-1 text-accent-1"></i>
+                                <i class="far fa-calendar-alt mr-1.5 text-accent-1"></i>
                                 {{ $download->formatted_date }}
                             </td>
 
                             <!-- Action -->
                             <td class="px-6 py-4 text-center">
                                 @if($download->document_url)
-                                    @if($extension == 'pdf')
-                                        <a href="{{ $download->document_url }}" target="_blank"
-                                           class="inline-flex items-center px-3 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white transition-all duration-300 text-sm font-medium">
-                                            <i class="fas fa-eye mr-1"></i> View
-                                        </a>
-                                    @else
-                                        <a href="{{ $download->document_url }}" download
-                                           class="inline-flex items-center px-3 py-2 bg-accent-1/10 text-accent-1 rounded-lg hover:bg-accent-1 hover:text-white transition-all duration-300 text-sm font-medium">
-                                            <i class="fas fa-download mr-1"></i> Download
-                                        </a>
-                                    @endif
+                                    <a href="{{ $download->document_url }}" download
+                                       class="inline-flex items-center px-4 py-2 bg-accent-1/10 text-accent-1 rounded-lg hover:bg-accent-1 hover:text-white transition-all duration-300 text-sm font-medium">
+                                        <i class="fas fa-download mr-1.5"></i> Download
+                                    </a>
                                 @else
                                     <span class="text-text-muted text-sm">File missing</span>
                                 @endif
@@ -147,10 +141,10 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-16 text-center">
+                            <td colspan="3" class="px-6 py-10 text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <i class="fas fa-folder-open text-6xl text-gray-300 mb-3"></i>
-                                    <p class="text-text-muted text-lg">No documents found in this category.</p>
+                                    <i class="fas fa-folder-open text-6xl text-text-muted mb-4"></i>
+                                    <p class="text-text-muted text-lg font-medium">No documents found in this category.</p>
                                     <p class="text-text-secondary text-sm mt-1">Please check back later for new resources.</p>
                                 </div>
                             </td>
@@ -172,7 +166,7 @@
                     $params = array_merge($params, $queryParams);
                 @endphp
                 
-                <div class="px-6 py-4 border-t border-gray-200 bg-background-light/60">
+                <div class="px-6 py-4 border-t border-gray-200/30 bg-background-light/40">
                     @include('layouts.partials.pagination', [
                         'currentPage' => $downloads->currentPage(),
                         'lastPage' => $downloads->lastPage(),

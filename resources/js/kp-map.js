@@ -15,8 +15,17 @@
     
     console.log('Divisions Data from DB:', divisionsData);
 
-    // Color scale for choropleth (green shades)
-    const colors = ['#2E7D32', '#1B5E20', '#0A612B', '#06451F', '#043015', '#03200E', '#021508', '#010A04'];
+    // Color scale for choropleth (using theme accent and primary colors)
+    const colors = [
+        '#B39339', // accent-1 (highest)
+        '#c4a747', // accent-2
+        '#8a7a2e', // darker gold
+        '#6a5d24', // even darker
+        '#4a401a', // dark
+        '#2a2510', // very dark
+        '#1a180a', // nearly black
+        '#0D2617'  // primary (lowest)
+    ];
 
     // Calculate totals for coloring
     const divisionProjectCounts = {};
@@ -99,7 +108,7 @@
     function showFallbackMessage() {
         const msgDiv = L.divIcon({
             className: 'fallback-msg',
-            html: '<div style="background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px;">Map data loading failed. Please check GeoJSON file.</div>',
+            html: '<div style="background: rgba(13, 38, 23, 0.9); color: white; padding: 10px; border-radius: 5px; border: 1px solid #B39339;">Map data loading failed. Please check GeoJSON file.</div>',
             iconSize: [200, 60]
         });
         L.marker([33.5, 71.5], { icon: msgDiv }).addTo(map);
@@ -155,7 +164,7 @@
                     };
                 } else if (divisionName === 'FATA') {
                     return {
-                        fillColor: '#9e9e9e',
+                        fillColor: '#6b7280',
                         weight: 2,
                         color: '#ffffff',
                         fillOpacity: 0.7,
@@ -180,11 +189,11 @@
                 
                 const division = divisionsData[dataKey];
                 
-                let tooltipContent = `<div style="font-size: 11px;"><strong>${displayName || 'Unknown'}</strong><br>`;
+                let tooltipContent = `<div style="font-size: 11px; color: white;"><strong>${displayName || 'Unknown'}</strong><br>`;
                 
                 if (division) {
                     tooltipContent += `Total Projects: ${division.total_projects || 0}<br>`;
-                    tooltipContent += `<span style="color: #F59E0B;">Pipeline: ${division.projects?.pipeline || 0}</span> | `;
+                    tooltipContent += `<span style="color: #B39339;">Pipeline: ${division.projects?.pipeline || 0}</span> | `;
                     tooltipContent += `<span style="color: #10B981;">Ongoing: ${division.projects?.ongoing || 0}</span> | `;
                     tooltipContent += `<span style="color: #3B82F6;">Completed: ${division.projects?.completed || 0}</span>`;
                 } else {
@@ -192,7 +201,11 @@
                 }
                 tooltipContent += `</div>`;
                 
-                layer.bindTooltip(tooltipContent, { sticky: true, className: 'custom-tooltip' });
+                layer.bindTooltip(tooltipContent, { 
+                    sticky: true, 
+                    className: 'custom-tooltip',
+                    direction: 'center'
+                });
                 
                 if (division) {
                     layer.on('click', function() {
@@ -209,7 +222,7 @@
                     layer.setStyle({
                         fillOpacity: 0.95,
                         weight: 3,
-                        color: '#f59e0b'
+                        color: '#B39339'
                     });
                     layer.bringToFront();
                 });
@@ -228,7 +241,7 @@
                         
                         const label = L.divIcon({
                             className: 'division-label',
-                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">${formattedLabel}</div>`,
+                            html: `<div style="background: rgba(13, 38, 23, 0.8); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px); border: 1px solid rgba(179, 147, 57, 0.3);">${formattedLabel}</div>`,
                             iconSize: [45, 20],
                             iconAnchor: [22, 10]
                         });
@@ -242,7 +255,7 @@
                         const center = bounds.getCenter();
                         const label = L.divIcon({
                             className: 'division-label',
-                            html: `<div style="background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px);">Merged<br>Districts</div>`,
+                            html: `<div style="background: rgba(13, 38, 23, 0.8); color: white; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 500; text-align: center; line-height: 1.3; white-space: normal; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); backdrop-filter: blur(2px); border: 1px solid rgba(179, 147, 57, 0.3);">Merged<br>Districts</div>`,
                             iconSize: [45, 20],
                             iconAnchor: [22, 10]
                         });
@@ -289,7 +302,7 @@
                     layer.setStyle({
                         fillOpacity: 0.95,
                         weight: 3,
-                        color: '#f59e0b'
+                        color: '#B39339'
                     });
                     layer.bringToFront();
                 }
@@ -298,10 +311,28 @@
     }
 
     const sectorColorPalette = [
-        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-        '#DDA0DD', '#98D8C8', '#F7B731', '#A569BD', '#5DADE2',
-        '#E74C3C', '#2ECC71', '#F39C12', '#1ABC9C', '#3498DB',
-        '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
+        '#B39339', // accent-1
+        '#c4a747', // accent-2
+        '#FF6B6B', 
+        '#4ECDC4', 
+        '#45B7D1', 
+        '#96CEB4', 
+        '#FFEAA7',
+        '#DDA0DD', 
+        '#98D8C8', 
+        '#F7B731', 
+        '#A569BD', 
+        '#5DADE2',
+        '#E74C3C', 
+        '#2ECC71', 
+        '#F39C12', 
+        '#1ABC9C', 
+        '#3498DB',
+        '#9B59B6', 
+        '#E67E22', 
+        '#16A085', 
+        '#27AE60', 
+        '#2980B9'
     ];
 
     function createSectorChart(division) {

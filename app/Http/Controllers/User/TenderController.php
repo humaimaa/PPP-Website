@@ -35,7 +35,7 @@ class TenderController extends Controller
         // Get status filter from request (default to 'active')
         $status = $request->get('status', 'active');
         
-        // Fetch tenders based on status
+        // Fetch tenders based on status with pagination
         $query = Tender::where('category', $category)
             ->orderBy('closing_date', 'desc')
             ->with('additionalDocs');
@@ -57,7 +57,8 @@ class TenderController extends Controller
             });
         }
         
-        $tenders = $query->get();
+        // Use paginate() instead of get() to get a Paginator instance
+        $tenders = $query->paginate(10); // 10 items per page
         
         return view('user.tenders', compact('section', 'tenders', 'status', 'category'));
     }

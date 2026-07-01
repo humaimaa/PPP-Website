@@ -95,19 +95,19 @@ class ProjectController extends Controller
                 'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
             ];
 
-            // Conditional validation for status and category-specific fields
+            // Conditional validation for status and category-specific fields (now nullable)
             if ($request->category === 'Ongoing') {
                 $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
-                $rules['implementing_modality'] = 'required|string';
-                $rules['government_contribution'] = 'required|string';
-                $rules['government_return'] = 'required|string';
-                $rules['private_party_return'] = 'required|string';
+                $rules['implementing_modality'] = 'nullable|string';
+                $rules['government_contribution'] = 'nullable|string';
+                $rules['government_return'] = 'nullable|string';
+                $rules['private_party_return'] = 'nullable|string';
             } elseif ($request->category === 'Construction & Operational') {
                 $rules['status'] = 'required|in:Operational,Construction';
-                $rules['scope'] = 'required|string';
-                $rules['cost_financing_mix'] = 'required|string';
-                $rules['project_timeline'] = 'required|string';
-                $rules['expected_financial_benefits_to_government'] = 'required|string';
+                $rules['scope'] = 'nullable|string';
+                $rules['cost_financing_mix'] = 'nullable|string';
+                $rules['project_timeline'] = 'nullable|string';
+                $rules['expected_financial_benefits_to_government'] = 'nullable|string';
             } else { // Pipeline
                 $rules['status'] = 'nullable';
             }
@@ -126,9 +126,8 @@ class ProjectController extends Controller
                 $validated['image'] = $imagePath;
             }
 
-            // ✅ FIX: Convert division array to comma-separated string for SET column
+            // Convert division array to comma-separated string for SET column
             if ($request->has('division') && is_array($request->division)) {
-                // Remove empty values and trim
                 $divisions = array_filter(array_map('trim', $request->division));
                 $validated['division'] = implode(',', $divisions);
             } else {
@@ -138,7 +137,7 @@ class ProjectController extends Controller
             // Create the project
             $project = Project::create($validated);
 
-            // Handle category-specific details
+            // Handle category-specific details (always create, but fields may be null)
             if ($request->category === 'Ongoing') {
                 OngoingProjectDetail::create([
                     'project_id' => $project->id,
@@ -222,19 +221,19 @@ class ProjectController extends Controller
             'category' => 'required|in:Pipeline,Ongoing,Construction & Operational',
         ];
 
-        // Conditional validation for status and category-specific fields
+        // Conditional validation for status and category-specific fields (now nullable)
         if ($request->category === 'Ongoing') {
             $rules['status'] = 'required|in:Private Partner Selection,Transaction Advisory';
-            $rules['implementing_modality'] = 'required|string';
-            $rules['government_contribution'] = 'required|string';
-            $rules['government_return'] = 'required|string';
-            $rules['private_party_return'] = 'required|string';
+            $rules['implementing_modality'] = 'nullable|string';
+            $rules['government_contribution'] = 'nullable|string';
+            $rules['government_return'] = 'nullable|string';
+            $rules['private_party_return'] = 'nullable|string';
         } elseif ($request->category === 'Construction & Operational') {
             $rules['status'] = 'required|in:Operational,Construction';
-            $rules['scope'] = 'required|string';
-            $rules['cost_financing_mix'] = 'required|string';
-            $rules['project_timeline'] = 'required|string';
-            $rules['expected_financial_benefits_to_government'] = 'required|string';
+            $rules['scope'] = 'nullable|string';
+            $rules['cost_financing_mix'] = 'nullable|string';
+            $rules['project_timeline'] = 'nullable|string';
+            $rules['expected_financial_benefits_to_government'] = 'nullable|string';
         } else { // Pipeline
             $rules['status'] = 'nullable';
         }
@@ -258,9 +257,8 @@ class ProjectController extends Controller
                 $validated['image'] = $imagePath;
             }
 
-            // ✅ FIX: Convert division array to comma-separated string for SET column
+            // Convert division array to comma-separated string for SET column
             if ($request->has('division') && is_array($request->division)) {
-                // Remove empty values and trim
                 $divisions = array_filter(array_map('trim', $request->division));
                 $validated['division'] = implode(',', $divisions);
             } else {
@@ -270,7 +268,7 @@ class ProjectController extends Controller
             // Update the project
             $project->update($validated);
             
-            // Handle category-specific details
+            // Handle category-specific details (update or create, fields may be null)
             if ($request->category === 'Ongoing') {
                 OngoingProjectDetail::updateOrCreate(
                     ['project_id' => $project->id],

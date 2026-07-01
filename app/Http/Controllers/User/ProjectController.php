@@ -127,8 +127,11 @@ class ProjectController extends Controller
             $query->where('sector', $sectorFilter);
         }
 
+        // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
         // Paginate results (9 per page)
-        $projects = $query->orderBy('created_at', 'desc')->paginate(9);
+        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                          ->orderBy('created_at', 'desc')   // secondary sort within each category
+                          ->paginate(9);
 
         // ---- Statistics (optional) ----
         $allProjects = Project::all();
@@ -165,8 +168,11 @@ class ProjectController extends Controller
         // Filter by sector
         $query->where('sector', $sector);
         
+        // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
         // Paginate results (9 per page)
-        $projects = $query->orderBy('created_at', 'desc')->paginate(9);
+        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(9);
         
         // Get statistics for this sector
         $allProjects = Project::all();

@@ -310,7 +310,7 @@
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="implementing_modality" class="block text-sm font-medium text-gray-700 mb-2">
-                            Implementing Modality <span class="text-red-500">*</span>
+                            Implementing Modality <span class="text-red-500"></span>
                         </label>
                         <textarea id="implementing_modality" name="implementing_modality" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -322,7 +322,7 @@
 
                     <div>
                         <label for="government_contribution" class="block text-sm font-medium text-gray-700 mb-2">
-                            Government Contribution <span class="text-red-500">*</span>
+                            Government Contribution <span class="text-red-500"></span>
                         </label>
                         <textarea id="government_contribution" name="government_contribution" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -334,7 +334,7 @@
 
                     <div>
                         <label for="government_return" class="block text-sm font-medium text-gray-700 mb-2">
-                            Government Return <span class="text-red-500">*</span>
+                            Government Return <span class="text-red-500"></span>
                         </label>
                         <textarea id="government_return" name="government_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -346,7 +346,7 @@
 
                     <div>
                         <label for="private_party_return" class="block text-sm font-medium text-gray-700 mb-2">
-                            Private Party Return <span class="text-red-500">*</span>
+                            Private Party Return <span class="text-red-500"></span>
                         </label>
                         <textarea id="private_party_return" name="private_party_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -368,7 +368,7 @@
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="scope" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Scope <span class="text-red-500">*</span>
+                            Project Scope <span class="text-red-500"></span>
                         </label>
                         <textarea id="scope" name="scope" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -380,7 +380,7 @@
 
                     <div>
                         <label for="cost_financing_mix" class="block text-sm font-medium text-gray-700 mb-2">
-                            Cost Financing Mix <span class="text-red-500">*</span>
+                            Cost Financing Mix <span class="text-red-500"></span>
                         </label>
                         <textarea id="cost_financing_mix" name="cost_financing_mix" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -392,7 +392,7 @@
 
                     <div>
                         <label for="project_timeline" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Timeline <span class="text-red-500">*</span>
+                            Project Timeline <span class="text-red-500"></span>
                         </label>
                         <textarea id="project_timeline" name="project_timeline" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -405,7 +405,7 @@
                     <div>
                         <label for="expected_financial_benefits_to_government"
                             class="block text-sm font-medium text-gray-700 mb-2">
-                            Financial Benefits to Government <span class="text-red-500">*</span>
+                            Financial Benefits to Government <span class="text-red-500"></span>
                         </label>
                         <textarea id="expected_financial_benefits_to_government"
                             name="expected_financial_benefits_to_government" rows="4"

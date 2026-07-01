@@ -4,21 +4,25 @@
 
 @section('content')
 
-<!-- Page Header -->
+<!-- Hero Banner Section -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+    <!-- Using theme variables for overlay -->
+    <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Updates</h1>
-            <div class="w-20 h-1 bg-white mx-auto"></div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
+                News & Updates
+            </h1>
+            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
         </div>
     </div>
     <img src="{{ asset('images/updates.jpg') }}" alt="News Banner" class="w-full h-full object-cover">
 </section>
 
-<section class="py-10 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<!-- News Section -->
+<section class="py-10 bg-background-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-primary mb-3 md:mb-0">Latest Updates</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-text-green mb-3 md:mb-0">Latest Updates</h2>
             
             <!-- Filter Section -->
             <div class="flex flex-col sm:flex-row gap-3">
@@ -29,8 +33,8 @@
                                name="search" 
                                placeholder="Search updates..." 
                                value="{{ request('search') }}"
-                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-64">
-                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-1 focus:border-transparent w-full sm:w-64 text-text-black">
+                        <svg class="w-5 h-5 text-text-muted absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
@@ -38,13 +42,11 @@
             </div>
         </div>
 
-
         <div class="space-y-6">
             @forelse($updates as $news)
             <!-- News Card -->
-            <div
-                class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row h-auto md:h-64 relative group">
-                <div class="md:w-1/3 h-48 md:h-full overflow-hidden relative bg-background-primary/10">
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row h-auto md:h-64 relative group border border-gray-200/30">
+                <div class="md:w-1/3 h-48 md:h-full overflow-hidden relative bg-primary/10">
                     @if($news->img_path)
                         <!-- Show the update's image if available -->
                         <img src="{{ asset('storage/' . $news->img_path) }}" alt="{{ $news->title }}"
@@ -55,7 +57,7 @@
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     @elseif($news->pdf_path)
                         <!-- PDF icon fallback -->
-                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
                             <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5.414 5.414c.391.391.586.903.586 1.414V7c0-2.21-1.79-4-4-4H7z"></path>
@@ -63,7 +65,7 @@
                         </div>
                     @else
                         <!-- Final fallback: gradient with type text -->
-                        <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
                             <div class="text-center">
                                 <svg class="w-12 h-12 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
@@ -97,12 +99,11 @@
                                     Featured
                                 </span>
                             @endif
-                           
                         </div>
-                        <h3 class="text-xl font-bold text-text-black mb-3 hover:text-accent-1 transition-colors duration-300">
-                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ formatTitle( Str::title($news->title) )}}</a>
+                        <h3 class="text-lg font-bold text-text-green mb-3 hover:text-accent-1 transition-colors duration-300">
+                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ formatTitle( Str::title($news->title) ) }}</a>
                         </h3>
-                        <p class="text-text-muted line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
+                        <p class="text-text-muted text-sm md:text-md lg:text-base line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
                     </div>
                     <div class="mt-auto pt-4 flex justify-between items-center">
                         <div>
@@ -112,7 +113,7 @@
                             </span>
                         </div>
                         <a href="{{ route('media.room.updates.show', $news->id) }}"
-                            class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
+                            class="text-accent-1 font-medium hover:text-primary-hover transition-colors duration-300 inline-flex items-center group">
                             Read More
                             <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -122,16 +123,17 @@
                 </div>
             </div>
             @empty
-            <div class="text-center py-12">
-                <svg class="w-24 h-24 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- No Updates Found -->
+            <div class="text-center py-10">
+                <svg class="w-24 h-24 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                     </path>
                 </svg>
-                <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Updates Found</h3>
-                <p class="text-gray-500">No updates available matching your criteria. Please try different filters.</p>
+                <h3 class="text-2xl font-bold text-text-green mb-2">No Updates Found</h3>
+                <p class="text-text-muted text-sm md:text-md lg:text-base">No updates available matching your criteria. Please try different filters.</p>
                 @if(request('type') || request('search'))
-                    <a href="{{ route('media.room.updates') }}" class="mt-4 inline-block px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200">
+                    <a href="{{ route('media.room.updates') }}" class="mt-4 inline-block px-6 py-2 bg-accent-1 text-white rounded-lg hover:bg-primary-hover transition-colors duration-300">
                         Clear Filters
                     </a>
                 @endif

@@ -4,13 +4,15 @@
 
 @section('content')
 
-<!-- Page Header -->
+<!-- Hero Banner Section -->
 <section class="relative h-[40vh] md:h-[50vh] overflow-hidden">
-    <div class="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
+    <!-- Using theme variables for overlay -->
+    <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">{{formatTitle(Str::title( $event->title ))}}</h1>
-            <div class="w-20 h-1 bg-white-500 mx-auto"></div>
-
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
+                {{ formatTitle(Str::title($event->title)) }}
+            </h1>
+            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
         </div>
     </div>
     @php
@@ -29,11 +31,12 @@
     <img src="{{ $bannerImage }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
 </section>
 
-<section class="py-10 bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Gallery Section -->
+<section class="py-16 bg-background-light">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="{{ route('media.room.events') }}" class="text-orange-600 hover:text-orange-700 inline-flex items-center transition-colors duration-300">
+            <a href="{{ route('media.room.events') }}" class="text-accent-1 hover:text-primary-hover inline-flex items-center transition-colors duration-300 font-medium">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Events
             </a>
@@ -41,22 +44,22 @@
         
         <!-- Event Info -->
         <div class="max-w-4xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">{{formatTitle( Str::title($event->title) )}}</h1>
-            <div class="flex flex-wrap gap-4 text-gray-600 mb-6 pb-6 border-b border-gray-200">
+            <h1 class="text-xl md:text-2xl lg:text-2xl font-bold text-text-green mb-3">{{ formatTitle( Str::title($event->title) ) }}</h1>
+            <div class="flex flex-wrap gap-4 text-text-muted mb-6 pb-6 border-b border-gray-200/30">
                 <div class="flex items-center">
-                    <i class="fas fa-calendar-alt text-orange-500 mr-2"></i>
+                    <i class="fas fa-calendar-alt text-accent-1 mr-2"></i>
                     <span>{{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
+                    <i class="fas fa-map-marker-alt text-accent-1 mr-2"></i>
                     <span>{{ $event->location ?? 'Location TBA' }}</span>
                 </div>
                 <div class="flex items-center">
-                    <i class="fas fa-images text-orange-500 mr-2"></i>
+                    <i class="fas fa-images text-accent-1 mr-2"></i>
                     <span>{{ $event->gallery->count() }} {{ Str::plural('Photo', $event->gallery->count()) }}</span>
                 </div>
             </div>
-            <p class="text-gray-700 text-lg leading-relaxed">{{ $event->description }}</p>
+            <p class="text-text-muted text-justify text-sm md:text-md lg:text-base leading-normal">{{ $event->description }}</p>
         </div>
         
         <!-- Photo Gallery Grid -->
@@ -77,14 +80,14 @@
                              alt="{{ $event->title }} - Photo {{ $loop->iteration }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                              loading="lazy">
-                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <div class="text-white text-center">
                                 <i class="fas fa-search-plus text-2xl mb-1"></i>
                                 <p class="text-xs">Click to view</p>
                             </div>
                         </div>
                         @if($galleryItem->is_thumbnail)
-                        <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs">
+                        <div class="absolute top-2 right-2 bg-accent-1 text-white px-2 py-1 rounded-md text-xs font-semibold">
                             <i class="fas fa-star mr-1"></i> Featured
                         </div>
                         @endif
@@ -97,16 +100,16 @@
         <!-- Download All Button -->
         <div class="text-center mt-12">
             <button id="downloadAllBtn" 
-                    class="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors duration-300 shadow-md">
+                    class="inline-flex items-center px-6 py-3 bg-accent-1 text-white rounded-lg font-semibold hover:bg-primary-hover transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
                 <i class="fas fa-download mr-2"></i>
                 Download All Photos (ZIP)
             </button>
         </div>
         @else
-        <div class="text-center py-12 bg-white rounded-lg">
-            <i class="fas fa-camera text-6xl text-gray-400 mb-3"></i>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Photos Available</h3>
-            <p class="text-gray-500">No photos have been added to this gallery yet.</p>
+        <div class="text-center py-16 bg-background-white rounded-lg border border-gray-200/30">
+            <i class="fas fa-camera text-6xl text-text-muted mb-4"></i>
+            <h3 class="text-2xl font-bold text-text-green mb-2">No Photos Available</h3>
+            <p class="text-text-muted">No photos have been added to this gallery yet.</p>
         </div>
         @endif
     </div>

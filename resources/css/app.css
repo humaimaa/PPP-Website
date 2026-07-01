@@ -12,49 +12,94 @@
 @source '../**/*.js';
 
 @theme {
+  /* ========== FONTS ========== */
   --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
 
-  /* Colors - Theme variables */
+  /* ========== PRIMARY COLORS ========== */
   --color-primary: #0D2617;
   --color-primary-dark: #07180e;
   --color-primary-light: #1a3a28;
   --color-primary-hover: #B39339;
 
+  /* ========== BACKGROUND COLORS ========== */
   --color-background-primary: #0D2617;
   --color-background-secondary: #1a3a28;
   --color-background-card: #0D2617;
   --color-background-white: #ffffff;
-  --color-background-gray: #888888; 
-  --color-background-light: #DEE2DF; 
+  --color-background-gray: #888888;
+  --color-background-light: #DEE2DF;
+  --color-background-dark: #0D2617;
 
+  /* ========== TEXT COLORS ========== */
   --color-text-primary: #ffffff;
   --color-text-black: #000000;
   --color-text-green: #0D2617;
   --color-text-secondary: #d1d5db;
   --color-text-muted: #6b7280;
+  --color-text-light: #f3f4f6;
 
+  /* ========== ACCENT COLORS ========== */
   --color-accent-1: #B39339;
   --color-accent-2: #c4a747;
   --color-accent-3: #0D2617;
 
-  /* RGB versions for rgba() usage */
+  /* ========== BORDER COLORS ========== */
+  --color-border-accent-1: #B39339;
+  --color-border-primary: #0D2617;
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-muted: rgba(255, 255, 255, 0.05);
+
+  /* ========== RGB VERSIONS (for rgba() usage) ========== */
   --color-primary-rgb: 13, 38, 23;
+  --color-primary-dark-rgb: 7, 24, 14;
   --color-primary-light-rgb: 26, 58, 40;
   --color-accent-1-rgb: 179, 147, 57;
+  --color-accent-2-rgb: 196, 167, 71;
+  --color-background-white-rgb: 255, 255, 255;
+  --color-background-light-rgb: 222, 226, 223;
 
-  /* Border Radius */
+  /* ========== BORDER RADIUS ========== */
+  --radius-none: 0;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-full: 9999px;
 
-  /* Box Shadow */
+  /* ========== BOX SHADOWS ========== */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.5);
   --shadow-glow: 0 0 20px rgba(179, 147, 57, 0.5);
+  --shadow-glow-lg: 0 0 40px rgba(179, 147, 57, 0.3);
+
+  /* ========== SPACING ========== */
+  --spacing: 0.25rem;
+
+  /* ========== TRANSITIONS ========== */
+  --transition-default: all 0.3s ease;
+  --transition-slow: all 0.5s ease;
+  --transition-fast: all 0.15s ease;
+
+  /* ========== Z-INDEX ========== */
+  --z-dropdown: 50;
+  --z-subdropdown: 60;
+  --z-mobile-menu: 100;
+  --z-modal: 200;
+  --z-tooltip: 300;
+  --z-toast: 400;
+
+  /* ========== CONTAINER ========== */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+  --container-3xl: 1920px;
 }
 
 @layer base {
@@ -75,15 +120,28 @@
     line-height: 1.6;
     overflow-x: hidden;
   }
-  
+
   /* Prevent body scroll when mobile menu is open */
   body.mobile-menu-open {
     overflow: hidden;
   }
+
+  /* Selection color */
+  ::selection {
+    background-color: var(--color-accent-1);
+    color: var(--color-text-primary);
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--color-accent-1);
+    outline-offset: 2px;
+  }
 }
 
-/* Custom utilities for animations */
+/* ========== CUSTOM UTILITIES & ANIMATIONS ========== */
 @layer utilities {
+  /* ===== 3D Rotation Animation ===== */
   @keyframes continuousRotation {
     0% { transform: rotateY(0deg); }
     100% { transform: rotateY(360deg); }
@@ -94,6 +152,7 @@
     transform-style: preserve-3d;
   }
 
+  /* ===== Fade In Animation ===== */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -108,7 +167,8 @@
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
   }
-  
+
+  /* ===== Slide In Animation ===== */
   @keyframes slideIn {
     from {
       opacity: 0;
@@ -119,12 +179,12 @@
       transform: translateX(0);
     }
   }
-  
+
   .animate-slide-in {
     animation: slideIn 0.2s ease-out;
   }
 
-  /* Text animation for hero */
+  /* ===== Text Fade In Up ===== */
   @keyframes textFadeInUp {
     from {
       opacity: 0;
@@ -143,8 +203,17 @@
   .animation-delay-200 {
     animation-delay: 0.2s;
   }
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+  .animation-delay-800 {
+    animation-delay: 0.8s;
+  }
 
-  /* Scroll-triggered animations */
+  /* ===== Scroll-Triggered Animations ===== */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -166,22 +235,74 @@
     animation: fadeInUp 0.8s ease-out 0.3s forwards;
   }
 
-  /* Overlay utility classes using theme variables */
+  /* ===== Scroll Down Arrow Animation ===== */
+  @keyframes bounceArrow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  #scroll-down-arrow .arrow-circle {
+    animation: bounceArrow 2s ease-in-out infinite;
+  }
+
+  /* ===== Loading Animations ===== */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.95); }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ===== Overlay Utilities ===== */
   .overlay-primary-dark {
-    background: linear-gradient(to top, rgba(var(--color-primary-rgb), 0.8), rgba(var(--color-primary-rgb), 0.4));
+    background: linear-gradient(
+      to top,
+      rgba(var(--color-primary-rgb), 0.8),
+      rgba(var(--color-primary-rgb), 0.4)
+    );
   }
 
   .overlay-primary-light {
-    background: linear-gradient(to top, rgba(var(--color-primary-light-rgb), 0.95), rgba(var(--color-accent-1-rgb), 0.3), rgba(var(--color-primary-rgb), 0.6));
+    background: linear-gradient(
+      to top,
+      rgba(var(--color-primary-light-rgb), 0.95),
+      rgba(var(--color-accent-1-rgb), 0.3),
+      rgba(var(--color-primary-rgb), 0.6)
+    );
   }
 
-  /* Sector card text shadow for better readability */
-  .sector-card h3,
-  .sector-card p {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  .overlay-gradient-gold {
+    background: linear-gradient(
+      to right,
+      rgba(var(--color-primary-rgb), 0.9),
+      rgba(var(--color-accent-1-rgb), 0.6)
+    );
   }
 
-  /* Line clamp utilities */
+  /* ===== Line Clamp Utilities ===== */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -196,18 +317,26 @@
     overflow: hidden;
   }
 
-  /* Scroll down arrow animation */
-  @keyframes bounceArrow {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  #scroll-down-arrow .arrow-circle {
-    animation: bounceArrow 2s ease-in-out infinite;
+  /* ===== Text Shadow ===== */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Sector card text shadow for better readability */
+  .sector-card h3,
+  .sector-card p {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -241,6 +370,7 @@
   transition: all 0.3s ease;
   background-color: var(--color-primary);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible !important; /* Important for sub-dropdowns */
 }
 
 /* Dropdown on scrolled state - Still solid green */
@@ -250,11 +380,12 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Dropdown item hover styles - text color change only */
+/* Dropdown item styles */
 .dropdown-item {
   position: relative;
   transition: all 0.3s ease;
   color: var(--color-text-primary);
+  background: transparent !important;
 }
 
 /* On hover: change text color to gold, add slight right movement, NO background change */
@@ -293,11 +424,6 @@
   position: relative;
 }
 
-/* IMPORTANT: The parent dropdown-menu / Projects panel must NOT use
-   overflow:hidden, since .sub-dropdown-menu is absolutely positioned
-   with left:100% (left-full) and escapes the parent's box to flyout
-   to the right. overflow:hidden on the parent clips it invisible. */
-
 /* Sub-dropdown menu - hidden by default */
 .sub-dropdown-menu {
   opacity: 0;
@@ -307,7 +433,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
-  z-index: 9999;
+  z-index: var(--z-subdropdown);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
@@ -327,15 +453,24 @@
   transition: transform 0.3s ease;
 }
 
-/* Ensure main dropdown items don't have background on hover */
-.dropdown-item {
+/* Sub-dropdown item hover */
+.sub-dropdown-item {
+  transition: all 0.3s ease;
+  color: var(--color-text-primary);
   background: transparent !important;
+}
+
+.sub-dropdown-item:hover {
+  color: var(--color-accent-1) !important;
+  transform: translateX(5px);
+  background-color: transparent !important;
 }
 
 /* ========== MOBILE MENU STYLES ========== */
 
 .mobile-menu {
   background-color: var(--color-primary);
+  z-index: var(--z-mobile-menu);
 }
 
 .navbar-scrolled .mobile-menu {
@@ -396,30 +531,6 @@ footer a:hover {
   color: var(--color-accent-1) !important;
 }
 
-footer .border-accent-1 {
-  border-color: var(--color-accent-1);
-}
-
-footer .bg-accent-1 {
-  background-color: var(--color-accent-1);
-}
-
-footer .hover\:bg-accent-1:hover {
-  background-color: var(--color-accent-1);
-}
-
-footer .hover\:scale-110:hover {
-  transform: scale(1.1);
-}
-
-footer .text-accent-1 {
-  color: var(--color-accent-1);
-}
-
-footer .text-accent-2 {
-  color: var(--color-accent-2);
-}
-
 /* Social icons container */
 footer .flex.space-x-4 a {
   transition: all 0.3s ease;
@@ -466,11 +577,20 @@ footer .flex.space-x-4 a:hover i {
 
 /* Use theme-based gradients instead of hardcoded ones */
 .sector-card .overlay-default {
-  background: linear-gradient(to top, rgba(var(--color-primary-rgb), 0.8), rgba(var(--color-primary-rgb), 0.4));
+  background: linear-gradient(
+    to top,
+    rgba(var(--color-primary-rgb), 0.8),
+    rgba(var(--color-primary-rgb), 0.4)
+  );
 }
 
 .sector-card .overlay-hover {
-  background: linear-gradient(to top, rgba(var(--color-primary-light-rgb), 0.95), rgba(var(--color-accent-1-rgb), 0.3), rgba(var(--color-primary-rgb), 0.6));
+  background: linear-gradient(
+    to top,
+    rgba(var(--color-primary-light-rgb), 0.95),
+    rgba(var(--color-accent-1-rgb), 0.3),
+    rgba(var(--color-primary-rgb), 0.6)
+  );
   opacity: 0;
   transition: opacity 0.5s ease;
 }
@@ -515,30 +635,36 @@ footer .flex.space-x-4 a:hover i {
   background: rgba(var(--color-accent-1-rgb), 0.8);
 }
 
-/* ========== LOADING ANIMATIONS ========== */
+/* ========== RESPONSIVE UTILITIES ========== */
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* Container padding utilities */
+.container-padding {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+@media (min-width: 640px) {
+  .container-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+@media (min-width: 1024px) {
+  .container-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
-.animate-bounce {
-  animation: bounce 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(0.95); }
-}
-
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
+/* ========== PRINT STYLES ========== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
 }

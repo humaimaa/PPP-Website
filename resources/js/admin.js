@@ -52,9 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.opacity = open ? '1' : '0';
         });
 
-        // Tooltips — show only when sidebar is closed
+        // Tooltips — show only when sidebar is closed (FIXED)
+        // The hidden class should be ADDED when open is true (sidebar expanded)
+        // and REMOVED when open is false (sidebar collapsed)
         sidebar?.querySelectorAll('[data-dropdown] button > span:last-child, .nav-item > span:last-child').forEach(el => {
-            el.classList.toggle('hidden', open);
+            if (open) {
+                el.classList.add('hidden');
+            } else {
+                el.classList.remove('hidden');
+            }
         });
 
         // Close all dropdowns when collapsing sidebar

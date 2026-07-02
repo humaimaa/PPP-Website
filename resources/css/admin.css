@@ -37,6 +37,7 @@
   scrollbar-width: thin;
   scrollbar-color: #34d399 #064e3b;
   transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  overflow-x: visible !important; /* Allow tooltips to overflow */
 }
 
 /* ============================================
@@ -106,6 +107,53 @@ body.sidebar-open .stats-grid {
 @keyframes dropdownFadeIn {
   from { opacity: 0; transform: scale(0.96) translateY(-4px); }
   to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ============================================
+   TOOLTIP STYLES - COMPLETE FIX
+   ============================================ */
+
+/* Base tooltip styles */
+.tooltip-text {
+    pointer-events: none;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.75rem;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Show tooltip on hover of parent group */
+.group:hover .tooltip-text {
+    opacity: 1 !important;
+}
+
+/* Ensure tooltips are visible when sidebar is collapsed */
+#sidebar:not(.sidebar-open) .tooltip-text {
+    opacity: 0;
+}
+
+#sidebar:not(.sidebar-open) .group:hover .tooltip-text {
+    opacity: 1 !important;
+}
+
+/* When sidebar is open, hide tooltips */
+#sidebar.sidebar-open .tooltip-text {
+    display: none !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .tooltip-text {
+        display: none !important;
+    }
 }
 
 /* ============================================

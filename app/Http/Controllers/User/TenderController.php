@@ -38,7 +38,7 @@ class TenderController extends Controller
         // Fetch tenders based on status with pagination
         $query = Tender::where('category', $category)
             ->orderBy('closing_date', 'desc')
-            ->with('additionalDocs');
+            ->with('additionalDocs'); // Eager load additional docs
         
         if ($status === 'active') {
             // Active: effective closing date is today or in future
@@ -57,8 +57,8 @@ class TenderController extends Controller
             });
         }
         
-        // Use paginate() instead of get() to get a Paginator instance
-        $tenders = $query->paginate(10); // 10 items per page
+        // Use paginate() to get a Paginator instance
+        $tenders = $query->paginate(10);
         
         return view('user.tenders', compact('section', 'tenders', 'status', 'category'));
     }

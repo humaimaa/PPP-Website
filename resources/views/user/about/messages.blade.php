@@ -24,9 +24,9 @@
         @php
             // Define hierarchy order based on enum values (excluding Chief Minister)
             $hierarchyOrder = [
-                'Chief Secretary / Chairman of PPP Unit',
+                'Chief Secretary',
                 'Additional Chief Secretary Development / Chairman of PDF Committee',
-                'Secretary P&D',
+                'Secretary P&D / Chairman of PPP Unit',
                 'Chief PPP'
             ];
             

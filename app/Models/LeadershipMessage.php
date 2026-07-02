@@ -16,18 +16,20 @@ class LeadershipMessage extends Model
         'image',
     ];
     
-    // Define the enum values as a constant
-    const DESIGNATIONS = [
-        'Chief Minister',
-        'Chief Secretary',
-        'Additional Chief Secretary Development',
-        'Secretary P&D',
-        'Chief PPP'
-    ];
-    
     // Cast designation to ensure it's always a string
     protected $casts = [
         'designation' => 'string',
+    ];
+    
+    /**
+     * List of all valid designations
+     */
+    const DESIGNATIONS = [
+        'Chief Minister / Chairman of PPP Committee',
+        'Chief Secretary',
+        'Additional Chief Secretary Development / Chairman of PDF Committee',
+        'Secretary P&D / Chairman of PPP Unit',
+        'Chief PPP'
     ];
     
     /**

@@ -141,7 +141,7 @@
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('resource.center', 'pre-qualified-advisors') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Pre-qualified Transaction Advisory</a>
                         <div class="h-px bg-white/10 mx-4"></div>
-                        <a href="{{ route('resource.center', 'policies-regulations') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Policies, Regulators & Guidelines</a>
+                        <a href="{{ route('resource.center', 'policies-regulations') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Policies, Regulations & Guidelines</a>
                         <div class="h-px bg-white/10 mx-4"></div>
                         <a href="{{ route('resource.center', 'knowledge-hub') }}" class="dropdown-item block px-4 py-3 text-text-primary hover:text-accent-1 transition-all duration-300">Knowledge Hub</a>
                     </div>
@@ -321,7 +321,7 @@
                             class="mt-2 space-y-1 pl-6">
                             <li><a href="{{ route('resource.center', 'legal-framework') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Legal Framework</a></li>
                             <li><a href="{{ route('resource.center', 'pre-qualified-advisors') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Pre-qualified Transaction Advisory</a></li>
-                            <li><a href="{{ route('resource.center', 'policies-regulations') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Policies & Guidelines</a></li>
+                            <li><a href="{{ route('resource.center', 'policies-regulations') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Policies, Regulations & Guidelines</a></li>
                             <li><a href="{{ route('resource.center', 'knowledge-hub') }}" class="block text-base md:text-lg px-6 py-2 text-text-secondary hover:text-accent-1 rounded-lg transition duration-300">Knowledge Hub</a></li>
                         </ul>
                     </li>

@@ -331,10 +331,11 @@
                     <i class="fas fa-chart-line mr-2 text-emerald-600"></i>
                     Ongoing Project Details
                 </h4>
+                <p class="text-sm text-text-muted mb-4">These fields are optional. You can leave them empty.</p>
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="implementing_modality" class="block text-sm font-medium text-gray-700 mb-2">
-                            Implementing Modality <span class="text-red-500">*</span>
+                            Implementing Modality
                         </label>
                         <textarea id="implementing_modality" name="implementing_modality" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -346,7 +347,7 @@
 
                     <div>
                         <label for="government_contribution" class="block text-sm font-medium text-gray-700 mb-2">
-                            Government Contribution <span class="text-red-500">*</span>
+                            Government Contribution
                         </label>
                         <textarea id="government_contribution" name="government_contribution" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -358,7 +359,7 @@
 
                     <div>
                         <label for="government_return" class="block text-sm font-medium text-gray-700 mb-2">
-                            Government Return <span class="text-red-500">*</span>
+                            Government Return
                         </label>
                         <textarea id="government_return" name="government_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -370,7 +371,7 @@
 
                     <div>
                         <label for="private_party_return" class="block text-sm font-medium text-gray-700 mb-2">
-                            Private Party Return <span class="text-red-500">*</span>
+                            Private Party Return
                         </label>
                         <textarea id="private_party_return" name="private_party_return" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -389,10 +390,11 @@
                     <i class="fas fa-hard-hat mr-2 text-emerald-600"></i>
                     Construction & Operational Project Details
                 </h4>
+                <p class="text-sm text-text-muted mb-4">These fields are optional. You can leave them empty.</p>
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="scope" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Scope <span class="text-red-500">*</span>
+                            Project Scope
                         </label>
                         <textarea id="scope" name="scope" rows="4"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -404,7 +406,7 @@
 
                     <div>
                         <label for="cost_financing_mix" class="block text-sm font-medium text-gray-700 mb-2">
-                            Cost Financing Mix <span class="text-red-500">*</span>
+                            Cost Financing Mix
                         </label>
                         <textarea id="cost_financing_mix" name="cost_financing_mix" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -416,7 +418,7 @@
 
                     <div>
                         <label for="project_timeline" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project Timeline <span class="text-red-500">*</span>
+                            Project Timeline
                         </label>
                         <textarea id="project_timeline" name="project_timeline" rows="3"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -429,7 +431,7 @@
                     <div>
                         <label for="expected_financial_benefits_to_government"
                             class="block text-sm font-medium text-gray-700 mb-2">
-                            Financial Benefits to Government <span class="text-red-500">*</span>
+                            Financial Benefits to Government
                         </label>
                         <textarea id="expected_financial_benefits_to_government"
                             name="expected_financial_benefits_to_government" rows="4"
@@ -503,25 +505,8 @@
                 preview.classList.add('border-solid', 'border-emerald-500');
             }
             reader.readAsDataURL(file);
-        } else {
-            // If no file selected, show existing image or placeholder
-            @if($project->image && Storage::disk('public')->exists($project->image))
-            preview.innerHTML = `
-                <img src="{{ Storage::url($project->image) }}" class="w-full h-full object-cover rounded-lg">
-            `;
-            preview.classList.remove('border-dashed');
-            preview.classList.add('border-solid', 'border-emerald-500');
-            @else
-            preview.innerHTML = `
-                <div class="text-center">
-                    <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                    <p class="text-sm text-gray-500">No image selected</p>
-                </div>
-            `;
-            preview.classList.remove('border-solid', 'border-emerald-500');
-            preview.classList.add('border-dashed');
-            @endif
         }
+        // If no file selected, keep the existing image
     }
 
     function toggleProjectDetails() {
@@ -537,9 +522,6 @@
         if (pipelineSection) pipelineSection.style.display = 'none';
         if (ongoingSection) ongoingSection.style.display = 'none';
         if (completedSection) completedSection.style.display = 'none';
-
-        // Remove required attributes from all conditional fields first
-        removeRequiredAttributes();
 
         // Clear and hide status by default
         statusWrapper.style.display = 'none';
@@ -564,7 +546,7 @@
                 if (currentStatus === opt) option.selected = true;
                 statusSelect.appendChild(option);
             });
-            addRequiredAttributes(['implementing_modality', 'government_contribution', 'government_return', 'private_party_return']);
+            // DO NOT add required attributes to optional fields
 
         } else if (category === 'Construction & Operational') {
             if (completedSection) completedSection.style.display = 'block';
@@ -580,34 +562,8 @@
                 if (currentStatus === opt) option.selected = true;
                 statusSelect.appendChild(option);
             });
-            addRequiredAttributes(['scope', 'cost_financing_mix', 'project_timeline', 'expected_financial_benefits_to_government']);
+            // DO NOT add required attributes to optional fields
         }
-    }
-
-    function removeRequiredAttributes() {
-        const allConditionalFields = [
-            'implementing_modality', 'government_contribution', 'government_return',
-            'private_party_return', 'scope', 'cost_financing_mix',
-            'project_timeline', 'expected_financial_benefits_to_government'
-        ];
-
-        allConditionalFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.removeAttribute('required');
-                field.disabled = false;
-            }
-        });
-    }
-
-    function addRequiredAttributes(fieldIds) {
-        fieldIds.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.setAttribute('required', 'required');
-                field.disabled = false;
-            }
-        });
     }
 
     // Initialize on page load

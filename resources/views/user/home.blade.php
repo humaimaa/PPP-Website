@@ -66,8 +66,8 @@
             <div class="w-full max-w-2xl mx-auto">
                 <div class="w-full about-content">
                     <div class="w-24 h-2 bg-accent-1 mb-4 rounded"></div>
-                    <h2 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-text-black">About PPP Unit KP</h2>
-                    <p class="text-text-muted text-sm md:text-base mb-4 leading-normal text-justify">
+                    <h2 class="font-bold text-2xl md:text-3xl  mb-4 text-text-black">About PPP Unit KP</h2>
+                    <p class="text-text-muted text-sm md:text-md lg:text-base mb-4 leading-normal text-justify">
                         The Public Private Partnership (PPP) Unit, established under the Planning & Development Department,
                         Government of Khyber Pakhtunkhwa, serves as a specialized mechanism for promoting and facilitating
                         PPP projects across the province.
@@ -122,8 +122,8 @@
 <!-- Departmental Leadership Section - Added container with max-w-6xl -->
 <section class="py-12 bg-linear-to-br from-primary to-primary-light text-text-primary">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Message from Leadership</h2>
+        <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">Message from Leadership</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto"></div>
         </div>
 
@@ -143,8 +143,8 @@
 
             <div class="lg:w-1/2">
                 <div class="space-y-4">
-                    <h3 class="text-2xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
-                    <p class="text-text-secondary text-justify leading-normal">
+                    <h3 class="text-lg md:text-xl font-bold">Message from the {{ $leadershipMessage->designation }}</h3>
+                    <p class="text-text-secondary text-sm md:text-md lg:text-base text-justify leading-normal">
                         {{ $leadershipMessage->message }}
                     </p>
                 </div>
@@ -157,8 +157,8 @@
 <!-- Sectors Section - Full width (no container) -->
 <section class="py-10 w-full bg-background-light" id="sectors-section">
     <div class="w-full px-0">
-        <div class="text-center mb-12 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-green animate-on-scroll-title">Our Project Sectors</h2>
+        <div class="text-center mb-8 overflow-hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Our Project Sectors</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
@@ -196,14 +196,14 @@
     </div>
     <!-- Using theme variable for overlay -->
     <div class="absolute inset-0" style="background: rgba(var(--color-primary-rgb), 0.7);"></div>
-    <div class="relative z-10 px-4 mx-auto text-center md:px-6 lg:px-8 max-w-7xl">
-        <div class="max-w-3xl mx-auto">
+    <div class="relative z-10 px-4 mx-auto text-center md:px-6 lg:px-8 max-w-6xl">
+        <div class="max-w-2xl mx-auto">
             <h2
-                class="text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl md:leading-snug animate-on-scroll-title">
+                class=" font-bold leading-tight text-text-primary sm:text-3xl md:text-4xl md:leading-snug animate-on-scroll-title">
                 Our Vision for Sustainable Development
             </h2>
             <p
-                class="mt-6 text-md leading-normal text-text-primary md:text-xl md:leading-normal animate-on-scroll-text">
+                class="mt-4 text-md leading-normal text-text-primary md:text-lg  animate-on-scroll-text">
                 We are committed to fostering public-private partnerships that drive innovation, infrastructure
                 development, and economic growth across Khyber Pakhtunkhwa.
             </p>
@@ -214,8 +214,8 @@
 <!-- News Section - Added container with max-w-6xl -->
 <section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-12 overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-black animate-on-scroll-title">News & Updates</h2>
+        <div class="text-center mb-8 overflow-hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-black animate-on-scroll-title">News & Updates</h2>
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 

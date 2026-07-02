@@ -248,7 +248,7 @@
                                    title="Tender Document ({{ $fileInfo['extension'] }})"
                                    class="{{ $fileInfo['color'] }} hover:opacity-75 transition-opacity">
                                     <div class="flex flex-col items-center">
-                                        <i class="fas {{ $fileInfo['icon'] }} text-2xl"></i>
+                                        <i class="fas {{ $fileInfo['icon'] }} text-3xl"></i>
                                         <span class="text-[10px] font-semibold mt-0.5">{{ $fileInfo['extension'] }}</span>
                                     </div>
                                 </a>
@@ -265,7 +265,7 @@
                                    title="Advertisement ({{ $fileInfo['extension'] }})"
                                    class="{{ $fileInfo['color'] }} hover:opacity-75 transition-opacity">
                                     <div class="flex flex-col items-center">
-                                        <i class="fas {{ $fileInfo['icon'] }} text-3xl"></i>
+                                        <i class="fas {{ $fileInfo['icon'] }} text-xl"></i>
                                         <span class="text-[10px] font-semibold mt-0.5">{{ $fileInfo['extension'] }}</span>
                                     </div>
                                 </a>
@@ -340,7 +340,7 @@
 <section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="text-center mb-12">
-            <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Tender Submission Guidelines</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-text-green animate-on-scroll-title">Tender Submission Guidelines</h2>
             <div class="w-20 h-1.5 bg-accent-1 mx-auto mt-4 rounded"></div>
             <p class="text-text-muted mt-4 max-w-3xl mx-auto text-sm md:text-md lg:text-base">Essential information to ensure your tender submission meets all requirements</p>
         </div>

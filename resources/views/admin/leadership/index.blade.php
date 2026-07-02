@@ -129,7 +129,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-medium text-gray-900">{{ $msg->name }}</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <td class="px-6 py-4  text-sm text-gray-600">
                                     {{ $msg->designation }}
                                 </td>
                                 <td class="px-6 py-4">

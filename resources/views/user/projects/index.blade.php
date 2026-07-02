@@ -91,7 +91,7 @@
 
                 <div class="p-4">
                     <!-- Title with Tooltip -->
-                    <h3 class="text-lg font-bold text-text-green mb-3 line-clamp-1" 
+                    <h3 class="text-lg font-bold h-14 text-text-green mb-3 line-clamp-2" 
                         title="{{ formatTitle( Str::title($project->name) ) }}">
                         {{ formatTitle( Str::title($project->name) ) }}
                     </h3>

@@ -211,7 +211,7 @@
     </div>
 </section>
 
-<!-- News Section - Added container with max-w-6xl -->
+<!-- News Section -->
 <section class="py-10 bg-background-white" id="news-section">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="text-center mb-8 overflow-hidden">
@@ -221,8 +221,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($latestNews as $news)
-            <div
-                class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <!-- News Image -->
                 <div class="h-48 overflow-hidden bg-background-primary/10">
                     @if($news->img_path)
                     <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}"
@@ -236,20 +236,31 @@
                         </svg>
                     </div>
                     @else
-                    <div
-                        class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
+                    <div class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary to-primary-light">
                         <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                     </div>
                     @endif
                 </div>
+
+                <!-- News Content -->
                 <div class="p-6">
+                    <!-- Meta Info -->
                     <div class="flex items-center mb-2">
                         <span class="text-sm text-accent-1 font-medium">{{ $news->created_at->format('F d, Y') }}</span>
                         <span class="mx-2 text-text-muted">|</span>
                         <span class="text-sm text-text-muted">{{ Str::title($news->type) }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">{{ Str::title($news->title) }}</h3>
+                    
+                    <!-- Title with Native Tooltip -->
+                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2 cursor-help hover:text-accent-1 transition-colors duration-300"
+                        title="{{ Str::title($news->title) }}">
+                        {{ Str::title($news->title) }}
+                    </h3>
+                    
+                    <!-- Content Preview -->
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
+                    
+                    <!-- Read More Link -->
                     <a href="{{ url('/media-room/updates/' . $news->id) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
@@ -264,6 +275,7 @@
             @endforeach
         </div>
 
+        <!-- View All Button -->
         @if($latestNews->count() > 0)
         <div class="pt-8 flex justify-center">
             <a href="{{ url('/media-room/updates') }}"

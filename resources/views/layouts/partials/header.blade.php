@@ -10,8 +10,9 @@
                     <img src="{{ asset('images/logo.png') }}" alt="PPP Unit KP Logo" 
                          class="navbar-logo h-12 md:h-18 w-auto mr-2 md:mr-3 animate-continuous-rotation">
                     <div class="hidden lg:block">
-                        <span class="text-text-primary font-semibold text-md block tracking-tighter leading-4">Public Private Partnership Unit</span>
-                        <span class="text-text-secondary text-sm block tracking-tighter leading-4">P & D Department, KP</span>
+                        <span class="text-text-primary font-semibold text-md block tracking-tight leading-4">Public Private Partnership Unit</span>
+                        <span class="text-text-secondary text-sm block tracking-tight leading-4">P & D Department</span>
+                        <span class="text-text-secondary text-sm block tracking-tight leading-4">Govt. of Khyber Pakhtunkhwa</span>
                     </div>
                 </a>
             </div>

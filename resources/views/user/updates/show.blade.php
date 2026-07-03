@@ -9,10 +9,6 @@
     <!-- Using theme variables for overlay -->
     <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30 max-w-5xl">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
-                {{ formatTitle($news->title) }}
-            </h1>
-            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
         </div>
     </div>
     

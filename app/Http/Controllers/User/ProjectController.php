@@ -204,37 +204,35 @@ class ProjectController extends Controller
     /**
      * Show a single project
      */
-    public function show($id)
-    {
-        $project = Project::findOrFail($id);
+    public function show(Project $project)
+{
+    $pipelineDetails = null;
+    $ongoingDetails = null;
+    $completedDetails = null;
+    $achievements = [];
 
-        $pipelineDetails = null;
-        $ongoingDetails = null;
-        $completedDetails = null;
-        $achievements = [];
-
-        if ($project->category === 'Pipeline') {
-            $pipelineDetails = $project->pipelineDetail;
-        } elseif ($project->category === 'Ongoing') {
-            $ongoingDetails = OngoingProjectDetail::where('project_id', $project->id)->first();
-        } elseif ($project->category === 'Construction & Operational') {
-            $completedDetails = CompletedProjectDetail::where('project_id', $project->id)->first();
-            $achievements = [
-                'Successfully completed within budget',
-                'Created 500+ local jobs',
-                'Served 100,000+ beneficiaries',
-                'Received international recognition for best practices'
-            ];
-        }
-
-        return view('user.projects.show', compact(
-            'project',
-            'pipelineDetails',
-            'ongoingDetails',
-            'completedDetails',
-            'achievements'
-        ));
+    if ($project->category === 'Pipeline') {
+        $pipelineDetails = $project->pipelineDetail;
+    } elseif ($project->category === 'Ongoing') {
+        $ongoingDetails = OngoingProjectDetail::where('project_id', $project->id)->first();
+    } elseif ($project->category === 'Construction & Operational') {
+        $completedDetails = CompletedProjectDetail::where('project_id', $project->id)->first();
+        $achievements = [
+            'Successfully completed within budget',
+            'Created 500+ local jobs',
+            'Served 100,000+ beneficiaries',
+            'Received international recognition for best practices'
+        ];
     }
+
+    return view('user.projects.show', compact(
+        'project',
+        'pipelineDetails',
+        'ongoingDetails',
+        'completedDetails',
+        'achievements'
+    ));
+}
 
     /**
      * Show project statistics page

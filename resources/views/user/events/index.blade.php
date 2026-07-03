@@ -93,10 +93,6 @@
                                 <i class="fas fa-map-marker-alt text-accent-1 mr-1.5"></i>
                                 {{ $event->location ?? 'Location TBA' }}
                             </div>
-                            <div class="flex items-center text-text-muted text-sm">
-                                <i class="fas fa-images text-accent-1 mr-1.5"></i>
-                                {{ $event->gallery_count }} {{ Str::plural('photo', $event->gallery_count) }}
-                            </div>
                         </div>
                     </div>
                 </div>

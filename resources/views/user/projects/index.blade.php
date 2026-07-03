@@ -134,7 +134,7 @@
 
                     <!-- View Details Button -->
                     <div class="mt-3 pt-3 border-t border-gray-200/30">
-                        <a href="{{ route('projects.show', $project->id) }}"
+                        <a href="{{ route('projects.show', $project) }}"
                             class="text-accent-1 font-medium hover:text-primary-hover transition-colors duration-300 inline-flex items-center text-sm">
                             View Details
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

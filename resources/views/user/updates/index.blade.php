@@ -101,7 +101,7 @@
                             @endif
                         </div>
                         <h3 class="text-lg font-bold text-text-green mb-3 hover:text-accent-1 transition-colors duration-300">
-                            <a href="{{ route('media.room.updates.show', $news->id) }}">{{ formatTitle( Str::title($news->title) ) }}</a>
+                            <a href="{{ route('media.room.updates.show', $news->slug) }}">{{ formatTitle( Str::title($news->title) ) }}</a>
                         </h3>
                         <p class="text-text-muted text-sm md:text-md lg:text-base line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
                     </div>
@@ -112,7 +112,7 @@
                                 {{ $news->type ?? 'News' }}
                             </span>
                         </div>
-                        <a href="{{ route('media.room.updates.show', $news->id) }}"
+                        <a href="{{ route('media.room.updates.show', $news) }}"
                             class="text-accent-1 font-medium hover:text-primary-hover transition-colors duration-300 inline-flex items-center group">
                             Read More
                             <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

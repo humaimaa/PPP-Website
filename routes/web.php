@@ -32,10 +32,6 @@ Route::prefix('about')->name('about.')->group(function () {
 // Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-// ==================== PROJECT ROUTES ====================
-// IMPORTANT: Specific routes must come before generic routes
-Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
-Route::get('/project/{id}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Sector-specific route (must come before generic route)
 Route::get('/projects/sector/{sector}', [ProjectController::class, 'indexBySector'])->name('projects.sector');
@@ -49,11 +45,13 @@ Route::get('/projects/{category?}/{status?}', [ProjectController::class, 'index'
 // Resource Center (Downloads) with optional section parameter
 Route::get('/resource-center/{section?}', [ResourceController::class, 'downloads'])->name('resource.center');
 
-// Media Room Routes
+Route::get('/project/statistics', [ProjectController::class, 'projectStats'])->name('projects.projectStats');
+Route::get('/project/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
+
 Route::prefix('media-room')->name('media.room.')->group(function () {
     Route::get('/events', [MediaroomController::class, 'eventsIndex'])->name('events');
     Route::get('/updates', [MediaroomController::class, 'updatesIndex'])->name('updates');
-    Route::get('/updates/{id}', [MediaroomController::class, 'updatesShow'])->name('updates.show');
+    Route::get('/updates/{news:slug}', [MediaroomController::class, 'updatesShow'])->name('updates.show');
     Route::get('/events/gallery/{id}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
 });
 

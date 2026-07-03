@@ -75,23 +75,21 @@ class MediaroomController extends Controller
     /**
      * Individual updates detail page
      */
-    public function updatesShow($id)
-    {
-        $news = News::findOrFail($id);
-        
-        // Get previous and next news for navigation
-        $previousNews = News::where(function($query) use ($news) {
-                $query->whereRaw('COALESCE(news_date, created_at) < ?', [$news->news_date ?? $news->created_at]);
-            })
-            ->orderByRaw('COALESCE(news_date, created_at) DESC')
-            ->first();
-        
-        $nextNews = News::where(function($query) use ($news) {
-                $query->whereRaw('COALESCE(news_date, created_at) > ?', [$news->news_date ?? $news->created_at]);
-            })
-            ->orderByRaw('COALESCE(news_date, created_at) ASC')
-            ->first();
-        
-        return view('user.updates.show', compact('news', 'previousNews', 'nextNews'));
-    }
+  public function updatesShow(News $news)
+{
+    // Get previous and next news for navigation
+    $previousNews = News::where(function($query) use ($news) {
+            $query->whereRaw('COALESCE(news_date, created_at) < ?', [$news->news_date ?? $news->created_at]);
+        })
+        ->orderByRaw('COALESCE(news_date, created_at) DESC')
+        ->first();
+
+    $nextNews = News::where(function($query) use ($news) {
+            $query->whereRaw('COALESCE(news_date, created_at) > ?', [$news->news_date ?? $news->created_at]);
+        })
+        ->orderByRaw('COALESCE(news_date, created_at) ASC')
+        ->first();
+
+    return view('user.updates.show', compact('news', 'previousNews', 'nextNews'));
+}
 }

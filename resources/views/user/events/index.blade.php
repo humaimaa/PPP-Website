@@ -26,7 +26,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($events as $event)
-            <div class="group cursor-pointer" onclick="window.location='{{ route('media.room.events.gallery', $event->id) }}'">
+            <div class="group cursor-pointer" onclick="window.location='{{ route('media.room.events.gallery', $event) }}'">
                 <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200/30">
                     <!-- Image Container -->
                     <div class="relative overflow-hidden h-64">

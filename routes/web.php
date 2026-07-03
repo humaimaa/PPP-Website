@@ -52,7 +52,7 @@ Route::prefix('media-room')->name('media.room.')->group(function () {
     Route::get('/events', [MediaroomController::class, 'eventsIndex'])->name('events');
     Route::get('/updates', [MediaroomController::class, 'updatesIndex'])->name('updates');
     Route::get('/updates/{news:slug}', [MediaroomController::class, 'updatesShow'])->name('updates.show');
-    Route::get('/events/gallery/{id}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
+    Route::get('/events/gallery/{event:slug}', [MediaroomController::class, 'eventGallery'])->name('events.gallery');
 });
 
 // API endpoint for downloading files

@@ -29,14 +29,14 @@ class MediaroomController extends Controller
         return view('user.events.index', compact('events'));
     }
 
-    /**
-     * Gallery album page
-     */
-    public function eventGallery($id)
-    {
-        $event = Event::with('gallery')->findOrFail($id);
-        return view('user.events.gallery', compact('event'));
-    }
+   /**
+ * Gallery album page
+ */
+public function eventGallery(Event $event)
+{
+    $event->load('gallery');
+    return view('user.events.gallery', compact('event'));
+}
 
     /**
      * Updates page with pagination and filtering

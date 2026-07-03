@@ -2,7 +2,7 @@
 @props(['isOpen' => false])
 
 <aside id="sidebar"
-       class="fixed top-0 left-0 h-full bg-emerald-900 text-white z-40 shadow-xl overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out
+       class="fixed top-0 left-0 h-full bg-emerald-900 text-white z-40 shadow-xl overflow-y-auto overflow-x-visible transition-all duration-300 ease-in-out
               [scrollbar-width:thin] [scrollbar-color:#34d399_#064e3b]"
        style="width: {{ $isOpen ? '256px' : '72px' }};">
 
@@ -18,7 +18,7 @@
     </div>
 
     {{-- Navigation --}}
-    <nav class="px-2 pb-20 pt-2">
+    <nav class="px-2 pb-20 pt-2 relative">
 
         {{-- Dashboard --}}
         <a href="{{ route('admin.dashboard') }}"
@@ -26,9 +26,8 @@
             <i class="fas fa-tachometer-alt w-6 text-center shrink-0"></i>
             <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
                   style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Dashboard</span>
-            <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                         opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                         {{ $isOpen ? 'hidden' : '' }}">Dashboard</span>
+            {{-- Tooltip --}}
+            <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Dashboard</span>
         </a>
 
         {{-- Projects --}}
@@ -43,9 +42,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Projects</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Projects</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('projects.create')
@@ -68,9 +66,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Tenders</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Tenders</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('tenders.create')
@@ -93,9 +90,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Updates</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Updates</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('news.create')
@@ -118,9 +114,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Downloads</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Downloads</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('downloads.create')
@@ -143,9 +138,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Events</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Events</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('events.create')
@@ -168,9 +162,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Sectors</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Sectors</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('sectors.create')
@@ -193,9 +186,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Team</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Team</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('team.create')
@@ -207,29 +199,28 @@
         @endcan
 
         {{-- Hierarchy --}}
-@can('hierarchy.view')
-<div class="mb-1" data-dropdown>
-    <button type="button"
-            class="dropdown-btn group w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left relative">
-        <div class="flex items-center">
-            <i class="fas fa-sitemap w-6 text-center shrink-0"></i>
-            <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-                  style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Hierarchy</span>
+        @can('hierarchy.view')
+        <div class="mb-1" data-dropdown>
+            <button type="button"
+                    class="dropdown-btn group w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left relative">
+                <div class="flex items-center">
+                    <i class="fas fa-sitemap w-6 text-center shrink-0"></i>
+                    <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+                          style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Hierarchy</span>
+                </div>
+                <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
+                   style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Hierarchy</span>
+            </button>
+            <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
+                @can('hierarchy.create')
+                <a href="{{ route('admin.hierarchy.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Hierarchy</a>
+                @endcan
+                <a href="{{ route('admin.hierarchy.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Hierarchy</a>
+            </div>
         </div>
-        <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
-           style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-        <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                     opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                     {{ $isOpen ? 'hidden' : '' }}">Hierarchy</span>
-    </button>
-    <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
-        @can('hierarchy.create')
-        <a href="{{ route('admin.hierarchy.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Hierarchy</a>
         @endcan
-        <a href="{{ route('admin.hierarchy.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.hierarchy.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Hierarchy</a>
-    </div>
-</div>
-@endcan
 
         {{-- Leadership Messages --}}
         @can('leadership.view')
@@ -243,9 +234,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Leadership</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Leadership</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('leadership.create')
@@ -277,9 +267,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Users</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Users</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('users.create')
@@ -302,9 +291,8 @@
                 </div>
                 <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
                    style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
-                <span class="pointer-events-none absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-xs rounded
-                             opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50
-                             {{ $isOpen ? 'hidden' : '' }}">Roles</span>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Roles</span>
             </button>
             <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
                 @can('roles.create')

@@ -77,7 +77,7 @@
           </li>
           <li class="flex items-center">
             <i class="fas fa-phone-alt text-accent-1 mr-3 text-sm"></i>
-            <span class="text-sm md:text-base text-text-secondary">+92 333 9391457</span>
+            <span class="text-sm md:text-base text-text-secondary">091 9223699</span>
           </li>
           <li class="flex items-center">
             <i class="fas fa-envelope text-accent-1 mr-3 text-sm"></i>

@@ -419,14 +419,14 @@
                         <h4 class="font-semibold mb-2 text-text-black text-sm flex items-center">
                             <i class="fas fa-envelope text-accent-1 mr-2"></i> Email Support
                         </h4>
-                        <p class="text-sm text-text-muted break-all">procurement@pppdepartmentkpk.gov.pk</p>
+                        <p class="text-sm text-text-muted break-all">chief.ppp@pndkp.gov.pk</p>
                         <p class="text-xs mt-1 text-text-muted">Response within 24-48 hours</p>
                     </div>
                     <div class="p-4 bg-background-white rounded-lg border border-gray-200/30 hover:border-accent-1/50 transition-colors duration-200">
                         <h4 class="font-semibold mb-2 text-text-black text-sm flex items-center">
                             <i class="fas fa-phone-alt text-accent-1 mr-2"></i> Helpline
                         </h4>
-                        <p class="text-sm text-text-muted">+92 91 921 1234 (9AM-5PM, Mon-Fri)</p>
+                        <p class="text-sm text-text-muted">091 9223699 (9AM-5PM, Mon-Fri)</p>
                         <p class="text-xs mt-1 text-text-muted">For urgent queries only</p>
                     </div>
                     <div class="p-4 bg-background-white rounded-lg border border-gray-200/30 hover:border-accent-1/50 transition-colors duration-200">

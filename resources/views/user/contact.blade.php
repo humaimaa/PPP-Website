@@ -54,7 +54,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Phone</h3>
                             <p class="mt-1 text-text-muted text-sm md:text-md">
-                                +92 333 9391457
+                                091 9223699
                             </p>
                         </div>
                     </div>

@@ -174,16 +174,7 @@
                     $newsDate = \Carbon\Carbon::parse($news->news_date);
                     $diffDays = $newsDate->diffInDays($news->created_at);
                 @endphp
-                @if($diffDays > 0)
-                    <div class="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-clock text-blue-600"></i>
-                            </div>
-                            
-                        </div>
-                    </div>
-                @endif
+                
             @endif
         </div>
     </div>

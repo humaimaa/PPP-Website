@@ -34,6 +34,11 @@ class NewsController extends Controller
             $query->where('is_featured', $request->featured);
         }
 
+        // Filter by publish status
+        if ($request->filled('publish') && $request->publish !== '') {
+            $query->where('publish', $request->publish);
+        }
+
         $news = $query->latest()->paginate(10);
         $news->appends(request()->query());
 
@@ -51,40 +56,41 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-   public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title'       => 'required|string|max:255',
-        'content'     => 'required|string',
-        'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
-        'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
-        'is_featured' => 'nullable|boolean',
-        'news_date'   => 'nullable|date|before_or_equal:today', // Add this validation rule
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'content'     => 'required|string',
+            'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
+            'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
+            'is_featured' => 'nullable|boolean',
+            'news_date'   => 'nullable|date|before_or_equal:today',
+        ]);
 
-    $imagePath = null;
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('news/images', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('news/images', 'public');
+        }
+
+        $newsDate = $request->filled('news_date') 
+            ? Carbon::parse($request->news_date) 
+            : Carbon::now();
+
+        News::create([
+            'title'       => $validated['title'],
+            'content'     => $validated['content'],
+            'type'        => $validated['type'],
+            'img_path'    => $imagePath,
+            'is_featured' => $request->boolean('is_featured'),
+            'news_date'   => $newsDate,
+            'publish'     => 'no', // Default to not published
+        ]);
+
+        return redirect()
+            ->route('admin.updates.index')
+            ->with('success', 'Update created successfully!');
     }
 
-    // Set news_date: use user input if provided, otherwise use current timestamp
-    $newsDate = $request->filled('news_date') 
-        ? Carbon::parse($request->news_date) 
-        : Carbon::now();
-
-    News::create([
-        'title'       => $validated['title'],
-        'content'     => $validated['content'],
-        'type'        => $validated['type'],
-        'img_path'    => $imagePath,
-        'is_featured' => $request->boolean('is_featured'),
-        'news_date'   => $newsDate,
-    ]);
-
-    return redirect()
-        ->route('admin.updates.index')
-        ->with('success', 'Update created successfully!');
-}
     /**
      * Display the specified resource.
      */
@@ -104,47 +110,61 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, News $news)
-{
-    $validated = $request->validate([
-        'title'       => 'required|string|max:255',
-        'content'     => 'required|string',
-        'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
-        'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
-        'is_featured' => 'nullable|boolean',
-        'news_date'   => 'nullable|date|before_or_equal:today', // Add this validation rule
-    ]);
+    public function update(Request $request, News $news)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'content'     => 'required|string',
+            'type'        => 'required|in:Update,Announcement,Press Release,Notice,Other',
+            'image'       => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
+            'is_featured' => 'nullable|boolean',
+            'news_date'   => 'nullable|date|before_or_equal:today',
+        ]);
 
-    $imagePath = $news->img_path;
+        $imagePath = $news->img_path;
 
-    if ($request->hasFile('image')) {
-        // Delete old image if exists
-        if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
-            Storage::disk('public')->delete($news->img_path);
+        if ($request->hasFile('image')) {
+            if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
+                Storage::disk('public')->delete($news->img_path);
+            }
+            $imagePath = $request->file('image')->store('news/images', 'public');
         }
-        $imagePath = $request->file('image')->store('news/images', 'public');
+
+        if ($request->filled('news_date')) {
+            $newsDate = Carbon::parse($request->news_date);
+        } else {
+            $newsDate = $news->news_date ?? Carbon::now();
+        }
+
+        $news->update([
+            'title'       => $validated['title'],
+            'content'     => $validated['content'],
+            'type'        => $validated['type'],
+            'img_path'    => $imagePath,
+            'is_featured' => $request->boolean('is_featured'),
+            'news_date'   => $newsDate,
+        ]);
+
+        return redirect()
+            ->route('admin.updates.index')
+            ->with('success', 'Update updated successfully!');
     }
 
-    // Set news_date: use user input if provided, otherwise keep existing or use current
-    if ($request->filled('news_date')) {
-        $newsDate = Carbon::parse($request->news_date);
-    } else {
-        $newsDate = $news->news_date ?? Carbon::now();
+    /**
+     * Toggle publish status
+     */
+    public function togglePublish($id)
+    {
+        try {
+            $news = News::findOrFail($id);
+            $news->publish = $news->publish === 'yes' ? 'no' : 'yes';
+            $news->save();
+            
+            return redirect()->back()->with('success', 'Publish status updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
+        }
     }
-
-    $news->update([
-        'title'       => $validated['title'],
-        'content'     => $validated['content'],
-        'type'        => $validated['type'],
-        'img_path'    => $imagePath,
-        'is_featured' => $request->boolean('is_featured'),
-        'news_date'   => $newsDate,
-    ]);
-
-    return redirect()
-        ->route('admin.updates.index')
-        ->with('success', 'Update updated successfully!');
-}
 
     /**
      * Remove the specified resource from storage.
@@ -216,7 +236,6 @@ class NewsController extends Controller
         foreach ($updateIds as $updateId) {
             $news = News::find($updateId);
             if ($news) {
-                // Delete image if exists
                 if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
                     Storage::disk('public')->delete($news->img_path);
                 }

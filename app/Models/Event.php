@@ -17,6 +17,7 @@ class Event extends Model
         'location',
         'description',
         'event_date',
+        'publish', // Add this
     ];
 
     protected $casts = [
@@ -26,6 +27,22 @@ class Event extends Model
     protected function slugSourceColumn(): string
     {
         return 'title';
+    }
+
+    /**
+     * Helper method to check if event is published
+     */
+    public function isPublished()
+    {
+        return $this->publish === 'yes';
+    }
+
+    /**
+     * Scope for published events
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('publish', 'yes');
     }
 
     /**
@@ -54,7 +71,6 @@ class Event extends Model
         // Delete all gallery images when event is deleted
         static::deleting(function ($event) {
             foreach ($event->gallery as $gallery) {
-                // This will trigger the Gallery's deleting event
                 $gallery->delete();
             }
         });

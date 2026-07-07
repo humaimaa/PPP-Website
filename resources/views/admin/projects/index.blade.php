@@ -77,198 +77,230 @@
             </div>
         </div>
 
-        <form id="bulkDeleteForm" action="{{ route('admin.projects.bulk-delete') }}" method="POST">
+        {{-- BULK DELETE FORM - Now outside the table and hidden --}}
+        <form id="bulkDeleteForm" action="{{ route('admin.projects.bulk-delete') }}" method="POST" style="display: none;">
             @csrf
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-                        <tr>
-                            @can('projects.delete')
-                            <th class="px-6 py-3 text-left w-10">
-                                <input type="checkbox" id="selectAllCheckbox"
-                                    class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            </th>
-                            @endcan
-                            <th class="px-6 py-3 text-left">Image</th>
-                            <th class="px-6 py-3 text-left">Project Name</th>
-                            <th class="px-6 py-3 text-left">Location/Division</th>
-                            <th class="px-6 py-3 text-left">Sector</th>
-                            <th class="px-6 py-3 text-left">Cost (PKR)</th>
-                            <th class="px-6 py-3 text-left">Category</th>
-                            <th class="px-6 py-3 text-left">Status</th>
-                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete'))
-                            <th class="px-6 py-3 text-right">Actions</th>
+            <input type="hidden" name="project_ids" id="bulkDeleteIds" value="">
+        </form>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                    <tr>
+                        @can('projects.delete')
+                        <th class="px-6 py-3 text-left w-10">
+                            <input type="checkbox" id="selectAllCheckbox"
+                                class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                        </th>
+                        @endcan
+                        <th class="px-6 py-3 text-left">Image</th>
+                        <th class="px-6 py-3 text-left">Project Name</th>
+                        <th class="px-6 py-3 text-left">Location/Division</th>
+                        <th class="px-6 py-3 text-left">Sector</th>
+                        <th class="px-6 py-3 text-left">Cost (PKR)</th>
+                        <th class="px-6 py-3 text-left">Category</th>
+                        <th class="px-6 py-3 text-left">Status</th>
+                        @if( auth()->user()->can('projects.edit') )
+                        <th class="px-6 py-3 text-left">Published</th>
+                        @endif
+                        @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                        auth()->user()->can('projects.delete'))
+                        <th class="px-6 py-3 text-right">Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    @forelse($projects as $project)
+                    <tr class="hover:bg-gray-50 transition" data-project-id="{{ $project->id }}">
+
+                        @can('projects.delete')
+                        <td class="px-6 py-4">
+                            <input type="checkbox" name="project_ids[]" value="{{ $project->id }}"
+                                class="project-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                        </td>
+                        @endcan
+
+                        <td class="px-6 py-4">
+                            @if($project->image && Storage::disk('public')->exists($project->image))
+                            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                                <img src="{{ Storage::url($project->image) }}" alt="{{ $project->name }}"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            @else
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
                             @endif
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-700">
-                        @forelse($projects as $project)
-                        <tr class="hover:bg-gray-50 transition" data-project-id="{{ $project->id }}">
+                        </td>
 
-                            @can('projects.delete')
-                            <td class="px-6 py-4">
-                                <input type="checkbox" name="project_ids[]" value="{{ $project->id }}"
-                                    class="project-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                            </td>
-                            @endcan
-
-                            <td class="px-6 py-4">
-                                @if($project->image && Storage::disk('public')->exists($project->image))
-                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-                                    <img src="{{ Storage::url($project->image) }}" alt="{{ $project->name }}"
-                                        class="w-full h-full object-cover">
+                        <td class="px-6 py-4">
+                            <div>
+                                <span class="font-medium text-gray-900">{{ $project->name }}</span>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-building mr-1"></i>
+                                    {{ $project->implementing_authority ?
+                                    Str::limit($project->implementing_authority, 30) : 'N/A' }}
                                 </div>
-                                @else
-                                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                                    <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <div>
+                                @if($project->location)
+                                <div class="text-sm text-gray-900">
+                                    <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
+                                    {{ Str::limit($project->location, 30) }}
                                 </div>
                                 @endif
-                            </td>
 
-                            <td class="px-6 py-4">
-                                <div>
-                                    <span class="font-medium text-gray-900">{{ $project->name }}</span>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        <i class="fas fa-building mr-1"></i>
-                                        {{ $project->implementing_authority ? Str::limit($project->implementing_authority, 30) : 'N/A' }}
-                                    </div>
+                                {{-- Display Divisions as Badges --}}
+                                @if($project->division)
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    @php
+                                    $divisions = explode(',', $project->division);
+                                    @endphp
+                                    @foreach($divisions as $division)
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-building mr-1 text-[8px]"></i>
+                                        {{ trim($division) }}
+                                    </span>
+                                    @endforeach
                                 </div>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <div>
-                                    @if($project->location)
-                                    <div class="text-sm text-gray-900">
-                                        <i class="fas fa-map-marker-alt text-gray-400 mr-1"></i>
-                                        {{ Str::limit($project->location, 30) }}
-                                    </div>
-                                    @endif
-                                    
-                                    {{-- Display Divisions as Badges --}}
-                                    @if($project->division)
-                                    <div class="flex flex-wrap gap-1 mt-1">
-                                        @php
-                                            $divisions = explode(',', $project->division);
-                                        @endphp
-                                        @foreach($divisions as $division)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            <i class="fas fa-building mr-1 text-[8px]"></i>
-                                            {{ trim($division) }}
-                                        </span>
-                                        @endforeach
-                                    </div>
-                                    @endif
-                                    
-                                    @if(!$project->location && !$project->division)
-                                    <span class="text-gray-400 text-sm">—</span>
-                                    @endif
-                                </div>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
-                                    <i class="fas fa-chart-line mr-1 text-xs"></i>
-                                    {{ $project->sector }}
-                                </span>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <div class="text-sm font-semibold text-gray-900">
-                                    {{ $project->cost }}
-                                </div>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                    @if($project->category == 'Pipeline') bg-blue-100 text-blue-800
-                                    @elseif($project->category == 'Ongoing') bg-yellow-100 text-yellow-800
-                                    @elseif($project->category == 'Construction & Operational') bg-green-100 text-green-800
-                                    @endif">
-                                    <i class="fas fa-tag mr-1 text-xs"></i>
-                                    {{ $project->category }}
-                                </span>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                @if($project->status)
-                                <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full
-                                    @if($project->status == 'Private Partner Selection') bg-orange-100 text-orange-800
-                                    @elseif($project->status == 'Transaction Advisory') bg-cyan-100 text-cyan-800
-                                    @elseif($project->status == 'Operational') bg-green-100 text-green-800
-                                    @elseif($project->status == 'Construction') bg-amber-100 text-amber-800
-                                    @else bg-gray-100 text-gray-700
-                                    @endif">
-                                    <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
-                                    {{ $project->status }}
-                                </span>
-                                @else
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-600 bg-gray-100">
-                                    N/A
-                                </span>
                                 @endif
-                            </td>
 
-                            @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete'))
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center justify-end gap-2">
-                                    @can('projects.view')
-                                    <a href="{{ route('admin.projects.show', $project) }}"
-                                        class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                        title="View Project Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    @endcan
+                                @if(!$project->location && !$project->division)
+                                <span class="text-gray-400 text-sm">—</span>
+                                @endif
+                            </div>
+                        </td>
 
-                                    @can('projects.edit')
-                                    <a href="{{ route('admin.projects.edit', $project) }}"
-                                        class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                        title="Edit Project">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    @endcan
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                <i class="fas fa-chart-line mr-1 text-xs"></i>
+                                {{ $project->sector }}
+                            </span>
+                        </td>
 
-                                    @can('projects.delete')
-                                    <button type="button"
-                                        onclick="confirmDelete({{ $project->id }}, '{{ addslashes($project->name) }}')"
-                                        class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                        title="Delete Project">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    @endcan
-                                </div>
-                            </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-semibold text-gray-900">
+                                {{ $project->cost }}
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                @if($project->category == 'Pipeline') bg-blue-100 text-blue-800
+                                @elseif($project->category == 'Ongoing') bg-yellow-100 text-yellow-800
+                                @elseif($project->category == 'Construction & Operational') bg-green-100 text-green-800
+                                @endif">
+                                <i class="fas fa-tag mr-1 text-xs"></i>
+                                {{ $project->category }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            @if($project->status)
+                            <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full
+                                @if($project->status == 'Private Partner Selection') bg-orange-100 text-orange-800
+                                @elseif($project->status == 'Transaction Advisory') bg-cyan-100 text-cyan-800
+                                @elseif($project->status == 'Operational') bg-green-100 text-green-800
+                                @elseif($project->status == 'Construction') bg-amber-100 text-amber-800
+                                @else bg-gray-100 text-gray-700
+                                @endif">
+                                <i class="fas fa-circle mr-1 text-[8px] align-middle"></i>
+                                {{ $project->status }}
+                            </span>
+                            @else
+                            <span
+                                class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-600 bg-gray-100">
+                                N/A
+                            </span>
                             @endif
-                        </tr>
-                        @empty
-                        <tr>
-                            @php
-                            $colspan = 8;
-                            if(auth()->user()->can('projects.delete')) $colspan++;
-                            if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') || auth()->user()->can('projects.delete')) $colspan++;
-                            @endphp
-                            <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
-                                <i class="fas fa-project-diagram text-4xl mb-2"></i>
-                                <p class="text-lg mb-1">No projects found</p>
-                                @if(request('search'))
-                                <a href="{{ route('admin.projects.index') }}"
-                                    class="text-emerald-600 hover:underline text-sm">
-                                    Clear search
-                                </a>
-                                @else
-                                @can('projects.create')
-                                <a href="{{ route('admin.projects.add') }}"
-                                    class="text-emerald-600 hover:underline text-sm">
-                                    Create your first project →
+                        </td>
+
+                        {{-- PUBLISH TOGGLE - Now properly outside the bulk delete form --}}
+                        @if( auth()->user()->can('projects.edit') )
+                        <td class="px-6 py-4">
+                            <form action="{{ route('admin.projects.toggle-publish', $project->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" 
+                                    class="relative inline-flex items-center h-8 rounded-full w-14 transition-colors duration-300 focus:outline-none
+                                    {{ $project->publish == 'yes' ? 'bg-emerald-500' : 'bg-gray-300' }}">
+                                    <span class="sr-only">{{ $project->publish == 'yes' ? 'Published' : 'Draft' }}</span>
+                                    <span class="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300
+                                        {{ $project->publish == 'yes' ? 'translate-x-7' : 'translate-x-1' }}">
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                        @endif
+
+                        @if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                        auth()->user()->can('projects.delete'))
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center justify-end gap-2">
+                                @can('projects.view')
+                                <a href="{{ route('admin.projects.show', $project) }}"
+                                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                    title="View Project Details">
+                                    <i class="fas fa-eye"></i>
                                 </a>
                                 @endcan
-                                @endif
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </form>
+
+                                @can('projects.edit')
+                                <a href="{{ route('admin.projects.edit', $project) }}"
+                                    class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                    title="Edit Project">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                @endcan
+
+                                @can('projects.delete')
+                                <button type="button"
+                                    onclick="confirmDelete({{ $project->id }}, '{{ addslashes($project->name) }}')"
+                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                    title="Delete Project">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                @endcan
+                            </div>
+                        </td>
+                        @endif
+                    </tr>
+                    @empty
+                    <tr>
+                        @php
+                        $colspan = 8;
+                        if(auth()->user()->can('projects.delete')) $colspan++;
+                        if(auth()->user()->can('projects.view') || auth()->user()->can('projects.edit') ||
+                        auth()->user()->can('projects.delete')) $colspan++;
+                        if(auth()->user()->can('projects.edit')) $colspan++;
+                        @endphp
+                        <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                            <i class="fas fa-project-diagram text-4xl mb-2"></i>
+                            <p class="text-lg mb-1">No projects found</p>
+                            @if(request('search'))
+                            <a href="{{ route('admin.projects.index') }}"
+                                class="text-emerald-600 hover:underline text-sm">
+                                Clear search
+                            </a>
+                            @else
+                            @can('projects.create')
+                            <a href="{{ route('admin.projects.add') }}"
+                                class="text-emerald-600 hover:underline text-sm">
+                                Create your first project →
+                            </a>
+                            @endcan
+                            @endif
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @if($projects->hasPages())
@@ -291,7 +323,8 @@
                     Are you sure you want to delete project "<span id="deleteProjectName"
                         class="font-semibold text-gray-700"></span>"?
                 </p>
-                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.</p>
+                <p class="text-xs text-red-500 mt-2">This action cannot be undone. All associated data will be removed.
+                </p>
             </div>
             <div class="flex justify-center gap-3 mt-4">
                 <button id="cancelDeleteBtn"
@@ -404,6 +437,15 @@
                 confirmBulkDeleteBtn.addEventListener('click', function() {
                     bulkDeleteModal.classList.add('hidden');
                     document.body.style.overflow = '';
+                    
+                    // Get all checked checkboxes
+                    const checkedBoxes = document.querySelectorAll('.project-checkbox:checked');
+                    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                    
+                    // Set the hidden input value
+                    document.getElementById('bulkDeleteIds').value = ids.join(',');
+                    
+                    // Submit the form
                     bulkDeleteForm.submit();
                 });
             }

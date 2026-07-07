@@ -64,6 +64,13 @@
                 </div>
                 <div class="flex gap-2">
                     <form method="GET" action="{{ route('admin.events.index') }}" class="flex gap-2">
+                        <select name="publish" 
+                                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                            <option value="">All Publish Status</option>
+                            <option value="yes" {{ request('publish') == 'yes' ? 'selected' : '' }}>Published</option>
+                            <option value="no" {{ request('publish') == 'no' ? 'selected' : '' }}>Draft</option>
+                        </select>
+                        
                         <input type="text" 
                                name="search" 
                                value="{{ request('search') }}"
@@ -72,7 +79,7 @@
                         <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search"></i>
                         </button>
-                        @if(request('search'))
+                        @if(request('search') || request('publish'))
                             <a href="{{ route('admin.events.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -82,168 +89,188 @@
             </div>
         </div>
 
-        <form id="bulkDeleteForm" action="{{ route('admin.events.bulk-delete') }}" method="POST">
+        {{-- BULK DELETE FORM - Outside the table and hidden --}}
+        <form id="bulkDeleteForm" action="{{ route('admin.events.bulk-delete') }}" method="POST" style="display: none;">
             @csrf
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-                        <tr>
+            <input type="hidden" name="event_ids" id="bulkDeleteIds" value="">
+        </form>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                    <tr>
+                        {{-- Checkbox column - Only show if user has delete permission --}}
+                        @can('gallery.delete')
+                            <th class="px-6 py-3 text-left w-10">
+                                <input type="checkbox" 
+                                       id="selectAllCheckbox" 
+                                       class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            </th>
+                        @endcan
+                        <th class="px-6 py-3 text-left">Thumbnail</th>
+                        <th class="px-6 py-3 text-left">Title</th>
+                        <th class="px-6 py-3 text-left">Description</th>
+                        <th class="px-6 py-3 text-left">Location</th>
+                        <th class="px-6 py-3 text-left">Event Date</th>
+                        <th class="px-6 py-3 text-left">Published</th>
+                        <th class="px-6 py-3 text-left">Images</th>
+                        <th class="px-6 py-3 text-left">Created</th>
+                        
+                        {{-- Actions column - Only show if user has any action permissions --}}
+                        @if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete'))
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    @forelse($events as $event)
+                        @php
+                            $thumbnail = $event->gallery->where('is_thumbnail', true)->first();
+                            $thumbnailUrl = $thumbnail ? asset('storage/' . $thumbnail->image) : asset('images/default-event.jpg');
+                            $imageCount = $event->gallery->count();
+                            $description = $event->description ? Str::limit($event->description, 100) : '';
+                        @endphp
+                        <tr class="hover:bg-gray-50 transition" data-event-id="{{ $event->id }}">
                             {{-- Checkbox column - Only show if user has delete permission --}}
                             @can('gallery.delete')
-                                <th class="px-6 py-3 text-left w-10">
+                                <td class="px-6 py-4">
                                     <input type="checkbox" 
-                                           id="selectAllCheckbox" 
-                                           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                </th>
+                                           name="event_ids[]" 
+                                           value="{{ $event->id }}"
+                                           class="event-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                </td>
                             @endcan
-                            <th class="px-6 py-3 text-left">Thumbnail</th>
-                            <th class="px-6 py-3 text-left">Title</th>
-                            <th class="px-6 py-3 text-left">Description</th>
-                            <th class="px-6 py-3 text-left">Location</th>
-                            <th class="px-6 py-3 text-left">Event Date</th>
-                            <th class="px-6 py-3 text-left">Images</th>
-                            <th class="px-6 py-3 text-left">Created</th>
+                            
+                            <td class="px-6 py-4">
+                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                                    <img src="{{ $thumbnailUrl }}" 
+                                         alt="{{ $event->title }}"
+                                         class="w-full h-full object-cover"
+                                         onerror="this.src='https://via.placeholder.com/48?text=No+Image'">
+                                </div>
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">{{ Str::limit($event->title, 50) }}</span>
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                @if($description)
+                                    <span class="text-gray-600 line-clamp-2 max-w-xs" title="{{ $event->description }}">
+                                        {{ $description }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                @if($event->location)
+                                    <div class="text-gray-600">
+                                        <i class="fas fa-map-marker-alt text-emerald-500 text-xs mr-1"></i>
+                                        {{ Str::limit($event->location, 30) }}
+                                    </div>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-gray-600">
+                                    <i class="far fa-calendar-alt text-emerald-500 text-xs mr-1"></i>
+                                    {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}
+                                </div>
+                            </td>
+
+                            {{-- PUBLISH TOGGLE --}}
+                            <td class="px-6 py-4">
+                                <form action="{{ route('admin.events.toggle-publish', $event->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" 
+                                        class="relative inline-flex items-center h-8 rounded-full w-14 transition-colors duration-300 focus:outline-none
+                                        {{ $event->publish == 'yes' ? 'bg-emerald-500' : 'bg-gray-300' }}">
+                                        <span class="sr-only">{{ $event->publish == 'yes' ? 'Published' : 'Draft' }}</span>
+                                        <span class="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300
+                                            {{ $event->publish == 'yes' ? 'translate-x-7' : 'translate-x-1' }}">
+                                        </span>
+                                    </button>
+                                </form>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                    <i class="fas fa-images mr-1"></i>
+                                    {{ $imageCount }} {{ $imageCount === 1 ? 'image' : 'images' }}
+                                </span>
+                            </td>
+                            
+                            <td class="px-6 py-4 text-gray-500 text-xs whitespace-nowrap">
+                                {{ $event->created_at->format('M d, Y') }}
+                            </td>
                             
                             {{-- Actions column - Only show if user has any action permissions --}}
                             @if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete'))
-                                <th class="px-6 py-3 text-right">Actions</th>
-                            @endif
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-700">
-                        @forelse($events as $event)
-                            @php
-                                $thumbnail = $event->gallery->where('is_thumbnail', true)->first();
-                                $thumbnailUrl = $thumbnail ? asset('storage/' . $thumbnail->image) : asset('images/default-event.jpg');
-                                $imageCount = $event->gallery->count();
-                                $description = $event->description ? Str::limit($event->description, 100) : '';
-                            @endphp
-                            <tr class="hover:bg-gray-50 transition" data-event-id="{{ $event->id }}">
-                                {{-- Checkbox column - Only show if user has delete permission --}}
-                                @can('gallery.delete')
-                                    <td class="px-6 py-4">
-                                        <input type="checkbox" 
-                                               name="event_ids[]" 
-                                               value="{{ $event->id }}"
-                                               class="event-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                    </td>
-                                @endcan
-                                
-                                <td class="px-6 py-4">
-                                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-                                        <img src="{{ $thumbnailUrl }}" 
-                                             alt="{{ $event->title }}"
-                                             class="w-full h-full object-cover"
-                                             onerror="this.src='https://via.placeholder.com/48?text=No+Image'">
-                                    </div>
-                                </td>
-                                
-                                <td class="px-6 py-4">
-                                    <span class="font-medium text-gray-900">{{ Str::limit($event->title, 50) }}</span>
-                                </td>
-                                
-                                <td class="px-6 py-4">
-                                    @if($description)
-                                        <span class="text-gray-600 line-clamp-2 max-w-xs" title="{{ $event->description }}">
-                                            {{ $description }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400">—</span>
-                                    @endif
-                                </td>
-                                
-                                <td class="px-6 py-4">
-                                    @if($event->location)
-                                        <div class="text-gray-600">
-                                            <i class="fas fa-map-marker-alt text-emerald-500 text-xs mr-1"></i>
-                                            {{ Str::limit($event->location, 30) }}
-                                        </div>
-                                    @else
-                                        <span class="text-gray-400">—</span>
-                                    @endif
-                                </td>
-                                
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-gray-600">
-                                        <i class="far fa-calendar-alt text-emerald-500 text-xs mr-1"></i>
-                                        {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}
-                                    </div>
-                                </td>
-                                
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-md">
-                                        <i class="fas fa-images mr-1"></i>
-                                        {{ $imageCount }} {{ $imageCount === 1 ? 'image' : 'images' }}
-                                    </span>
-                                </td>
-                                
-                                <td class="px-6 py-4 text-gray-500 text-xs whitespace-nowrap">
-                                    {{ $event->created_at->format('M d, Y') }}
-                                </td>
-                                
-                                {{-- Actions column - Only show if user has any action permissions --}}
-                                @if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete'))
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex items-center justify-end gap-2">
-                                            {{-- View Button --}}
-                                            @can('gallery.view')
-                                                <a href="{{ route('admin.events.show', $event) }}" 
-                                                   class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
-                                                   title="View Details">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            @endcan
-                                            
-                                            {{-- Edit Button --}}
-                                            @can('gallery.edit')
-                                                <a href="{{ route('admin.events.edit', $event) }}" 
-                                                   class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
-                                                   title="Edit Event">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            @endcan
-                                            
-                                            {{-- Delete Button --}}
-                                            @can('gallery.delete')
-                                                <button type="button" 
-                                                        onclick="confirmDelete({{ $event->id }}, '{{ addslashes($event->title) }}')"
-                                                        class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                                                        title="Delete Event">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            @endcan
-                                        </div>
-                                    </td>
-                                @endif
-                            </tr>
-                        @empty
-                            <tr>
-                                @php
-                                    $colspan = 8; // Base columns (Thumbnail, Title, Description, Location, Event Date, Images, Created)
-                                    if(auth()->user()->can('gallery.delete')) $colspan++; // Add checkbox column
-                                    if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete')) $colspan++; // Add actions column
-                                @endphp
-                                <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
-                                    <i class="fas fa-calendar-alt text-4xl mb-2"></i>
-                                    <p class="text-lg mb-1">No events found</p>
-                                    @if(request('search'))
-                                        <a href="{{ route('admin.events.index') }}" class="text-emerald-600 hover:underline text-sm">
-                                            Clear search
-                                        </a>
-                                    @else
-                                        @can('gallery.create')
-                                            <a href="{{ route('admin.events.add') }}" class="text-emerald-600 hover:underline text-sm">
-                                                Add your first event →
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {{-- View Button --}}
+                                        @can('gallery.view')
+                                            <a href="{{ route('admin.events.show', $event) }}" 
+                                               class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                                               title="View Details">
+                                                <i class="fas fa-eye"></i>
                                             </a>
                                         @endcan
-                                    @endif
+                                        
+                                        {{-- Edit Button --}}
+                                        @can('gallery.edit')
+                                            <a href="{{ route('admin.events.edit', $event) }}" 
+                                               class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
+                                               title="Edit Event">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        
+                                        {{-- Delete Button --}}
+                                        @can('gallery.delete')
+                                            <button type="button" 
+                                                    onclick="confirmDelete({{ $event->id }}, '{{ addslashes($event->title) }}')"
+                                                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                                    title="Delete Event">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endcan
+                                    </div>
                                 </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </form>
+                            @endif
+                        </tr>
+                    @empty
+                        <tr>
+                            @php
+                                $colspan = 9; // Base columns (Thumbnail, Title, Description, Location, Event Date, Published, Images, Created)
+                                if(auth()->user()->can('gallery.delete')) $colspan++; // Add checkbox column
+                                if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete')) $colspan++; // Add actions column
+                            @endphp
+                            <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+                                <p class="text-lg mb-1">No events found</p>
+                                @if(request('search') || request('publish'))
+                                    <a href="{{ route('admin.events.index') }}" class="text-emerald-600 hover:underline text-sm">
+                                        Clear filters
+                                    </a>
+                                @else
+                                    @can('gallery.create')
+                                        <a href="{{ route('admin.events.add') }}" class="text-emerald-600 hover:underline text-sm">
+                                            Add your first event →
+                                        </a>
+                                    @endcan
+                                @endif
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     {{-- Pagination --}}
@@ -388,6 +415,11 @@
                 confirmBulkDeleteBtn.addEventListener('click', function() {
                     bulkDeleteModal.classList.add('hidden');
                     document.body.style.overflow = '';
+                    
+                    const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
+                    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                    
+                    document.getElementById('bulkDeleteIds').value = ids.join(',');
                     bulkDeleteForm.submit();
                 });
             }

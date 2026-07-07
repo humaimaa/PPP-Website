@@ -66,5 +66,5 @@ Route::post('/contact/submit', [PageController::class, 'submitContact'])->name('
 // ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('permissions', PermissionController::class)->except(['show']);
-    Route::resource('roles', RoleController::class)->except(['show']);
+    // Route::resource('roles', RoleController::class)->except(['show']);  // REMOVE THIS LINE
 });

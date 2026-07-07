@@ -24,7 +24,7 @@
         
         <div class="flex justify-center">
             <div class="relative rounded-lg overflow-hidden shadow-lg group w-full max-w-4xl">
-                <img src="{{ asset('images/Line-Organizational-Structure-1.png') }}" 
+                <img src="{{ asset('images/Line-Organizational-Structure-1.jpg') }}" 
                      alt="PPP Unit Organogram" 
                      class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 rounded-lg">
                 <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -32,7 +32,7 @@
         </div>
         
         <div class="text-center mt-8">
-            <a href="{{ asset('images/Line-Organizational-Structure-1.png') }}" 
+            <a href="{{ asset('images/Line-Organizational-Structure-1.jpg') }}" 
                download="PPP-Department-Organogram.jpg" 
                class="inline-flex items-center px-6 py-3 bg-accent-1 text-white font-medium rounded-md hover:bg-accent-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

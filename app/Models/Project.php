@@ -20,9 +20,14 @@ class Project extends Model
         'image',
         'division',
         'category',
+        'publish', // Add this line
     ];
     
-
+    // Add helper method
+    public function isPublished()
+    {
+        return $this->publish === 'yes';
+    }
     
     public function ongoingDetail()
     {

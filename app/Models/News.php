@@ -17,6 +17,7 @@ class News extends Model
         'img_path',
         'is_featured',
         'news_date',
+        'publish', // Add this
     ];
 
     protected $casts = [
@@ -29,6 +30,12 @@ class News extends Model
         return 'title';
     }
 
+    // Helper method
+    public function isPublished()
+    {
+        return $this->publish === 'yes';
+    }
+
     // Scopes
     public function scopeFeatured($query)
     {
@@ -38,5 +45,10 @@ class News extends Model
     public function scopeOfType($query, string $type)
     {
         return $query->where('type', $type);
+    }
+    
+    public function scopePublished($query)
+    {
+        return $query->where('publish', 'yes');
     }
 }

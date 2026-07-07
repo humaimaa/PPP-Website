@@ -66,6 +66,21 @@ class ProjectController extends Controller
     }
 
     /**
+ * Toggle publish status
+ */
+public function togglePublish($id)
+{
+    try {
+        $project = Project::findOrFail($id);
+        $project->publish = $project->publish === 'yes' ? 'no' : 'yes';
+        $project->save();
+        
+        return redirect()->back()->with('success', 'Publish status updated successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
+    }
+}
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

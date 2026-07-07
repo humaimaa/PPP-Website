@@ -145,13 +145,13 @@
                             <h3 class="text-lg font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
                             <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
                             {{-- @if($member->email)
-                            <a href="mailto:{{ $member->email }}"
+                            <div 
                                class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
                                 <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                                 </svg>
                                 {{ Str::limit($member->email, 30) }}
-                            </a>
+                            </div>
                             @endif --}}
                         </div>
                     </div>
@@ -167,10 +167,10 @@
                         <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
                         <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
                         {{-- @if($member->email)
-                        <a href="mailto:{{ $member->email }}"
+                        <div 
                            class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
                             {{ Str::limit($member->email, 30) }}
-                        </a>
+                        </div>
                         @endif --}}
                     </div>
                     @else

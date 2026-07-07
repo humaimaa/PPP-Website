@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">Create and manage news, announcements, and press releases</p>
         </div>
         <div class="flex gap-3">
-            @can('updates.delete')
+            @can('news.delete')
                 <button type="button" id="bulkDeleteBtn" 
                         class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                         style="display: none;">
@@ -20,7 +20,7 @@
                 </button>
             @endcan
             
-            @can('updates.create')
+            @can('news.create')
                 <a href="{{ route('admin.updates.create') }}"
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                     <i class="fas fa-plus"></i>
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        {{-- BULK DELETE FORM - Outside the table and hidden --}}
+        {{-- BULK DELETE FORM --}}
         <form id="bulkDeleteForm" action="{{ route('admin.updates.bulk-delete') }}" method="POST" style="display: none;">
             @csrf
             <input type="hidden" name="update_ids" id="bulkDeleteIds" value="">
@@ -110,7 +110,7 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                     <tr>
-                        @can('updates.delete')
+                        @can('news.delete')
                             <th class="px-6 py-3 text-left w-10">
                                 <input type="checkbox" 
                                        id="selectAllCheckbox" 
@@ -123,7 +123,7 @@
                         <th class="px-6 py-3 text-left">Published</th>
                         <th class="px-6 py-3 text-left">Image</th>
                         <th class="px-6 py-3 text-left">Date</th>
-                        @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
+                        @if(auth()->user()->can('news.view') || auth()->user()->can('news.edit') || auth()->user()->can('news.delete'))
                             <th class="px-6 py-3 text-right">Actions</th>
                         @endif
                     </tr>
@@ -131,7 +131,7 @@
                 <tbody class="divide-y divide-gray-100 text-gray-700">
                     @forelse($news as $item)
                     <tr class="hover:bg-gray-50 transition" data-update-id="{{ $item->id }}">
-                        @can('updates.delete')
+                        @can('news.delete')
                             <td class="px-6 py-4">
                                 <input type="checkbox" 
                                        name="update_ids[]" 
@@ -220,10 +220,10 @@
                             </div>
                         </td>
                         
-                        @if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete'))
+                        @if(auth()->user()->can('news.view') || auth()->user()->can('news.edit') || auth()->user()->can('news.delete'))
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    @can('updates.view')
+                                    @can('news.view')
                                         <a href="{{ route('admin.updates.show', $item) }}" 
                                            class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
                                            title="View Update Details">
@@ -231,7 +231,7 @@
                                         </a>
                                     @endcan
                                     
-                                    @can('updates.edit')
+                                    @can('news.edit')
                                         <a href="{{ route('admin.updates.edit', $item) }}" 
                                            class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
                                            title="Edit Update">
@@ -239,7 +239,7 @@
                                         </a>
                                     @endcan
                                     
-                                    @can('updates.edit')
+                                    @can('news.edit')
                                         <button type="button"
                                                 onclick="toggleFeatured({{ $item->id }}, {{ $item->is_featured ? 'true' : 'false' }})" 
                                                 class="{{ $item->is_featured ? 'text-yellow-600 hover:text-yellow-900' : 'text-gray-500 hover:text-yellow-600' }} p-2 rounded hover:bg-yellow-50 transition-colors"
@@ -248,7 +248,7 @@
                                         </button>
                                     @endcan
                                     
-                                    @can('updates.delete')
+                                    @can('news.delete')
                                         <button type="button"
                                                 onclick="confirmDelete({{ $item->id }}, '{{ addslashes($item->title) }}')" 
                                                 class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
@@ -264,8 +264,8 @@
                         <tr>
                             @php
                                 $colspan = 7; // title, type, featured, published, image, date, actions
-                                if(auth()->user()->can('updates.delete')) $colspan++; // checkbox
-                                if(auth()->user()->can('updates.view') || auth()->user()->can('updates.edit') || auth()->user()->can('updates.delete')) $colspan++; // actions
+                                if(auth()->user()->can('news.delete')) $colspan++; // checkbox
+                                if(auth()->user()->can('news.view') || auth()->user()->can('news.edit') || auth()->user()->can('news.delete')) $colspan++; // actions
                             @endphp
                             <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                 <i class="fas fa-bullhorn text-4xl mb-2"></i>
@@ -275,7 +275,7 @@
                                         Clear filters
                                     </a>
                                 @else
-                                    @can('updates.create')
+                                    @can('news.create')
                                         <a href="{{ route('admin.updates.create') }}" class="text-emerald-600 hover:underline text-sm">
                                             Create your first update →
                                         </a>
@@ -329,7 +329,7 @@
 </div>
 
 {{-- Bulk Delete Confirmation Modal --}}
-@can('updates.delete')
+@can('news.delete')
 <div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -367,7 +367,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @can('updates.delete')
+        @can('news.delete')
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const updateCheckboxes = document.querySelectorAll('.update-checkbox');
             const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -437,9 +437,13 @@
                     document.body.style.overflow = '';
                     
                     const checkedBoxes = document.querySelectorAll('.update-checkbox:checked');
+                    // Get IDs as array and join with comma
                     const ids = Array.from(checkedBoxes).map(cb => cb.value);
                     
+                    // Set the hidden input value as comma-separated string
                     document.getElementById('bulkDeleteIds').value = ids.join(',');
+                    
+                    // Submit the form
                     bulkDeleteForm.submit();
                 });
             }
@@ -464,7 +468,7 @@
             updateSelectedCount();
         @endcan
         
-        @can('updates.delete')
+        @can('news.delete')
             window.confirmDelete = function(updateId, updateName) {
                 const modal = document.getElementById('deleteModal');
                 const deleteUpdateNameSpan = document.getElementById('deleteUpdateName');
@@ -501,7 +505,7 @@
             }
         @endcan
         
-        @can('updates.edit')
+        @can('news.edit')
             window.toggleFeatured = function(updateId, isCurrentlyFeatured) {
                 const action = isCurrentlyFeatured ? 'unfeature' : 'feature';
                 const form = document.getElementById('toggleFeaturedForm');
@@ -512,7 +516,7 @@
         
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                @can('updates.delete')
+                @can('news.delete')
                     const deleteModal = document.getElementById('deleteModal');
                     const bulkDeleteModal = document.getElementById('bulkDeleteModal');
                     

@@ -273,41 +273,69 @@ class NewsController extends Controller
         }
     }
 
-    /**
-     * Bulk delete updates
-     */
-    public function bulkDelete(Request $request)
-    {
-        try {
-            $request->validate([
-                'update_ids'   => 'required|array',
-                'update_ids.*' => 'exists:news,id',
-            ]);
-
-            $updateIds    = $request->update_ids;
-            $deletedCount = 0;
-
-            foreach ($updateIds as $updateId) {
-                $news = News::find($updateId);
-                if ($news) {
-                    if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
-                        Storage::disk('public')->delete($news->img_path);
-                    }
-                    $news->delete();
-                    $deletedCount++;
-                }
-            }
-
-            return redirect()
-                ->route('admin.updates.index')
-                ->with('success', "{$deletedCount} update(s) deleted successfully!");
-
-        } catch (\Exception $e) {
-            return redirect()
-                ->route('admin.updates.index')
-                ->with('error', 'Error deleting updates: ' . $e->getMessage());
+   /**
+ * Bulk delete updates
+ */
+public function bulkDelete(Request $request)
+{
+    try {
+        // Handle both array and comma-separated string
+        $updateIds = $request->input('update_ids');
+        
+        // If it's a string, convert to array
+        if (is_string($updateIds)) {
+            $updateIds = explode(',', $updateIds);
         }
+        
+        // Ensure we have an array and filter out empty values
+        if (!is_array($updateIds)) {
+            $updateIds = [];
+        }
+        
+        $updateIds = array_filter($updateIds, function($id) {
+            return !empty($id) && is_numeric($id);
+        });
+        
+        // Validate that we have IDs
+        if (empty($updateIds)) {
+            return redirect()->route('admin.updates.index')
+                ->with('error', 'No valid update IDs provided for deletion.');
+        }
+        
+        // Check if all IDs exist
+        $validIds = News::whereIn('id', $updateIds)->pluck('id')->toArray();
+        
+        if (empty($validIds)) {
+            return redirect()->route('admin.updates.index')
+                ->with('error', 'No valid updates found to delete.');
+        }
+        
+        $deletedCount = 0;
+        
+        foreach ($validIds as $updateId) {
+            $news = News::find($updateId);
+            if ($news) {
+                if ($news->img_path && Storage::disk('public')->exists($news->img_path)) {
+                    Storage::disk('public')->delete($news->img_path);
+                }
+                $news->delete();
+                $deletedCount++;
+            }
+        }
+
+        return redirect()
+            ->route('admin.updates.index')
+            ->with('success', "{$deletedCount} update(s) deleted successfully!");
+
+    } catch (\Exception $e) {
+        \Log::error('Bulk delete failed: ' . $e->getMessage());
+        \Log::error($e->getTraceAsString());
+        
+        return redirect()
+            ->route('admin.updates.index')
+            ->with('error', 'Error deleting updates: ' . $e->getMessage());
     }
+}
 
     /**
      * Display the specified resource by slug (for frontend).

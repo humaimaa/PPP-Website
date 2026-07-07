@@ -105,12 +105,14 @@
                     @forelse($acronyms as $acronym)
                     <tr class="hover:bg-gray-50 transition" data-acronym-id="{{ $acronym->id }}">
 
-                        
-
-                        <td class="px-6 py-4 text-gray-500 text-xs">
-                            #{{ $acronym->id }}
+                        @can('acronyms.delete')
+                        <td class="px-6 py-4">
+                            <input type="checkbox" name="acronym_ids[]" value="{{ $acronym->id }}"
+                                class="acronym-checkbox rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
+                        @endcan
 
+                        
                         <td class="px-6 py-4">
                             <span class="font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md text-sm">
                                 {{ $acronym->acronym }}

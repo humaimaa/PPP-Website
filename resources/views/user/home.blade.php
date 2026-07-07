@@ -254,8 +254,8 @@
                     
                     <!-- Title with Native Tooltip -->
                     <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2 cursor-help hover:text-accent-1 transition-colors duration-300"
-                        title="{{ Str::title($news->title) }}">
-                        {{ Str::title($news->title) }}
+                        title="{{ formatTitle( Str::title($news->title) ) }}">
+                        {{  formatTitle( Str::title($news->title) )  }}
                     </h3>
                     
                     <!-- Content Preview -->

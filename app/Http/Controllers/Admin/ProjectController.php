@@ -372,24 +372,57 @@ class ProjectController extends Controller
     }
     
     /**
-     * Bulk delete projects
+     * Bulk delete projects - FIXED
      */
     public function bulkDelete(Request $request)
     {
-        $request->validate([
-            'project_ids' => 'required|array',
-            'project_ids.*' => 'exists:projects,id'
-        ]);
-        
         try {
-            $projectIds = $request->project_ids;
+            // Handle both array and comma-separated string
+            $projectIds = $request->input('project_ids');
+            
+            // If it's a string, convert to array
+            if (is_string($projectIds)) {
+                $projectIds = explode(',', $projectIds);
+            }
+            
+            // Ensure we have an array and filter out empty values
+            if (!is_array($projectIds)) {
+                $projectIds = [];
+            }
+            
+            $projectIds = array_filter($projectIds, function($id) {
+                return !empty($id) && is_numeric($id);
+            });
+            
+            // Validate that we have IDs
+            if (empty($projectIds)) {
+                return redirect()->route('admin.projects.index')
+                    ->with('error', 'No valid project IDs provided for deletion.');
+            }
+            
+            // Check if all IDs exist
+            $validIds = Project::whereIn('id', $projectIds)->pluck('id')->toArray();
+            
+            if (empty($validIds)) {
+                return redirect()->route('admin.projects.index')
+                    ->with('error', 'No valid projects found to delete.');
+            }
+            
             $deletedCount = 0;
             
-            foreach ($projectIds as $projectId) {
+            foreach ($validIds as $projectId) {
                 $project = Project::find($projectId);
                 if ($project) {
+                    // Delete project image if exists
                     if ($project->image && Storage::disk('public')->exists($project->image)) {
                         Storage::disk('public')->delete($project->image);
+                    }
+                    
+                    // Delete associated details based on category
+                    if ($project->category === 'Ongoing') {
+                        OngoingProjectDetail::where('project_id', $project->id)->delete();
+                    } elseif ($project->category === 'Construction & Operational') {
+                        CompletedProjectDetail::where('project_id', $project->id)->delete();
                     }
                     
                     $project->delete();
@@ -401,6 +434,9 @@ class ProjectController extends Controller
                 ->with('success', "{$deletedCount} project(s) deleted successfully!");
                 
         } catch (\Exception $e) {
+            \Log::error('Bulk delete failed: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
             return redirect()->route('admin.projects.index')
                 ->with('error', 'Error deleting projects: ' . $e->getMessage());
         }

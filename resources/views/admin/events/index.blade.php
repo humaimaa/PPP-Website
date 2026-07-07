@@ -13,7 +13,7 @@
         </div>
         <div class="flex gap-3">
             {{-- Bulk Delete Button - Only show if user has delete permission --}}
-            @can('events.delete')
+            @can('gallery.delete')
                 <button type="button" id="bulkDeleteBtn" 
                         class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
                         style="display: none;">
@@ -23,7 +23,7 @@
             @endcan
             
             {{-- Add New Event Button --}}
-            @can('events.create')
+            @can('gallery.create')
                 <a href="{{ route('admin.events.add') }}"
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                     <i class="fas fa-plus"></i>
@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        {{-- BULK DELETE FORM --}}
+        {{-- BULK DELETE FORM - FIXED --}}
         <form id="bulkDeleteForm" action="{{ route('admin.events.bulk-delete') }}" method="POST" style="display: none;">
             @csrf
             <input type="hidden" name="event_ids" id="bulkDeleteIds" value="">
@@ -100,7 +100,7 @@
                 <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                     <tr>
                         {{-- Checkbox column - Only show if user has delete permission --}}
-                        @can('events.delete')
+                        @can('gallery.delete')
                             <th class="px-6 py-3 text-left w-10">
                                 <input type="checkbox" 
                                        id="selectAllCheckbox" 
@@ -117,7 +117,7 @@
                         <th class="px-6 py-3 text-left">Created</th>
                         
                         {{-- Actions column - Only show if user has any action permissions --}}
-                        @if(auth()->user()->can('events.view') || auth()->user()->can('events.edit') || auth()->user()->can('events.delete'))
+                        @if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete'))
                             <th class="px-6 py-3 text-right">Actions</th>
                         @endif
                     </tr>
@@ -132,7 +132,7 @@
                         @endphp
                         <tr class="hover:bg-gray-50 transition" data-event-id="{{ $event->id }}">
                             {{-- Checkbox column - Only show if user has delete permission --}}
-                            @can('events.delete')
+                            @can('gallery.delete')
                                 <td class="px-6 py-4">
                                     <input type="checkbox" 
                                            name="event_ids[]" 
@@ -210,11 +210,11 @@
                             </td>
                             
                             {{-- Actions column - Only show if user has any action permissions --}}
-                            @if(auth()->user()->can('events.view') || auth()->user()->can('events.edit') || auth()->user()->can('events.delete'))
+                            @if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete'))
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center justify-end gap-2">
                                         {{-- View Button --}}
-                                        @can('events.view')
+                                        @can('gallery.view')
                                             <a href="{{ route('admin.events.show', $event) }}" 
                                                class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
                                                title="View Details">
@@ -223,7 +223,7 @@
                                         @endcan
                                         
                                         {{-- Edit Button --}}
-                                        @can('events.edit')
+                                        @can('gallery.edit')
                                             <a href="{{ route('admin.events.edit', $event) }}" 
                                                class="text-emerald-600 hover:text-emerald-900 p-2 rounded hover:bg-emerald-50 transition-colors"
                                                title="Edit Event">
@@ -232,7 +232,7 @@
                                         @endcan
                                         
                                         {{-- Delete Button --}}
-                                        @can('events.delete')
+                                        @can('gallery.delete')
                                             <button type="button" 
                                                     onclick="confirmDelete({{ $event->id }}, '{{ addslashes($event->title) }}')"
                                                     class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
@@ -248,8 +248,8 @@
                         <tr>
                             @php
                                 $colspan = 9; // Base columns (Thumbnail, Title, Description, Location, Event Date, Published, Images, Created)
-                                if(auth()->user()->can('events.delete')) $colspan++; // Add checkbox column
-                                if(auth()->user()->can('events.view') || auth()->user()->can('events.edit') || auth()->user()->can('events.delete')) $colspan++; // Add actions column
+                                if(auth()->user()->can('gallery.delete')) $colspan++; // Add checkbox column
+                                if(auth()->user()->can('gallery.view') || auth()->user()->can('gallery.edit') || auth()->user()->can('gallery.delete')) $colspan++; // Add actions column
                             @endphp
                             <td colspan="{{ $colspan }}" class="px-6 py-12 text-center text-gray-400">
                                 <i class="fas fa-calendar-alt text-4xl mb-2"></i>
@@ -259,7 +259,7 @@
                                         Clear filters
                                     </a>
                                 @else
-                                    @can('events.create')
+                                    @can('gallery.create')
                                         <a href="{{ route('admin.events.add') }}" class="text-emerald-600 hover:underline text-sm">
                                             Add your first event →
                                         </a>
@@ -314,7 +314,7 @@
 </div>
 
 {{-- Bulk Delete Confirmation Modal - Only show if user has delete permission --}}
-@can('events.delete')
+@can('gallery.delete')
 <div id="bulkDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
@@ -347,7 +347,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Bulk delete functionality - Only initialize if user has delete permission
-        @can('events.delete')
+        @can('gallery.delete')
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const eventCheckboxes = document.querySelectorAll('.event-checkbox');
             const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -417,13 +417,10 @@
                     document.body.style.overflow = '';
                     
                     const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
-                    // Get IDs as array
-                    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                    // FIXED: Use map to get IDs and join with comma
+                    const ids = Array.from(checkedBoxes).map(cb => cb.value).join(',');
                     
-                    // Set the hidden input value as comma-separated string
-                    document.getElementById('bulkDeleteIds').value = ids.join(',');
-                    
-                    // Submit the form
+                    document.getElementById('bulkDeleteIds').value = ids;
                     bulkDeleteForm.submit();
                 });
             }
@@ -449,7 +446,7 @@
         @endcan
         
         // Delete confirmation function - Only define if user has delete permission
-        @can('events.delete')
+        @can('gallery.delete')
             window.confirmDelete = function(eventId, eventName) {
                 const modal = document.getElementById('deleteModal');
                 const deleteEventNameSpan = document.getElementById('deleteEventName');
@@ -489,7 +486,7 @@
         // Close modal on escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                @can('events.delete')
+                @can('gallery.delete')
                     const deleteModal = document.getElementById('deleteModal');
                     const bulkDeleteModal = document.getElementById('bulkDeleteModal');
                     

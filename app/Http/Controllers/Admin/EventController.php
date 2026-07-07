@@ -17,8 +17,8 @@ class EventController extends Controller
     {
         $query = Event::with('gallery');
         
-        // Search functionality - FIXED
-        if ($request->filled('search')) {
+        // Search functionality
+        if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
@@ -28,16 +28,16 @@ class EventController extends Controller
         }
         
         // Filter by date range
-        if ($request->filled('from_date')) {
+        if ($request->has('from_date') && $request->from_date) {
             $query->whereDate('event_date', '>=', $request->from_date);
         }
         
-        if ($request->filled('to_date')) {
+        if ($request->has('to_date') && $request->to_date) {
             $query->whereDate('event_date', '<=', $request->to_date);
         }
 
         // Filter by publish status
-        if ($request->filled('publish') && $request->publish !== '') {
+        if ($request->has('publish') && $request->publish !== '') {
             $query->where('publish', $request->publish);
         }
         
@@ -247,43 +247,17 @@ class EventController extends Controller
     }
 
     /**
-     * Bulk delete events - FIXED
+     * Bulk delete events.
      */
     public function bulkDelete(Request $request)
     {
         try {
-            // Handle both array and comma-separated string
-            $eventIds = $request->input('event_ids');
-            
-            // If it's a string, convert to array
-            if (is_string($eventIds)) {
-                $eventIds = explode(',', $eventIds);
-            }
-            
-            // Ensure we have an array and filter out empty values
-            if (!is_array($eventIds)) {
-                $eventIds = [];
-            }
-            
-            $eventIds = array_filter($eventIds, function($id) {
-                return !empty($id) && is_numeric($id);
-            });
-            
-            // Validate that we have IDs
-            if (empty($eventIds)) {
-                return redirect()->route('admin.events.index')
-                    ->with('error', 'No valid event IDs provided for deletion.');
-            }
-            
-            // Check if all IDs exist
-            $validIds = Event::whereIn('id', $eventIds)->pluck('id')->toArray();
-            
-            if (empty($validIds)) {
-                return redirect()->route('admin.events.index')
-                    ->with('error', 'No valid events found to delete.');
-            }
-            
-            $events = Event::whereIn('id', $validIds)->get();
+            $request->validate([
+                'event_ids' => 'required|array',
+                'event_ids.*' => 'exists:events,id',
+            ]);
+
+            $events = Event::whereIn('id', $request->event_ids)->get();
             $deletedCount = $events->count();
             
             foreach ($events as $event) {
@@ -293,15 +267,12 @@ class EventController extends Controller
                 }
             }
             
-            Event::whereIn('id', $validIds)->delete();
+            Event::whereIn('id', $request->event_ids)->delete();
 
             return redirect()->route('admin.events.index')
                 ->with('success', $deletedCount . ' event(s) deleted successfully.');
                 
         } catch (\Exception $e) {
-            \Log::error('Bulk delete failed: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
-            
             return redirect()->route('admin.events.index')
                 ->with('error', 'Error deleting events: ' . $e->getMessage());
         }

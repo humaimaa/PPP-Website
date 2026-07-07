@@ -175,7 +175,7 @@
                     </div>
                     @else
                     {{-- Default Style Card --}}
-                    div class="bg-background-white rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                    div class="bg-background-light rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
                         <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
                             <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                                  alt="{{ $member->name }}"

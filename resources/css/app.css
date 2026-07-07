@@ -669,28 +669,3 @@ footer .flex.space-x-4 a:hover i {
   }
 }
 
-/* ============================================
-   TOOLTIP STYLES
-   ============================================ */
-
-.tooltip-text {
-    min-width: 60px;
-    max-width: 200px;
-    word-wrap: break-word;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* Ensure tooltips don't get cut off in collapsed sidebar */
-#sidebar:not(.sidebar-open) .tooltip-text {
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 0.75rem;
-}
-
-/* Adjust for dropdown buttons with chevrons */
-.dropdown-btn .tooltip-text {
-    top: 50%;
-    transform: translateY(-50%);
-}

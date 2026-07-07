@@ -337,8 +337,10 @@
 
     function createSectorChart(division) {
         // Set Chart.js global defaults so canvas-rendered text is white
-        Chart.defaults.color = '#ffffff';
-        Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.color = '#ffffff';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+        }
 
         const chartContainer = document.getElementById('sector-chart');
         if (!chartContainer) return;
@@ -394,64 +396,66 @@
         const canvas = document.createElement('canvas');
         chartContainer.appendChild(canvas);
 
-        sectorChart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: sectors,
-                datasets: [{
-                    data: counts,
-                    backgroundColor: chartColors,
-                    borderWidth: 0,
-                    borderRadius: 3,
-                    barThickness: 12
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 300 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.parsed.x || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return `${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
+        if (typeof Chart !== 'undefined') {
+            sectorChart = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: sectors,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: chartColors,
+                        borderWidth: 0,
+                        borderRadius: 3,
+                        barThickness: 12
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 300 },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.x || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${value} project${value !== 1 ? 's' : ''} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#ffffff',
+                                font: { size: 10 },
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.15)'
+                            },
+                            border: {
+                                color: 'rgba(255,255,255,0.2)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#ffffff',
+                                font: { size: 10 },
+                                autoSkip: false
+                            },
+                            grid: { display: false },
+                            border: {
+                                color: 'rgba(255,255,255,0.2)'
                             }
                         }
                     }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#ffffff',
-                            font: { size: 10 },
-                            stepSize: 1
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.15)'
-                        },
-                        border: {
-                            color: 'rgba(255,255,255,0.2)'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: '#ffffff',
-                            font: { size: 10 },
-                            autoSkip: false
-                        },
-                        grid: { display: false },
-                        border: {
-                            color: 'rgba(255,255,255,0.2)'
-                        }
-                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     function getStatusColorClass(category) {
@@ -540,7 +544,7 @@
             if (!division.projects_list || division.projects_list.length === 0) {
                 projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
             } else {
-                // Show all projects (not just first 10) for better visibility
+                // Show all projects with slug links
                 division.projects_list.forEach(project => {
                     const borderColorClass = getStatusColorClass(project.category);
                     const statusBadge = getStatusBadge(project.category);
@@ -548,11 +552,15 @@
                     
                     const projectDiv = document.createElement('div');
                     projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
+                    
+                    // Use slug instead of ID for the link - FIXED: Check for project.slug
+                    const projectSlug = project.slug || project.id;
                     projectDiv.onclick = () => {
-                        if (project.id) {
-                            window.location.href = `/project/${project.id}`;
+                        if (projectSlug) {
+                            window.location.href = `/project/${projectSlug}`;
                         }
                     };
+                    
                     projectDiv.innerHTML = `
                         <div class="flex justify-between items-start">
                             <div class="font-medium text-white text-sm flex-1">${escapeHtml(project.name)}</div>
@@ -638,11 +646,25 @@
         }
     }
 
+    // Division card click handlers
+    function initDivisionCardClickHandlers() {
+        const divisionCards = document.querySelectorAll('.division-card');
+        divisionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const divisionName = this.dataset.division;
+                if (divisionName) {
+                    showDivisionDetail(divisionName);
+                }
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded, initializing...');
         initStatNumberAnimation();
         updateTotalStats();
         initMap();
+        initDivisionCardClickHandlers();
 
         const statsPanel = document.getElementById('stats-panel');
         if (statsPanel && window.ResizeObserver) {

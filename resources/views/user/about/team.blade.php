@@ -175,25 +175,20 @@
                     </div>
                     @else
                     {{-- Default Style Card --}}
-                    <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
-                        <div class="h-56 overflow-hidden">
+                    div class="bg-background-white rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                        <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
                             <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                                  alt="{{ $member->name }}"
                                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                         </div>
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
-                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
-                            @if($member->email)
-                            <a href="mailto:{{ $member->email }}"
-                               class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
-                                <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                                {{ Str::limit($member->email, 30) }}
-                            </a>
-                            @endif
+                        <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                        <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
+                        {{-- @if($member->email)
+                        <div 
+                           class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
+                            {{ Str::limit($member->email, 30) }}
                         </div>
+                        @endif --}}
                     </div>
                     @endif
                 </div>

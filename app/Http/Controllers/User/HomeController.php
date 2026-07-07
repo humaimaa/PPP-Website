@@ -29,15 +29,17 @@ class HomeController extends Controller
             $leadershipMessage = LeadershipMessage::first();
         }
         
-        // Get latest 3 featured news (first try featured news, then fallback to latest news)
-        $latestNews = News::where('is_featured', true)
+        // Get latest 3 featured news (only published)
+        $latestNews = News::where('publish', 'yes')
+            ->where('is_featured', true)
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
         
-        // If no featured news found, get the latest 3 news instead
+        // If no featured news found, get the latest 3 published news instead
         if ($latestNews->count() < 3) {
-            $fallbackNews = News::orderBy('created_at', 'desc')
+            $fallbackNews = News::where('publish', 'yes')
+                ->orderBy('created_at', 'desc')
                 ->take(3)
                 ->get();
             

@@ -89,7 +89,7 @@
         <div class="mt-12 pt-6 border-t border-gray-200/30">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @if(isset($previousNews))
-                <a href="{{ route('media.room.updates.show', $previousNews->id) }}"
+                <a href="{{ route('media.room.updates.show', $previousNews->slug) }}"
                     class="group p-4 bg-background-light/10 rounded-lg hover:bg-background-light/20 transition-all duration-300 border border-gray-200/30 hover:border-accent-1/30">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-3 text-accent-1 group-hover:-translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@
                 @endif
                 
                 @if(isset($nextNews))
-                <a href="{{ route('media.room.updates.show', $nextNews->id) }}"
+                <a href="{{ route('media.room.updates.show', $nextNews->slug) }}"
                     class="group p-4 bg-background-light/10 rounded-lg hover:bg-background-light/20 transition-all duration-300 md:text-right border border-gray-200/30 hover:border-accent-1/30">
                     <div class="flex items-center md:flex-row-reverse">
                         <svg class="w-5 h-5 ml-3 text-accent-1 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

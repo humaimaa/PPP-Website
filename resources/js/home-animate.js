@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeStatsCounter();
     initSmoothScrollArrow();
     initPositionAwareButton();
-    initPartnerLogosWithArrows();
+    initPartnerLogosAutoScroll();
 });
 
 function initializeTextAnimations() {
@@ -313,14 +313,12 @@ function initPositionAwareButton() {
     });
 }
 
-// PARTNER LOGOS WITH ARROW NAVIGATION
-function initPartnerLogosWithArrows() {
+// PARTNER LOGOS AUTO-SCROLL (No Arrows)
+function initPartnerLogosAutoScroll() {
     const track = document.getElementById('partner-track');
     const container = track?.closest('.logo-scroll-container');
-    const leftBtn = document.getElementById('partner-scroll-left');
-    const rightBtn = document.getElementById('partner-scroll-right');
     
-    if (!track || !container || !leftBtn || !rightBtn) {
+    if (!track || !container) {
         return;
     }
 
@@ -328,242 +326,117 @@ function initPartnerLogosWithArrows() {
     const logoItems = track.querySelectorAll('.partner-logo');
     if (logoItems.length === 0) return;
 
-    // Store logo widths
-    let logoWidths = [];
-    let totalOriginalWidth = 0;
-    const gap = 48; // gap-12 in rem = 3rem = 48px
+    let gap = 48; // gap-12 in rem = 3rem = 48px
+    let logoWidth = 0;
+    let totalWidth = 0;
+    let halfTotalWidth = 0;
+    let animation = null;
 
-    // Calculate logo widths
-    function calculateLogoWidths() {
-        logoWidths = [];
-        const items = track.querySelectorAll('.partner-logo');
-        const originalCount = items.length / 2; // Only original items
-        let tempWidth = 0;
-        
-        for (let i = 0; i < originalCount; i++) {
-            const width = items[i].offsetWidth + gap;
-            logoWidths.push(width);
-            tempWidth += width;
+    // Calculate widths
+    function calculateWidths() {
+        // Get the width of the first logo including gap
+        const firstLogo = logoItems[0];
+        if (firstLogo) {
+            logoWidth = firstLogo.offsetWidth + gap;
+        } else {
+            logoWidth = 200 + gap; // fallback
         }
-        totalOriginalWidth = tempWidth;
+        
+        // Total width of all logos
+        totalWidth = logoItems.length * logoWidth;
+        halfTotalWidth = totalWidth / 2;
     }
 
-    // Clone logos for infinite scroll
-    const logos = Array.from(logoItems);
-    logos.forEach(logo => {
-        const clone = logo.cloneNode(true);
-        track.appendChild(clone);
-    });
-
-    // Initial calculation
-    setTimeout(calculateLogoWidths, 100);
-
-    let isAnimating = false;
-    let animation = null;
-    let currentIndex = 0;
-    let totalLogos = logoItems.length;
-
-    // Start continuous scroll
-    function startContinuousScroll() {
-        if (isAnimating) return;
+    // Setup track with clones for seamless infinite scroll
+    function setupClones() {
+        // Remove existing clones if any
+        const existingClones = track.querySelectorAll('.clone-logo');
+        existingClones.forEach(clone => clone.remove());
         
-        if (logoWidths.length === 0) {
-            calculateLogoWidths();
-        }
-        
-        const scrollDistance = totalOriginalWidth;
-        
+        // Clone all logos and append
+        logoItems.forEach(logo => {
+            const clone = logo.cloneNode(true);
+            clone.classList.add('clone-logo');
+            track.appendChild(clone);
+        });
+    }
+
+    // Start auto-scroll
+    function startAutoScroll() {
         if (animation) {
             animation.kill();
             animation = null;
         }
-
-        isAnimating = true;
+        
+        const scrollDistance = halfTotalWidth;
         
         animation = gsap.to(track, {
             x: -scrollDistance,
-            duration: 20,
+            duration: 25,
             ease: "none",
             repeat: -1,
             modifiers: {
                 x: function(x) {
                     const currentX = parseFloat(x);
-                    if (currentX <= -scrollDistance) {
-                        gsap.set(track, { x: 0 });
-                        currentIndex = 0;
-                        updateArrowVisibility();
-                        return "0px";
+                    // Check if we need to loop seamlessly
+                    if (currentX <= -halfTotalWidth) {
+                        gsap.set(track, { x: currentX + halfTotalWidth });
+                        return (currentX + halfTotalWidth) + "px";
                     }
                     return x;
                 }
-            },
-            onUpdate: function() {
-                updateArrowVisibility();
             }
         });
     }
 
-    // Stop continuous scroll
-    function stopContinuousScroll() {
+    // Stop auto-scroll
+    function stopAutoScroll() {
         if (animation) {
             animation.kill();
             animation = null;
         }
-        isAnimating = false;
     }
-
-    // Update arrow visibility
-    function updateArrowVisibility() {
-        const currentX = parseFloat(gsap.getProperty(track, "x"));
-        const maxScroll = totalOriginalWidth - container.clientWidth;
-        
-        // Left arrow: can scroll if not at the beginning
-        if (currentX < -1) {
-            leftBtn.disabled = false;
-        } else {
-            leftBtn.disabled = true;
-        }
-
-        // Right arrow: can scroll if not at the end
-        if (currentX > -maxScroll + 1) {
-            rightBtn.disabled = false;
-        } else {
-            rightBtn.disabled = true;
-        }
-    }
-
-    // Get logo width
-    function getLogoWidth() {
-        if (logoWidths.length > 0) {
-            return logoWidths[0] || (logoItems[0]?.offsetWidth + gap || 200);
-        }
-        return logoItems[0]?.offsetWidth + gap || 200;
-    }
-
-    // Scroll by one logo
-    function scrollByOneLogo(direction) {
-        stopContinuousScroll();
-        
-        const currentX = parseFloat(gsap.getProperty(track, "x"));
-        const logoWidth = getLogoWidth();
-        const maxScroll = totalOriginalWidth - container.clientWidth;
-        
-        let targetX;
-        
-        if (direction === 'left') {
-            targetX = Math.min(currentX + logoWidth, 0);
-        } else {
-            targetX = Math.max(currentX - logoWidth, -maxScroll);
-        }
-        
-        if (Math.abs(targetX - currentX) < 1) {
-            setTimeout(() => startContinuousScroll(), 500);
-            return;
-        }
-        
-        gsap.to(track, {
-            x: targetX,
-            duration: 0.5,
-            ease: "power2.inOut",
-            onComplete: function() {
-                updateCurrentIndex();
-                setTimeout(() => startContinuousScroll(), 1000);
-            },
-            onUpdate: function() {
-                updateArrowVisibility();
-            }
-        });
-    }
-
-    // Update current index
-    function updateCurrentIndex() {
-        const currentX = parseFloat(gsap.getProperty(track, "x"));
-        const logoWidth = getLogoWidth();
-        
-        if (logoWidth > 0) {
-            const index = Math.round(Math.abs(currentX) / logoWidth);
-            currentIndex = Math.min(index, totalLogos - 1);
-        }
-    }
-
-    // Arrow click handlers
-    leftBtn.addEventListener('click', function() {
-        if (this.disabled) return;
-        scrollByOneLogo('left');
-    });
-
-    rightBtn.addEventListener('click', function() {
-        if (this.disabled) return;
-        scrollByOneLogo('right');
-    });
-
-    // Mouse wheel support
-    let wheelTimeout = null;
-    container.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        
-        if (wheelTimeout) return;
-        
-        wheelTimeout = setTimeout(() => {
-            wheelTimeout = null;
-        }, 500);
-        
-        stopContinuousScroll();
-        
-        if (e.deltaY > 0) {
-            scrollByOneLogo('right');
-        } else {
-            scrollByOneLogo('left');
-        }
-    }, { passive: false });
-
-    // Touch support
-    let touchStartX = 0;
-    
-    container.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        stopContinuousScroll();
-    }, { passive: true });
-    
-    container.addEventListener('touchend', function(e) {
-        const touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        const threshold = 30;
-        
-        if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-                scrollByOneLogo('right');
-            } else {
-                scrollByOneLogo('left');
-            }
-        } else {
-            setTimeout(() => startContinuousScroll(), 500);
-        }
-    }, { passive: true });
 
     // Pause on hover
-    container.addEventListener('mouseenter', stopContinuousScroll);
-    container.addEventListener('mouseleave', startContinuousScroll);
+    container.addEventListener('mouseenter', stopAutoScroll);
+    container.addEventListener('mouseleave', function() {
+        startAutoScroll();
+    });
 
     // Resize handler
     let resizeTimeout = null;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            calculateLogoWidths();
-            stopContinuousScroll();
+            stopAutoScroll();
+            calculateWidths();
             gsap.set(track, { x: 0 });
-            currentIndex = 0;
-            updateArrowVisibility();
-            setTimeout(() => startContinuousScroll(), 500);
+            setTimeout(() => {
+                startAutoScroll();
+            }, 300);
         }, 300);
     });
 
-    // Initialize
-    setTimeout(() => {
-        startContinuousScroll();
-        updateArrowVisibility();
-    }, 1000);
+    // Initialize everything
+    function init() {
+        calculateWidths();
+        setupClones();
+        gsap.set(track, { x: 0 });
+        startAutoScroll();
+    }
+
+    // Initial setup with delay to ensure layout is complete
+    setTimeout(init, 500);
+
+    // Re-initialize on window load
+    window.addEventListener('load', function() {
+        stopAutoScroll();
+        calculateWidths();
+        gsap.set(track, { x: 0 });
+        setTimeout(() => {
+            startAutoScroll();
+        }, 500);
+    });
 }
 
 // Export for use in Blade templates

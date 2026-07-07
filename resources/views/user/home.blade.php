@@ -219,9 +219,10 @@
             <div class="w-20 h-1 bg-text-muted mx-auto mt-4"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($latestNews as $news)
-            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        <!-- News Cards in Flex with Center Alignment -->
+        <div class="flex flex-wrap justify-center gap-8">
+            @forelse($latestNews as $news)
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-md">
                 <!-- News Image -->
                 <div class="h-48 overflow-hidden bg-background-primary/10">
                     @if($news->img_path)
@@ -261,7 +262,7 @@
                     <p class="text-text-muted mb-4 line-clamp-3">{{ Str::limit(strip_tags($news->content), 120) }}</p>
                     
                     <!-- Read More Link -->
-                    <a href="{{ url('/media-room/updates/' . $news->id) }}"
+                    <a href="{{ url('/media-room/updates/' . $news->slug) }}"
                         class="text-accent-1 font-medium hover:text-primary transition-colors duration-300 inline-flex items-center group">
                         Read More
                         <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1"
@@ -272,7 +273,11 @@
                     </a>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="w-full text-center py-12">
+                <p class="text-text-muted text-lg">No news updates available at the moment.</p>
+            </div>
+            @endforelse
         </div>
 
         <!-- View All Button -->
@@ -287,7 +292,7 @@
     </div>
 </section>
 
-<!-- Our Partners Section - Added container with max-w-6xl -->
+<!-- Our Partners Section - Auto-scrolling Logos -->
 <section class="py-12 bg-background-white overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="text-center mb-10">
@@ -297,19 +302,10 @@
                 sustainable development in Khyber Pakhtunkhwa</p>
         </div>
 
-        <!-- Partner Logos with Navigation Arrows -->
+        <!-- Partner Logos Container (No Arrows) -->
         <div class="relative">
-            <!-- Left Arrow -->
-            <button id="partner-scroll-left"
-                class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-lg rounded-full p-3 transition-all duration-300 hover:scale-110 focus:outline-none border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-                aria-label="Scroll left" disabled>
-                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
-
             <!-- Logo Container -->
-            <div class="logo-scroll-container overflow-hidden mx-10 md:mx-14">
+            <div class="logo-scroll-container overflow-hidden">
                 <div class="logo-track flex items-center gap-8 md:gap-12" id="partner-track">
                     @php
                     $partnerLogos = [
@@ -344,15 +340,6 @@
                     @endforeach
                 </div>
             </div>
-
-            <!-- Right Arrow -->
-            <button id="partner-scroll-right"
-                class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-lg rounded-full p-3 transition-all duration-300 hover:scale-110 focus:outline-none border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-                aria-label="Scroll right">
-                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
         </div>
     </div>
 </section>

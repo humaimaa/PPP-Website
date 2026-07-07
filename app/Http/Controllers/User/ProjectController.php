@@ -379,6 +379,7 @@ class ProjectController extends Controller
                 if (!$projectExists) {
                     $projectsByDivision[$division]['projects'][] = [
                         'id' => $project->id,
+                        'slug' => $project->slug, // ADD SLUG HERE
                         'name' => $project->name,
                         'category' => $project->category,
                         'status' => $project->status,
@@ -398,6 +399,23 @@ class ProjectController extends Controller
             $totalProjectsCount = $data['total'];
             $avgCost = $totalProjectsCount > 0 ? ($data['investment'] / $totalProjectsCount) / 10000000 : 0;
             
+            // Prepare projects list with slug
+            $projectsList = [];
+            foreach ($data['projects'] as $projectData) {
+                $projectsList[] = [
+                    'id' => $projectData['id'],
+                    'slug' => $projectData['slug'], // ADD SLUG HERE
+                    'name' => $projectData['name'],
+                    'category' => $projectData['category'],
+                    'status' => $projectData['status'],
+                    'cost' => $projectData['cost'],
+                    'cost_display' => $projectData['cost_display'],
+                    'sector' => $projectData['sector'],
+                    'description' => $projectData['description'],
+                    'location' => $projectData['location']
+                ];
+            }
+            
             $divisionsDataForMap[$divisionName] = [
                 'name' => $divisionName,
                 'projects' => [
@@ -412,7 +430,7 @@ class ProjectController extends Controller
                 'investment' => $data['investment'],
                 'total_projects' => $totalProjectsCount,
                 'avg_cost' => $avgCost,
-                'projects_list' => array_slice($data['projects'], 0, 10)
+                'projects_list' => array_slice($projectsList, 0, 10) // Use the prepared list with slugs
             ];
             
             if ($divisionName === 'FATA') {
@@ -533,6 +551,23 @@ class ProjectController extends Controller
                 $investment += $this->getRawCostValue($proj->cost);
             }
             
+            // Prepare projects list with slug
+            $projectsList = [];
+            foreach ($projects as $project) {
+                $projectsList[] = [
+                    'id' => $project->id,
+                    'slug' => $project->slug, // ADD SLUG HERE
+                    'name' => $project->name,
+                    'category' => $project->category,
+                    'status' => $project->status,
+                    'cost' => $this->getRawCostValue($project->cost),
+                    'cost_display' => $project->cost,
+                    'sector' => $project->sector,
+                    'description' => $project->overview,
+                    'location' => $project->location
+                ];
+            }
+            
             $divisionsData[$division] = [
                 'name' => $division,
                 'projects' => [
@@ -546,19 +581,7 @@ class ProjectController extends Controller
                 ],
                 'investment' => (float)$investment,
                 'total_projects' => count($projects),
-                'projects_list' => array_map(function($project) {
-                    return [
-                        'id' => $project->id,
-                        'name' => $project->name,
-                        'category' => $project->category,
-                        'status' => $project->status,
-                        'cost' => $this->getRawCostValue($project->cost),
-                        'cost_display' => $project->cost,
-                        'sector' => $project->sector,
-                        'description' => $project->overview,
-                        'location' => $project->location
-                    ];
-                }, $projects)
+                'projects_list' => $projectsList // Now includes slug
             ];
         }
         
@@ -595,6 +618,23 @@ class ProjectController extends Controller
             elseif ($proj->status === 'Operational') $fataOperational++;
         }
         
+        // Prepare FATA projects list with slug
+        $fataProjectsList = [];
+        foreach ($fataProjects as $project) {
+            $fataProjectsList[] = [
+                'id' => $project->id,
+                'slug' => $project->slug, // ADD SLUG HERE
+                'name' => $project->name,
+                'category' => $project->category,
+                'status' => $project->status,
+                'cost' => $this->getRawCostValue($project->cost),
+                'cost_display' => $project->cost,
+                'sector' => $project->sector,
+                'description' => $project->overview,
+                'location' => $project->location
+            ];
+        }
+        
         $divisionsData['FATA'] = [
             'name' => 'FATA',
             'is_merged' => true,
@@ -610,19 +650,7 @@ class ProjectController extends Controller
             ],
             'investment' => (float)$fataInvestment,
             'total_projects' => count($fataProjects),
-            'projects_list' => array_map(function($project) {
-                return [
-                    'id' => $project->id,
-                    'name' => $project->name,
-                    'category' => $project->category,
-                    'status' => $project->status,
-                    'cost' => $this->getRawCostValue($project->cost),
-                    'cost_display' => $project->cost,
-                    'sector' => $project->sector,
-                    'description' => $project->overview,
-                    'location' => $project->location
-                ];
-            }, $fataProjects)
+            'projects_list' => $fataProjectsList // Now includes slug
         ];
         
         return response()->json($divisionsData);

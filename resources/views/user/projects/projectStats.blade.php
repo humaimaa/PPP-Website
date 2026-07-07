@@ -164,7 +164,7 @@
 </section>
 
 <!-- Pitchbook Section -->
-<section class="py-10 bg-background-light">
+<section class="py-10 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="text-center mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Our Pitchbook</h2>
@@ -177,12 +177,10 @@
         <div class="flex justify-center items-center">
             <a href="{{ url('/pitchbook') }}"
                 class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1 group">
-                <div class="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="relative rounded-lg overflow-hidden  hover:scale-105 transition-all duration-300">
                     <img src="{{ asset('images/Pitchbook-Cover.png') }}" alt="Pitchbook Cover"
-                        class="w-60 h-40 md:w-80 md:h-50 object-cover">
-                    <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <span class="text-white font-semibold text-sm bg-accent-1/90 px-4 py-2 rounded-md">View Pitchbook</span>
-                    </div>
+                        class="w-60 h-40 md:w-80 md:h-50 ">
+                    
                 </div>
             </a>
         </div>
@@ -290,18 +288,18 @@
 
 <script>
     window.divisionsDataFromDB = @json($divisionsDataForMap);
-window.sectorChartDataFromDB = @json($sectorChartData);
+    window.sectorChartDataFromDB = @json($sectorChartData);
 </script>
 <script>
     // Override Chart.js defaults AFTER chart.js loads but BEFORE kp-map.js runs
-document.querySelector('script[src*="chart"]') && (function waitForChart() {
-    if (typeof Chart !== 'undefined') {
-        Chart.defaults.color = '#ffffff';
-        Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
-    } else {
-        setTimeout(waitForChart, 50);
-    }
-})();
+    document.querySelector('script[src*="chart"]') && (function waitForChart() {
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.color = '#ffffff';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+        } else {
+            setTimeout(waitForChart, 50);
+        }
+    })();
 </script>
 @vite([
 'resources/js/kp-map.js'

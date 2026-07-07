@@ -174,6 +174,30 @@
         </div>
         @endcan
 
+        {{-- Acronyms --}}
+        @can('acronyms.view')
+        <div class="mb-1" data-dropdown>
+            <button type="button"
+                    class="dropdown-btn group w-full flex items-center justify-between px-3 py-3 rounded-md hover:bg-emerald-700/80 transition-colors text-left relative">
+                <div class="flex items-center">
+                    <i class="fas fa-font w-6 text-center shrink-0"></i>
+                    <span class="nav-text ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+                          style="opacity: {{ $isOpen ? '1' : '0' }}; max-width: {{ $isOpen ? '200px' : '0' }};">Acronyms</span>
+                </div>
+                <i class="dropdown-icon fas fa-chevron-down text-xs transition-transform duration-200 shrink-0"
+                   style="opacity: {{ $isOpen ? '1' : '0' }};"></i>
+                {{-- Tooltip --}}
+                <span class="tooltip-text {{ $isOpen ? 'hidden' : '' }}">Acronyms</span>
+            </button>
+            <div class="dropdown-content hidden ml-9 pl-2 border-l-2 border-emerald-600/50">
+                @can('acronyms.create')
+                <a href="{{ route('admin.acronyms.add') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.acronyms.add') ? 'bg-emerald-700/60 font-medium' : '' }}">Add Acronym</a>
+                @endcan
+                <a href="{{ route('admin.acronyms.index') }}" class="block px-3 py-2 rounded hover:bg-emerald-700/50 my-1 text-sm {{ request()->routeIs('admin.acronyms.index') ? 'bg-emerald-700/60 font-medium' : '' }}">Manage Acronyms</a>
+            </div>
+        </div>
+        @endcan
+
         {{-- Team --}}
         @can('team.view')
         <div class="mb-1" data-dropdown>

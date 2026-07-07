@@ -11,12 +11,12 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\LeadershipMessageController;
+use App\Http\Controllers\Admin\AcronymController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ProfileController;
-
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -90,65 +90,66 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->middleware('can:roles.delete');
     });
 
-/// ==================== PROJECT MANAGEMENT ====================
-Route::prefix('projects')->name('projects.')->middleware('can:projects.view')->group(function () {
-    // 1. STATIC ROUTES FIRST (no parameters)
-    Route::get('/', [ProjectController::class, 'index'])->name('index');
-    Route::get('/add', [ProjectController::class, 'create'])->name('add')->middleware('can:projects.create');
-    Route::post('/', [ProjectController::class, 'store'])->name('store')->middleware('can:projects.create');
-    Route::post('/bulk-delete', [ProjectController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-    
-    // 2. CUSTOM ROUTES WITH PARAMETERS
-    Route::patch('/{project}/toggle-publish', [ProjectController::class, 'togglePublish'])
-        ->name('toggle-publish')
-        ->where('project', '[0-9]+');
-    
-    // 3. RESOURCE ROUTES (with parameters)
-    Route::get('/{project}/edit', [ProjectController::class, 'edit'])
-        ->name('edit')
-        ->middleware('can:projects.edit')
-        ->where('project', '[0-9]+');
-    
-    Route::put('/{project}', [ProjectController::class, 'update'])
-        ->name('update')
-        ->middleware('can:projects.edit')
-        ->where('project', '[0-9]+');
-    
-    Route::delete('/{project}', [ProjectController::class, 'destroy'])
-        ->name('destroy')
-        ->middleware('can:projects.delete')
-        ->where('project', '[0-9]+');
-    
-    // 4. SHOW ROUTE MUST BE LAST
-    Route::get('/{project}', [ProjectController::class, 'show'])
-        ->name('show')
-        ->where('project', '[0-9]+');
-});
+    // ==================== PROJECT MANAGEMENT ====================
+    Route::prefix('projects')->name('projects.')->middleware('can:projects.view')->group(function () {
+        // 1. STATIC ROUTES FIRST (no parameters)
+        Route::get('/', [ProjectController::class, 'index'])->name('index');
+        Route::get('/add', [ProjectController::class, 'create'])->name('add')->middleware('can:projects.create');
+        Route::post('/', [ProjectController::class, 'store'])->name('store')->middleware('can:projects.create');
+        Route::post('/bulk-delete', [ProjectController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        
+        // 2. CUSTOM ROUTES WITH PARAMETERS
+        Route::patch('/{project}/toggle-publish', [ProjectController::class, 'togglePublish'])
+            ->name('toggle-publish')
+            ->where('project', '[0-9]+');
+        
+        // 3. RESOURCE ROUTES (with parameters)
+        Route::get('/{project}/edit', [ProjectController::class, 'edit'])
+            ->name('edit')
+            ->middleware('can:projects.edit')
+            ->where('project', '[0-9]+');
+        
+        Route::put('/{project}', [ProjectController::class, 'update'])
+            ->name('update')
+            ->middleware('can:projects.edit')
+            ->where('project', '[0-9]+');
+        
+        Route::delete('/{project}', [ProjectController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware('can:projects.delete')
+            ->where('project', '[0-9]+');
+        
+        // 4. SHOW ROUTE MUST BE LAST
+        Route::get('/{project}', [ProjectController::class, 'show'])
+            ->name('show')
+            ->where('project', '[0-9]+');
+    });
+
     // ==================== NEWS/UPDATES MANAGEMENT ====================
-Route::prefix('updates')->name('updates.')->middleware('can:news.view')->group(function () {
-    Route::get('/', [NewsController::class, 'index'])->name('index');
-    Route::get('/create', [NewsController::class, 'create'])->name('create')->middleware('can:news.create');
-    Route::post('/', [NewsController::class, 'store'])->name('store')->middleware('can:news.create');
-    Route::post('/bulk-delete', [NewsController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-    
-    // Toggle publish route - with numeric constraint
-    Route::patch('/{news}/toggle-publish', [NewsController::class, 'togglePublish'])
-        ->name('toggle-publish')
-        ->where('news', '[0-9]+');
-    
-    // Feature routes
-    Route::post('/{news}/feature', [NewsController::class, 'feature'])->name('feature')->middleware('can:news.edit');
-    Route::post('/{news}/unfeature', [NewsController::class, 'unfeature'])->name('unfeature')->middleware('can:news.edit');
-    Route::post('/{news}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('toggle-featured')->middleware('can:news.edit');
-    
-    // Resource routes - with numeric constraints
-    Route::get('/{news}/edit', [NewsController::class, 'edit'])->name('edit')->middleware('can:news.edit')->where('news', '[0-9]+');
-    Route::put('/{news}', [NewsController::class, 'update'])->name('update')->middleware('can:news.edit')->where('news', '[0-9]+');
-    Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy')->middleware('can:news.delete')->where('news', '[0-9]+');
-    
-    // Show route must be LAST
-    Route::get('/{news}', [NewsController::class, 'show'])->name('show')->where('news', '[0-9]+');
-});
+    Route::prefix('updates')->name('updates.')->middleware('can:news.view')->group(function () {
+        Route::get('/', [NewsController::class, 'index'])->name('index');
+        Route::get('/create', [NewsController::class, 'create'])->name('create')->middleware('can:news.create');
+        Route::post('/', [NewsController::class, 'store'])->name('store')->middleware('can:news.create');
+        Route::post('/bulk-delete', [NewsController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        
+        // Toggle publish route - with numeric constraint
+        Route::patch('/{news}/toggle-publish', [NewsController::class, 'togglePublish'])
+            ->name('toggle-publish')
+            ->where('news', '[0-9]+');
+        
+        // Feature routes
+        Route::post('/{news}/feature', [NewsController::class, 'feature'])->name('feature')->middleware('can:news.edit');
+        Route::post('/{news}/unfeature', [NewsController::class, 'unfeature'])->name('unfeature')->middleware('can:news.edit');
+        Route::post('/{news}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('toggle-featured')->middleware('can:news.edit');
+        
+        // Resource routes - with numeric constraints
+        Route::get('/{news}/edit', [NewsController::class, 'edit'])->name('edit')->middleware('can:news.edit')->where('news', '[0-9]+');
+        Route::put('/{news}', [NewsController::class, 'update'])->name('update')->middleware('can:news.edit')->where('news', '[0-9]+');
+        Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy')->middleware('can:news.delete')->where('news', '[0-9]+');
+        
+        // Show route must be LAST
+        Route::get('/{news}', [NewsController::class, 'show'])->name('show')->where('news', '[0-9]+');
+    });
 
     // ==================== TENDERS MANAGEMENT ====================
     Route::prefix('tenders')->name('tenders.')->middleware('can:tenders.view')->group(function () {
@@ -187,31 +188,32 @@ Route::prefix('updates')->name('updates.')->middleware('can:news.view')->group(f
         Route::delete('/{download}', [DownloadController::class, 'destroy'])->name('destroy')->middleware('can:downloads.delete');
     });
 
- // ==================== EVENTS MANAGEMENT ====================
-Route::prefix('events')->name('events.')->middleware('can:events.view')->group(function () {
-    // Static routes (no parameters) first
-    Route::get('/', [EventController::class, 'index'])->name('index');
-    Route::get('/add', [EventController::class, 'create'])->name('add')->middleware('can:events.create');
-    Route::post('/', [EventController::class, 'store'])->name('store')->middleware('can:events.create');
-    Route::post('/bulk-delete', [EventController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
-    
-    // Custom routes with parameters - with numeric constraints
-    Route::patch('/{event}/toggle-publish', [EventController::class, 'togglePublish'])
-        ->name('toggle-publish')
-        ->where('event', '[0-9]+');
-    
-    Route::post('/{event}/gallery', [EventController::class, 'storeGallery'])->name('gallery.store')->middleware('can:events.edit');
-    Route::delete('/gallery/{gallery}', [EventController::class, 'destroyGallery'])->name('gallery.destroy')->middleware('can:events.delete');
-    Route::post('/{event}/gallery/{gallery}/thumbnail', [EventController::class, 'setGalleryThumbnail'])->name('gallery.thumbnail')->middleware('can:events.edit');
-    
-    // Resource routes - with numeric constraints
-    Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit')->middleware('can:events.edit')->where('event', '[0-9]+');
-    Route::put('/{event}', [EventController::class, 'update'])->name('update')->middleware('can:events.edit')->where('event', '[0-9]+');
-    Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy')->middleware('can:events.delete')->where('event', '[0-9]+');
-    
-    // Show route must be LAST
-    Route::get('/{event}', [EventController::class, 'show'])->name('show')->where('event', '[0-9]+');
-});
+    // ==================== EVENTS MANAGEMENT ====================
+    Route::prefix('events')->name('events.')->middleware('can:events.view')->group(function () {
+        // Static routes (no parameters) first
+        Route::get('/', [EventController::class, 'index'])->name('index');
+        Route::get('/add', [EventController::class, 'create'])->name('add')->middleware('can:events.create');
+        Route::post('/', [EventController::class, 'store'])->name('store')->middleware('can:events.create');
+        Route::post('/bulk-delete', [EventController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        
+        // Custom routes with parameters - with numeric constraints
+        Route::patch('/{event}/toggle-publish', [EventController::class, 'togglePublish'])
+            ->name('toggle-publish')
+            ->where('event', '[0-9]+');
+        
+        Route::post('/{event}/gallery', [EventController::class, 'storeGallery'])->name('gallery.store')->middleware('can:events.edit');
+        Route::delete('/gallery/{gallery}', [EventController::class, 'destroyGallery'])->name('gallery.destroy')->middleware('can:events.delete');
+        Route::post('/{event}/gallery/{gallery}/thumbnail', [EventController::class, 'setGalleryThumbnail'])->name('gallery.thumbnail')->middleware('can:events.edit');
+        
+        // Resource routes - with numeric constraints
+        Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit')->middleware('can:events.edit')->where('event', '[0-9]+');
+        Route::put('/{event}', [EventController::class, 'update'])->name('update')->middleware('can:events.edit')->where('event', '[0-9]+');
+        Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy')->middleware('can:events.delete')->where('event', '[0-9]+');
+        
+        // Show route must be LAST
+        Route::get('/{event}', [EventController::class, 'show'])->name('show')->where('event', '[0-9]+');
+    });
+
     // ==================== SECTORS MANAGEMENT ====================
     Route::prefix('sectors')->name('sectors.')->middleware('can:sectors.view')->group(function () {
         Route::get('/', [SectorController::class, 'index'])->name('index');
@@ -224,7 +226,34 @@ Route::prefix('events')->name('events.')->middleware('can:events.view')->group(f
         Route::delete('/{sector}', [SectorController::class, 'destroy'])->name('destroy')->middleware('can:sectors.delete');
     });
 
-  // ==================== HIERARCHY MANAGEMENT ====================
+    // ==================== ACRONYMS MANAGEMENT ====================
+    Route::prefix('acronyms')->name('acronyms.')->middleware('can:acronyms.view')->group(function () {
+        // Static routes (no parameters) first
+        Route::get('/', [AcronymController::class, 'index'])->name('index');
+        Route::get('/add', [AcronymController::class, 'create'])->name('add')->middleware('can:acronyms.create');
+        Route::post('/', [AcronymController::class, 'store'])->name('store')->middleware('can:acronyms.create');
+        Route::post('/bulk-delete', [AcronymController::class, 'bulkDelete'])->name('bulk-delete')->middleware('can:bulk.delete');
+        
+        // Resource routes - with numeric constraints
+        Route::get('/{acronym}/edit', [AcronymController::class, 'edit'])
+            ->name('edit')
+            ->middleware('can:acronyms.edit')
+            ->where('acronym', '[0-9]+');
+        
+        Route::put('/{acronym}', [AcronymController::class, 'update'])
+            ->name('update')
+            ->middleware('can:acronyms.edit')
+            ->where('acronym', '[0-9]+');
+        
+        Route::delete('/{acronym}', [AcronymController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware('can:acronyms.delete')
+            ->where('acronym', '[0-9]+');
+        
+        
+    });
+
+    // ==================== HIERARCHY MANAGEMENT ====================
     Route::prefix('hierarchy')->name('hierarchy.')->middleware('can:hierarchy.view')->group(function () {
         Route::get('/', [HierarchyController::class, 'index'])->name('index');
         Route::get('/add', [HierarchyController::class, 'create'])->name('add')->middleware('can:hierarchy.create');

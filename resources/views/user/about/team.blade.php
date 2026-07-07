@@ -61,12 +61,11 @@
         <div class="text-center mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Executives</h2>
             <div class="w-20 h-1.5 bg-accent-1 mx-auto mt-4 rounded"></div>
-           
         </div>
 
         <div class="flex flex-wrap justify-center gap-8 max-w-3xl mx-auto">
             @foreach($leadershipMembers as $leadershipMember)
-            <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200/30 transition-all duration-300 hover:shadow-xl  w-full {{ $leadershipMembers->count() > 1 ? 'md:w-[calc(30%-1rem)]' : 'md:w-[calc(40%)]' }}">
+            <div class="bg-background-white rounded-lg overflow-hidden shadow-lg border border-gray-200/30 transition-all duration-300 hover:shadow-xl w-full {{ $leadershipMembers->count() > 1 ? 'md:w-[calc(30%-1rem)]' : 'md:w-[calc(40%)]' }}">
                 <div class="relative">
                     <div class="h-80 overflow-hidden">
                         <img src="{{ $leadershipMember->img ? asset('storage/' . $leadershipMember->img) : asset('images/boy.jpg') }}"
@@ -79,14 +78,6 @@
                     </div>
                 </div>
                 <div class="p-5">
-                    {{-- @if($leadershipMember->email)
-                    <div class="flex items-center justify-center space-x-2 text-text-muted">
-                        <svg class="w-5 h-5 text-accent-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        <span class="break-all text-sm">{{ $leadershipMember->email }}</span>
-                    </div>
-                    @endif --}}
                     @if($leadershipMember->phone)
                     <div class="flex items-center justify-center space-x-2 text-text-muted mt-1">
                         <svg class="w-5 h-5 text-accent-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -114,9 +105,8 @@
     // Create strip effect - alternate between gray and white
     $bgClass = ($loopIndex % 2 == 0) ? 'bg-background-light' : 'bg-background-white';
     
-    // Card styling based on hierarchy order
-    $isOfficerStyle = ($hierarchyOrder == 2);  // Research Officers
-    $isAnalystStyle = ($hierarchyOrder == 3 || $hierarchyOrder == 4);  // Specialists and Analysts
+    // Card background - opposite of row background for contrast
+    $cardBgClass = ($loopIndex % 2 == 0) ? 'bg-background-white' : 'bg-background-light';
 @endphp
 
 <section class="py-10 {{ $bgClass }} transition-all duration-300">
@@ -133,32 +123,8 @@
         <div class="flex flex-wrap justify-center -mx-3">
             @foreach($members as $member)
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-3 mb-6">
-                    @if($isOfficerStyle)
-                    {{-- Research Officer Style Card (Order 2) --}}
-                    <div class="bg-background-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full">
-                        <div class="h-56 overflow-hidden">
-                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                                 alt="{{ $member->name }}"
-                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
-                            <p class="text-accent-1 font-semibold text-sm mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
-                            {{-- @if($member->email)
-                            <div 
-                               class="text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all inline-flex items-center gap-1">
-                                <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                </svg>
-                                {{ Str::limit($member->email, 30) }}
-                            </div>
-                            @endif --}}
-                        </div>
-                    </div>
-
-                    @elseif($isAnalystStyle)
-                    {{-- Specialist/Analyst Style Card (Order 3 & 4) --}}
-                    <div class="bg-background-white rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                    {{-- Unified Card Style for All Members (Same as Analyst/Specialist) --}}
+                    <div class="{{ $cardBgClass }} rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
                         <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
                             <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
                                  alt="{{ $member->name }}"
@@ -166,31 +132,7 @@
                         </div>
                         <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
                         <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
-                        {{-- @if($member->email)
-                        <div 
-                           class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
-                            {{ Str::limit($member->email, 30) }}
-                        </div>
-                        @endif --}}
                     </div>
-                    @else
-                    {{-- Default Style Card --}}
-                    div class="bg-background-light rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
-                        <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
-                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                                 alt="{{ $member->name }}"
-                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                        </div>
-                        <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
-                        <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
-                        {{-- @if($member->email)
-                        <div 
-                           class="inline-block text-accent-1 hover:text-primary transition-colors duration-300 text-xs break-all">
-                            {{ Str::limit($member->email, 30) }}
-                        </div>
-                        @endif --}}
-                    </div>
-                    @endif
                 </div>
             @endforeach
         </div>

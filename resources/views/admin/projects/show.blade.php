@@ -25,15 +25,7 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View complete project information</p>
                 </div>
-                <div class="flex gap-2">
-                    @can('projects.edit')
-                    <a href="{{ route('admin.projects.edit', $project) }}"
-                        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-edit"></i>
-                        Edit Project
-                    </a>
-                    @endcan
-                </div>
+                
             </div>
         </div>
 

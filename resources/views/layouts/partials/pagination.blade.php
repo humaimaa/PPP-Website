@@ -7,36 +7,64 @@
     'section' => null,       // For about page (overview, team)
     'tenderType' => null,    // For tenders (active, archived)
     'routeName' => null,     // Custom route name if needed
-    'params' => []           // Additional route parameters
+    'params' => [],          // Additional route parameters
+    'queryParams' => []      // Query string parameters
 ])
 
 @php
     $start = ($currentPage - 1) * $perPage + 1;
     $end = min($currentPage * $perPage, $total);
     
-    // Get current URL parameters
-    $queryParams = request()->query();
-    unset($queryParams['page']); // Remove page parameter to add it later
+    // Get current URL parameters if not explicitly passed
+    if (empty($queryParams)) {
+        $queryParams = request()->query();
+        unset($queryParams['page']);
+    }
     
     // Build the base URL based on what's provided
     if ($routeName) {
-        // If custom route name is provided
+        // Build route parameters
         $routeParams = [];
         
-        // Add status for projects (only if not 'all' and not null)
-        if ($status && $status !== 'all') {
-            $routeParams['status'] = $status;
+        // For projects index route: {category}/{status}
+        if ($routeName === 'projects.index') {
+            // Use the params passed explicitly or build from status/category
+            if (!empty($params)) {
+                $routeParams = $params;
+            } else {
+                // Fallback: use status and category from props
+                $routeParams['category'] = 'all';
+                $routeParams['status'] = 'all';
+            }
         }
-        // Add section for about page
-        elseif ($section) {
-            $routeParams['section'] = $section;
+        // For about routes: {section?}
+        elseif ($routeName === 'about.index' || $routeName === 'about.functions' || 
+                $routeName === 'about.message' || $routeName === 'about.vision-mission' ||
+                $routeName === 'about.team' || $routeName === 'about.organogram') {
+            if ($section) {
+                $routeParams['section'] = $section;
+            }
         }
-        // Add tenderType for tenders
-        elseif ($tenderType) {
-            $routeParams['section'] = $tenderType;
+        // For tenders: {section?}
+        elseif ($routeName === 'tenders') {
+            if ($tenderType) {
+                $routeParams['section'] = $tenderType;
+            }
+        }
+        // For resource center: {section?}
+        elseif ($routeName === 'resource.center') {
+            if ($section) {
+                $routeParams['section'] = $section;
+            }
+        }
+        // For sectors: {sector}
+        elseif ($routeName === 'projects.sector') {
+            if (isset($params['sector'])) {
+                $routeParams['sector'] = $params['sector'];
+            }
         }
         
-        // Merge any additional params (like category, sector, etc.)
+        // Merge any additional params
         $routeParams = array_merge($routeParams, $params);
         
         try {

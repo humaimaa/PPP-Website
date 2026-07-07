@@ -134,7 +134,7 @@
 
                     <!-- View Details Button -->
                     <div class="mt-3 pt-3 border-t border-gray-200/30">
-                        <a href="{{ route('projects.show', $project) }}"
+                        <a href="{{ route('projects.show', $project->slug) }}"
                             class="text-accent-1 font-medium hover:text-primary-hover transition-colors duration-300 inline-flex items-center text-sm">
                             View Details
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,31 +148,35 @@
         </div>
         
         <!-- ===== PAGINATION ===== -->
-        @if($projects->hasPages())
-            @php
-                $routeName = 'projects.index';
-                $params = [];
-                
-                // Always include category and status in the route parameters
-                // The route expects: projects/{category}/{status}
-                $params['category'] = $category ?? 'all';
-                $params['status'] = $status ?? 'all';
-                
-                // Add sector filter if it exists (as query parameter)
-                if(isset($sectorFilter) && $sectorFilter) {
-                    $params['sector'] = $sectorFilter;
-                }
-            @endphp
-            
-            @include('layouts.partials.pagination', [
-                'currentPage' => $projects->currentPage(),
-                'lastPage' => $projects->lastPage(),
-                'total' => $projects->total(),
-                'perPage' => $projects->perPage(),
-                'routeName' => $routeName,
-                'params' => $params
-            ])
-        @endif
+@if($projects->hasPages())
+    @php
+        // Build the route parameters for projects.index
+        $routeParams = [
+            'category' => $category ?? 'all',
+            'status' => $status ?? 'all'
+        ];
+        
+        // Add sector as query parameter if it exists
+        $queryParams = request()->query();
+        if (isset($sectorFilter)) {
+            $queryParams['sector'] = $sectorFilter;
+        }
+        
+        // Remove page from query params to avoid duplication
+        unset($queryParams['page']);
+    @endphp
+    
+    @include('layouts.partials.pagination', [
+        'currentPage' => $projects->currentPage(),
+        'lastPage' => $projects->lastPage(),
+        'total' => $projects->total(),
+        'perPage' => $projects->perPage(),
+        'routeName' => 'projects.index',
+        'params' => $routeParams,
+        'queryParams' => $queryParams, // Pass query parameters separately
+        'status' => $status ?? 'all', // For backward compatibility
+    ])
+@endif
         
         @else
         <!-- No Projects Found -->

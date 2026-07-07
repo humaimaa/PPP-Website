@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="mt-4 md:mt-0 text-left md:text-right">
-                            <p class="text-2xl font-bold text-accent-1">PKR {{ $project->cost }}</p>
+                            <p class="text-2xl font-bold text-accent-1">PKR {{ Str::title($project->cost)  }}</p>
                             <p class="text-sm text-text-muted">Total Investment</p>
                         </div>
                     </div>

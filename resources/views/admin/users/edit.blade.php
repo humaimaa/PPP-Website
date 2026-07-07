@@ -135,17 +135,14 @@
             Account Information
         </h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-                <span class="text-gray-500">User ID:</span>
-                <span class="text-gray-700 font-medium ml-2">#{{ $user->id }}</span>
-            </div>
+          
             <div>
                 <span class="text-gray-500">Created:</span>
-                <span class="text-gray-700 ml-2">{{ $user->created_at->format('F d, Y h:i A') }}</span>
+                <span class="text-gray-700 ml-2">{{ $user->created_at->format('F d, Y') }}</span>
             </div>
             <div>
                 <span class="text-gray-500">Last Updated:</span>
-                <span class="text-gray-700 ml-2">{{ $user->updated_at->format('F d, Y h:i A') }}</span>
+                <span class="text-gray-700 ml-2">{{ $user->updated_at->format('F d, Y') }}</span>
             </div>
             <div>
                 <span class="text-gray-500">Email Verified:</span>

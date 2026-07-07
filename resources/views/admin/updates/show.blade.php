@@ -147,7 +147,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Created</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->created_at->format('F d, Y') }}</p>
-                            <p class="text-xs text-gray-400">{{ $news->created_at->format('h:i A') }}</p>
+                          
                         </div>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                         <div>
                             <p class="text-xs text-gray-500 uppercase mb-1">Last Updated</p>
                             <p class="text-sm font-semibold text-gray-800">{{ $news->updated_at->format('F d, Y') }}</p>
-                            <p class="text-xs text-gray-400">{{ $news->updated_at->format('h:i A') }}</p>
+                           
                             @if($news->created_at != $news->updated_at)
                                 <p class="text-xs text-gray-400 mt-1">(Updated {{ $news->updated_at->diffForHumans() }})</p>
                             @endif
@@ -174,26 +174,7 @@
                     $newsDate = \Carbon\Carbon::parse($news->news_date);
                     $diffDays = $newsDate->diffInDays($news->created_at);
                 @endphp
-                @if($diffDays > 0)
-                    <div class="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-clock text-blue-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 uppercase mb-1">Date Information</p>
-                                <p class="text-sm text-gray-700">
-                                    <i class="fas fa-calendar-week mr-1 text-blue-600"></i>
-                                    @if($diffDays == 1)
-                                        News date is 1 day apart from creation date
-                                    @else
-                                        News date is {{ $diffDays }} days apart from creation date
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                
             @endif
         </div>
     </div>

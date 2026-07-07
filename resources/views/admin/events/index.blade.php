@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        {{-- BULK DELETE FORM - Outside the table and hidden --}}
+        {{-- BULK DELETE FORM - FIXED --}}
         <form id="bulkDeleteForm" action="{{ route('admin.events.bulk-delete') }}" method="POST" style="display: none;">
             @csrf
             <input type="hidden" name="event_ids" id="bulkDeleteIds" value="">
@@ -417,9 +417,10 @@
                     document.body.style.overflow = '';
                     
                     const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
-                    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                    // FIXED: Use map to get IDs and join with comma
+                    const ids = Array.from(checkedBoxes).map(cb => cb.value).join(',');
                     
-                    document.getElementById('bulkDeleteIds').value = ids.join(',');
+                    document.getElementById('bulkDeleteIds').value = ids;
                     bulkDeleteForm.submit();
                 });
             }

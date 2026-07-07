@@ -23,7 +23,7 @@
             
             {{-- Add Role Button --}}
             @can('roles.create')
-                <a href="{{ route('admin.roles.create') }}"
+                <a href="{{ route('admin.roles.add') }}"   {{-- ✅ changed from 'create' to 'add' --}}
                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                     <i class="fas fa-plus"></i>
                     Add Role
@@ -254,7 +254,7 @@
                                         </a>
                                     @else
                                         @can('roles.create')
-                                            <a href="{{ route('admin.roles.create') }}" class="text-emerald-600 hover:underline text-sm">
+                                            <a href="{{ route('admin.roles.add') }}" class="text-emerald-600 hover:underline text-sm">
                                                 Create your first role →
                                             </a>
                                         @endcan

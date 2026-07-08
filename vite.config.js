@@ -11,7 +11,7 @@ export default defineConfig({
                 'resources/css/pitchbook.css',
                 'resources/js/pitchbook.js',
                 'resources/js/home-animate.js',
-                'resources/js/turn.js',
+                'resources/js/turn.min.js',
                 'resources/js/kp-map.js',
                 'resources/js/admin.js',
                 'resources/css/home-animate.css',

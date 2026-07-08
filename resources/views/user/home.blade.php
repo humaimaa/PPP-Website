@@ -134,9 +134,9 @@
                 <div class="relative rounded-lg overflow-hidden shadow-2xl">
                     <img src="{{ $leadershipMessage->image ? asset('storage/' . $leadershipMessage->image) : asset('images/boy.jpg') }}"
                         alt="{{ $leadershipMessage->name }}" class="w-full h-96 object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-6">
                         <h3 class="text-2xl font-bold text-text-primary">{{ $leadershipMessage->name }}</h3>
-                        <p class="text-accent-1">{{ $leadershipMessage->designation }}</p>
+                        <p class="text-accent-1 ">{{ $leadershipMessage->designation }}</p>
                     </div>
                 </div>
             </div>

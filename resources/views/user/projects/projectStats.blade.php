@@ -63,7 +63,7 @@
 
 <!-- Map Section -->
 <section class="py-10 bg-background-white" id="map-section">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="text-center mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-text-green animate-on-scroll-title">Projects Distribution Across Khyber Pakhtunkhwa</h2>
             <div class="w-20 h-1.5 bg-accent-1 mx-auto mt-4 rounded"></div>

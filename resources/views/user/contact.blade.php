@@ -36,8 +36,7 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-text-green">Address</h3>
                             <p class="mt-1 text-text-muted text-sm md:text-md">
-                                PPP Unit,<br>
-                                P & D Department,<br>
+                                PPP Unit,P & D Department,<br>
                                 Civil Secretariat,<br>
                                 Peshawar, Khyber Pakhtunkhwa,<br>
                                 Pakistan

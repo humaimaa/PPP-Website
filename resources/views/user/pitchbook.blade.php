@@ -18,7 +18,6 @@
     <script src="{{ asset('js/turn.min.js') }}"></script>
 </head>
 
-{{-- No Tailwind bg class here — pitchbook.css handles the light gray bg --}}
 <body>
 
     <!-- Flip sound -->
@@ -67,6 +66,12 @@
     <script>
     var TOTAL_PAGES = 80;
 
+    // Set audio volume to 50% (0.5) when page loads
+    var audioElement = document.getElementById('flipSound');
+    if (audioElement) {
+        audioElement.volume = 0.5;
+    }
+
     /*
      * Each slide is landscape 16:9.
      * Double-page spread = 2 pages side by side → book ratio = 32:9.
@@ -107,9 +112,19 @@
             (new Image()).src = '/images/Pitchbook/Slide' + i + '.PNG';
         }
     }
+    
+    // Play flip sound at 50% volume
     function playFlipSound() {
         var snd = document.getElementById('flipSound');
-        if (snd) { snd.currentTime = 0; snd.play().catch(function () {}); }
+        if (snd) {
+            // Ensure volume is set to 50% each time
+            snd.volume = 0.5;
+            snd.currentTime = 0;
+            snd.play().catch(function (err) {
+                // Handle autoplay restrictions silently
+                console.log('Sound play prevented:', err);
+            });
+        }
     }
 
     function loadApp() {

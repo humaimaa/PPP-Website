@@ -32,7 +32,7 @@
             </div>
             
             <div class="bg-background-white overflow-hidden">
-                <div class="px-6 md:px-8">
+                <div >
                     <!-- Project Header -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-between items-start mb-6">
                         <div class="md:col-span-2">

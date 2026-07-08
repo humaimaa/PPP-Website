@@ -29,7 +29,7 @@
 
 <!-- Gallery Section -->
 <section class="py-16 bg-background-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+    <div class="container mx-auto  px-4 sm:px-6 lg:px-8 max-w-6xl">
         <!-- Back Button -->
         <div class="mb-8">
             <a href="{{ route('media.room.events') }}" class="text-accent-1 hover:text-primary-hover inline-flex items-center transition-colors duration-300 font-medium">
@@ -39,7 +39,7 @@
         </div>
         
         <!-- Event Info -->
-        <div class="max-w-4xl mx-auto mb-12">
+        <div class=" mb-12">
             <h1 class="text-xl md:text-2xl lg:text-2xl font-bold text-text-green mb-3">{{ formatTitle( Str::title($event->title) ) }}</h1>
             <div class="flex flex-wrap gap-4 text-text-muted mb-6 pb-6 border-b border-gray-200/30">
                 <div class="flex items-center">

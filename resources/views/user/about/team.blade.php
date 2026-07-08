@@ -107,6 +107,9 @@
     
     // Card background - opposite of row background for contrast
     $cardBgClass = ($loopIndex % 2 == 0) ? 'bg-background-white' : 'bg-background-light';
+    
+    // Check if this is Research Officer section
+    $isResearchOfficer = stripos($hierarchyTitle, 'Research Officer') !== false;
 @endphp
 
 <section class="py-10 {{ $bgClass }} transition-all duration-300">
@@ -123,16 +126,31 @@
         <div class="flex flex-wrap justify-center -mx-3">
             @foreach($members as $member)
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-3 mb-6">
-                    {{-- Unified Card Style for All Members (Same as Analyst/Specialist) --}}
-                    <div class="{{ $cardBgClass }} rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
-                        <div class="w-29 h-29 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
-                            <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
-                                 alt="{{ $member->name }}"
-                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    @if($isResearchOfficer)
+                        {{-- Research Officer Card Style - Full width rectangle image --}}
+                        <div class="{{ $cardBgClass }} rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                            <div class="w-full h-56 overflow-hidden bg-background-light">
+                                <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                                     alt="{{ $member->name }}"
+                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            </div>
+                            <div class="p-5 text-center">
+                                <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                                <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
+                            </div>
                         </div>
-                        <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
-                        <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
-                    </div>
+                    @else
+                        {{-- Default Card Style for Other Members --}}
+                        <div class="{{ $cardBgClass }} rounded-lg shadow-md p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
+                            <div class="w-34 h-34 mx-auto mb-3 rounded-full overflow-hidden bg-background-light">
+                                <img src="{{ $member->img ? asset('storage/' . $member->img) : asset('images/default-avatar.jpg') }}"
+                                     alt="{{ $member->name }}"
+                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            </div>
+                            <h3 class="text-base font-bold text-text-green mb-1">{{ formatTitle( Str::title($member->name) ) }}</h3>
+                            <p class="text-accent-1 text-xs font-medium mb-2">{{ formatTitle( Str::title($member->designation ?? 'Team Member') ) }}</p>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

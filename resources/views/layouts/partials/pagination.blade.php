@@ -127,32 +127,49 @@
             
             {{-- Page Numbers --}}
             @php
-                $startPage = max(1, $currentPage - 2);
-                $endPage = min($lastPage, $currentPage + 2);
-                
-                // First page
-                if ($startPage > 1) {
-                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, 1) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">1</a>';
-                    if ($startPage > 2) {
+                // Show first 2 pages, then "...", then last page
+                // But if total pages is 3 or less, show all
+                if ($lastPage <= 3) {
+                    // Show all pages
+                    for ($i = 1; $i <= $lastPage; $i++) {
+                        if ($i == $currentPage) {
+                            echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $i . '</span>';
+                        } else {
+                            echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $i) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $i . '</a>';
+                        }
+                    }
+                } else {
+                    // Show first 2 pages
+                    for ($i = 1; $i <= 2; $i++) {
+                        if ($i == $currentPage) {
+                            echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $i . '</span>';
+                        } else {
+                            echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $i) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $i . '</a>';
+                        }
+                    }
+                    
+                    // Show dots if current page is not within first 2 or last page
+                    // But don't show dots if current page is 3 (it would create duplicates)
+                    if ($currentPage > 3) {
                         echo '<span class="px-3 py-1 text-text-muted text-sm sm:text-base">...</span>';
                     }
-                }
-                
-                // Page numbers
-                for ($i = $startPage; $i <= $endPage; $i++) {
-                    if ($i == $currentPage) {
-                        echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $i . '</span>';
+                    
+                    // Show current page if it's not in first 2 and not the last page
+                    if ($currentPage > 2 && $currentPage < $lastPage) {
+                        echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $currentPage . '</span>';
+                    }
+                    
+                    // Show dots if current page is not the last page and not adjacent to last page
+                    if ($currentPage < $lastPage - 1 && $currentPage > 2) {
+                        echo '<span class="px-3 py-1 text-text-muted text-sm sm:text-base">...</span>';
+                    }
+                    
+                    // Show last page
+                    if ($lastPage != $currentPage) {
+                        echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $lastPage) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $lastPage . '</a>';
                     } else {
-                        echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $i) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $i . '</a>';
+                        echo '<span class="px-3 py-1 rounded-md bg-accent-1 text-text-primary text-sm sm:text-base shadow-sm">' . $lastPage . '</span>';
                     }
-                }
-                
-                // Last page
-                if ($endPage < $lastPage) {
-                    if ($endPage < $lastPage - 1) {
-                        echo '<span class="px-3 py-1 text-text-muted text-sm sm:text-base">...</span>';
-                    }
-                    echo '<a href="' . buildPaginationUrl($baseUrl, $queryParams, $lastPage) . '" class="px-3 py-1 rounded-md border border-background-light text-text-muted hover:bg-background-light hover:border-accent-1 hover:text-accent-1 text-sm sm:text-base transition duration-200">' . $lastPage . '</a>';
                 }
             @endphp
             

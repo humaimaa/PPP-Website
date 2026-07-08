@@ -60,10 +60,13 @@
             @foreach($projects as $project)
             <!-- Project Card -->
             <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200/30">
+                <!-- Image Section - Clickable -->
                 <div class="h-48 overflow-hidden relative">
-                    <img src="{{ $project->image ? asset('storage/' . $project->image) : asset('images/project-placeholder.jpg') }}" 
-                         alt="{{ $project->name }}"
-                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    <a href="{{ route('projects.show', $project->slug) }}" class="block w-full h-full">
+                        <img src="{{ $project->image ? asset('storage/' . $project->image) : asset('images/project-placeholder.jpg') }}" 
+                             alt="{{ $project->name }}"
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
 
                     <!-- Category Badge -->
                     <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium capitalize text-white
@@ -90,10 +93,12 @@
                 </div>
 
                 <div class="p-4">
-                    <!-- Title with Tooltip -->
+                    <!-- Title - Clickable -->
                     <h3 class="text-lg font-bold h-14 text-text-green mb-3 line-clamp-2" 
                         title="{{ formatTitle( Str::title($project->name) ) }}">
-                        {{ formatTitle( Str::title($project->name) ) }}
+                        <a href="{{ route('projects.show', $project->slug) }}" class="hover:text-accent-1 transition-colors duration-300">
+                            {{ formatTitle( Str::title($project->name) ) }}
+                        </a>
                     </h3>
                     
                     <!-- Cost & Sector - Grid Layout (Row 1) -->

@@ -159,55 +159,44 @@ class ProjectController extends Controller
         return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
     }
 
-    /**
-     * Display projects filtered by sector
-     * Only shows projects with publish = 'yes'
-     */
-    public function indexBySector($sector)
-    {
-        // Get sector data
-        $sectorData = Sector::where('name', $sector)->first();
-        
-        $query = Project::query();
-        
-        // ---- ONLY SHOW PUBLISHED PROJECTS ----
-        $query->where('publish', 'yes');
-        
-        // Filter by sector
-        $query->where('sector', $sector);
-        
-        // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
-        // Paginate results (9 per page)
-        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(9);
-        
-        // Get statistics for this sector (only published projects)
-        $allPublishedProjects = Project::where('publish', 'yes')->get();
-        $totalInvestmentRaw = 0;
-        foreach ($allPublishedProjects as $project) {
-            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
-        }
-        
-        $stats = [
-            'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
-            'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
-            'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
-            'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
-            'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
-            'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
-            'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
-            'total_investment'    => $totalInvestmentRaw,
-            'total_projects'      => $allPublishedProjects->count()
-        ];
-        
-        // Pass sector filter to view
-        $sectorFilter = $sector;
-        $category = 'all';
-        $status = 'all';
-        
-        return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
+    public function indexBySector(Sector $sector)
+{
+    // Laravel automatically finds the sector by slug
+    $sectorData = $sector;
+    $sectorFilter = $sector->name; // Use the actual name from the database
+    
+    $query = Project::query();
+    $query->where('publish', 'yes');
+    $query->where('sector', $sector->name); // Use the actual name
+    
+    $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(9);
+    
+    // Get statistics
+    $allPublishedProjects = Project::where('publish', 'yes')->get();
+    $totalInvestmentRaw = 0;
+    foreach ($allPublishedProjects as $project) {
+        $totalInvestmentRaw += $this->getRawCostValue($project->cost);
     }
+    
+    $stats = [
+        'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
+        'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
+        'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
+        'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
+        'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
+        'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
+        'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
+        'total_investment'    => $totalInvestmentRaw,
+        'total_projects'      => $allPublishedProjects->count()
+    ];
+    
+    $category = 'all';
+    $status = 'all';
+    
+    return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
+}
 
     /**
      * Show a single project

@@ -9,7 +9,11 @@
     <!-- Using theme variables for overlay -->
     <div class="absolute inset-0 z-10 flex items-center justify-center" style="background: rgba(var(--color-primary-rgb), 0.6);">
         <div class="text-center px-4 pt-30">
-            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 animate-text-fade-in-up">
+                {{ formatTitle( Str::title($project->name) ) }}
+            </h1>
+            <div class="w-20 h-1.5 bg-white mx-auto animate-text-fade-in-up animation-delay-200 rounded"></div>
+        </div>
     </div>
     <img src="{{ $project->image ? asset('storage/' . $project->image) : asset('images/project-placeholder.jpg') }}" 
          alt="{{ $project->name }}" 
@@ -32,7 +36,7 @@
             </div>
             
             <div class="bg-background-white overflow-hidden">
-                <div >
+                <div>
                     <!-- Project Header -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-between items-start mb-6">
                         <div class="md:col-span-2">
@@ -185,18 +189,14 @@
                         
                         <!-- Clickable Icon Buttons -->
                         <div class="flex flex-wrap items-center gap-3">
-                           
-                            
                             <!-- Email Button -->
                             <a href="{{ route('contact') }}" 
-                               class="inline-flex items-center gap-2 px-4 py-2.5 bg-accent-1 text-text-green border border-gray-200/50 rounded-md  hover:text-white hover:border-accent-1 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-sm font-medium">
+                               class="inline-flex items-center gap-2 px-4 py-2.5 bg-accent-1 text-text-green border border-gray-200/50 rounded-md hover:text-white hover:border-accent-1 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 text-sm font-medium">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                                 Email Us
                             </a>
-                            
-                            
                         </div>
                     </div>
                 </div>

@@ -12,10 +12,6 @@
 
     @vite(['resources/css/app.css', 'resources/css/pitchbook.css'])
 
-    {{-- LOAD ORDER: jQuery → jQuery UI → turn.js  (plain scripts, NOT via Vite) --}}
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/turn.min.js') }}"></script>
 </head>
 
 <body>
@@ -48,10 +44,7 @@
             </div>
         </div>
 
-        <!-- Slider -->
-        <div id="slider-bar">
-            <div id="slider"></div>
-        </div>
+        
     </div>
 
     <!-- Nav -->
@@ -63,186 +56,198 @@
         <button id="nextBtn">Next &#9654;</button>
     </nav>
 
+    <!-- Load scripts in correct order -->
+    @vite(['resources/js/jquery.min.js', 'resources/js/jquery-ui-1.8.20.custom.min.js', 'resources/js/turn.min.js'])
+
     <script>
-    var TOTAL_PAGES = 80;
-
-    // Set audio volume to 50% (0.5) when page loads
-    var audioElement = document.getElementById('flipSound');
-    if (audioElement) {
-        audioElement.volume = 0.5;
-    }
-
-    /*
-     * Each slide is landscape 16:9.
-     * Double-page spread = 2 pages side by side → book ratio = 32:9.
-     *
-     * Strategy: fit by HEIGHT first (height is the tight constraint for
-     * landscape content). The width then naturally equals the image width
-     * (i.e. each page is exactly one 16:9 slide wide). If the result is
-     * wider than the viewport we scale down by width instead.
-     */
-    function calcBookSize() {
-        var availW = window.innerWidth  - 32;   // 16px each side
-        var availH = window.innerHeight - 100;  // nav + slider + gap
-
-        // Fit by height first: book_w = book_h × (32/9)
-        var bookH = availH;
-        var bookW = Math.round(bookH * 32 / 9);
-
-        // If wider than screen, constrain by width
-        if (bookW > availW) {
-            bookW = availW;
-            bookH = Math.round(bookW * 9 / 32);
-        }
-
-        return { w: bookW, h: bookH };
-    }
-
-    function numberOfViews(book) {
-        return Math.ceil((book.turn('pages') + 2) / 2);
-    }
-    function getViewNumber(book, page) {
-        return Math.ceil(((page || book.turn('page')) + 1) / 2);
-    }
-    function updatePageCounter(page) {
-        $('#currentPage').text(page);
-    }
-    function preloadImages(start, end) {
-        for (var i = start; i <= Math.min(end, TOTAL_PAGES); i++) {
-            (new Image()).src = '/images/Pitchbook/Slide' + i + '.PNG';
-        }
-    }
-    
-    // Play flip sound at 50% volume
-    function playFlipSound() {
-        var snd = document.getElementById('flipSound');
-        if (snd) {
-            // Ensure volume is set to 50% each time
-            snd.volume = 0.5;
-            snd.currentTime = 0;
-            snd.play().catch(function (err) {
-                // Handle autoplay restrictions silently
-                console.log('Sound play prevented:', err);
-            });
-        }
-    }
-
-    function loadApp() {
-        var flipbook = $('#flipbook');
-        var size     = calcBookSize();
-
-        // Apply dimensions
-        $('#book-zoom').css({ width: size.w, height: size.h });
-        flipbook.css({ width: size.w, height: size.h });
-        $('#slider-bar').css({ width: size.w });
-
-        // Init turn.js
-        flipbook.turn({
-            width:        size.w,
-            height:       size.h,
-            duration:     650,
-            gradients:    true,
-            acceleration: true,
-            display:      'double',
-            autoCenter:   true,
-            elevation:    50,
-            pages:        TOTAL_PAGES,
-
-            when: {
-                turning: function (e, page) {
-                    var book    = $(this);
-                    var current = book.turn('page');
-                    var pages   = book.turn('pages');
-                    if (current > 3 && current < pages - 3) {
-                        if (page === 1) {
-                            book.turn('page', 2).turn('stop').turn('page', page);
-                            e.preventDefault(); return;
-                        } else if (page === pages) {
-                            book.turn('page', pages - 1).turn('stop').turn('page', page);
-                            e.preventDefault(); return;
-                        }
-                    }
-                    playFlipSound();
-                },
-                turned: function (e, page) {
-                    updatePageCounter(page);
-                    if (typeof $.fn.slider !== 'undefined') {
-                        $('#slider').slider('value', getViewNumber($(this), page));
-                    }
-                    $(this).turn('center');
-                    preloadImages(page + 2, page + 12);
-                },
-                missing: function (e, pages) {
-                    console.warn('Missing pages:', pages);
-                }
-            }
-        });
-
-        // Slider
-        if (typeof $.fn.slider !== 'undefined') {
-            $('#slider').slider({
-                min: 1,
-                max: numberOfViews(flipbook),
-                slide: function (event, ui) {
-                    updatePageCounter(Math.max(1, ui.value * 2 - 2));
-                },
-                stop: function (event, ui) {
-                    flipbook.turn('page', Math.max(1, ui.value * 2 - 2));
-                }
-            });
-        } else {
-            $('#slider-bar').hide();
-        }
-
-        // Mousewheel
-        $('#book-zoom').on('wheel', function (e) {
-            e.preventDefault();
-            var d = e.originalEvent.deltaX || e.originalEvent.deltaY;
-            if      (d > 20)  flipbook.turn('next');
-            else if (d < -20) flipbook.turn('previous');
-        });
-
-        // Keyboard
-        $(document).keydown(function (e) {
-            switch (e.keyCode) {
-                case 37: flipbook.turn('previous');         e.preventDefault(); break;
-                case 39: flipbook.turn('next');             e.preventDefault(); break;
-                case 36: flipbook.turn('page', 1);          e.preventDefault(); break;
-                case 35: flipbook.turn('page',TOTAL_PAGES); e.preventDefault(); break;
-            }
-        });
-
-        // Buttons
-        $('#prevBtn').on('click', function () { flipbook.turn('previous'); });
-        $('#nextBtn').on('click', function () { flipbook.turn('next'); });
-
-        // Resize
-        $(window).on('resize', function () {
-            var s = calcBookSize();
-            $('#book-zoom').css({ width: s.w, height: s.h });
-            $('#slider-bar').css({ width: s.w });
-            flipbook.turn('size', s.w, s.h);
-            flipbook.turn('center');
-        });
-
-        // Reveal
-        $('#totalPages').text(TOTAL_PAGES);
-        updatePageCounter(1);
-        $('#canvas').css({ visibility: 'visible' });
-        setTimeout(function () { $('#loading').fadeOut(400); }, 400);
-        preloadImages(1, 20);
-    }
-
-    $(document).ready(function () {
-        if (typeof $.fn.turn === 'undefined') {
-            $('#loading').html(
+    // Wait for DOM and all scripts to load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if jQuery is loaded
+        if (typeof jQuery === 'undefined') {
+            document.getElementById('loading').innerHTML =
                 '<p style="color:#333;font-family:sans-serif;text-align:center;padding:2rem;">' +
-                '&#9888; <strong>turn.js not loaded.</strong><br><br>' +
-                '<small>Check that <code>public/js/turn.min.js</code> exists.</small></p>'
-            );
+                '&#9888; <strong>jQuery not loaded.</strong><br><br>' +
+                '<small>Check that jQuery files exist.</small></p>';
             return;
         }
-        loadApp();
+
+        // Use jQuery's ready function
+        jQuery(document).ready(function($) {
+            var TOTAL_PAGES = 80;
+
+            // Set audio volume to 50%
+            var audioElement = document.getElementById('flipSound');
+            if (audioElement) {
+                audioElement.volume = 0.5;
+            }
+
+            /*
+             * Each slide is landscape 16:9.
+             * Double-page spread = 2 pages side by side → book ratio = 32:9.
+             *
+             * Strategy: fit by HEIGHT first (height is the tight constraint for
+             * landscape content). The width then naturally equals the image width
+             * (i.e. each page is exactly one 16:9 slide wide). If the result is
+             * wider than the viewport we scale down by width instead.
+             */
+            function calcBookSize() {
+                var availW = window.innerWidth  - 32;   // 16px each side
+                var availH = window.innerHeight - 100;  // nav + slider + gap
+
+                // Fit by height first: book_w = book_h × (32/9)
+                var bookH = availH;
+                var bookW = Math.round(bookH * 32 / 9);
+
+                // If wider than screen, constrain by width
+                if (bookW > availW) {
+                    bookW = availW;
+                    bookH = Math.round(bookW * 9 / 32);
+                }
+
+                return { w: bookW, h: bookH };
+            }
+
+            function numberOfViews(book) {
+                return Math.ceil((book.turn('pages') + 2) / 2);
+            }
+            function getViewNumber(book, page) {
+                return Math.ceil(((page || book.turn('page')) + 1) / 2);
+            }
+            function updatePageCounter(page) {
+                $('#currentPage').text(page);
+            }
+            function preloadImages(start, end) {
+                for (var i = start; i <= Math.min(end, TOTAL_PAGES); i++) {
+                    (new Image()).src = '/images/Pitchbook/Slide' + i + '.PNG';
+                }
+            }
+            function playFlipSound() {
+                var snd = document.getElementById('flipSound');
+                if (snd) { 
+                    snd.currentTime = 0; 
+                    snd.play().catch(function () {}); 
+                }
+            }
+
+            function loadApp() {
+                // Check if turn.js is loaded
+                if (typeof $.fn.turn === 'undefined') {
+                    $('#loading').html(
+                        '<p style="color:#333;font-family:sans-serif;text-align:center;padding:2rem;">' +
+                        '&#9888; <strong>turn.js not loaded.</strong><br><br>' +
+                        '<small>Check that <code>public/js/turn.min.js</code> exists.</small></p>'
+                    );
+                    return;
+                }
+
+                var flipbook = $('#flipbook');
+                var size     = calcBookSize();
+
+                // Apply dimensions
+                $('#book-zoom').css({ width: size.w, height: size.h });
+                flipbook.css({ width: size.w, height: size.h });
+                $('#slider-bar').css({ width: size.w });
+
+                // Init turn.js
+                flipbook.turn({
+                    width:        size.w,
+                    height:       size.h,
+                    duration:     650,
+                    gradients:    true,
+                    acceleration: true,
+                    display:      'double',
+                    autoCenter:   true,
+                    elevation:    50,
+                    pages:        TOTAL_PAGES,
+
+                    when: {
+                        turning: function (e, page) {
+                            var book    = $(this);
+                            var current = book.turn('page');
+                            var pages   = book.turn('pages');
+                            if (current > 3 && current < pages - 3) {
+                                if (page === 1) {
+                                    book.turn('page', 2).turn('stop').turn('page', page);
+                                    e.preventDefault(); return;
+                                } else if (page === pages) {
+                                    book.turn('page', pages - 1).turn('stop').turn('page', page);
+                                    e.preventDefault(); return;
+                                }
+                            }
+                            playFlipSound();
+                        },
+                        turned: function (e, page) {
+                            updatePageCounter(page);
+                            if (typeof $.fn.slider !== 'undefined') {
+                                $('#slider').slider('value', getViewNumber($(this), page));
+                            }
+                            $(this).turn('center');
+                            preloadImages(page + 2, page + 12);
+                        },
+                        missing: function (e, pages) {
+                            console.warn('Missing pages:', pages);
+                        }
+                    }
+                });
+
+                // Slider
+                if (typeof $.fn.slider !== 'undefined') {
+                    $('#slider').slider({
+                        min: 1,
+                        max: numberOfViews(flipbook),
+                        slide: function (event, ui) {
+                            updatePageCounter(Math.max(1, ui.value * 2 - 2));
+                        },
+                        stop: function (event, ui) {
+                            flipbook.turn('page', Math.max(1, ui.value * 2 - 2));
+                        }
+                    });
+                } else {
+                    $('#slider-bar').hide();
+                }
+
+                // Mousewheel
+                $('#book-zoom').on('wheel', function (e) {
+                    e.preventDefault();
+                    var d = e.originalEvent.deltaX || e.originalEvent.deltaY;
+                    if      (d > 20)  flipbook.turn('next');
+                    else if (d < -20) flipbook.turn('previous');
+                });
+
+                // Keyboard
+                $(document).keydown(function (e) {
+                    switch (e.keyCode) {
+                        case 37: flipbook.turn('previous');         e.preventDefault(); break;
+                        case 39: flipbook.turn('next');             e.preventDefault(); break;
+                        case 36: flipbook.turn('page', 1);          e.preventDefault(); break;
+                        case 35: flipbook.turn('page',TOTAL_PAGES); e.preventDefault(); break;
+                    }
+                });
+
+                // Buttons
+                $('#prevBtn').on('click', function () { flipbook.turn('previous'); });
+                $('#nextBtn').on('click', function () { flipbook.turn('next'); });
+
+                // Resize
+                $(window).on('resize', function () {
+                    var s = calcBookSize();
+                    $('#book-zoom').css({ width: s.w, height: s.h });
+                    $('#slider-bar').css({ width: s.w });
+                    flipbook.turn('size', s.w, s.h);
+                    flipbook.turn('center');
+                });
+
+                // Reveal
+                $('#totalPages').text(TOTAL_PAGES);
+                updatePageCounter(1);
+                $('#canvas').css({ visibility: 'visible' });
+                setTimeout(function () { $('#loading').fadeOut(400); }, 400);
+                preloadImages(1, 20);
+            }
+
+            // Start the app
+            loadApp();
+        });
     });
     </script>
 

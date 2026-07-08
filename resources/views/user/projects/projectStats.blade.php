@@ -48,7 +48,7 @@
             <div class="text-center p-6 md:p-8 rounded-xl bg-background-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-t-4 border-blue-500">
                 <div class="stat-number text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mb-3"
                     data-count="{{ $completedCount ?? 0 }}">0</div>
-                <p class="text-text-muted text-sm md:text-base font-medium">Completed Projects</p>
+                <p class="text-text-muted text-sm md:text-base font-medium">Construction and Operational Projects</p>
             </div>
 
             <!-- Total Projects -->

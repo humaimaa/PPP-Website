@@ -26,10 +26,10 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($events as $event)
-            <div class="group cursor-pointer" onclick="window.location='{{ route('media.room.events.gallery', $event) }}'">
-                <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200/30">
-                    <!-- Image Container -->
-                    <div class="relative overflow-hidden h-64">
+            <div class="group bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200/30">
+                <!-- Image Container - Clickable -->
+                <div class="relative overflow-hidden h-64">
+                    <a href="{{ route('media.room.events.gallery', $event) }}" class="block w-full h-full">
                         @php
                             $thumbnailUrl = null;
                             // Load gallery relationship for this event
@@ -57,43 +57,55 @@
                                 <i class="fas fa-calendar-alt text-white text-6xl opacity-50"></i>
                             </div>
                         @endif
-                        
-                        <!-- Overlay with image count -->
-                        <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <div class="bg-accent-1 text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold">
-                                <i class="fas fa-images mr-2"></i>
-                                {{ $event->gallery_count }} {{ Str::plural('Photo', $event->gallery_count) }}
-                            </div>
+                    </a>
+                    
+                    <!-- Overlay with image count -->
+                    <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div class="bg-accent-1 text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold">
+                            <i class="fas fa-images mr-2"></i>
+                            {{ $event->gallery_count }} {{ Str::plural('Photo', $event->gallery_count) }}
                         </div>
-                        
-                        <!-- Date Badge -->
-                        <div class="absolute top-4 left-4 bg-accent-1 text-white px-3 py-1.5 rounded-full text-xs font-medium">
-                            <i class="fas fa-calendar-alt mr-1"></i> 
-                            {{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}
-                        </div>
-                        
-                        <!-- Featured Badge -->
-                        @if($thumbnail && $thumbnail->is_thumbnail)
-                        <div class="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
-                            <i class="fas fa-star mr-1"></i> Featured
-                        </div>
-                        @endif
                     </div>
                     
-                    <!-- Card Content -->
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold text-text-green mb-2 line-clamp-1 group-hover:text-accent-1 transition-colors duration-300">
+                    <!-- Date Badge -->
+                    <div class="absolute top-4 left-4 bg-accent-1 text-white px-3 py-1.5 rounded-full text-xs font-medium">
+                        <i class="fas fa-calendar-alt mr-1"></i> 
+                        {{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}
+                    </div>
+                    
+                    <!-- Featured Badge -->
+                    @if($thumbnail && $thumbnail->is_thumbnail)
+                    <div class="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+                        <i class="fas fa-star mr-1"></i> Featured
+                    </div>
+                    @endif
+                </div>
+                
+                <!-- Card Content -->
+                <div class="p-6">
+                    <!-- Title - Clickable -->
+                    <h3 class="text-lg font-bold text-text-green mb-2 line-clamp-1">
+                        <a href="{{ route('media.room.events.gallery', $event) }}" 
+                           class="hover:text-accent-1 transition-colors duration-300">
                             {{ formatTitle( Str::title($event->title) ) }}
-                        </h3>
-                        <p class="text-text-muted text-sm mb-3 line-clamp-3 leading-normal">
-                            {{ Str::limit($event->description ?? 'No description available.', 100) }}
-                        </p>
-                        <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-200/30">
-                            <div class="flex items-center text-text-muted text-sm">
-                                <i class="fas fa-map-marker-alt text-accent-1 mr-1.5"></i>
-                                {{ $event->location ?? 'Location TBA' }}
-                            </div>
+                        </a>
+                    </h3>
+                    <p class="text-text-muted text-sm mb-3 line-clamp-3 leading-normal">
+                        {{ Str::limit($event->description ?? 'No description available.', 100) }}
+                    </p>
+                    <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-200/30">
+                        <div class="flex items-center text-text-muted text-sm">
+                            <i class="fas fa-map-marker-alt text-accent-1 mr-1.5"></i>
+                            {{ $event->location ?? 'Location TBA' }}
                         </div>
+                        <!-- View Gallery Link -->
+                        <a href="{{ route('media.room.events.gallery', $event) }}"
+                           class="text-accent-1 font-medium hover:text-primary-hover transition-colors duration-300 inline-flex items-center text-sm">
+                            View Gallery
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>

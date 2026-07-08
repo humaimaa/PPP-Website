@@ -32,9 +32,8 @@ Route::prefix('about')->name('about.')->group(function () {
 // Tenders page (with optional section parameter)
 Route::get('/tenders/{section?}', [TenderController::class, 'tenders'])->name('tenders');
 
-
-// Sector-specific route (must come before generic route)
-Route::get('/projects/sector/{sector}', [ProjectController::class, 'indexBySector'])->name('projects.sector');
+// Sector-specific route with slug - UPDATED
+Route::get('/projects/sector/{sector:slug}', [ProjectController::class, 'indexBySector'])->name('projects.sector');
 
 // Generic route with optional category and status parameters
 Route::get('/projects/{category?}/{status?}', [ProjectController::class, 'index'])

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Sector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SectorController extends Controller
 {
@@ -21,7 +22,8 @@ class SectorController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('tagline', 'like', '%' . $search . '%');
+                  ->orWhere('tagline', 'like', '%' . $search . '%')
+                  ->orWhere('slug', 'like', '%' . $search . '%');
             });
         }
         
@@ -51,8 +53,18 @@ class SectorController extends Controller
 
         $imagePath = $request->file('img')->store('sectors', 'public');
 
+        // Generate unique slug
+        $slug = Str::slug($request->name);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Sector::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         Sector::create([
             'name' => $request->name,
+            'slug' => $slug,
             'tagline' => $request->tagline,
             'img' => $imagePath,
         ]);
@@ -92,6 +104,18 @@ class SectorController extends Controller
             'name' => $request->name,
             'tagline' => $request->tagline,
         ];
+
+        // Update slug if name changed
+        if ($sector->name !== $request->name) {
+            $slug = Str::slug($request->name);
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Sector::where('slug', $slug)->where('id', '!=', $sector->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+            $data['slug'] = $slug;
+        }
 
         if ($request->hasFile('img')) {
             // Delete old image

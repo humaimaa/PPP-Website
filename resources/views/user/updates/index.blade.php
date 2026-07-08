@@ -46,35 +46,40 @@
             @forelse($updates as $news)
             <!-- News Card -->
             <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row h-auto md:h-64 relative group border border-gray-200/30">
+                <!-- Image Section - Clickable -->
                 <div class="md:w-1/3 h-48 md:h-full overflow-hidden relative bg-primary/10">
-                    @if($news->img_path)
-                        <!-- Show the update's image if available -->
-                        <img src="{{ asset('storage/' . $news->img_path) }}" alt="{{ $news->title }}"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    @elseif($news->featured_image)
-                        <!-- Fallback to featured_image column if it exists -->
-                        <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    @elseif($news->pdf_path)
-                        <!-- PDF icon fallback -->
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
-                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5.414 5.414c.391.391.586.903.586 1.414V7c0-2.21-1.79-4-4-4H7z"></path>
-                            </svg>
-                        </div>
-                    @else
-                        <!-- Final fallback: gradient with type text -->
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
-                            <div class="text-center">
-                                <svg class="w-12 h-12 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    <a href="{{ route('media.room.updates.show', $news->slug) }}" class="block w-full h-full">
+                        @if($news->img_path)
+                            <!-- Show the update's image if available -->
+                            <img src="{{ asset('storage/' . $news->img_path) }}" alt="{{ $news->title }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @elseif($news->featured_image)
+                            <!-- Fallback to featured_image column if it exists -->
+                            <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @elseif($news->pdf_path)
+                            <!-- PDF icon fallback -->
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                                <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5.414 5.414c.391.391.586.903.586 1.414V7c0-2.21-1.79-4-4-4H7z"></path>
                                 </svg>
-                                <span class="text-white text-sm font-semibold uppercase">{{ $news->type ?? 'News' }}</span>
                             </div>
-                        </div>
-                    @endif
+                        @else
+                            <!-- Final fallback: gradient with type text -->
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-light">
+                                <div class="text-center">
+                                    <svg class="w-12 h-12 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                    </svg>
+                                    <span class="text-white text-sm font-semibold uppercase">{{ $news->type ?? 'News' }}</span>
+                                </div>
+                            </div>
+                        @endif
+                    </a>
                 </div>
+                
+                <!-- Content Section -->
                 <div class="p-6 md:p-8 md:w-2/3 flex flex-col">
                     <div>
                         <div class="flex items-center mb-2 flex-wrap gap-2">
@@ -100,8 +105,12 @@
                                 </span>
                             @endif
                         </div>
+                        
+                        <!-- Title - Clickable -->
                         <h3 class="text-lg font-bold text-text-green mb-3 hover:text-accent-1 transition-colors duration-300">
-                            <a href="{{ route('media.room.updates.show', $news->slug) }}">{{ formatTitle( Str::title($news->title) ) }}</a>
+                            <a href="{{ route('media.room.updates.show', $news->slug) }}">
+                                {{ formatTitle( Str::title($news->title) ) }}
+                            </a>
                         </h3>
                         <p class="text-text-muted text-sm md:text-md lg:text-base line-clamp-3 text-justify">{{ Str::limit(strip_tags($news->content), 150) }}</p>
                     </div>

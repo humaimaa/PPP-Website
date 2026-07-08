@@ -164,7 +164,7 @@
 
         <div class="grid grid-cols-1 min-[550px]:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             @foreach($sectors as $sector)
-            <a href="{{ route('projects.sector', ['sector' => $sector->name]) }}"
+            <a href="{{ route('projects.sector', ['sector' => $sector->slug]) }}"
                 class="sector-card relative h-64 overflow-hidden group w-full block cursor-pointer no-underline">
                 <!-- Using theme-based overlay classes instead of inline styles -->
                 <div class="absolute inset-0 z-10 overlay-default transition-all duration-500"></div>

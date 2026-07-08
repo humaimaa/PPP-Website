@@ -24,9 +24,43 @@
 <section class="py-16 bg-background-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div class="max-w-5xl mx-auto">
-            <!-- Back Button -->
+            <!-- Back Button with preserved filters -->
             <div class="mb-6">
-                <a href="{{ route('projects.index', ['category' => 'all', 'status' => 'all']) }}" 
+                @php
+                    // Get filters from session or use defaults
+                    $filters = $filters ?? session()->get('projects_filters', [
+                        'category' => 'all',
+                        'status' => 'all',
+                        'sector' => null,
+                        'page' => 1
+                    ]);
+                    
+                    // Build the route parameters
+                    $category = $filters['category'] ?? 'all';
+                    $status = $filters['status'] ?? 'all';
+                    
+                    // Build query parameters
+                    $queryParams = [];
+                    if (!empty($filters['sector'])) {
+                        $queryParams['sector'] = $filters['sector'];
+                    }
+                    if (!empty($filters['page']) && $filters['page'] > 1) {
+                        $queryParams['page'] = $filters['page'];
+                    }
+                    
+                    // Build the URL
+                    $backUrl = route('projects.index', [
+                        'category' => $category,
+                        'status' => $status
+                    ]);
+                    
+                    // Add query parameters if they exist
+                    if (!empty($queryParams)) {
+                        $backUrl .= '?' . http_build_query($queryParams);
+                    }
+                @endphp
+                
+                <a href="{{ $backUrl }}" 
                    class="text-accent-1 hover:text-primary-hover inline-flex items-center transition-colors duration-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>

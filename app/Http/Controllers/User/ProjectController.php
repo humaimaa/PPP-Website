@@ -61,109 +61,125 @@ class ProjectController extends Controller
         return json_last_error() === JSON_ERROR_NONE;
     }
 
-    /**
-     * Display projects with category, status, and sector filters
-     * Only shows projects with publish = 'yes'
-     */
-    public function index($category = 'all', $status = 'all')
-    {
-        // Allowed slugs – must match route constraints AND your view's dropdown values
-        $validCategories = ['all', 'pipeline', 'ongoing', 'construction-operational'];
-        $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
+ /**
+ * Display projects with category, status, and sector filters
+ * Only shows projects with publish = 'yes'
+ */
+public function index($category = 'all', $status = 'all')
+{
+    // Allowed slugs – must match route constraints AND your view's dropdown values
+    $validCategories = ['all', 'pipeline', 'ongoing', 'construction-operational'];
+    $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
 
-        // Validate and sanitize inputs
-        if (!in_array($category, $validCategories)) $category = 'all';
-        if (!in_array($status, $validStatuses)) $status = 'all';
-        
-        // Get sector from query parameter
-        $sectorFilter = request()->query('sector');
-        $sectorData = null;
-        
-        // If sector filter is applied, get the sector data
-        if ($sectorFilter) {
-            $sectorData = Sector::where('name', $sectorFilter)->first();
-        }
-
-        $query = Project::query();
-
-        // ---- ONLY SHOW PUBLISHED PROJECTS ----
-        $query->where('publish', 'yes');
-
-        // ---- Category filter (slug → DB value) ----
-        if ($category !== 'all') {
-            switch ($category) {
-                case 'pipeline':
-                    $query->where('category', 'Pipeline');
-                    break;
-                case 'ongoing':
-                    $query->where('category', 'Ongoing');
-                    break;
-                case 'construction-operational':
-                    $query->where('category', 'Construction & Operational');
-                    break;
-                default:
-                    $query->where('category', $category);
-            }
-        }
-
-        // ---- Status filter (slug → DB value) ----
-        if ($status !== 'all') {
-            switch ($status) {
-                case 'private-partner':
-                    $query->where('status', 'Private Partner Selection');
-                    break;
-                case 'transaction-advisory':
-                    $query->where('status', 'Transaction Advisory');
-                    break;
-                case 'construction':
-                    $query->where('status', 'Construction');
-                    break;
-                case 'operational':
-                    $query->where('status', 'Operational');
-                    break;
-                default:
-                    $query->where('status', $status);
-            }
-        }
-
-        // ---- Sector filter ----
-        if ($sectorFilter) {
-            $query->where('sector', $sectorFilter);
-        }
-
-        // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
-        // Paginate results (9 per page)
-        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(9);
-
-        // ---- Statistics (only for published projects) ----
-        $allPublishedProjects = Project::where('publish', 'yes')->get();
-        $totalInvestmentRaw = 0;
-        foreach ($allPublishedProjects as $project) {
-            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
-        }
-
-        $stats = [
-            'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
-            'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
-            'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
-            'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
-            'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
-            'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
-            'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
-            'total_investment'    => $totalInvestmentRaw,
-            'total_projects'      => $allPublishedProjects->count()
-        ];
-
-        return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
+    // Validate and sanitize inputs
+    if (!in_array($category, $validCategories)) $category = 'all';
+    if (!in_array($status, $validStatuses)) $status = 'all';
+    
+    // Get sector from query parameter
+    $sectorFilter = request()->query('sector');
+    $sectorData = null;
+    
+    // If sector filter is applied, get the sector data
+    if ($sectorFilter) {
+        $sectorData = Sector::where('name', $sectorFilter)->first();
     }
 
-    public function indexBySector(Sector $sector)
+    // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
+    session()->put('projects_filters', [
+        'category' => $category,
+        'status' => $status,
+        'sector' => $sectorFilter,
+        'page' => request()->query('page', 1)
+    ]);
+
+    $query = Project::query();
+
+    // ---- ONLY SHOW PUBLISHED PROJECTS ----
+    $query->where('publish', 'yes');
+
+    // ---- Category filter (slug → DB value) ----
+    if ($category !== 'all') {
+        switch ($category) {
+            case 'pipeline':
+                $query->where('category', 'Pipeline');
+                break;
+            case 'ongoing':
+                $query->where('category', 'Ongoing');
+                break;
+            case 'construction-operational':
+                $query->where('category', 'Construction & Operational');
+                break;
+            default:
+                $query->where('category', $category);
+        }
+    }
+
+    // ---- Status filter (slug → DB value) ----
+    if ($status !== 'all') {
+        switch ($status) {
+            case 'private-partner':
+                $query->where('status', 'Private Partner Selection');
+                break;
+            case 'transaction-advisory':
+                $query->where('status', 'Transaction Advisory');
+                break;
+            case 'construction':
+                $query->where('status', 'Construction');
+                break;
+            case 'operational':
+                $query->where('status', 'Operational');
+                break;
+            default:
+                $query->where('status', $status);
+        }
+    }
+
+    // ---- Sector filter ----
+    if ($sectorFilter) {
+        $query->where('sector', $sectorFilter);
+    }
+
+    // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
+    // Paginate results (9 per page)
+    $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(9);
+
+    // ---- Statistics (only for published projects) ----
+    $allPublishedProjects = Project::where('publish', 'yes')->get();
+    $totalInvestmentRaw = 0;
+    foreach ($allPublishedProjects as $project) {
+        $totalInvestmentRaw += $this->getRawCostValue($project->cost);
+    }
+
+    $stats = [
+        'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
+        'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
+        'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
+        'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
+        'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
+        'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
+        'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
+        'total_investment'    => $totalInvestmentRaw,
+        'total_projects'      => $allPublishedProjects->count()
+    ];
+
+    return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
+}
+
+public function indexBySector(Sector $sector)
 {
     // Laravel automatically finds the sector by slug
     $sectorData = $sector;
     $sectorFilter = $sector->name; // Use the actual name from the database
+
+    // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
+    session()->put('projects_filters', [
+        'category' => 'all',
+        'status' => 'all',
+        'sector' => $sector->name,
+        'page' => request()->query('page', 1)
+    ]);
     
     $query = Project::query();
     $query->where('publish', 'yes');

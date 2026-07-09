@@ -48,8 +48,9 @@
             <div class="bg-background-light/30 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 {{ $loop->first ? 'border-l-4 border-accent-1' : '' }}">
                 <div class="flex flex-col md:flex-row">
                     <!-- Image Section -->
-                    <div class="md:w-1/3 lg:w-1/4">
-                        <div class="h-64 md:h-full w-full overflow-hidden">
+                    <div class="md:w-1/3 lg:w-2/7">
+                        <!-- Fixed height that matches typical content height -->
+                        <div class="h-48 md:h-full w-full overflow-hidden">
                             @if($message->image && file_exists(public_path('storage/' . $message->image)))
                                 <img src="{{ asset('storage/' . $message->image) }}" 
                                      alt="{{ $message->name }}" 
@@ -68,7 +69,7 @@
                     </div>
                     
                     <!-- Content Section -->
-                    <div class="md:w-2/3 lg:w-3/4 p-6 md:p-8">
+                    <div class="md:w-2/3 lg:w-5/7 px-4 pt-4 md:px-6 md:pt-6">
                         <!-- Designation Badge -->
                         <div class="inline-block mb-4">
                             <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-primary text-white">
@@ -83,7 +84,7 @@
 
                         
                         <!-- Message with line break support -->
-                        <div class="text-text-muted leading-relaxed text-sm md:text-md lg:text-base text-justify space-y-4 mb-4">
+                        <div class="text-text-muted leading-normal text-xm md:text-sm lg:text-md text-justify space-y-4 mb-4">
                             {!! nl2br(e($message->message)) !!}
                         </div>
                         

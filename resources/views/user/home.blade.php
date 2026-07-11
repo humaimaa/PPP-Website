@@ -223,8 +223,8 @@
         <div class="flex flex-wrap justify-center gap-8">
             @forelse($latestNews as $news)
             <div class="bg-background-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-md">
-                <!-- News Image -->
-                <div class="h-48 overflow-hidden bg-background-primary/10">
+                <!-- News Image - Clickable -->
+                <a href="{{ url('/media-room/updates/' . $news->slug) }}" class="block h-48 overflow-hidden bg-background-primary/10">
                     @if($news->img_path)
                     <img src="{{ Storage::url($news->img_path) }}" alt="{{ $news->title }}"
                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
@@ -241,7 +241,7 @@
                         <span class="text-text-primary text-lg font-semibold">{{ $news->type }}</span>
                     </div>
                     @endif
-                </div>
+                </a>
 
                 <!-- News Content -->
                 <div class="p-6">
@@ -252,10 +252,13 @@
                         <span class="text-sm text-text-muted">{{ Str::title($news->type) }}</span>
                     </div>
                     
-                    <!-- Title with Native Tooltip -->
-                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2 cursor-help hover:text-accent-1 transition-colors duration-300"
-                        title="{{ formatTitle( Str::title($news->title) ) }}">
-                        {{  formatTitle( Str::title($news->title) )  }}
+                    <!-- Title - Clickable -->
+                    <h3 class="text-xl font-bold text-text-black mb-3 line-clamp-2">
+                        <a href="{{ url('/media-room/updates/' . $news->slug) }}" 
+                           class="hover:text-accent-1 transition-colors duration-300"
+                           title="{{ formatTitle( Str::title($news->title) ) }}">
+                            {{ formatTitle( Str::title($news->title) ) }}
+                        </a>
                     </h3>
                     
                     <!-- Content Preview -->

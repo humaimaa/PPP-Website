@@ -4,10 +4,9 @@ import Alpine from 'alpinejs';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
-
-/**
- * Check if a function exists globally
- */
+// **
+//  * Check if a function exists globally
+//  */
 if (!window.function_exists) {
     window.function_exists = function(functionName) {
         return typeof window[functionName] === 'function';
@@ -100,15 +99,12 @@ function initializeNavbarScroll() {
         const handleScroll = () => {
             if (window.scrollY > 50) {
                 navbar.classList.add('navbar-scrolled');
-                navbar.classList.remove('navbar-transparent');
             } else {
                 navbar.classList.remove('navbar-scrolled');
-                navbar.classList.add('navbar-transparent');
             }
         };
         
         window.addEventListener('scroll', handleScroll);
-        // Initial call to set correct state
         handleScroll();
     }
 }
@@ -140,7 +136,7 @@ function initializeFooter() {
         const year = new Date().getFullYear();
         const text = copyrightElement.innerHTML;
         if (!text.includes(year.toString())) {
-            copyrightElement.innerHTML = '<i class="far fa-copyright mr-1"></i> ' + year + ' PPP Department Khyber Pakhtunkhwa. All rights reserved.';
+            copyrightElement.innerHTML = `<i class="far fa-copyright mr-1"></i> ${year} PPP Department Khyber Pakhtunkhwa. All rights reserved.`;
         }
     }
 }

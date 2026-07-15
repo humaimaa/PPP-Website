@@ -5,13 +5,6 @@
 
     console.log('kp-map.js loaded');
 
-    // ─── EARLY EXIT: If no map container, skip all map functionality ────
-    const mapContainer = document.getElementById('kp-choropleth-map');
-    if (!mapContainer) {
-        console.log('ℹ️ Map container not found on this page - skipping map initialization');
-        return;
-    }
-
     let currentSelectedDivision = null;
     let geoJsonLayer = null;
     let map = null;
@@ -52,6 +45,7 @@
     }
 
     function updateTotalStats() {
+        // Count unique projects across all divisions (avoid double counting)
         const allProjectsMap = {};
         Object.values(divisionsData).forEach(division => {
             if (division && division.projects_list) {
@@ -121,6 +115,7 @@
     }
 
     function formatDivisionLabel(divisionName) {
+        // Special handling for FATA
         if (divisionName === 'FATA' || divisionName === 'F.A.T.A.') {
             return 'Merged<br>Districts';
         }
@@ -141,6 +136,7 @@
     }
 
     function getDisplayName(divisionName) {
+        // Special handling for FATA
         if (divisionName === 'FATA' || divisionName === 'F.A.T.A.') {
             return 'Merged Districts';
         }
@@ -253,6 +249,7 @@
                         L.marker(center, { icon: label, interactive: false }).addTo(map);
                     }
                 } else if (isFATA) {
+                    // Add label for FATA as "Merged Districts"
                     const bounds = layer.getBounds();
                     if (bounds && bounds.isValid()) {
                         const center = bounds.getCenter();
@@ -314,12 +311,32 @@
     }
 
     const sectorColorPalette = [
-        '#B39339', '#c4a747', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-        '#DDA0DD', '#98D8C8', '#F7B731', '#A569BD', '#5DADE2', '#E74C3C', '#2ECC71',
-        '#F39C12', '#1ABC9C', '#3498DB', '#9B59B6', '#E67E22', '#16A085', '#27AE60', '#2980B9'
+        '#B39339', // accent-1
+        '#c4a747', // accent-2
+        '#FF6B6B', 
+        '#4ECDC4', 
+        '#45B7D1', 
+        '#96CEB4', 
+        '#FFEAA7',
+        '#DDA0DD', 
+        '#98D8C8', 
+        '#F7B731', 
+        '#A569BD', 
+        '#5DADE2',
+        '#E74C3C', 
+        '#2ECC71', 
+        '#F39C12', 
+        '#1ABC9C', 
+        '#3498DB',
+        '#9B59B6', 
+        '#E67E22', 
+        '#16A085', 
+        '#27AE60', 
+        '#2980B9'
     ];
 
     function createSectorChart(division) {
+        // Set Chart.js global defaults so canvas-rendered text is white
         if (typeof Chart !== 'undefined') {
             Chart.defaults.color = '#ffffff';
             Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
@@ -362,6 +379,7 @@
             return;
         }
 
+        // Dynamic height: 24px per bar, min 80px
         const chartHeight = Math.max(80, sectors.length * 24 + 20);
         chartContainer.style.height = chartHeight + 'px';
         chartContainer.style.position = 'relative';
@@ -485,6 +503,7 @@
         if (divisionView) divisionView.classList.remove('hidden');
         
         const total = division.total_projects || 0;
+        // Use "Merged Districts" for FATA
         const displayTitle = division.is_merged ? 'Merged Districts (Former FATA)' : (division.name + ' Division');
         
         const titleEl = document.getElementById('division-title');
@@ -525,6 +544,7 @@
             if (!division.projects_list || division.projects_list.length === 0) {
                 projectsContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No projects found for this division</div>';
             } else {
+                // Show all projects with slug links
                 division.projects_list.forEach(project => {
                     const borderColorClass = getStatusColorClass(project.category);
                     const statusBadge = getStatusBadge(project.category);
@@ -533,6 +553,7 @@
                     const projectDiv = document.createElement('div');
                     projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
                     
+                    // Use slug instead of ID for the link - FIXED: Check for project.slug
                     const projectSlug = project.slug || project.id;
                     projectDiv.onclick = () => {
                         if (projectSlug) {
@@ -625,6 +646,7 @@
         }
     }
 
+    // Division card click handlers
     function initDivisionCardClickHandlers() {
         const divisionCards = document.querySelectorAll('.division-card');
         divisionCards.forEach(card => {
@@ -638,14 +660,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Double-check map container exists
-        const mapContainerCheck = document.getElementById('kp-choropleth-map');
-        if (!mapContainerCheck) {
-            console.log('ℹ️ No map container found - skipping map initialization');
-            return;
-        }
-        
-        console.log('Map container found! Initializing...');
+        console.log('DOM loaded, initializing...');
         initStatNumberAnimation();
         updateTotalStats();
         initMap();

@@ -359,11 +359,17 @@
 
         const sectorData = {};
         division.projects_list.forEach(project => {
+            // UPDATED: Use the sector field from the project data
+            // The sector name is now passed from the controller via the relationship
             let sectorName = project.sector;
+            
+            // Handle cases where sector might be null or undefined
             if (!sectorName || sectorName === '' || sectorName === 'undefined' || sectorName === 'null') {
                 sectorName = 'Other';
             } else {
+                // Clean up the sector name
                 sectorName = sectorName.trim();
+                // Capitalize each word
                 sectorName = sectorName.split(' ').map(word =>
                     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                 ).join(' ');
@@ -553,7 +559,7 @@
                     const projectDiv = document.createElement('div');
                     projectDiv.className = `bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all duration-200 border-l-4 ${borderColorClass} cursor-pointer`;
                     
-                    // Use slug instead of ID for the link - FIXED: Check for project.slug
+                    // Use slug for the link
                     const projectSlug = project.slug || project.id;
                     projectDiv.onclick = () => {
                         if (projectSlug) {
@@ -561,12 +567,15 @@
                         }
                     };
                     
+                    // UPDATED: Display sector name from the project data
+                    const sectorDisplay = project.sector || 'N/A';
+                    
                     projectDiv.innerHTML = `
                         <div class="flex justify-between items-start">
                             <div class="font-medium text-white text-sm flex-1">${escapeHtml(project.name)}</div>
                             ${statusBadge}
                         </div>
-                        <div class="text-xs text-gray-300 mt-1">${escapeHtml(project.sector || 'N/A')}</div>
+                        <div class="text-xs text-gray-300 mt-1">${escapeHtml(sectorDisplay)}</div>
                         <div class="text-xs ${borderColorClass} mt-1">Cost: ${escapeHtml(costDisplay)}</div>
                     `;
                     projectsContainer.appendChild(projectDiv);

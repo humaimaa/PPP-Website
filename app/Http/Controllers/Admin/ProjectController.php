@@ -18,14 +18,16 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Project::with(['ongoingDetail', 'completedDetail']);
+        $query = Project::with(['sector', 'ongoingDetail', 'completedDetail']);
         
         // Optional: Add search functionality
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sector', 'like', "%{$search}%")
+                  ->orWhereHas('sector', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  })
                   ->orWhere('implementing_authority', 'like', "%{$search}%")
                   ->orWhere('location', 'like', "%{$search}%")
                   ->orWhere('division', 'like', "%{$search}%")
@@ -38,9 +40,9 @@ class ProjectController extends Controller
             $query->where('category', $request->category);
         }
         
-        // Optional: Add sector filter
+        // Optional: Add sector filter (using sector_id now)
         if ($request->has('sector') && !empty($request->sector)) {
-            $query->where('sector', $request->sector);
+            $query->where('sector_id', $request->sector);
         }
         
         // Optional: Add division filter
@@ -100,7 +102,7 @@ class ProjectController extends Controller
             // Basic validation rules
             $rules = [
                 'name' => 'required|string|max:255',
-                'sector' => 'required|exists:sectors,name',
+                'sector_id' => 'required|exists:sectors,id',
                 'implementing_authority' => 'required|string|max:255',
                 'location' => 'nullable|string|max:255',
                 'cost' => 'required|string|max:50',
@@ -204,7 +206,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project = Project::with(['ongoingDetail', 'completedDetail'])->findOrFail($id);
+        $project = Project::with(['sector', 'ongoingDetail', 'completedDetail'])->findOrFail($id);
         return view('admin.projects.show', compact('project'));
     }
 
@@ -213,7 +215,7 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::with(['ongoingDetail', 'completedDetail'])->findOrFail($id);
+        $project = Project::with(['sector', 'ongoingDetail', 'completedDetail'])->findOrFail($id);
         $sectors = Sector::orderBy('name')->get();
         $divisions = ['Bannu', 'Dera Ismail Khan', 'Hazara', 'Kohat', 'Malakand', 'Mardan', 'Peshawar', 'FATA'];
         return view('admin.projects.edit', compact('project', 'sectors', 'divisions'));
@@ -229,7 +231,7 @@ class ProjectController extends Controller
         // Validation rules
         $rules = [
             'name' => 'required|string|max:255',
-            'sector' => 'required|exists:sectors,name',
+            'sector_id' => 'required|exists:sectors,id',
             'implementing_authority' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
             'cost' => 'required|string|max:50',
@@ -372,7 +374,7 @@ class ProjectController extends Controller
     }
     
     /**
-     * Bulk delete projects - FIXED
+     * Bulk delete projects
      */
     public function bulkDelete(Request $request)
     {

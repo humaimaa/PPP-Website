@@ -37,4 +37,10 @@ class Sector extends Model
     {
         return 'slug';
     }
+    
+    // Relationship with projects
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

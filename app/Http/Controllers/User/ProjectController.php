@@ -61,158 +61,161 @@ class ProjectController extends Controller
         return json_last_error() === JSON_ERROR_NONE;
     }
 
- /**
- * Display projects with category, status, and sector filters
- * Only shows projects with publish = 'yes'
- */
-public function index($category = 'all', $status = 'all')
-{
-    // Allowed slugs – must match route constraints AND your view's dropdown values
-    $validCategories = ['all', 'pipeline', 'ongoing', 'construction-operational'];
-    $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
+    /**
+     * Display projects with category, status, and sector filters
+     * Only shows projects with publish = 'yes'
+     */
+    public function index($category = 'all', $status = 'all')
+    {
+        // Allowed slugs – must match route constraints AND your view's dropdown values
+        $validCategories = ['all', 'pipeline', 'ongoing', 'construction-operational'];
+        $validStatuses = ['all', 'private-partner', 'transaction-advisory', 'construction', 'operational'];
 
-    // Validate and sanitize inputs
-    if (!in_array($category, $validCategories)) $category = 'all';
-    if (!in_array($status, $validStatuses)) $status = 'all';
-    
-    // Get sector from query parameter
-    $sectorFilter = request()->query('sector');
-    $sectorData = null;
-    
-    // If sector filter is applied, get the sector data
-    if ($sectorFilter) {
-        $sectorData = Sector::where('name', $sectorFilter)->first();
-    }
-
-    // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
-    session()->put('projects_filters', [
-        'category' => $category,
-        'status' => $status,
-        'sector' => $sectorFilter,
-        'page' => request()->query('page', 1)
-    ]);
-
-    $query = Project::query();
-
-    // ---- ONLY SHOW PUBLISHED PROJECTS ----
-    $query->where('publish', 'yes');
-
-    // ---- Category filter (slug → DB value) ----
-    if ($category !== 'all') {
-        switch ($category) {
-            case 'pipeline':
-                $query->where('category', 'Pipeline');
-                break;
-            case 'ongoing':
-                $query->where('category', 'Ongoing');
-                break;
-            case 'construction-operational':
-                $query->where('category', 'Construction & Operational');
-                break;
-            default:
-                $query->where('category', $category);
+        // Validate and sanitize inputs
+        if (!in_array($category, $validCategories)) $category = 'all';
+        if (!in_array($status, $validStatuses)) $status = 'all';
+        
+        // Get sector from query parameter - now using sector_id
+        $sectorFilter = request()->query('sector');
+        $sectorData = null;
+        
+        // If sector filter is applied, get the sector data
+        if ($sectorFilter) {
+            $sectorData = Sector::find($sectorFilter); // Now using ID instead of name
         }
-    }
 
-    // ---- Status filter (slug → DB value) ----
-    if ($status !== 'all') {
-        switch ($status) {
-            case 'private-partner':
-                $query->where('status', 'Private Partner Selection');
-                break;
-            case 'transaction-advisory':
-                $query->where('status', 'Transaction Advisory');
-                break;
-            case 'construction':
-                $query->where('status', 'Construction');
-                break;
-            case 'operational':
-                $query->where('status', 'Operational');
-                break;
-            default:
-                $query->where('status', $status);
+        // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
+        session()->put('projects_filters', [
+            'category' => $category,
+            'status' => $status,
+            'sector' => $sectorFilter,
+            'page' => request()->query('page', 1)
+        ]);
+
+        $query = Project::query();
+
+        // ---- ONLY SHOW PUBLISHED PROJECTS ----
+        $query->where('publish', 'yes');
+
+        // ---- Category filter (slug → DB value) ----
+        if ($category !== 'all') {
+            switch ($category) {
+                case 'pipeline':
+                    $query->where('category', 'Pipeline');
+                    break;
+                case 'ongoing':
+                    $query->where('category', 'Ongoing');
+                    break;
+                case 'construction-operational':
+                    $query->where('category', 'Construction & Operational');
+                    break;
+                default:
+                    $query->where('category', $category);
+            }
         }
+
+        // ---- Status filter (slug → DB value) ----
+        if ($status !== 'all') {
+            switch ($status) {
+                case 'private-partner':
+                    $query->where('status', 'Private Partner Selection');
+                    break;
+                case 'transaction-advisory':
+                    $query->where('status', 'Transaction Advisory');
+                    break;
+                case 'construction':
+                    $query->where('status', 'Construction');
+                    break;
+                case 'operational':
+                    $query->where('status', 'Operational');
+                    break;
+                default:
+                    $query->where('status', $status);
+            }
+        }
+
+        // ---- Sector filter - now using sector_id ----
+        if ($sectorFilter) {
+            $query->where('sector_id', $sectorFilter);
+        }
+
+        // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
+        // Paginate results (9 per page)
+        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(9);
+
+        // ---- Statistics (only for published projects) ----
+        $allPublishedProjects = Project::where('publish', 'yes')->get();
+        $totalInvestmentRaw = 0;
+        foreach ($allPublishedProjects as $project) {
+            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
+        }
+
+        $stats = [
+            'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
+            'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
+            'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
+            'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
+            'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
+            'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
+            'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
+            'total_investment'    => $totalInvestmentRaw,
+            'total_projects'      => $allPublishedProjects->count()
+        ];
+
+        return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
     }
 
-    // ---- Sector filter ----
-    if ($sectorFilter) {
-        $query->where('sector', $sectorFilter);
+    /**
+     * Display projects by sector slug
+     */
+    public function indexBySector(Sector $sector)
+    {
+        // Laravel automatically finds the sector by slug
+        $sectorData = $sector;
+        $sectorFilter = $sector->id; // Now using ID instead of name
+
+        // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
+        session()->put('projects_filters', [
+            'category' => 'all',
+            'status' => 'all',
+            'sector' => $sector->id, // Now using ID
+            'page' => request()->query('page', 1)
+        ]);
+        
+        $query = Project::query();
+        $query->where('publish', 'yes');
+        $query->where('sector_id', $sector->id); // Now using ID instead of name
+        
+        $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(9);
+        
+        // Get statistics
+        $allPublishedProjects = Project::where('publish', 'yes')->get();
+        $totalInvestmentRaw = 0;
+        foreach ($allPublishedProjects as $project) {
+            $totalInvestmentRaw += $this->getRawCostValue($project->cost);
+        }
+        
+        $stats = [
+            'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
+            'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
+            'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
+            'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
+            'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
+            'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
+            'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
+            'total_investment'    => $totalInvestmentRaw,
+            'total_projects'      => $allPublishedProjects->count()
+        ];
+        
+        $category = 'all';
+        $status = 'all';
+        
+        return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
     }
-
-    // ---- Custom ordering: Ongoing first, then Pipeline, then Construction & Operational ----
-    // Paginate results (9 per page)
-    $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
-                      ->orderBy('created_at', 'desc')
-                      ->paginate(9);
-
-    // ---- Statistics (only for published projects) ----
-    $allPublishedProjects = Project::where('publish', 'yes')->get();
-    $totalInvestmentRaw = 0;
-    foreach ($allPublishedProjects as $project) {
-        $totalInvestmentRaw += $this->getRawCostValue($project->cost);
-    }
-
-    $stats = [
-        'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
-        'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
-        'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
-        'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
-        'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
-        'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
-        'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
-        'total_investment'    => $totalInvestmentRaw,
-        'total_projects'      => $allPublishedProjects->count()
-    ];
-
-    return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
-}
-
-public function indexBySector(Sector $sector)
-{
-    // Laravel automatically finds the sector by slug
-    $sectorData = $sector;
-    $sectorFilter = $sector->name; // Use the actual name from the database
-
-    // ========== STORE FILTERS IN SESSION FOR BACK NAVIGATION ==========
-    session()->put('projects_filters', [
-        'category' => 'all',
-        'status' => 'all',
-        'sector' => $sector->name,
-        'page' => request()->query('page', 1)
-    ]);
-    
-    $query = Project::query();
-    $query->where('publish', 'yes');
-    $query->where('sector', $sector->name); // Use the actual name
-    
-    $projects = $query->orderByRaw("FIELD(category, 'Ongoing', 'Pipeline', 'Construction & Operational') ASC")
-                      ->orderBy('created_at', 'desc')
-                      ->paginate(9);
-    
-    // Get statistics
-    $allPublishedProjects = Project::where('publish', 'yes')->get();
-    $totalInvestmentRaw = 0;
-    foreach ($allPublishedProjects as $project) {
-        $totalInvestmentRaw += $this->getRawCostValue($project->cost);
-    }
-    
-    $stats = [
-        'pipeline' => Project::where('publish', 'yes')->where('category', 'Pipeline')->count(),
-        'ongoing'  => Project::where('publish', 'yes')->where('category', 'Ongoing')->count(),
-        'construction_operational' => Project::where('publish', 'yes')->where('category', 'Construction & Operational')->count(),
-        'private_partner'     => Project::where('publish', 'yes')->where('status', 'Private Partner Selection')->count(),
-        'transaction_advisory'=> Project::where('publish', 'yes')->where('status', 'Transaction Advisory')->count(),
-        'construction'        => Project::where('publish', 'yes')->where('status', 'Construction')->count(),
-        'operational'         => Project::where('publish', 'yes')->where('status', 'Operational')->count(),
-        'total_investment'    => $totalInvestmentRaw,
-        'total_projects'      => $allPublishedProjects->count()
-    ];
-    
-    $category = 'all';
-    $status = 'all';
-    
-    return view('user.projects.index', compact('projects', 'category', 'status', 'stats', 'sectorFilter', 'sectorData'));
-}
 
     /**
      * Show a single project
@@ -384,13 +387,14 @@ public function indexBySector(Sector $sector)
                 if (!$projectExists) {
                     $projectsByDivision[$division]['projects'][] = [
                         'id' => $project->id,
-                        'slug' => $project->slug, // ADD SLUG HERE
+                        'slug' => $project->slug,
                         'name' => $project->name,
                         'category' => $project->category,
                         'status' => $project->status,
                         'cost' => $this->getRawCostValue($project->cost),
                         'cost_display' => $project->cost,
-                        'sector' => $project->sector,
+                        'sector' => $project->sector ? $project->sector->name : null, // Now using relationship
+                        'sector_id' => $project->sector_id,
                         'description' => $project->overview,
                         'location' => $project->location
                     ];
@@ -409,13 +413,14 @@ public function indexBySector(Sector $sector)
             foreach ($data['projects'] as $projectData) {
                 $projectsList[] = [
                     'id' => $projectData['id'],
-                    'slug' => $projectData['slug'], // ADD SLUG HERE
+                    'slug' => $projectData['slug'],
                     'name' => $projectData['name'],
                     'category' => $projectData['category'],
                     'status' => $projectData['status'],
                     'cost' => $projectData['cost'],
                     'cost_display' => $projectData['cost_display'],
                     'sector' => $projectData['sector'],
+                    'sector_id' => $projectData['sector_id'],
                     'description' => $projectData['description'],
                     'location' => $projectData['location']
                 ];
@@ -435,7 +440,7 @@ public function indexBySector(Sector $sector)
                 'investment' => $data['investment'],
                 'total_projects' => $totalProjectsCount,
                 'avg_cost' => $avgCost,
-                'projects_list' => array_slice($projectsList, 0, 10) // Use the prepared list with slugs
+                'projects_list' => array_slice($projectsList, 0, 10)
             ];
             
             if ($divisionName === 'FATA') {
@@ -444,15 +449,15 @@ public function indexBySector(Sector $sector)
             }
         }
         
-        // Get sector data for charts (only published projects)
+        // Get sector data for charts (only published projects) - now using sector relationship
         $sectorCounts = [];
         foreach ($allProjects as $proj) {
-            if (!empty($proj->sector)) {
-                $sector = ucfirst(strtolower(trim($proj->sector)));
-                if (!isset($sectorCounts[$sector])) {
-                    $sectorCounts[$sector] = 0;
+            if ($proj->sector) {
+                $sectorName = $proj->sector->name;
+                if (!isset($sectorCounts[$sectorName])) {
+                    $sectorCounts[$sectorName] = 0;
                 }
-                $sectorCounts[$sector]++;
+                $sectorCounts[$sectorName]++;
             }
         }
         $sectorChartData = $sectorCounts;
@@ -520,7 +525,7 @@ public function indexBySector(Sector $sector)
     public function getDivisionsData()
     {
         $validDivisions = ['Peshawar', 'Mardan', 'Kohat', 'Bannu', 'Dera Ismail Khan', 'Malakand', 'Hazara'];
-        $allProjects = Project::where('publish', 'yes')->get();
+        $allProjects = Project::where('publish', 'yes')->with('sector')->get(); // Eager load sector
         
         $divisionsData = [];
         
@@ -561,13 +566,14 @@ public function indexBySector(Sector $sector)
             foreach ($projects as $project) {
                 $projectsList[] = [
                     'id' => $project->id,
-                    'slug' => $project->slug, // ADD SLUG HERE
+                    'slug' => $project->slug,
                     'name' => $project->name,
                     'category' => $project->category,
                     'status' => $project->status,
                     'cost' => $this->getRawCostValue($project->cost),
                     'cost_display' => $project->cost,
-                    'sector' => $project->sector,
+                    'sector' => $project->sector ? $project->sector->name : null,
+                    'sector_id' => $project->sector_id,
                     'description' => $project->overview,
                     'location' => $project->location
                 ];
@@ -586,7 +592,7 @@ public function indexBySector(Sector $sector)
                 ],
                 'investment' => (float)$investment,
                 'total_projects' => count($projects),
-                'projects_list' => $projectsList // Now includes slug
+                'projects_list' => $projectsList
             ];
         }
         
@@ -628,13 +634,14 @@ public function indexBySector(Sector $sector)
         foreach ($fataProjects as $project) {
             $fataProjectsList[] = [
                 'id' => $project->id,
-                'slug' => $project->slug, // ADD SLUG HERE
+                'slug' => $project->slug,
                 'name' => $project->name,
                 'category' => $project->category,
                 'status' => $project->status,
                 'cost' => $this->getRawCostValue($project->cost),
                 'cost_display' => $project->cost,
-                'sector' => $project->sector,
+                'sector' => $project->sector ? $project->sector->name : null,
+                'sector_id' => $project->sector_id,
                 'description' => $project->overview,
                 'location' => $project->location
             ];
@@ -655,7 +662,7 @@ public function indexBySector(Sector $sector)
             ],
             'investment' => (float)$fataInvestment,
             'total_projects' => count($fataProjects),
-            'projects_list' => $fataProjectsList // Now includes slug
+            'projects_list' => $fataProjectsList
         ];
         
         return response()->json($divisionsData);

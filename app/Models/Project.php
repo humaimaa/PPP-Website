@@ -13,7 +13,7 @@ class Project extends Model
     protected $fillable = [
         'name',
         'slug',
-        'sector',
+        'sector_id', // Changed from 'sector' to 'sector_id'
         'implementing_authority',
         'location',
         'cost',
@@ -88,6 +88,11 @@ class Project extends Model
     }
     
     // Relationships
+    public function sector()
+    {
+        return $this->belongsTo(Sector::class);
+    }
+    
     public function ongoingDetail()
     {
         return $this->hasOne(OngoingProjectDetail::class);

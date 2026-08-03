@@ -25,7 +25,7 @@
                     </h3>
                     <p class="text-sm text-gray-500 mt-1">View complete project information</p>
                 </div>
-                
+
             </div>
         </div>
 
@@ -37,7 +37,8 @@
                     <img src="{{ Storage::url($project->image) }}" alt="{{ $project->name }}"
                         class="w-full rounded-lg object-cover border border-gray-200 shadow-sm">
                     @else
-                    <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                    <div
+                        class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
                         <div class="text-center">
                             <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
                             <p class="text-sm text-gray-500">No image available</p>
@@ -50,11 +51,12 @@
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ $project->name }}</h2>
 
                     <div class="grid grid-cols-2 gap-4">
+                        {{-- Sector Display --}}
                         <div>
                             <p class="text-xs text-gray-500 uppercase tracking-wider">Sector</p>
                             <p class="text-sm font-medium text-gray-900">
                                 <i class="fas fa-chart-line text-gray-400 mr-1"></i>
-                                {{ $project->sector }}
+                                {{ $project->sector ? $project->sector->name : 'N/A' }}
                             </p>
                         </div>
                         <div>
@@ -99,7 +101,8 @@
                                     {{ $project->status }}
                                 </span>
                                 @else
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
+                                <span
+                                    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
                                     N/A
                                 </span>
                                 @endif
@@ -118,10 +121,11 @@
                                 @if($project->division)
                                 <div class="flex flex-wrap gap-2">
                                     @php
-                                        $divisions = explode(',', $project->division);
+                                    $divisions = explode(',', $project->division);
                                     @endphp
                                     @foreach($divisions as $division)
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                                         <i class="fas fa-building mr-1.5 text-xs"></i>
                                         {{ trim($division) }}
                                     </span>
@@ -201,7 +205,8 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-sm font-medium text-gray-700 mb-2">Financial Benefits to Government</p>
-                        <p class="text-gray-600">{{ $project->completedDetail->expected_financial_benefits_to_government }}</p>
+                        <p class="text-gray-600">{{ $project->completedDetail->expected_financial_benefits_to_government
+                            }}</p>
                     </div>
                 </div>
             </div>

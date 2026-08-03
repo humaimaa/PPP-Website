@@ -175,13 +175,14 @@
                             </div>
                         </td>
 
-                        <td class="px-6 py-4">
-                            <span
-                                class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
-                                <i class="fas fa-chart-line mr-1 text-xs"></i>
-                                {{ $project->sector }}
-                            </span>
-                        </td>
+                        {{-- Sector Column --}}
+<td class="px-6 py-4">
+    <span
+        class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+        <i class="fas fa-chart-line mr-1 text-xs"></i>
+        {{ $project->sector ? $project->sector->name : 'N/A' }}
+    </span>
+</td>
 
                         <td class="px-6 py-4">
                             <div class="text-sm font-semibold text-gray-900">

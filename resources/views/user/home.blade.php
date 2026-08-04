@@ -296,52 +296,44 @@
 </section>
 
 <!-- Our Partners Section - Auto-scrolling Logos -->
-<section class="py-12 bg-background-white overflow-hidden">
+<section class="py-8 bg-background-white overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-black mb-4">Our Trusted Partners</h2>
+        <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-text-black mb-3">Our Trusted Partners</h2>
             <div class="w-20 h-1 bg-accent-1 mx-auto rounded-full"></div>
-            <p class="text-text-muted mt-4 max-w-2xl mx-auto">Collaborating with leading organizations to drive
-                sustainable development in Khyber Pakhtunkhwa</p>
+            <p class="text-text-muted text-sm md:text-base mt-3 max-w-2xl mx-auto">Collaborating with leading organizations to drive sustainable development in Khyber Pakhtunkhwa</p>
         </div>
 
-        <!-- Partner Logos Container (No Arrows) -->
-        <div class="relative">
-            <!-- Logo Container -->
-            <div class="logo-scroll-container overflow-hidden">
-                <div class="logo-track flex items-center gap-8 md:gap-12" id="partner-track">
-                    @php
-                    $partnerLogos = [
+        <div class="logo-scroll-container relative">
+            <div class="logo-track flex gap-6 md:gap-8 lg:gap-12" id="partner-track">
+                @php
+                $partnerLogos = [
                     ['src' => 'partner_1.png', 'alt' => 'FWO', 'url' => 'https://www.fwo.com.pk'],
-                    ['src' => 'partner_2.png', 'alt' => 'ZKB', 'url' => 'https://www.zkb.com.pk'],
+                    ['src' => 'partner_2.png', 'alt' => 'PwC', 'url' => 'https://www.pwc.com.pk/en/'],
                     ['src' => 'partner_3.png', 'alt' => 'AIIB', 'url' => 'https://www.aiib.org'],
                     ['src' => 'partner_4.png', 'alt' => 'IFC', 'url' => 'https://www.ifc.org'],
-                    ['src' => 'partner_5.png', 'alt' => 'FCDO', 'url' =>
-                    'https://www.gov.uk/government/organisations/foreign-commonwealth-development-office'],
-                    ['src' => 'partner_6.png', 'alt' => 'Asian Development Bank', 'url' =>
-                    'https://www.shiftcities.org/organization/asian-development-bank'],
-                    ['src' => 'partner_7.png', 'alt' => 'PwC', 'url' => 'https://www.pwc.com.pk/en/'],
+                    ['src' => 'partner_5.png', 'alt' => 'FCDO', 'url' => 'https://www.gov.uk/government/organisations/foreign-commonwealth-development-office'],
+                    ['src' => 'partner_6.png', 'alt' => 'Asian Development Bank', 'url' => 'https://www.shiftcities.org/organization/asian-development-bank'],
+                    ['src' => 'partner_7.png', 'alt' => 'ZKB', 'url' => 'https://www.zkb.com.pk'],
                     ['src' => 'partner_8.png', 'alt' => 'Pavron', 'url' => 'https://www.pavron.com.pk/'],
                     ['src' => 'partner_9.png', 'alt' => 'Nespak', 'url' => 'https://nespak.com.pk/'],
-                    ['src' => 'partner_10.png', 'alt' => 'Riaa Barker Gillette', 'url' =>
-                    'https://riaabarkergillette.com/pk/'],
+                    ['src' => 'partner_10.png', 'alt' => 'Riaa Barker Gillette', 'url' => 'https://riaabarkergillette.com/pk/'],
                     ['src' => 'partner_11.png', 'alt' => 'RSM', 'url' => 'https://www.rsm.global/'],
                     ['src' => 'partner_12.png', 'alt' => 'Tahir Builders', 'url' => 'https://tahirbuilders.com/'],
                     ['src' => 'partner_13.png', 'alt' => 'KPMG', 'url' => 'https://kpmg.com/xx/en.html'],
                     ['src' => 'partner_14.png', 'alt' => 'Icon Consult', 'url' => 'https://www.iconsult.com.pk/'],
                     ['src' => 'partner_15.png', 'alt' => 'EY', 'url' => 'https://www.ey.com/en_pk'],
-                    ];
-                    @endphp
+                ];
+                @endphp
 
-                    @foreach($partnerLogos as $index => $logo)
-                    <div class="partner-logo w-32 md:w-40 shrink-0 flex items-center justify-center">
-                        <a href="{{ $logo['url'] }}" target="_blank" rel="noopener noreferrer" class="block w-full">
-                            <img src="{{ asset('images/' . $logo['src']) }}" alt="{{ $logo['alt'] }}"
-                                class="w-full h-auto max-h-16 md:max-h-20 object-contain transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105">
-                        </a>
-                    </div>
-                    @endforeach
+                {{-- Only original logos (will be cloned by JavaScript) --}}
+                @foreach($partnerLogos as $logo)
+                <div class="partner-logo flex-shrink-0 w-[140px] sm:w-[160px] lg:w-[180px]">
+                    <a href="{{ $logo['url'] }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
+                        <img src="{{ asset('images/' . $logo['src']) }}" alt="{{ $logo['alt'] }}" class="w-auto h-auto max-h-[60px] sm:max-h-[70px] lg:max-h-[80px] object-contain transition-transform duration-300 hover:scale-105">
+                    </a>
                 </div>
+                @endforeach
             </div>
         </div>
     </div>

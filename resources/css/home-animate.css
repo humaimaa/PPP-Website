@@ -10,13 +10,19 @@
 }
 
 /* Sector card hover overlay effects */
-.sector-card .absolute.inset-0.bg-gradient-to-t {
+.sector-card .overlay-default {
     background: linear-gradient(to top, rgba(13, 38, 23, 0.8), rgba(13, 38, 23, 0.4));
     transition: opacity 0.5s ease;
 }
 
-.sector-card:hover .absolute.inset-0.bg-gradient-to-t {
+.sector-card .overlay-hover {
     background: linear-gradient(to top, rgba(26, 58, 40, 0.95), rgba(179, 147, 57, 0.3), rgba(13, 38, 23, 0.6));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.sector-card:hover .overlay-hover {
+    opacity: 1;
 }
 
 .sector-card:hover img {
@@ -36,7 +42,7 @@
    PARTNER LOGOS - Homepage Specific
    ============================================ */
 
-/* Logo scroll container */
+/* Logo scroll container - minimal styling */
 .logo-scroll-container {
     width: 100%;
     overflow: hidden;
@@ -51,7 +57,8 @@
     will-change: transform;
 }
 
-/* Individual partner logo */
+/* Individual partner logo - using Tailwind classes in HTML */
+/* Only minimal CSS needed for structure */
 .partner-logo {
     display: flex;
     align-items: center;
@@ -60,7 +67,7 @@
     transition: all 0.3s ease;
 }
 
-/* Partner logo images */
+/* Partner logo images - controlled by Tailwind classes */
 .partner-logo img {
     width: 100%;
     height: auto;
@@ -73,32 +80,6 @@
 .partner-logo:hover img {
     filter: drop-shadow(0 4px 12px rgba(179, 147, 57, 0.3));
     transform: scale(1.05);
-}
-
-/* Partner logo fixed widths */
-.partner-logo {
-    width: 160px !important;
-}
-
-/* Responsive adjustments for partner logos */
-@media (max-width: 768px) {
-    .partner-logo {
-        width: 128px !important;
-    }
-    
-    .partner-logo img {
-        max-height: 64px;
-    }
-}
-
-@media (max-width: 640px) {
-    .partner-logo {
-        width: 96px !important;
-    }
-    
-    .partner-logo img {
-        max-height: 48px;
-    }
 }
 
 /* ============================================

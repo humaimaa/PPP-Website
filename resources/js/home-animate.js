@@ -313,7 +313,7 @@ function initPositionAwareButton() {
     });
 }
 
-// PARTNER LOGOS AUTO-SCROLL (No Arrows)
+// PARTNER LOGOS AUTO-SCROLL (Using Duplicate Approach for Seamless Loop)
 function initPartnerLogosAutoScroll() {
     const track = document.getElementById('partner-track');
     const container = track?.closest('.logo-scroll-container');
@@ -322,121 +322,169 @@ function initPartnerLogosAutoScroll() {
         return;
     }
 
-    // Get logo items
-    const logoItems = track.querySelectorAll('.partner-logo');
-    if (logoItems.length === 0) return;
-
-    let gap = 48; // gap-12 in rem = 3rem = 48px
-    let logoWidth = 0;
-    let totalWidth = 0;
-    let halfTotalWidth = 0;
     let animation = null;
+    let isPaused = false;
+    let speed = 0.9; // Adjust this value to change scroll speed
+    let originalLogos = [];
+    let totalWidth = 0;
+    let halfWidth = 0;
 
-    // Calculate widths
+    // Get the gap value from Tailwind classes
+    function getGap() {
+        const style = window.getComputedStyle(track);
+        const gap = parseFloat(style.gap) || 48; // Default to 48px if gap not found
+        return gap;
+    }
+
+    // Calculate the total width of all logos including gaps
     function calculateWidths() {
-        // Get the width of the first logo including gap
-        const firstLogo = logoItems[0];
-        if (firstLogo) {
-            logoWidth = firstLogo.offsetWidth + gap;
-        } else {
-            logoWidth = 200 + gap; // fallback
-        }
+        const logos = track.querySelectorAll('.partner-logo');
+        const gap = getGap();
+        let width = 0;
         
-        // Total width of all logos
-        totalWidth = logoItems.length * logoWidth;
-        halfTotalWidth = totalWidth / 2;
-    }
-
-    // Setup track with clones for seamless infinite scroll
-    function setupClones() {
-        // Remove existing clones if any
-        const existingClones = track.querySelectorAll('.clone-logo');
-        existingClones.forEach(clone => clone.remove());
-        
-        // Clone all logos and append
-        logoItems.forEach(logo => {
-            const clone = logo.cloneNode(true);
-            clone.classList.add('clone-logo');
-            track.appendChild(clone);
-        });
-    }
-
-    // Start auto-scroll
-    function startAutoScroll() {
-        if (animation) {
-            animation.kill();
-            animation = null;
-        }
-        
-        const scrollDistance = halfTotalWidth;
-        
-        animation = gsap.to(track, {
-            x: -scrollDistance,
-            duration: 25,
-            ease: "none",
-            repeat: -1,
-            modifiers: {
-                x: function(x) {
-                    const currentX = parseFloat(x);
-                    // Check if we need to loop seamlessly
-                    if (currentX <= -halfTotalWidth) {
-                        gsap.set(track, { x: currentX + halfTotalWidth });
-                        return (currentX + halfTotalWidth) + "px";
-                    }
-                    return x;
-                }
+        logos.forEach((logo, index) => {
+            width += logo.offsetWidth;
+            if (index < logos.length - 1) {
+                width += gap;
             }
         });
+        
+        return width;
     }
 
-    // Stop auto-scroll
-    function stopAutoScroll() {
+    // Setup the track with duplicates for seamless scrolling
+    function setupTrack() {
+        // Clear existing clones
+        const existingClones = track.querySelectorAll('.logo-clone');
+        existingClones.forEach(clone => clone.remove());
+        
+        // Get original logos (not clones)
+        originalLogos = track.querySelectorAll('.partner-logo:not(.logo-clone)');
+        
+        // Clone each original logo and append to track
+        originalLogos.forEach(logo => {
+            const clone = logo.cloneNode(true);
+            clone.classList.add('logo-clone');
+            track.appendChild(clone);
+        });
+        
+        // Calculate total width
+        totalWidth = calculateWidths();
+        halfWidth = totalWidth / 2;
+        
+        // Reset position
+        track.style.transform = 'translateX(0px)';
+        track.style.transition = 'none';
+    }
+
+    // Animation function
+    function animate() {
+        if (isPaused) {
+            animation = requestAnimationFrame(animate);
+            return;
+        }
+
+        // Get current position
+        let currentX = 0;
+        const transform = track.style.transform;
+        if (transform && transform !== 'none') {
+            const match = transform.match(/translateX\(([^)]+)\)/);
+            if (match) {
+                currentX = parseFloat(match[1]);
+            }
+        }
+
+        // Move left
+        currentX -= speed;
+
+        // Check if we've scrolled past half the width
+        if (Math.abs(currentX) >= halfWidth) {
+            // Reset to beginning seamlessly
+            currentX = 0;
+            track.style.transition = 'none';
+            track.style.transform = `translateX(${currentX}px)`;
+            // Force reflow
+            void track.offsetHeight;
+            track.style.transition = '';
+        } else {
+            track.style.transform = `translateX(${currentX}px)`;
+        }
+
+        animation = requestAnimationFrame(animate);
+    }
+
+    // Start scrolling
+    function startScroll() {
         if (animation) {
-            animation.kill();
+            cancelAnimationFrame(animation);
             animation = null;
         }
+        isPaused = false;
+        animation = requestAnimationFrame(animate);
     }
 
-    // Pause on hover
-    container.addEventListener('mouseenter', stopAutoScroll);
-    container.addEventListener('mouseleave', function() {
-        startAutoScroll();
+    // Stop scrolling
+    function stopScroll() {
+        isPaused = true;
+    }
+
+    // Initialize
+    function init() {
+        // Stop any existing animation
+        if (animation) {
+            cancelAnimationFrame(animation);
+            animation = null;
+        }
+        
+        // Setup the track with clones
+        setupTrack();
+        
+        // Start animation with delay
+        setTimeout(startScroll, 300);
+    }
+
+    // Event listeners
+    container.addEventListener('mouseenter', stopScroll);
+    container.addEventListener('mouseleave', startScroll);
+
+    // Handle tab visibility
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            stopScroll();
+        } else {
+            if (!animation) {
+                startScroll();
+            }
+        }
     });
 
-    // Resize handler
-    let resizeTimeout = null;
+    // Handle window resize
+    let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            stopAutoScroll();
-            calculateWidths();
-            gsap.set(track, { x: 0 });
-            setTimeout(() => {
-                startAutoScroll();
-            }, 300);
+            stopScroll();
+            setupTrack();
+            setTimeout(startScroll, 300);
         }, 300);
     });
 
-    // Initialize everything
-    function init() {
-        calculateWidths();
-        setupClones();
-        gsap.set(track, { x: 0 });
-        startAutoScroll();
-    }
-
-    // Initial setup with delay to ensure layout is complete
-    setTimeout(init, 500);
-
-    // Re-initialize on window load
-    window.addEventListener('load', function() {
-        stopAutoScroll();
-        calculateWidths();
-        gsap.set(track, { x: 0 });
-        setTimeout(() => {
-            startAutoScroll();
-        }, 500);
+    // Cleanup
+    window.addEventListener('beforeunload', function() {
+        if (animation) {
+            cancelAnimationFrame(animation);
+            animation = null;
+        }
     });
+
+    // Start when ready
+    if (document.readyState === 'complete') {
+        setTimeout(init, 500);
+    } else {
+        window.addEventListener('load', function() {
+            setTimeout(init, 500);
+        });
+    }
 }
 
 // Export for use in Blade templates

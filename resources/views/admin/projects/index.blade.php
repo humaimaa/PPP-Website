@@ -32,7 +32,8 @@
     </div>
 
     @if(session('success'))
-    <div class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
+    <div
+        class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
         <i class="fas fa-check-circle"></i>
         {{ session('success') }}
     </div>
@@ -78,7 +79,8 @@
         </div>
 
         {{-- BULK DELETE FORM - Now outside the table and hidden --}}
-        <form id="bulkDeleteForm" action="{{ route('admin.projects.bulk-delete') }}" method="POST" style="display: none;">
+        <form id="bulkDeleteForm" action="{{ route('admin.projects.bulk-delete') }}" method="POST"
+            style="display: none;">
             @csrf
             <input type="hidden" name="project_ids" id="bulkDeleteIds" value="">
         </form>
@@ -176,13 +178,13 @@
                         </td>
 
                         {{-- Sector Column --}}
-<td class="px-6 py-4">
-    <span
-        class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
-        <i class="fas fa-chart-line mr-1 text-xs"></i>
-        {{ $project->sector ? $project->sector->name : 'N/A' }}
-    </span>
-</td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-md">
+                                <i class="fas fa-chart-line mr-1 text-xs"></i>
+                                {{ $project->sector ? $project->sector->name : 'N/A' }}
+                            </span>
+                        </td>
 
                         <td class="px-6 py-4">
                             <div class="text-sm font-semibold text-gray-900">
@@ -224,13 +226,14 @@
                         {{-- PUBLISH TOGGLE - Now properly outside the bulk delete form --}}
                         @if( auth()->user()->can('projects.edit') )
                         <td class="px-6 py-4">
-                            <form action="{{ route('admin.projects.toggle-publish', $project->id) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.projects.toggle-publish', $project->id) }}" method="POST"
+                                class="inline">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" 
-                                    class="relative inline-flex items-center h-8 rounded-full w-14 transition-colors duration-300 focus:outline-none
+                                <button type="submit" class="relative inline-flex items-center h-8 rounded-full w-14 transition-colors duration-300 focus:outline-none
                                     {{ $project->publish == 'yes' ? 'bg-emerald-500' : 'bg-gray-300' }}">
-                                    <span class="sr-only">{{ $project->publish == 'yes' ? 'Published' : 'Draft' }}</span>
+                                    <span class="sr-only">{{ $project->publish == 'yes' ? 'Published' : 'Draft'
+                                        }}</span>
                                     <span class="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300
                                         {{ $project->publish == 'yes' ? 'translate-x-7' : 'translate-x-1' }}">
                                     </span>

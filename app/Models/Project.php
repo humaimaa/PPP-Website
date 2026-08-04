@@ -13,7 +13,7 @@ class Project extends Model
     protected $fillable = [
         'name',
         'slug',
-        'sector_id', // Changed from 'sector' to 'sector_id'
+        'sector_id', 
         'implementing_authority',
         'location',
         'cost',

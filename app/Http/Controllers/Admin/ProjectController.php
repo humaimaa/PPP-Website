@@ -13,9 +13,26 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
+   
+
     /**
-     * Display a listing of the resource.
+     * Toggle publish status
      */
+    public function togglePublish($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+            $project->publish = $project->publish === 'yes' ? 'no' : 'yes';
+            $project->save();
+            
+            return redirect()->back()->with('success', 'Publish status updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
+        }
+    }
+
+   
+    
     public function index(Request $request)
     {
         $query = Project::with(['sector', 'ongoingDetail', 'completedDetail']);
@@ -70,18 +87,18 @@ class ProjectController extends Controller
     /**
      * Toggle publish status
      */
-    public function togglePublish($id)
-    {
-        try {
-            $project = Project::findOrFail($id);
-            $project->publish = $project->publish === 'yes' ? 'no' : 'yes';
-            $project->save();
+    // public function togglePublish($id)
+    // {
+    //     try {
+    //         $project = Project::findOrFail($id);
+    //         $project->publish = $project->publish === 'yes' ? 'no' : 'yes';
+    //         $project->save();
             
-            return redirect()->back()->with('success', 'Publish status updated successfully!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
-        }
-    }
+    //         return redirect()->back()->with('success', 'Publish status updated successfully!');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
+    //     }
+    // }
 
     /**
      * Show the form for creating a new resource.

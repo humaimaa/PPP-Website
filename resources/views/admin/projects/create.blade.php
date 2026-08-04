@@ -502,19 +502,19 @@
         const statusSelect = document.getElementById('status');
         const statusRequired = document.getElementById('status-required');
 
-        // Hide all sections
+        
         if (pipelineSection) pipelineSection.style.display = 'none';
         if (ongoingSection) ongoingSection.style.display = 'none';
         if (completedSection) completedSection.style.display = 'none';
 
-        // Clear and hide status by default
+        
         statusWrapper.style.display = 'none';
         statusSelect.removeAttribute('required');
         statusSelect.innerHTML = '<option value="">Select Status</option>';
 
         if (category === 'Pipeline') {
             if (pipelineSection) pipelineSection.style.display = 'block';
-            // status remains hidden
+            
 
         } else if (category === 'Ongoing') {
             if (ongoingSection) ongoingSection.style.display = 'block';
@@ -546,7 +546,7 @@
         }
     }
 
-    // Initialize on page load
+    
     document.addEventListener('DOMContentLoaded', function() {
         toggleProjectDetails();
     });

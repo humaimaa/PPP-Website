@@ -175,7 +175,7 @@
         </div>
         
         <div class="flex justify-center items-center">
-            <a href="{{ url('/pitchbook') }}"
+            <a href="{{ asset('./pitchbook') }}"
                 class="inline-block transition-all duration-300 hover:scale-105 hover:-translate-y-1 group">
                 <div class="relative rounded-lg overflow-hidden  hover:scale-105 transition-all duration-300">
                     <img src="{{ asset('images/Pitchbook-Cover.png') }}" alt="Pitchbook Cover"

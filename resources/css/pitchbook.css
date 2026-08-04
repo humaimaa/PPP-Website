@@ -62,8 +62,6 @@ html, body {
     position: relative;
     flex-shrink: 0;
     border-radius: 4px;
-    /* box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18); */
-
 }
 
 /* ── Flipbook element ──────────────────────────────────────── */
@@ -99,7 +97,7 @@ html, body {
 #flipbook .page img {
     width: 100%;
     height: 100%;
-    object-fit: fill;         /* slides are exactly 16:9 — fill = no bars */
+    object-fit: fill;
     display: block;
     pointer-events: none;
     user-select: none;
@@ -153,52 +151,222 @@ html, body {
     border-radius: 3px;
 }
 
-/* ── Navigation bar ────────────────────────────────────────── */
+/* ── Navigation bar with Volume Control ───────────────────── */
 #nav-bar {
     position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 20px;
     z-index: 1000;
-    background: #fff;
-    padding: 0.5rem 1.25rem;
-    border-radius: 9999px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
-    white-space: nowrap;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
 }
 
 #nav-bar button {
-    background: #0D2617;
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    border: none;
-    padding: 0.4rem 1.1rem;
-    border-radius: 9999px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 20px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    min-width: 80px;
 }
 
-#nav-bar button:hover  { background: #B39339; transform: scale(1.05); }
-#nav-bar button:active { transform: scale(0.97); }
+#nav-bar button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+#nav-bar button:active {
+    transform: scale(0.95);
+}
 
 #page-counter {
-    color: #333;
-    font-size: 13px;
-    font-weight: 600;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
     font-family: 'Inter', sans-serif;
-    min-width: 110px;
+    min-width: 120px;
     text-align: center;
 }
 
+#page-counter span {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+/* Volume Control in Nav */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 12px 4px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.volume-icon {
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+    padding: 4px;
+    line-height: 1;
+}
+
+.volume-icon:hover {
+    transform: scale(1.15);
+    color: #4CAF50;
+}
+
+.volume-icon.muted {
+    opacity: 0.5;
+}
+
+#volume-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, #4CAF50 0%, #4CAF50 5%, #555 5%, #555 100%);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s;
+}
+
+#volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+#volume-percentage {
+    color: #fff;
+    font-size: 11px;
+    min-width: 32px;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    opacity: 0.8;
+}
+
+/* Divider between elements */
+.nav-divider {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 20px;
+    user-select: none;
+}
+
 /* ── Mobile ────────────────────────────────────────────────── */
-@media (max-width: 600px) {
-    #nav-bar { gap: 0.4rem; padding: 0.4rem 0.8rem; }
-    #nav-bar button { padding: 0.3rem 0.7rem; font-size: 11px; }
-    #page-counter   { min-width: 80px; font-size: 11px; }
+@media (max-width: 768px) {
+    #nav-bar {
+        padding: 10px 15px;
+        gap: 12px;
+    }
+
+    #nav-bar button {
+        padding: 6px 14px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+
+    #page-counter {
+        font-size: 12px;
+        min-width: 90px;
+    }
+
+    #volume-slider {
+        width: 60px;
+    }
+
+    .volume-control {
+        padding: 3px 8px 3px 6px;
+    }
+
+    .volume-icon {
+        font-size: 16px;
+    }
+
+    #volume-percentage {
+        font-size: 10px;
+        min-width: 28px;
+    }
+
+    .nav-divider {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    #nav-bar {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    #nav-bar button {
+        padding: 5px 10px;
+        font-size: 11px;
+        min-width: 50px;
+    }
+
+    #page-counter {
+        font-size: 11px;
+        min-width: 70px;
+    }
+
+    #volume-slider {
+        width: 40px;
+    }
+
+    .volume-control {
+        padding: 2px 6px 2px 4px;
+        gap: 6px;
+    }
+
+    .volume-icon {
+        font-size: 14px;
+    }
+
+    #volume-percentage {
+        font-size: 9px;
+        min-width: 24px;
+    }
+
+    .nav-divider {
+        font-size: 14px;
+    }
 }

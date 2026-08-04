@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Load CSS via Vite -->
-    @vite(['resources/css/app.css', 'resources/css/pitchbook.css', 'resources/css/home-animate.css', 'resources/css/admin.css'])
+    @vite(['resources/css/pitchbook.css'])
 
     <!-- Load jQuery and dependencies directly from public directory -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -53,16 +53,27 @@
         </div>
     </div>
 
-    <!-- Nav -->
+    <!-- Nav with Volume Control -->
     <nav id="nav-bar">
         <button id="prevBtn">&#9664; Prev</button>
+        
         <div id="page-counter">
             Page <span id="currentPage">1</span> / <span id="totalPages">111</span>
         </div>
+        
         <button id="nextBtn">Next &#9654;</button>
+        
+        <span class="nav-divider">|</span>
+        
+        <!-- Volume Control -->
+        <div class="volume-control">
+            <span class="volume-icon" id="volumeIcon" title="Toggle mute (M)">🔊</span>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.05">
+            <span id="volume-percentage">5%</span>
+        </div>
     </nav>
 
-    <!-- Load other JS via Vite (excluding jQuery and turn.js which are loaded above) -->
+    <!-- Load other JS via Vite -->
     @vite([
         'resources/js/app.js',
         'resources/js/home-animate.js',
@@ -72,9 +83,7 @@
     ])
 
     <script>
-        // Wait for DOM and all scripts to load
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if jQuery is loaded
             if (typeof jQuery === 'undefined') {
                 document.getElementById('loading').innerHTML =
                     '<p style="color:#333;font-family:sans-serif;text-align:center;padding:2rem;">' +
@@ -83,16 +92,118 @@
                 return;
             }
 
-            // Use jQuery's ready function
             jQuery(document).ready(function($) {
                 var TOTAL_PAGES = 111;
+                var isFlipping = false;
+                var isMuted = false;
 
-                // Set audio volume to 50%
+                // Get audio element
                 var audioElement = document.getElementById('flipSound');
+                
+                // Volume control elements
+                var volumeSlider = document.getElementById('volume-slider');
+                var volumeIcon = document.getElementById('volumeIcon');
+                var volumePercentage = document.getElementById('volume-percentage');
+
+                // === DEFAULT VOLUME SET TO 5% ===
+                var DEFAULT_VOLUME = 0.05; // 5% volume
+                
                 if (audioElement) {
-                    audioElement.volume = 0.5;
+                    // Set initial volume to 5%
+                    audioElement.volume = DEFAULT_VOLUME;
+                    audioElement.playbackRate = 0.6; // Slow down sound
+                    
+                    // Update slider to match default volume
+                    if (volumeSlider) {
+                        volumeSlider.value = DEFAULT_VOLUME;
+                        updateVolumeSliderBackground(DEFAULT_VOLUME);
+                    }
+                    
+                    // Update percentage display
+                    if (volumePercentage) {
+                        volumePercentage.textContent = Math.round(DEFAULT_VOLUME * 100) + '%';
+                    }
                 }
 
+                // === VOLUME CONTROL FUNCTIONS ===
+                function updateVolumeSliderBackground(value) {
+                    var percentage = value * 100;
+                    volumeSlider.style.background = 'linear-gradient(to right, #4CAF50 0%, #4CAF50 ' + percentage + '%, #555 ' + percentage + '%, #555 100%)';
+                }
+
+                function updateVolume(value) {
+                    if (audioElement) {
+                        // If muted and trying to change volume, unmute
+                        if (isMuted && value > 0) {
+                            isMuted = false;
+                            volumeIcon.textContent = '🔊';
+                            volumeIcon.classList.remove('muted');
+                        }
+                        
+                        audioElement.volume = Math.max(0, Math.min(1, value));
+                        updateVolumeSliderBackground(value);
+                        
+                        if (volumePercentage) {
+                            volumePercentage.textContent = Math.round(value * 100) + '%';
+                        }
+                    }
+                }
+
+                function toggleMute() {
+                    if (audioElement) {
+                        isMuted = !isMuted;
+                        if (isMuted) {
+                            audioElement.volume = 0;
+                            volumeIcon.textContent = '🔇';
+                            volumeIcon.classList.add('muted');
+                            if (volumePercentage) {
+                                volumePercentage.textContent = '0%';
+                            }
+                            // Update slider visual but keep the value
+                            updateVolumeSliderBackground(0);
+                        } else {
+                            // Restore previous volume from slider
+                            var newVolume = parseFloat(volumeSlider.value);
+                            audioElement.volume = newVolume;
+                            volumeIcon.textContent = '🔊';
+                            volumeIcon.classList.remove('muted');
+                            updateVolumeSliderBackground(newVolume);
+                            if (volumePercentage) {
+                                volumePercentage.textContent = Math.round(newVolume * 100) + '%';
+                            }
+                        }
+                    }
+                }
+
+                // === VOLUME SLIDER EVENT ===
+                if (volumeSlider) {
+                    volumeSlider.addEventListener('input', function(e) {
+                        var value = parseFloat(this.value);
+                        updateVolume(value);
+                        // If muted and user slides, unmute
+                        if (isMuted && value > 0) {
+                            isMuted = false;
+                            volumeIcon.textContent = '🔊';
+                            volumeIcon.classList.remove('muted');
+                        }
+                    });
+                }
+
+                // === VOLUME ICON CLICK (MUTE/UNMUTE) ===
+                if (volumeIcon) {
+                    volumeIcon.addEventListener('click', toggleMute);
+                }
+
+                // === KEYBOARD SHORTCUT FOR VOLUME ===
+                // Press M to mute/unmute
+                $(document).keydown(function(e) {
+                    if (e.key === 'm' || e.key === 'M') {
+                        toggleMute();
+                        e.preventDefault();
+                    }
+                });
+
+                // === FUNCTIONS ===
                 function calcBookSize() {
                     var availW = window.innerWidth - 32;
                     var availH = window.innerHeight - 100;
@@ -103,14 +214,6 @@
                         bookH = Math.round(bookW * 9 / 32);
                     }
                     return { w: bookW, h: bookH };
-                }
-
-                function numberOfViews(book) {
-                    return Math.ceil((book.turn('pages') + 2) / 2);
-                }
-
-                function getViewNumber(book, page) {
-                    return Math.ceil(((page || book.turn('page')) + 1) / 2);
                 }
 
                 function updatePageCounter(page) {
@@ -125,9 +228,19 @@
 
                 function playFlipSound() {
                     var snd = document.getElementById('flipSound');
-                    if (snd) { 
-                        snd.currentTime = 0; 
-                        snd.play().catch(function () {}); 
+                    if (snd && !isFlipping) {
+                        isFlipping = true;
+                        snd.currentTime = 0;
+                        
+                        // Ensure playback rate is set
+                        snd.playbackRate = 0.6;
+                        
+                        // Volume is already controlled by the slider
+                        // But if muted, volume is 0
+                        snd.play().catch(function() {});
+                        setTimeout(function() {
+                            isFlipping = false;
+                        }, 400);
                     }
                 }
 
@@ -158,6 +271,9 @@
                         elevation: 50,
                         pages: TOTAL_PAGES,
                         when: {
+                            start: function(e, page) {
+                                playFlipSound();
+                            },
                             turning: function(e, page) {
                                 var book = $(this);
                                 var current = book.turn('page');
@@ -173,7 +289,6 @@
                                         return;
                                     }
                                 }
-                                playFlipSound();
                             },
                             turned: function(e, page) {
                                 updatePageCounter(page);
@@ -186,7 +301,6 @@
                         }
                     });
 
-                    // Mousewheel
                     $('#book-zoom').on('wheel', function(e) {
                         e.preventDefault();
                         var d = e.originalEvent.deltaX || e.originalEvent.deltaY;
@@ -194,8 +308,12 @@
                         else if (d < -20) flipbook.turn('previous');
                     });
 
-                    // Keyboard
+                    // Keyboard navigation (excluding 'M' for mute)
                     $(document).keydown(function(e) {
+                        // Skip if 'M' key is pressed (handled above)
+                        if (e.key === 'm' || e.key === 'M') {
+                            return;
+                        }
                         switch (e.keyCode) {
                             case 37:
                                 flipbook.turn('previous');
@@ -216,15 +334,13 @@
                         }
                     });
 
-                    // Buttons
-                    $('#prevBtn').on('click', function() { 
-                        flipbook.turn('previous'); 
+                    $('#prevBtn').on('click', function() {
+                        flipbook.turn('previous');
                     });
-                    $('#nextBtn').on('click', function() { 
-                        flipbook.turn('next'); 
+                    $('#nextBtn').on('click', function() {
+                        flipbook.turn('next');
                     });
 
-                    // Resize
                     $(window).on('resize', function() {
                         var s = calcBookSize();
                         $('#book-zoom').css({ width: s.w, height: s.h });
@@ -235,8 +351,8 @@
                     $('#totalPages').text(TOTAL_PAGES);
                     updatePageCounter(1);
                     $('#canvas').css({ visibility: 'visible' });
-                    setTimeout(function() { 
-                        $('#loading').fadeOut(400); 
+                    setTimeout(function() {
+                        $('#loading').fadeOut(400);
                     }, 400);
                     preloadImages(1, 20);
                 }

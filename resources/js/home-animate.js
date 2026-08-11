@@ -313,7 +313,7 @@ function initPositionAwareButton() {
     });
 }
 
-// PARTNER LOGOS AUTO-SCROLL (Using Duplicate Approach for Seamless Loop)
+// PARTNER LOGOS AUTO-SCROLL (FIXED VERSION)
 function initPartnerLogosAutoScroll() {
     const track = document.getElementById('partner-track');
     const container = track?.closest('.logo-scroll-container');
@@ -324,10 +324,12 @@ function initPartnerLogosAutoScroll() {
 
     let animation = null;
     let isPaused = false;
+    let isVisible = true;
     let speed = 0.9; // Adjust this value to change scroll speed
     let originalLogos = [];
     let totalWidth = 0;
     let halfWidth = 0;
+    let isInitialized = false;
 
     // Get the gap value from Tailwind classes
     function getGap() {
@@ -343,13 +345,75 @@ function initPartnerLogosAutoScroll() {
         let width = 0;
         
         logos.forEach((logo, index) => {
-            width += logo.offsetWidth;
+            // Ensure we get the actual rendered width
+            const logoWidth = logo.offsetWidth || logo.getBoundingClientRect().width;
+            width += logoWidth;
             if (index < logos.length - 1) {
                 width += gap;
             }
         });
         
         return width;
+    }
+
+    // Check if all images are loaded
+    function areImagesLoaded() {
+        const logos = track.querySelectorAll('.partner-logo img');
+        if (logos.length === 0) return true;
+        
+        let allLoaded = true;
+        logos.forEach(img => {
+            if (!img.complete || img.naturalWidth === 0) {
+                allLoaded = false;
+            }
+        });
+        
+        return allLoaded;
+    }
+
+    // Wait for images to load
+    function waitForImages(callback) {
+        // Check if images are already loaded
+        if (areImagesLoaded()) {
+            callback();
+            return;
+        }
+
+        let imageLoadCount = 0;
+        const logos = track.querySelectorAll('.partner-logo img');
+        const totalImages = logos.length;
+
+        if (totalImages === 0) {
+            callback();
+            return;
+        }
+
+        logos.forEach(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                imageLoadCount++;
+                if (imageLoadCount === totalImages) {
+                    callback();
+                }
+                return;
+            }
+
+            img.addEventListener('load', function onLoad() {
+                imageLoadCount++;
+                if (imageLoadCount === totalImages) {
+                    callback();
+                }
+                img.removeEventListener('load', onLoad);
+            });
+
+            img.addEventListener('error', function onError() {
+                // Even if image fails, count it as loaded to prevent infinite waiting
+                imageLoadCount++;
+                if (imageLoadCount === totalImages) {
+                    callback();
+                }
+                img.removeEventListener('error', onError);
+            });
+        });
     }
 
     // Setup the track with duplicates for seamless scrolling
@@ -368,18 +432,28 @@ function initPartnerLogosAutoScroll() {
             track.appendChild(clone);
         });
         
-        // Calculate total width
-        totalWidth = calculateWidths();
-        halfWidth = totalWidth / 2;
-        
-        // Reset position
-        track.style.transform = 'translateX(0px)';
-        track.style.transition = 'none';
+        // Calculate total width after images are loaded
+        waitForImages(() => {
+            // Force reflow to ensure all elements are rendered
+            void track.offsetHeight;
+            
+            totalWidth = calculateWidths();
+            halfWidth = totalWidth / 2;
+            
+            // Reset position
+            track.style.transform = 'translateX(0px)';
+            track.style.transition = 'none';
+            
+            isInitialized = true;
+            
+            // Start animation after a small delay
+            setTimeout(startScroll, 200);
+        });
     }
 
     // Animation function
-    function animate() {
-        if (isPaused) {
+    function animate(timestamp) {
+        if (isPaused || !isVisible || !isInitialized) {
             animation = requestAnimationFrame(animate);
             return;
         }
@@ -419,13 +493,47 @@ function initPartnerLogosAutoScroll() {
             cancelAnimationFrame(animation);
             animation = null;
         }
+        
+        // Ensure we have valid dimensions
+        if (!isInitialized || halfWidth === 0) {
+            setupTrack();
+            return;
+        }
+        
         isPaused = false;
-        animation = requestAnimationFrame(animate);
+        isVisible = true;
+        
+        if (!animation) {
+            animation = requestAnimationFrame(animate);
+        }
     }
 
     // Stop scrolling
     function stopScroll() {
         isPaused = true;
+        if (animation) {
+            cancelAnimationFrame(animation);
+            animation = null;
+        }
+    }
+
+    // Handle page visibility changes
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            // Page is hidden (user switched tab)
+            isVisible = false;
+            isPaused = true;
+        } else {
+            // Page is visible again (user came back)
+            isVisible = true;
+            isPaused = false;
+            // Resume animation
+            if (!animation && isInitialized) {
+                setTimeout(() => {
+                    animation = requestAnimationFrame(animate);
+                }, 200);
+            }
+        }
     }
 
     // Initialize
@@ -436,24 +544,38 @@ function initPartnerLogosAutoScroll() {
             animation = null;
         }
         
+        isInitialized = false;
+        
         // Setup the track with clones
         setupTrack();
-        
-        // Start animation with delay
-        setTimeout(startScroll, 300);
     }
 
     // Event listeners
     container.addEventListener('mouseenter', stopScroll);
     container.addEventListener('mouseleave', startScroll);
 
-    // Handle tab visibility
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            stopScroll();
-        } else {
-            if (!animation) {
-                startScroll();
+    // Handle tab visibility - improved visibility handling
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Also handle page visibility API for older browsers
+    document.addEventListener('webkitvisibilitychange', handleVisibilityChange);
+    document.addEventListener('mozvisibilitychange', handleVisibilityChange);
+    document.addEventListener('msvisibilitychange', handleVisibilityChange);
+
+    // Handle window blur/focus for additional reliability
+    window.addEventListener('blur', function() {
+        isVisible = false;
+        isPaused = true;
+    });
+    
+    window.addEventListener('focus', function() {
+        if (!document.hidden) {
+            isVisible = true;
+            isPaused = false;
+            if (!animation && isInitialized) {
+                setTimeout(() => {
+                    animation = requestAnimationFrame(animate);
+                }, 200);
             }
         }
     });
@@ -464,9 +586,23 @@ function initPartnerLogosAutoScroll() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             stopScroll();
-            setupTrack();
-            setTimeout(startScroll, 300);
-        }, 300);
+            // Recalculate dimensions after resize
+            waitForImages(() => {
+                totalWidth = calculateWidths();
+                halfWidth = totalWidth / 2;
+                track.style.transform = 'translateX(0px)';
+                isInitialized = true;
+                setTimeout(startScroll, 200);
+            });
+        }, 500);
+    });
+
+    // Handle page visibility when returning from background
+    document.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            // Page was restored from bfcache
+            setTimeout(init, 500);
+        }
     });
 
     // Cleanup
@@ -475,6 +611,9 @@ function initPartnerLogosAutoScroll() {
             cancelAnimationFrame(animation);
             animation = null;
         }
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('blur', handleVisibilityChange);
+        window.removeEventListener('focus', handleVisibilityChange);
     });
 
     // Start when ready
@@ -482,7 +621,7 @@ function initPartnerLogosAutoScroll() {
         setTimeout(init, 500);
     } else {
         window.addEventListener('load', function() {
-            setTimeout(init, 500);
+            setTimeout(init, 800);
         });
     }
 }

@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 class MediaroomController extends Controller
 {
     /**
-     * Events page - Only shows published events
+     * Events page - Only shows published events, latest first
      */
     public function eventsIndex()
     {
         $events = Event::with('gallery')
             ->withCount('gallery')
             ->where('publish', 'yes') // Only show published events
-            ->orderBy('event_date', 'desc')
+            ->orderByRaw('COALESCE(event_date, created_at) DESC') // Latest events first, fallback to created_at
             ->paginate(12);
         
         // Debug: Check if images exist

@@ -25,3 +25,4 @@ Thumbs.db
 public/videos/*.mp4 
 public/videos/*.avi 
 public/videos/*.mov 
+"public.zip" 

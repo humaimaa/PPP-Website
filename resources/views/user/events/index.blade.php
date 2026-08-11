@@ -53,7 +53,7 @@
                         @endif
                     </a>
                     
-                    <!-- Overlay with image count - Moved OUTSIDE the <a> tag -->
+                    <!-- Overlay with image count -->
                     <div class="absolute inset-0 overlay-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
                         <div class="bg-accent-1 text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold pointer-events-none">
                             <i class="fas fa-images mr-2"></i>
@@ -61,18 +61,11 @@
                         </div>
                     </div>
                     
-                    <!-- Date Badge - Moved OUTSIDE the <a> tag -->
+                    <!-- Date Badge -->
                     <div class="absolute top-4 left-4 bg-accent-1 text-white px-3 py-1.5 rounded-full text-xs font-medium pointer-events-none">
                         <i class="fas fa-calendar-alt mr-1"></i> 
                         {{ $event->event_date ? $event->event_date->format('F d, Y') : 'Date TBA' }}
                     </div>
-                    
-                    <!-- Featured Badge - Moved OUTSIDE the <a> tag -->
-                    @if($thumbnail && $thumbnail->is_thumbnail)
-                    <div class="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs font-semibold pointer-events-none">
-                        <i class="fas fa-star mr-1"></i> Featured
-                    </div>
-                    @endif
                 </div>
                 
                 <!-- Card Content -->

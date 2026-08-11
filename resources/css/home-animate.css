@@ -39,14 +39,15 @@
 }
 
 /* ============================================
-   PARTNER LOGOS - Homepage Specific
+   PARTNER LOGOS - Homepage Specific (FIXED)
    ============================================ */
 
-/* Logo scroll container - minimal styling */
+/* Logo scroll container - minimal styling with fixed height */
 .logo-scroll-container {
     width: 100%;
     overflow: hidden;
     position: relative;
+    min-height: 120px; /* Reserve space for logos to prevent layout shifts */
 }
 
 /* Logo track - the scrolling container */
@@ -55,31 +56,97 @@
     align-items: center;
     width: fit-content;
     will-change: transform;
+    min-width: 100%;
+    gap: 1.5rem; /* 24px gap */
 }
 
-/* Individual partner logo - using Tailwind classes in HTML */
-/* Only minimal CSS needed for structure */
+@media (min-width: 768px) {
+    .logo-track {
+        gap: 2rem; /* 32px gap on tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    .logo-track {
+        gap: 3rem; /* 48px gap on desktop */
+    }
+}
+
+/* Individual partner logo - fixed dimensions */
 .partner-logo {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    width: 140px;
+    height: 80px;
     transition: all 0.3s ease;
 }
 
-/* Partner logo images - controlled by Tailwind classes */
+@media (min-width: 640px) {
+    .partner-logo {
+        width: 160px;
+        height: 90px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .partner-logo {
+        width: 180px;
+        height: 100px;
+    }
+}
+
+/* Partner logo images - controlled sizing with loading states */
 .partner-logo img {
-    width: 100%;
+    width: auto;
     height: auto;
-    max-height: 80px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     transition: all 0.3s ease;
+    opacity: 0; /* Start hidden */
+}
+
+/* Loaded state for images */
+.partner-logo img[loaded],
+.partner-logo img.loaded {
+    opacity: 1;
+    transition: opacity 0.4s ease;
 }
 
 /* Partner logo hover effect */
 .partner-logo:hover img {
     filter: drop-shadow(0 4px 12px rgba(179, 147, 57, 0.3));
     transform: scale(1.05);
+}
+
+/* Clone logos should have same styling */
+.logo-clone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Ensure track doesn't have extra space */
+.logo-track .logo-clone .partner-logo {
+    width: 140px;
+    height: 80px;
+}
+
+@media (min-width: 640px) {
+    .logo-track .logo-clone .partner-logo {
+        width: 160px;
+        height: 90px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .logo-track .logo-clone .partner-logo {
+        width: 180px;
+        height: 100px;
+    }
 }
 
 /* ============================================
@@ -269,5 +336,27 @@
     }
     50% {
         transform: translateY(10px);
+    }
+}
+
+/* ============================================
+   ADDITIONAL FIXES FOR LAYOUT STABILITY
+   ============================================ */
+
+/* Prevent layout shifts during loading */
+img {
+    background-color: #f3f4f6; /* Light gray placeholder */
+}
+
+/* Ensure smooth animations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for mobile devices */
+@media (max-width: 640px) {
+    .logo-scroll-container {
+        min-height: 90px;
     }
 }

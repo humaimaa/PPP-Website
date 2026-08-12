@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-   
-
     /**
      * Toggle publish status
      */
@@ -31,8 +29,9 @@ class ProjectController extends Controller
         }
     }
 
-   
-    
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $query = Project::with(['sector', 'ongoingDetail', 'completedDetail']);
@@ -83,22 +82,6 @@ class ProjectController extends Controller
         
         return view('admin.projects.index', compact('projects', 'sectors'));
     }
-
-    /**
-     * Toggle publish status
-     */
-    // public function togglePublish($id)
-    // {
-    //     try {
-    //         $project = Project::findOrFail($id);
-    //         $project->publish = $project->publish === 'yes' ? 'no' : 'yes';
-    //         $project->save();
-            
-    //         return redirect()->back()->with('success', 'Publish status updated successfully!');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', 'Error updating publish status: ' . $e->getMessage());
-    //     }
-    // }
 
     /**
      * Show the form for creating a new resource.
@@ -152,14 +135,27 @@ class ProjectController extends Controller
 
             DB::beginTransaction();
 
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
-                $imagePath = $image->storeAs('projects', $imageName, 'public');
-                $validated['image'] = $imagePath;
+            // Handle image upload (REQUIRED)
+            if (!$request->hasFile('image')) {
+                throw new \Exception('Image is required for creating a project.');
             }
+
+            $image = $request->file('image');
+            
+            // Validate image
+            if (!$image->isValid()) {
+                throw new \Exception('Invalid image upload: ' . $image->getErrorMessage());
+            }
+            
+            $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
+            $imagePath = $image->storeAs('projects', $imageName, 'public');
+            
+            // Verify image was saved
+            if (!$imagePath || !Storage::disk('public')->exists($imagePath)) {
+                throw new \Exception('Failed to save image. Please check storage permissions.');
+            }
+            
+            $validated['image'] = $imagePath;
 
             // Convert division array to comma-separated string for SET column
             if ($request->has('division') && is_array($request->division)) {
@@ -283,17 +279,32 @@ class ProjectController extends Controller
         
         try {
             // Handle image upload
-            $imagePath = null;
             if ($request->hasFile('image')) {
+                // Validate new image
+                $image = $request->file('image');
+                if (!$image->isValid()) {
+                    throw new \Exception('Invalid image upload: ' . $image->getErrorMessage());
+                }
+                
                 // Delete old image
                 if ($project->image && Storage::disk('public')->exists($project->image)) {
                     Storage::disk('public')->delete($project->image);
                 }
                 
-                $image = $request->file('image');
                 $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $image->getClientOriginalName());
                 $imagePath = $image->storeAs('projects', $imageName, 'public');
+                
+                // Verify image was saved
+                if (!$imagePath || !Storage::disk('public')->exists($imagePath)) {
+                    throw new \Exception('Failed to save new image. Please check storage permissions.');
+                }
+                
                 $validated['image'] = $imagePath;
+            }
+            // If no new image is uploaded, KEEP EXISTING IMAGE
+            // Remove image from validated array so it doesn't get set to null
+            else {
+                unset($validated['image']);
             }
 
             // Convert division array to comma-separated string for SET column
@@ -375,8 +386,16 @@ class ProjectController extends Controller
         try {
             $project = Project::findOrFail($id);
             
+            // Delete project image
             if ($project->image && Storage::disk('public')->exists($project->image)) {
                 Storage::disk('public')->delete($project->image);
+            }
+            
+            // Delete associated details based on category
+            if ($project->category === 'Ongoing') {
+                OngoingProjectDetail::where('project_id', $project->id)->delete();
+            } elseif ($project->category === 'Construction & Operational') {
+                CompletedProjectDetail::where('project_id', $project->id)->delete();
             }
             
             $project->delete();
